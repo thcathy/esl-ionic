@@ -76,24 +76,15 @@
   color: #fff;
 }
 
+.navbar-logo {
+  margin-top: 8px;
+  max-height: 36px;
+}
+
 ion-content {
   background-image: url('../assets/img/main_bg.jpg');
-  background-size: contain;
-  background-color: transparent;
-  background-position: center;
+  background-position: left 300px;
+  background-color: #46c6fc !important;
   background-repeat: no-repeat;
 }
 
-body {
-  background-image:url('../assets/img/main_bg.jpg');
-  background-repeat: no-repeat;
-  background-size: 100% 100%;
-  background-color: transparent;
-}
-
-outer-content {
-  background-image:url('assets/img/main_bg.jpg');
-  background-repeat: no-repeat;
-  background-size: 100% 100%;
-  background-color: transparent;
-}
