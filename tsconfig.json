@@ -18,7 +18,12 @@
     "lib": [
       "dom",
       "es2015"
-    ]
+    ],
+    "paths": {
+      "@app/env": [
+        "environments/environment"
+      ]
+    }
   },
   "include": [
     "src/**/*.ts"

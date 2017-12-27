@@ -23,4 +23,11 @@ page-home {
     height: 50px; padding: 4px;
   }
 
+  .summaryCard {
+    ion-card-header {
+      color: white;
+      background-color: #2196f3;
+    }
+  }
+
 }

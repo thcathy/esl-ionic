@@ -47,10 +47,12 @@
   },
   "devDependencies": {
     "@ionic/app-scripts": "3.1.0",
+    "ionic": "3.19.0",
     "typescript": "~2.4.2"
   },
   "config": {
-    "ionic_aot_write_to_disk": true
+    "ionic_aot_write_to_disk": true,
+    "ionic_webpack": "./config/webpack.config.js"
   },
   "cordova": {
     "platforms": [
