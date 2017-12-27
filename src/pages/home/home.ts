@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import {AppService} from "../../providers/app.service";
+import {RankingService} from "../../providers/ranking/ranking.service";
+import {MemberScoreRanking} from "../../entity/member-score-ranking";
 
 /**
  * Generated class for the HomePage page.
@@ -15,14 +17,18 @@ import {AppService} from "../../providers/app.service";
   templateUrl: 'home.html',
 })
 export class HomePage {
+  public memberScoreRanking: MemberScoreRanking;
 
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
-              public appService: AppService) {
+              public appService: AppService,
+              public rankingService: RankingService
+  ) {
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad HomePage');
+    this.rankingService.randomTopScore().subscribe(rank => this.memberScoreRanking = rank);
   }
 
 }

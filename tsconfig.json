@@ -19,6 +19,7 @@
       "dom",
       "es2015"
     ],
+    "baseUrl": "./src",
     "paths": {
       "@app/env": [
         "environments/environment"

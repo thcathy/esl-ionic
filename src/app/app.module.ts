@@ -1,6 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpModule } from '@angular/http';
 import { NgModule, ErrorHandler } from '@angular/core';
+import { HttpClientModule} from "@angular/common/http";
+import { HttpModule } from "@angular/http";
 
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 
@@ -30,6 +31,7 @@ import { ConferenceData } from '../providers/conference-data';
 import { UserData } from '../providers/user-data';
 import {HomePage} from "../pages/home/home";
 import {AppService} from "../providers/app.service";
+import {RankingService} from "../providers/ranking/ranking.service";
 
 
 @NgModule({
@@ -54,6 +56,7 @@ import {AppService} from "../providers/app.service";
   imports: [
     BrowserModule,
     HttpModule,
+    HttpClientModule,
     IonicModule.forRoot(ConferenceApp, {}, {
       links: [
         { component: TabsPage, name: 'TabsPage', segment: 'tabs-page' },
@@ -99,7 +102,8 @@ import {AppService} from "../providers/app.service";
     UserData,
     InAppBrowser,
     SplashScreen,
-    AppService
+    AppService,
+    RankingService,
   ]
 })
 export class AppModule { }
