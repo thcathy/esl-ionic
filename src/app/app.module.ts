@@ -32,6 +32,7 @@ import { UserData } from '../providers/user-data';
 import {HomePage} from "../pages/home/home";
 import {AppService} from "../providers/app.service";
 import {RankingService} from "../providers/ranking/ranking.service";
+import {ComponentsModule} from "../components/components.module";
 
 
 @NgModule({
@@ -51,7 +52,7 @@ import {RankingService} from "../providers/ranking/ranking.service";
     TabsPage,
     TutorialPage,
     SupportPage,
-    HomePage
+    HomePage,
   ],
   imports: [
     BrowserModule,
@@ -75,7 +76,8 @@ import {RankingService} from "../providers/ranking/ranking.service";
         { component: HomePage, name: 'HomePage', segment: 'home'}
       ]
     }),
-    IonicStorageModule.forRoot()
+    IonicStorageModule.forRoot(),
+    ComponentsModule,
   ],
   bootstrap: [IonicApp],
   entryComponents: [

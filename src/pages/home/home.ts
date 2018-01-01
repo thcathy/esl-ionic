@@ -17,18 +17,18 @@ import {MemberScoreRanking} from "../../entity/member-score-ranking";
   templateUrl: 'home.html',
 })
 export class HomePage {
-  public memberScoreRanking: MemberScoreRanking;
+  memberScoreRanking: MemberScoreRanking;
 
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
               public appService: AppService,
               public rankingService: RankingService
   ) {
+    this.rankingService.randomTopScore().subscribe(rank => this.memberScoreRanking = rank);
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad HomePage');
-    this.rankingService.randomTopScore().subscribe(rank => this.memberScoreRanking = rank);
   }
 
 }

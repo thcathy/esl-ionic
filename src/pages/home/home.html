@@ -23,18 +23,7 @@
     </ion-card-content>
   </ion-card>
 
-  <ion-card class="summaryCard">
-    <ion-card-header>
-      <i class="fas fa-pen-square"></i> Latest Created Dictations
-    </ion-card-header>
-    <ion-card-content>
-      <ion-list>
-        <button ion-item *ngFor="let item of items" (click)="itemSelected(item)">
-          {{ item }}
-        </button>
-      </ion-list>
-    </ion-card-content>
-  </ion-card>
+  <member-score-ranking [ranking]="memberScoreRanking"></member-score-ranking>
 
   <div padding-top>
     <a href="https://itunes.apple.com/app/apple-store/id1289059131?mt=8">

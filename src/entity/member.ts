@@ -15,6 +15,13 @@ export class Member {
     public createdDate: Date,
   ) { }
 
+  public displayName(): string {
+    if (this.name && this.name.fullName())
+      return this.name.fullName();
+    else
+      return this.emailAddress;
+  }
+
   public toString() {
     return JSON.stringify(this);
   }

@@ -5,6 +5,7 @@ export class MemberScore {
     public id: number,
     public createdDate: Date,
     public lastUpdateDate: Date,
+    public yearMonthAsDate: Date,
     public member: Member,
     public scoreYearMonth: string,
     public score: number

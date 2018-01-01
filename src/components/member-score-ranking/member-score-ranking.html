@@ -1,0 +1,22 @@
+
+<ion-card class="summaryCard" *ngIf="ranking">
+  <ion-card-header>
+    <i class="fas fa-trophy"></i> Ranking {{ ranking?.scores[0]?.yearMonthAsDate | date: 'MM yyyy' }}
+  </ion-card-header>
+  <ion-card-content>
+    <ion-list>
+      <ion-item *ngFor="let score of ranking.scores; let i = index">
+        <ion-badge>{{ ranking.firstPosition + i }}</ion-badge>
+        <span *ngIf="ranking.firstPosition + i <= 3">
+            <i class="fas fa-trophy"
+               [class.gold]="ranking.firstPosition + i == 1"
+               [class.silver]="ranking.firstPosition + i == 2"
+               [class.bronze]="ranking.firstPosition + i == 3"
+            ></i>
+          </span>
+        {{ score.member.displayName | slice:0:17 }}{{ score.member.displayName.length > 17 ? '...' : '' }}
+        <span float-right><i class="fas fa-star" style="color: gold"></i> {{score.score}}</span>
+      </ion-item>
+    </ion-list>
+  </ion-card-content>
+</ion-card>
