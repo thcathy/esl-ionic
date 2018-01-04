@@ -33,6 +33,7 @@ import {HomePage} from "../pages/home/home";
 import {AppService} from "../providers/app.service";
 import {RankingService} from "../providers/ranking/ranking.service";
 import {ComponentsModule} from "../components/components.module";
+import {DictationService} from "../providers/dictation/dictation.service";
 
 
 @NgModule({
@@ -106,6 +107,7 @@ import {ComponentsModule} from "../components/components.module";
     SplashScreen,
     AppService,
     RankingService,
+    DictationService,
   ]
 })
 export class AppModule { }
