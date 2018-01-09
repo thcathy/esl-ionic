@@ -1,0 +1,50 @@
+<!--
+  Generated template for the DictationViewPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>View dictation</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+
+  <ion-card>
+    <ion-card-header>
+      <i class="fas fa-edit"></i> Dictation - {{ dictation.title }}
+    </ion-card-header>
+    <ion-card-content>
+      <ion-card>
+        <ion-card-content>
+          <ion-row>
+            <ion-col>
+              <esl:oneDictationSummary2 dictation="#{dictationPracticeController.dictation}" />
+              <h:commandLink onclick="showSpinner()"
+                             styleClass="w3-btn w3-green w3-margin-top w3-margin-bottom w3-xlarge"
+                             action="#{dictationPracticeController.start}">
+                <i class="fa fa-play"></i> #{dictationMsg.start}</h:commandLink>
+              <span id="spinner" class="w3-hide"><i class="fa fa-spinner w3-spin" style="font-size:36px"></i></span>
+            </ion-col>
+            <ion-col>
+              <div class="w3-margin-bottom">#{dictationMsg.vocab}:</div>
+              <ui:repeat var="i" varStatus="r" value="#{dictationPracticeController.dictation.vocabs}">
+                <span class="w3-tag w3-round-large w3-green" style="margin: 2px!important;">#{i.word}</span>&#160;
+              </ui:repeat>
+
+              <h:panelGroup rendered="#{not empty dictationPracticeController.memberDictationHistory}">
+                <esl:memberDictationHistory2 history="#{dictationPracticeController.memberDictationHistory}" />
+              </h:panelGroup>
+            </ion-col>
+          </ion-row>
+        </ion-card-content>
+      </ion-card>
+    </ion-card-content>
+  </ion-card>
+
+</ion-content>
