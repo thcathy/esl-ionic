@@ -5,6 +5,8 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 
 import { Storage } from '@ionic/storage';
 
+import {TranslateService} from '@ngx-translate/core';
+
 import { AboutPage } from '../pages/about/about';
 import { AccountPage } from '../pages/account/account';
 import { LoginPage } from '../pages/login/login';
@@ -68,7 +70,8 @@ export class ConferenceApp {
     public platform: Platform,
     public confData: ConferenceData,
     public storage: Storage,
-    public splashScreen: SplashScreen
+    public splashScreen: SplashScreen,
+    public translate: TranslateService
   ) {
 
     // Check if the user has already seen the tutorial
@@ -92,6 +95,11 @@ export class ConferenceApp {
     this.enableMenu(true);
 
     this.listenToLoginEvents();
+
+    translate.addLangs(["en", "zh"]);
+    translate.setDefaultLang('en');
+    // the lang to use, if the lang isn't available, it will use the current loader to get them
+    translate.use('en');
   }
 
   openPage(page: PageInterface) {

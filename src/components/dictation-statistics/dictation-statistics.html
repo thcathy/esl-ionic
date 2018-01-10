@@ -1,14 +1,23 @@
 <ion-card class="summaryCard" *ngIf="stat" style="margin-top: 12px;">
   <ion-card-header>
-    <i class="fas fa-edit"></i> {{ stat.type }}
+    <i class="fas fa-edit"></i> {{ stat.type | translate }}
   </ion-card-header>
   <ion-card-content>
     <ion-list>
       <ion-item *ngFor="let dictation of stat.dictations; let i = index">
-        <ion-badge style="background-color: #4CAF50;">{{ i+1 }}</ion-badge>
-
-        {{ dictation.title | slice:0:17 }}{{ dictation.title.length > 17 ? '...' : '' }}
-        <span float-right><i class="far fa-thumbs-up" style="color: #2196f3;"></i> {{dictation.totalRecommended}}</span>
+        <ion-row>
+          <ion-col>
+            <ion-badge style="background-color: #4CAF50; margin-right: 12px;">{{ i+1 }}</ion-badge>
+            {{ dictation.title | slice:0:17 }}{{ dictation.title.length > 17 ? '...' : '' }}
+          </ion-col>
+          <ion-col text-right>{{ dictation.creator.name.fullName }}</ion-col>
+        </ion-row>
+        <ion-row style="color: #2196f3;">
+          <ion-col center text-left>Vocabs: {{ dictation.vocabs.length }}</ion-col>
+          <ion-col center text-center>Attempts: {{ dictation.totalAttempt }}</ion-col>
+          <ion-col center text-right><i class="far fa-thumbs-up" style="color: #2196f3;"></i> {{dictation.totalRecommended}}</ion-col>
+        </ion-row>
+        <button item-end outline color="secondary" (click)="openDictation(dictation)">View</button>
       </ion-item>
     </ion-list>
   </ion-card-content>

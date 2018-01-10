@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, ErrorHandler } from '@angular/core';
-import { HttpClientModule} from "@angular/common/http";
-import { HttpModule } from "@angular/http";
+import {HttpClient, HttpClientModule} from "@angular/common/http";
+import {HttpModule} from "@angular/http";
 
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 
@@ -34,7 +34,14 @@ import {AppService} from "../providers/app.service";
 import {RankingService} from "../providers/ranking/ranking.service";
 import {ComponentsModule} from "../components/components.module";
 import {DictationService} from "../providers/dictation/dictation.service";
+import {TranslateHttpLoader} from "@ngx-translate/http-loader";
+import {TranslateLoader, TranslateModule} from "@ngx-translate/core";
+import {DictationViewPage} from "../pages/dictation-view/dictation-view";
 
+// AoT requires an exported function for factories
+export function HttpLoaderFactory(http: HttpClient) {
+  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+}
 
 @NgModule({
   declarations: [
@@ -54,6 +61,7 @@ import {DictationService} from "../providers/dictation/dictation.service";
     TutorialPage,
     SupportPage,
     HomePage,
+    DictationViewPage,
   ],
   imports: [
     BrowserModule,
@@ -74,10 +82,18 @@ import {DictationService} from "../providers/dictation/dictation.service";
         { component: LoginPage, name: 'LoginPage', segment: 'login' },
         { component: AccountPage, name: 'AccountPage', segment: 'account' },
         { component: SignupPage, name: 'SignupPage', segment: 'signup' },
-        { component: HomePage, name: 'HomePage', segment: 'home'}
+        { component: HomePage, name: 'HomePage', segment: 'home'},
+        { component: DictationViewPage, name: 'DictationViewPage', segment: 'dictation/:dictationId'}
       ]
     }),
     IonicStorageModule.forRoot(),
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: HttpLoaderFactory,
+        deps: [HttpClient]
+      }
+    }),
     ComponentsModule,
   ],
   bootstrap: [IonicApp],
@@ -97,7 +113,8 @@ import {DictationService} from "../providers/dictation/dictation.service";
     TabsPage,
     TutorialPage,
     SupportPage,
-    HomePage
+    HomePage,
+    DictationViewPage,
   ],
   providers: [
     { provide: ErrorHandler, useClass: IonicErrorHandler },
