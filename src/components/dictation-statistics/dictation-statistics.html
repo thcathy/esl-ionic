@@ -1,4 +1,4 @@
-<ion-card class="summaryCard" *ngIf="stat" style="margin-top: 12px;">
+<ion-card class="card" *ngIf="stat" style="margin-top: 12px;">
   <ion-card-header>
     <i class="fas fa-edit"></i> {{ stat.type | translate }}
   </ion-card-header>
@@ -17,7 +17,7 @@
           <ion-col center text-center>Attempts: {{ dictation.totalAttempt }}</ion-col>
           <ion-col center text-right><i class="far fa-thumbs-up" style="color: #2196f3;"></i> {{dictation.totalRecommended}}</ion-col>
         </ion-row>
-        <button item-end outline color="secondary" (click)="openDictation(dictation)">View</button>
+        <button ion-button outline item-end (click)="openDictation(dictation)">View</button>
       </ion-item>
     </ion-list>
   </ion-card-content>
