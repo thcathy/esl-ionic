@@ -99,10 +99,19 @@ ion-content {
 
   ion-card-content {
     padding: 0px;
+    background-color: transparent;
   }
 
   ion-item {
-    background-color: transparent;
+    border-bottom: .55px solid #c8c7cc;
+  }
+
+  ion-label {
+    margin: 4px 8px 4px 8px;
+  }
+
+  [item-end] {
+    margin: 0px;
   }
 }
 
@@ -116,5 +125,10 @@ ion-content {
 
 .bronze {
   color: #cd7f32;
+}
+
+.table-heading {
+  color: #60646B;
+  font-weight: bold;
 }
 

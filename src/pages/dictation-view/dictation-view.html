@@ -19,57 +19,47 @@
     <ion-card-header>
       <i class="fas fa-edit"></i> Dictation - {{ dictation.title }}
     </ion-card-header>
-    <ion-card-content>
+    <ion-card-content style="font-size: 1.6rem">
       <ion-grid>
         <ion-row>
-          <ion-col col-sm-12 col-md-6>
+          <ion-col col-12 col-sm-12 col-md-6>
             <table width="95%">
               <tr>
-                <td width="120">title</td>
-                <td width="5">:</td>
+                <td width="125" class="table-heading">title</td>
                 <td><strong>{{dictation.title}}</strong></td>
               </tr>
               <tr>
-                <td>Description</td>
-                <td>:</td>
-                <td>{{dictation.description}}</td>
+                <td class="table-heading">Description</td>
+                <td>{{ dictation.description }}</td>
               </tr>
               <tr>
-                <td>Suitable Age:</td>
-                <td>:</td>
-                <td>{{dictation.suitableMinAge}} - {{dictation.suitableMaxAge}}</td>
+                <td class="table-heading">Suitable Age</td>
+                <td>{{ suitableAge(dictation) | translate }}</td>
               </tr>
               <tr>
-                <td>Show Image</td>
-                <td>:</td>
+                <td class="table-heading">Show Image</td>
                 <td>
                   <i class="fas fa-check" *ngIf="dictation.showImage"></i>
                   <i class="fas fa-times" *ngIf="!dictation.showImage"></i>
                 </td>
               </tr>
               <tr>
-                <td>Recommended</td>
-                <td>:</td>
+                <td class="table-heading">Recommended</td>
                 <td><i class="far fa-thumbs-up"></i> {{ dictation.totalRecommended }}</td>
               </tr>
               <tr>
-                <td>Last Updated</td>
-                <td>:</td>
+                <td class="table-heading">Last Updated</td>
                 <td>{{ dictation.lastModifyDate | date: 'dd/MM/yyyy' }}</td>
               </tr>
               <tr>
-                <td>Attempted</td>
-                <td>:</td>
+                <td class="table-heading">Attempted</td>
                 <td>{{dictation.totalAttempt}}</td>
               </tr>
             </table>
-
-            <button ion-button><i class="fas fa-play"></i>&nbsp;Start Dictation</button>
-
             <!--<span id="spinner" class="w3-hide"><i class="fa fa-spinner w3-spin" style="font-size:36px"></i></span>-->
           </ion-col>
-          <ion-col col-sm-12 col-md-6>
-            <div>Vocabulary ({{dictation.vocabs.length}}):</div>
+          <ion-col col-12 col-sm-12 col-md-6>
+            <div style="padding-bottom: 4px;" class="table-heading">Vocabulary ({{dictation.vocabs.length}}):</div>
             <span *ngFor="let vocab of dictation.vocabs"><ion-badge style="background-color: #4CAF50; margin-right: 4px;">{{ vocab.word }}</ion-badge></span>
 
             <!--<h:panelGroup rendered="#{not empty dictationPracticeController.memberDictationHistory}">-->
@@ -78,6 +68,7 @@
           </ion-col>
         </ion-row>
       </ion-grid>
+      <div padding><button ion-button><i class="fas fa-play"></i>&nbsp;Start Dictation</button></div>
     </ion-card-content>
 
   </ion-card>

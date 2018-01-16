@@ -176,4 +176,8 @@ export class ConferenceApp {
     }
     return;
   }
+
+  changeLanguage(lang: string) {
+    this.translate.use(lang);
+  }
 }

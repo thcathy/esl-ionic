@@ -26,4 +26,11 @@ export class DictationViewPage {
     console.log('ionViewDidLoad DictationViewPage');
   }
 
+  suitableAge(dictation: Dictation) {
+    if (dictation.suitableMaxAge < 1 || dictation.suitableMinAge < 1)
+      return "SuitableAge.Any";
+    else
+      return dictation.suitableMinAge + " - " + dictation.suitableMaxAge;
+  }
+
 }

@@ -1,6 +1,9 @@
 {
-  "MostPracticed": "Most Attempted Dictations zh",
-  "NewCreated":"Latest Created Dictations zh",
-  "MostRecommended":"Most Recommended Dictations zh",
-  "LatestPracticed":"Last Dictation Practiced zh"
+  "MostPracticed": "最多練習次數默書",
+  "NewCreated":"最新的默書",
+  "MostRecommended":"最多人推薦的默書",
+  "LatestPracticed":"剛被練習的默書",
+  "SuitableAge": {
+    "Any": "所有"
+  }
 }
