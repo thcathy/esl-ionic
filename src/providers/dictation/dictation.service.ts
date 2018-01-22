@@ -21,8 +21,7 @@ export class DictationService extends Service {
   private randomStatUrl = ENV.apiHost + '/dictation/random-stat';
 
   randomDictationStatistics(): Observable<DictationStatistics> {
-    return this.http.get(this.randomStatUrl)
-      .map(res => <DictationStatistics> res)
+    return this.http.get<DictationStatistics>(this.randomStatUrl)
               .catch(this.handleError);
   }
 

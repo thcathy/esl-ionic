@@ -21,8 +21,7 @@ export class RankingService extends Service {
   private randomTopScoreUrl = ENV.apiHost + '/ranking/random-top-score';
 
   randomTopScore(): Observable<MemberScoreRanking> {
-    return this.http.get(this.randomTopScoreUrl)
-      .map(res => <MemberScoreRanking> res)
+    return this.http.get<MemberScoreRanking>(this.randomTopScoreUrl)
               .catch(this.handleError);
   }
 

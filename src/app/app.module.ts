@@ -37,6 +37,7 @@ import {DictationService} from "../providers/dictation/dictation.service";
 import {TranslateHttpLoader} from "@ngx-translate/http-loader";
 import {TranslateLoader, TranslateModule} from "@ngx-translate/core";
 import {DictationViewPage} from "../pages/dictation-view/dictation-view";
+import {VocabPracticeService} from "../providers/practice/vocab-practice.service";
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -125,6 +126,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     AppService,
     RankingService,
     DictationService,
+    VocabPracticeService,
   ]
 })
 export class AppModule { }
