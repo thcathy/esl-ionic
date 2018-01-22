@@ -13,10 +13,10 @@ import {VocabPractice} from "../../entity/voacb-practice";
 
 @IonicPage()
 @Component({
-  selector: 'page-dictaion-practice',
-  templateUrl: 'dictaion-practice.html',
+  selector: 'page-dictation-practice',
+  templateUrl: 'dictation-practice.html',
 })
-export class DictaionPracticePage {
+export class DictationPracticePage {
   dictation: Dictation;
   vocabPractices: VocabPractice[];
   questionIndex: number;
@@ -32,13 +32,13 @@ export class DictaionPracticePage {
     this.dictation.vocabs.forEach((vocab) => {
       vocabPracticeService.getQuestion(vocab.word, this.dictation.showImage)
         .subscribe((p) => {
-          this.vocabPractices << p;
+          this.vocabPractices.push(p);
         })
     })
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad DictaionPracticePage');
+    console.log('ionViewDidLoad DictationPracticePage');
   }
 
 }

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import {Dictation} from "../../entity/dictation";
+import {DictationPracticePage} from "../dictation-practice/dictation-practice";
 
 /**
  * Generated class for the DictationViewPage page.
@@ -31,6 +32,12 @@ export class DictationViewPage {
       return "SuitableAge.Any";
     else
       return dictation.suitableMinAge + " - " + dictation.suitableMaxAge;
+  }
+
+  startDictation(dictation: Dictation) {
+    this.navCtrl.setRoot(DictationPracticePage, {
+      'dictation': dictation
+    });
   }
 
 }

@@ -4,14 +4,14 @@
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title>dictaion-practice</ion-title>
+    <ion-title>dictation-practice</ion-title>
   </ion-navbar>
 
 </ion-header>
 
 
 <ion-content padding>
-  <ion-card class="card">
+  <ion-card class="card" *ngIf="vocabPractices">
     <ion-card-header>
       Question {{ questionIndex + 1 }}
       <span class="hidden-xs-down"><i class="fas fa-edit"></i> Dictation</span>
@@ -33,7 +33,7 @@
           </ion-col>
         </ion-row>
       </ion-grid>
-      <div padding><button ion-button><i class="fas fa-play"></i>&nbsp;Start Dictation</button></div>
+      <div padding><button ion-button (click)="startDictation(dictation)"><i class="fas fa-play"></i>&nbsp;Start Dictation</button></div>
     </ion-card-content>
 
   </ion-card>
