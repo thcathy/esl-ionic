@@ -18,7 +18,7 @@ import {VocabPractice} from "../../entity/voacb-practice";
 })
 export class DictationPracticePage {
   dictation: Dictation;
-  vocabPractices: VocabPractice[];
+  vocabPractices: VocabPractice[] = [];
   questionIndex: number;
 
   constructor(

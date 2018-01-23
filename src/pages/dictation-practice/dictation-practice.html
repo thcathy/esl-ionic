@@ -11,29 +11,23 @@
 
 
 <ion-content padding>
-  <ion-card class="card" *ngIf="vocabPractices">
+  <ion-card class="card" *ngIf="vocabPractices[questionIndex]">
     <ion-card-header>
       Question {{ questionIndex + 1 }}
-      <span class="hidden-xs-down"><i class="fas fa-edit"></i> Dictation</span>
+      <span class="hidden-xs-down" float-right><i class="fas fa-edit"></i> Dictation</span>
     </ion-card-header>
 
     <ion-card-content style="font-size: 1.6rem">
       <ion-grid>
         <ion-row>
           <ion-col col-12 col-sm-12 col-md-6>
-
+            <vocab-image [images]="vocabPractices[questionIndex].picsFullPaths"></vocab-image>
           </ion-col>
           <ion-col col-12 col-sm-12 col-md-6>
-            <div style="padding-bottom: 4px;" class="table-heading">Vocabulary ({{dictation.vocabs.length}}):</div>
-            <span *ngFor="let vocab of dictation.vocabs"><ion-badge style="background-color: #4CAF50; margin-right: 4px;">{{ vocab.word }}</ion-badge></span>
 
-            <!--<h:panelGroup rendered="#{not empty dictationPracticeController.memberDictationHistory}">-->
-            <!--<esl:memberDictationHistory2 history="#{dictationPracticeController.memberDictationHistory}" />-->
-            <!--</h:panelGroup>-->
           </ion-col>
         </ion-row>
       </ion-grid>
-      <div padding><button ion-button (click)="startDictation(dictation)"><i class="fas fa-play"></i>&nbsp;Start Dictation</button></div>
     </ion-card-content>
 
   </ion-card>

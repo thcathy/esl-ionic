@@ -1,0 +1,15 @@
+<ion-card *ngIf="images" class="card">
+  <ion-row *ngIf="images?.length > 1">
+    <ion-col>
+      <button ion-button clear small (click)="previousImage()" class="button">
+        <i class="fas fa-angle-left"></i>
+      </button>
+    </ion-col>
+    <ion-col>
+      <button ion-button float-right clear small (click)="nextImage()" class="button">
+        <i class="fas fa-angle-right"></i>
+      </button>
+    </ion-col>
+  </ion-row>
+  <img [src]="images[index]" class="image" />
+</ion-card>

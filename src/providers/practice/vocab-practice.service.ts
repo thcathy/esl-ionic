@@ -18,14 +18,14 @@ export class VocabPracticeService extends Service {
     super();
   }
 
-  private getQuestionUrl = ENV.apiHost + 'vocab/get/question/';
+  private getQuestionUrl = ENV.apiHost + '/vocab/get/question/';
 
   getQuestion(word: string, showImage: boolean): Observable<VocabPractice> {
     let params = new HttpParams();
     params = params.append('image', showImage.toString());
 
-      return this.http.get<VocabPractice>(this.getQuestionUrl + word,  {params: params})
-        .catch(this.handleError);
+    return this.http.get<VocabPractice>(this.getQuestionUrl + word,  {params: params})
+      .catch(this.handleError);
   }
 
 }
