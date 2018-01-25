@@ -154,7 +154,7 @@ ion-content {
 
   ion-card-header {
     color: white;
-    background-color: #2196f3;
+    background-color: #4CAF50;
   }
 
   ion-card-content {
@@ -192,3 +192,11 @@ ion-content {
   font-weight: bold;
 }
 
+.submitBtn {
+  margin-top: 12px;
+
+  .button-inner {
+    height: 2rem;
+    font-size: 1.6rem;
+  }
+}

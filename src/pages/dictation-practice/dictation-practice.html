@@ -11,7 +11,7 @@
 
 
 <ion-content padding>
-  <ion-card class="card" *ngIf="vocabPractices[questionIndex]">
+  <ion-card class="card" *ngIf="currentQuestion()">
     <ion-card-header>
       Question {{ questionIndex + 1 }}
       <span class="hidden-xs-down" float-right><i class="fas fa-edit"></i> Dictation</span>
@@ -21,10 +21,24 @@
       <ion-grid>
         <ion-row>
           <ion-col col-12 col-sm-12 col-md-6>
-            <vocab-image [images]="vocabPractices[questionIndex].picsFullPaths"></vocab-image>
+            <ion-row>
+              <audio #speakRef onloadeddata="this.play()" [src]="currentQuestion().activePronounceLink"></audio>
+              <ion-col text-center>
+                <button ion-button round class="speakBtn" (click)="speak()"><i class="fas fa-headphones"></i>&nbsp;Speak</button>
+              </ion-col>
+              <ion-col text-center>
+                <button ion-button round class="phonicsBtn" (click)="showPhonics()">{{phonics}}</button>
+              </ion-col>
+            </ion-row>
+            <ion-item>
+              <ion-label floating>Answer</ion-label>
+              <ion-input [(ngModel)]="answer" type="text"></ion-input>
+            </ion-item>
+            <button ion-button full class="submitBtn">Submit</button>
+
           </ion-col>
           <ion-col col-12 col-sm-12 col-md-6>
-
+            <vocab-image [images]="currentQuestion().picsFullPaths"></vocab-image>
           </ion-col>
         </ion-row>
       </ion-grid>
