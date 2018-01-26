@@ -28,4 +28,8 @@ export class VocabPracticeService extends Service {
       .catch(this.handleError);
   }
 
+  isWordEqual(word: string, input: string): boolean {
+    return word.replace(/ /g, '').replace(/-/g, '').toLowerCase() === (input.replace(/ /g, "").replace(/-/g, "").toLowerCase());
+  }
+
 }

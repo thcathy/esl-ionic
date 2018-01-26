@@ -1,0 +1,18 @@
+<ion-card class="card" *ngIf="histories" style="padding-top: 12px;">
+  <ion-card-header>
+    <i class="fas fa-history"></i> History
+    <span float-right>Mark: {{ mark }} / {{ histories.length }}</span>
+  </ion-card-header>
+  <ion-card-content>
+    <ion-list>
+      <ion-item *ngFor="let history of histories; let i = index">
+        <ion-row>
+          <ion-badge item-start style="background-color: #4CAF50; margin: 0px;">{{ i+1 }}</ion-badge>
+          <ion-col>{{ history.question.word }}</ion-col>
+          <ion-col [class.green]="history.correct" [class.red]="!history.correct">{{ history.answer }}</ion-col>
+          <ion-col><i *ngIf="history.correct" class="fas fa-check green"></i><i *ngIf="!history.correct" class="fas fa-times red"></i></ion-col>
+        </ion-row>
+      </ion-item>
+    </ion-list>
+  </ion-card-content>
+</ion-card>

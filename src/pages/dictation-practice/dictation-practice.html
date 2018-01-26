@@ -14,7 +14,7 @@
   <ion-card class="card" *ngIf="currentQuestion()">
     <ion-card-header>
       Question {{ questionIndex + 1 }}
-      <span class="hidden-xs-down" float-right><i class="fas fa-edit"></i> Dictation</span>
+      <span float-right>Mark: {{mark}}</span>
     </ion-card-header>
 
     <ion-card-content style="font-size: 1.6rem">
@@ -30,11 +30,11 @@
                 <button ion-button round class="phonicsBtn" (click)="showPhonics()">{{phonics}}</button>
               </ion-col>
             </ion-row>
-            <ion-item>
+            <ion-item class="answerInput">
               <ion-label floating>Answer</ion-label>
-              <ion-input [(ngModel)]="answer" type="text"></ion-input>
+              <ion-input [(ngModel)]="answer" type="text" maxlength="30" (keyup.enter)="submitAnswer()"></ion-input>
             </ion-item>
-            <button ion-button full class="submitBtn">Submit</button>
+            <button ion-button full class="submitBtn" (click)="submitAnswer()">Submit</button>
 
           </ion-col>
           <ion-col col-12 col-sm-12 col-md-6>
@@ -42,6 +42,7 @@
           </ion-col>
         </ion-row>
       </ion-grid>
+      <practice-history-list [histories]="histories" [mark]="mark" ></practice-history-list>
     </ion-card-content>
 
   </ion-card>

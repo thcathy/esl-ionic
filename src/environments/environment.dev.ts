@@ -1,4 +1,4 @@
 export const ENV = {
   mode: 'Development',
-  apiHost: 'http://localhost:8080'
+  apiHost: 'http://localhost:8380'
 }

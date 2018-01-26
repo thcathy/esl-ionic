@@ -3,6 +3,7 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import {Dictation} from "../../entity/dictation";
 import {VocabPracticeService} from "../../providers/practice/vocab-practice.service";
 import {VocabPractice} from "../../entity/voacb-practice";
+import {VocabPracticeHistory} from "../../interfaces/vocab-practice-history";
 
 /**
  * Generated class for the DictaionPracticePage page.
@@ -23,6 +24,8 @@ export class DictationPracticePage {
   questionIndex: number;
   phonics: string;
   answer: string;
+  mark: number;
+  histories: VocabPracticeHistory[] = [];
 
   constructor(
     public navCtrl: NavController,
@@ -30,8 +33,7 @@ export class DictationPracticePage {
     public vocabPracticeService: VocabPracticeService
   ) {
     this.dictation = navParams.get('dictation');
-    this.questionIndex = 0;
-    this.phonics = "Phonetics";
+    this.init();
 
     this.dictation.vocabs.forEach((vocab) => {
       vocabPracticeService.getQuestion(vocab.word, this.dictation.showImage)
@@ -39,6 +41,12 @@ export class DictationPracticePage {
           this.vocabPractices.push(p);
         })
     })
+  }
+
+  private init() {
+    this.questionIndex = 0;
+    this.mark = 0;
+    this.phonics = "Phonetics";
   }
 
   speak() {
@@ -61,4 +69,28 @@ export class DictationPracticePage {
   currentQuestion() {
     return this.vocabPractices[this.questionIndex];
   }
+
+  submitAnswer() {
+    this.checkAnswer();
+    this.preNextQuestion();
+  }
+
+  private checkAnswer() {
+    let correct = this.vocabPracticeService.isWordEqual(this.currentQuestion().word, this.answer);
+    if (correct) this.mark++;
+
+    let history = <VocabPracticeHistory>  {
+      answer: this.answer,
+      question: this.currentQuestion(),
+      correct: correct
+    }
+    this.histories.push(history);
+  }
+
+  private preNextQuestion() {
+    this.phonics = "Phonetics";
+    this.questionIndex++;
+    this.answer = '';
+  }
+
 }
