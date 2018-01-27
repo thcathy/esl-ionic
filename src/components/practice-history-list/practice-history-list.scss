@@ -6,4 +6,14 @@ practice-history-list {
   .red {
     color: #f53d3d;
   }
+
+  .card {
+    ion-item {
+      font-size: 1.4rem;
+    }
+
+    ion-label {
+      margin: 0px;
+    }
+  }
 }
