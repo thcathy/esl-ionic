@@ -39,6 +39,7 @@ import {TranslateLoader, TranslateModule} from "@ngx-translate/core";
 import {DictationViewPage} from "../pages/dictation-view/dictation-view";
 import {VocabPracticeService} from "../providers/practice/vocab-practice.service";
 import {DictationPracticePage} from "../pages/dictation-practice/dictation-practice";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -68,6 +69,7 @@ export function HttpLoaderFactory(http: HttpClient) {
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     HttpModule,
     HttpClientModule,
     IonicModule.forRoot(ConferenceApp, {}, {

@@ -76,15 +76,17 @@ export class DictationPracticePage {
   }
 
   private checkAnswer() {
-    let correct = this.vocabPracticeService.isWordEqual(this.currentQuestion().word, this.answer);
+    let correct = this.vocabPracticeService.isWordEqual(this.currentQuestion().word, this.answer == null ? '' : this.answer);
     if (correct) this.mark++;
 
     let history = <VocabPracticeHistory>  {
       answer: this.answer,
       question: this.currentQuestion(),
-      correct: correct
+      correct: correct,
+      state: ''
     }
-    this.histories.push(history);
+    this.histories.unshift(history);
+    history.state = 'in';
   }
 
   private preNextQuestion() {
