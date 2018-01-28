@@ -5,12 +5,14 @@ import { DictationStatisticsComponent } from './dictation-statistics/dictation-s
 import {TranslateModule} from "@ngx-translate/core";
 import { VocabImageComponent } from './vocab-image/vocab-image';
 import { PracticeHistoryListComponent } from './practice-history-list/practice-history-list';
+import { ScoreComponent } from './score/score';
 
 @NgModule({
 	declarations: [MemberScoreRankingComponent,
     DictationStatisticsComponent,
     VocabImageComponent,
-    PracticeHistoryListComponent],
+    PracticeHistoryListComponent,
+    ScoreComponent],
 	imports: [
 	  IonicModule,
     TranslateModule,
@@ -18,6 +20,7 @@ import { PracticeHistoryListComponent } from './practice-history-list/practice-h
 	exports: [MemberScoreRankingComponent,
     DictationStatisticsComponent,
     VocabImageComponent,
-    PracticeHistoryListComponent]
+    PracticeHistoryListComponent,
+    ScoreComponent]
 })
 export class ComponentsModule {}

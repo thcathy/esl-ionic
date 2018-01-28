@@ -8,21 +8,16 @@ import {
   transition
 } from '@angular/animations';
 
-/**
- * Generated class for the PracticeHistoryListComponent component.
- *
- * See https://angular.io/api/core/Component for more info on Angular
- * Components.
- */
 @Component({
   selector: 'practice-history-list',
   templateUrl: 'practice-history-list.html',
   animations: [
     trigger('flyIn', [
       state('in', style({backgroundColor: '#ffffff'})),
-      transition('* => in',
-        animate(3000, style({backgroundColor: '#333333'}))
-      )
+      transition('* => in', [
+        animate('750ms ease-out', style({backgroundColor: '#ffff33'})),
+        animate('750ms ease-in', style({backgroundColor: '#ffffff'}))
+      ])
     ])
   ]
 })

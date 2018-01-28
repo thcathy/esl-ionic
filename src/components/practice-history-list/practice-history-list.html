@@ -1,7 +1,7 @@
 <ion-card class="card" *ngIf="histories" style="margin-top: 12px;">
   <ion-card-header>
     <i class="fas fa-history"></i> History
-    <span float-right>Mark: {{ mark }} / {{ histories.length }}</span>
+    <score float-right [mark]="mark" [total]="histories.length"></score>
   </ion-card-header>
   <ion-card-content>
     <ion-list>
