@@ -88,7 +88,8 @@ export function HttpLoaderFactory(http: HttpClient) {
         { component: AccountPage, name: 'AccountPage', segment: 'account' },
         { component: SignupPage, name: 'SignupPage', segment: 'signup' },
         { component: HomePage, name: 'HomePage', segment: 'home'},
-        { component: DictationViewPage, name: 'DictationViewPage', segment: 'dictation/:dictationId'}
+        { component: DictationViewPage, name: 'DictationViewPage', segment: 'dictation-view/:dictationId'},
+        { component: DictationPracticePage, name: 'DictationPracticePage', segment: 'dictation-practice/:dictationId'}
       ]
     }),
     IonicStorageModule.forRoot(),

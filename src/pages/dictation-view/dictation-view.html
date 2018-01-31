@@ -12,7 +12,7 @@
 
 <ion-content padding>
 
-  <ion-card class="card">
+  <ion-card class="card" *ngIf="dictation">
     <ion-card-header>
       <i class="fas fa-edit"></i> Dictation - {{ dictation.title }}
     </ion-card-header>

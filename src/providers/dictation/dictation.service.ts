@@ -8,6 +8,7 @@ import {ENV} from "@app/env";
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import {DictationStatistics} from "../../entity/dictation-statistics";
+import {Dictation} from "../../entity/dictation";
 
 
 
@@ -19,9 +20,15 @@ export class DictationService extends Service {
   }
 
   private randomStatUrl = ENV.apiHost + '/dictation/random-stat';
+  private getByIdUrl = ENV.apiHost + '/dictation/get/';
 
   randomDictationStatistics(): Observable<DictationStatistics> {
     return this.http.get<DictationStatistics>(this.randomStatUrl)
+              .catch(this.handleError);
+  }
+
+  getById(id: number): Observable<Dictation> {
+    return this.http.get<Dictation>(this.getByIdUrl + id)
               .catch(this.handleError);
   }
 

@@ -4,15 +4,11 @@ import {Dictation} from "../../entity/dictation";
 import {VocabPracticeService} from "../../providers/practice/vocab-practice.service";
 import {VocabPractice} from "../../entity/voacb-practice";
 import {VocabPracticeHistory} from "../../interfaces/vocab-practice-history";
+import {DictationService} from "../../providers/dictation/dictation.service";
 
-/**
- * Generated class for the DictaionPracticePage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
-
-@IonicPage()
+@IonicPage({
+  segment: 'dictation-practice/:dictationId', // will be used in browser as URL
+})
 @Component({
   selector: 'page-dictation-practice',
   templateUrl: 'dictation-practice.html',
@@ -20,6 +16,7 @@ import {VocabPracticeHistory} from "../../interfaces/vocab-practice-history";
 export class DictationPracticePage {
   @ViewChild('speakRef') speakRef: ElementRef;
   dictation: Dictation;
+  dictationId: number;
   vocabPractices: VocabPractice[] = [];
   questionIndex: number;
   phonics: string;
@@ -30,9 +27,11 @@ export class DictationPracticePage {
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
-    public vocabPracticeService: VocabPracticeService
+    public vocabPracticeService: VocabPracticeService,
+    public dictationService: DictationService
   ) {
     this.dictation = navParams.get('dictation');
+    this.dictationId = navParams.data.dictationId;
     this.init();
 
     this.dictation.vocabs.forEach((vocab) => {
@@ -40,18 +39,31 @@ export class DictationPracticePage {
         .subscribe((p) => {
           this.vocabPractices.push(p);
         })
-    })
+    });
+  }
+
+  ionViewDidLoad() {
+    if (this.vocabPractices.length == 1)
+      this.speak();
   }
 
   private init() {
+    if (this.dictation == null && this.dictationId > 0)
+      this.dictationService.getById(this.dictationId)
+        .toPromise().then(d => this.dictation = d);
+
     this.questionIndex = 0;
     this.mark = 0;
     this.phonics = "Phonetics";
   }
 
   speak() {
-    this.speakRef.nativeElement.src = this.vocabPractices[this.questionIndex].activePronounceLink;
-    this.speakRef.nativeElement.play();
+    if (this.vocabPractices[this.questionIndex].activePronounceLink) {
+      this.speakRef.nativeElement.src = this.vocabPractices[this.questionIndex].activePronounceLink;
+      this.speakRef.nativeElement.play();
+    } else {
+      responsiveVoice.speak(this.vocabPractices[this.questionIndex].word);
+    }
   }
 
   showPhonics() {
@@ -73,6 +85,7 @@ export class DictationPracticePage {
   submitAnswer() {
     this.checkAnswer();
     this.preNextQuestion();
+    this.speak();
   }
 
   private checkAnswer() {
