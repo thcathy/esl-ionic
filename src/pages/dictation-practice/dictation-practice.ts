@@ -1,10 +1,11 @@
-import {Component, ElementRef, ViewChild} from '@angular/core';
+import {Component, ElementRef, Input, ViewChild} from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import {Dictation} from "../../entity/dictation";
 import {VocabPracticeService} from "../../providers/practice/vocab-practice.service";
 import {VocabPractice} from "../../entity/voacb-practice";
 import {VocabPracticeHistory} from "../../interfaces/vocab-practice-history";
 import {DictationService} from "../../providers/dictation/dictation.service";
+import {Observable} from "rxjs/Observable";
 
 @IonicPage({
   segment: 'dictation-practice/:dictationId', // will be used in browser as URL
@@ -14,7 +15,6 @@ import {DictationService} from "../../providers/dictation/dictation.service";
   templateUrl: 'dictation-practice.html',
 })
 export class DictationPracticePage {
-  @ViewChild('speakRef') speakRef: ElementRef;
   dictation: Dictation;
   dictationId: number;
   vocabPractices: VocabPractice[] = [];
@@ -38,13 +38,12 @@ export class DictationPracticePage {
       vocabPracticeService.getQuestion(vocab.word, this.dictation.showImage)
         .subscribe((p) => {
           this.vocabPractices.push(p);
+
+          if (this.vocabPractices.length == 1) {
+            this.speak();
+          }
         })
     });
-  }
-
-  ionViewDidLoad() {
-    if (this.vocabPractices.length == 1)
-      this.speak();
   }
 
   private init() {
@@ -59,8 +58,8 @@ export class DictationPracticePage {
 
   speak() {
     if (this.vocabPractices[this.questionIndex].activePronounceLink) {
-      this.speakRef.nativeElement.src = this.vocabPractices[this.questionIndex].activePronounceLink;
-      this.speakRef.nativeElement.play();
+      var audio = new Audio(this.vocabPractices[this.questionIndex].activePronounceLink);
+      audio.play();
     } else {
       responsiveVoice.speak(this.vocabPractices[this.questionIndex].word);
     }
