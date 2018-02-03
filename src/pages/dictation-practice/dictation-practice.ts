@@ -1,11 +1,13 @@
-import {Component, ElementRef, Input, ViewChild} from '@angular/core';
+import {Component} from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import {Dictation} from "../../entity/dictation";
 import {VocabPracticeService} from "../../providers/practice/vocab-practice.service";
 import {VocabPractice} from "../../entity/voacb-practice";
 import {VocabPracticeHistory} from "../../interfaces/vocab-practice-history";
 import {DictationService} from "../../providers/dictation/dictation.service";
-import {Observable} from "rxjs/Observable";
+import {PracticeCompletePage} from "../practice-complete/practice-complete";
+
+declare var responsiveVoice: any;
 
 @IonicPage({
   segment: 'dictation-practice/:dictationId', // will be used in browser as URL
@@ -83,8 +85,21 @@ export class DictationPracticePage {
 
   submitAnswer() {
     this.checkAnswer();
-    this.preNextQuestion();
-    this.speak();
+    this.questionIndex++;
+    if (this.end()) {
+      this.navCtrl.setRoot(PracticeCompletePage, {
+        'dictation': this.dictation,
+        'mark': this.mark,
+        'histories': this.histories
+      });
+    } else {
+      this.preNextQuestion();
+      this.speak();
+    }
+  }
+
+  end(): boolean {
+    return this.questionIndex >= this.vocabPractices.length;
   }
 
   private checkAnswer() {
@@ -103,7 +118,6 @@ export class DictationPracticePage {
 
   private preNextQuestion() {
     this.phonics = "Phonetics";
-    this.questionIndex++;
     this.answer = '';
   }
 

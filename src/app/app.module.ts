@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, ErrorHandler } from '@angular/core';
-import {HttpClient, HttpClientModule} from "@angular/common/http";
+import {HTTP_INTERCEPTORS, HttpClient, HttpClientModule} from "@angular/common/http";
 import {HttpModule} from "@angular/http";
 
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
@@ -40,6 +40,10 @@ import {DictationViewPage} from "../pages/dictation-view/dictation-view";
 import {VocabPracticeService} from "../providers/practice/vocab-practice.service";
 import {DictationPracticePage} from "../pages/dictation-practice/dictation-practice";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {IdTokenInterceptor} from "./interceptor/IdTokenInterceptor";
+import {HttpErrorInterceptor} from "./interceptor/HttpErrorInterceptor";
+import {PracticeCompletePage} from "../pages/practice-complete/practice-complete";
+import {NavigationService} from "../providers/navigation.service";
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -65,7 +69,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     SupportPage,
     HomePage,
     DictationViewPage,
-    DictationPracticePage
+    DictationPracticePage,
+    PracticeCompletePage,
   ],
   imports: [
     BrowserModule,
@@ -122,6 +127,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     HomePage,
     DictationViewPage,
     DictationPracticePage,
+    PracticeCompletePage,
   ],
   providers: [
     { provide: ErrorHandler, useClass: IonicErrorHandler },
@@ -130,9 +136,20 @@ export function HttpLoaderFactory(http: HttpClient) {
     InAppBrowser,
     SplashScreen,
     AppService,
+    NavigationService,
     RankingService,
     DictationService,
     VocabPracticeService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: IdTokenInterceptor,
+      multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HttpErrorInterceptor,
+      multi: true
+    },
   ]
 })
 export class AppModule { }

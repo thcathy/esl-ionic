@@ -1,0 +1,55 @@
+<ion-card class="card" *ngIf="dictation" style="margin-top: 12px;">
+  <ion-card-header>
+    <i class="fas fa-edit"></i> Dictation - {{ dictation.title }}
+  </ion-card-header>
+  <ion-card-content style="font-size: 1.6rem">
+    <ion-grid>
+      <ion-row>
+        <ion-col col-12 col-sm-12 col-md-6>
+          <table width="95%">
+            <tr>
+              <td width="125" class="table-heading">title</td>
+              <td><strong>{{dictation.title}}</strong></td>
+            </tr>
+            <tr>
+              <td class="table-heading">Description</td>
+              <td>{{ dictation.description }}</td>
+            </tr>
+            <tr>
+              <td class="table-heading">Suitable Age</td>
+              <td>{{ suitableAge(dictation) | translate }}</td>
+            </tr>
+            <tr>
+              <td class="table-heading">Show Image</td>
+              <td>
+                <i class="fas fa-check" *ngIf="dictation.showImage"></i>
+                <i class="fas fa-times" *ngIf="!dictation.showImage"></i>
+              </td>
+            </tr>
+            <tr>
+              <td class="table-heading">Recommended</td>
+              <td><i class="far fa-thumbs-up"></i> {{ dictation.totalRecommended }}</td>
+            </tr>
+            <tr>
+              <td class="table-heading">Last Updated</td>
+              <td>{{ dictation.lastModifyDate | date: 'dd/MM/yyyy' }}</td>
+            </tr>
+            <tr>
+              <td class="table-heading">Attempted</td>
+              <td>{{dictation.totalAttempt}}</td>
+            </tr>
+          </table>
+          <!--<span id="spinner" class="w3-hide"><i class="fa fa-spinner w3-spin" style="font-size:36px"></i></span>-->
+        </ion-col>
+        <ion-col col-12 col-sm-12 col-md-6>
+          <div style="padding-bottom: 4px;" class="table-heading">Vocabulary ({{dictation.vocabs.length}}):</div>
+          <span *ngFor="let vocab of dictation.vocabs"><ion-badge style="background-color: #4CAF50; margin-right: 4px;">{{ vocab.word }}</ion-badge></span>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+    <div padding>
+      <button *ngIf="start" ion-button (click)="navService.startDictation(dictation)"><i class="fas fa-play"></i>&nbsp;Start Dictation</button>
+      <button *ngIf="retry" ion-button (click)="navService.startDictation(dictation)"><i class="fas fa-redo"></i>&nbsp;Retry Dictation</button>
+    </div>
+  </ion-card-content>
+</ion-card>

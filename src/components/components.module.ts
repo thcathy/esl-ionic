@@ -6,13 +6,17 @@ import {TranslateModule} from "@ngx-translate/core";
 import { VocabImageComponent } from './vocab-image/vocab-image';
 import { PracticeHistoryListComponent } from './practice-history-list/practice-history-list';
 import { ScoreComponent } from './score/score';
+import { AppHeaderComponent } from './app-header/app-header';
+import { DictationCardComponent } from './dictation-card/dictation-card';
 
 @NgModule({
 	declarations: [MemberScoreRankingComponent,
     DictationStatisticsComponent,
     VocabImageComponent,
     PracticeHistoryListComponent,
-    ScoreComponent],
+    ScoreComponent,
+    AppHeaderComponent,
+    DictationCardComponent],
 	imports: [
 	  IonicModule,
     TranslateModule,
@@ -21,6 +25,8 @@ import { ScoreComponent } from './score/score';
     DictationStatisticsComponent,
     VocabImageComponent,
     PracticeHistoryListComponent,
-    ScoreComponent]
+    ScoreComponent,
+    AppHeaderComponent,
+    DictationCardComponent]
 })
 export class ComponentsModule {}
