@@ -1,9 +1,9 @@
-import { Component } from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import {NavigationService} from "../../providers/navigation.service";
 import {VocabPracticeHistory} from "../../interfaces/vocab-practice-history";
 import {Dictation} from "../../entity/dictation";
-
+import {DictationService} from "../../providers/dictation/dictation.service";
 
 @IonicPage()
 @Component({
@@ -11,14 +11,18 @@ import {Dictation} from "../../entity/dictation";
   templateUrl: 'practice-complete.html',
 })
 export class PracticeCompletePage {
+  @ViewChild('dictationCard') dictationCard;
+
   dictation: Dictation;
   mark: number;
   histories: VocabPracticeHistory[] = [];
+  recommended: boolean;
 
   constructor(
         public navCtrl: NavController,
         public navParams: NavParams,
-        public navService: NavigationService) {
+        public navService: NavigationService,
+        public dictationService: DictationService) {
     this.getNavParams();
   }
 
@@ -28,8 +32,12 @@ export class PracticeCompletePage {
     this.histories = this.navParams.get('histories');
   }
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad PracticeCompletePage');
+  recommend() {
+    this.dictationService.recommend(this.dictation.id).subscribe(d => {
+      this.dictation = d;
+      this.recommended = true;
+      this.dictationCard.highlightRecommend();
+    })
   }
 
 }

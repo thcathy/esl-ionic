@@ -26,7 +26,8 @@
                 <i class="fas fa-times" *ngIf="!dictation.showImage"></i>
               </td>
             </tr>
-            <tr>
+            <tr [@recommend]="recommendState"
+                (@recommend.done)="recommendAnimationDone($event)">
               <td class="table-heading">Recommended</td>
               <td><i class="far fa-thumbs-up"></i> {{ dictation.totalRecommended }}</td>
             </tr>
@@ -47,7 +48,7 @@
         </ion-col>
       </ion-row>
     </ion-grid>
-    <div padding>
+    <div padding *ngIf="start || retry">
       <button *ngIf="start" ion-button (click)="navService.startDictation(dictation)"><i class="fas fa-play"></i>&nbsp;Start Dictation</button>
       <button *ngIf="retry" ion-button (click)="navService.startDictation(dictation)"><i class="fas fa-redo"></i>&nbsp;Retry Dictation</button>
     </div>

@@ -21,6 +21,7 @@ export class DictationService extends Service {
 
   private randomStatUrl = ENV.apiHost + '/dictation/random-stat';
   private getByIdUrl = ENV.apiHost + '/dictation/get/';
+  private recommendUrl = ENV.apiHost + '/dictation/recommend/';
 
   randomDictationStatistics(): Observable<DictationStatistics> {
     return this.http.get<DictationStatistics>(this.randomStatUrl)
@@ -30,6 +31,11 @@ export class DictationService extends Service {
   getById(id: number): Observable<Dictation> {
     return this.http.get<Dictation>(this.getByIdUrl + id)
               .catch(this.handleError);
+  }
+
+  recommend(id: number): Observable<Dictation> {
+    return this.http.get<Dictation>(this.recommendUrl + id)
+      .catch(this.handleError);
   }
 
 }

@@ -3,22 +3,22 @@
 </ion-header>
 
 <ion-content padding>
-  <ion-card>
-    <ion-card-content>
-      <p>
-        You got {{ mark }} marks in {{ histories.length }} questions
-      </p>
-    </ion-card-content>
+  <ion-card class="card">
+    <ion-card-header style="font-size: 1.8rem;">
+      You got {{ mark }} marks in {{ histories.length }} questions
+    </ion-card-header>
     <ion-row no-padding>
       <ion-col>
         <button ion-button (click)="navService.startDictation(dictation)" style="margin: 5px;"><i class="fas fa-redo"></i>&nbsp;Retry Dictation</button>
       </ion-col>
       <ion-col text-right>
-        <button ion-button item-end color="secondary" (click)="openDictation(dictation)" style="margin: 5px;"><i class="far fa-thumbs-up"></i>&nbsp;Recommend</button>
+        <button ion-button item-end color="secondary" (click)="recommend()" style="margin: 5px;" [disabled]="recommended">
+          <i class="far fa-thumbs-up"></i>&nbsp;{{ recommended ? 'Recommended' : 'Recommend' }}
+        </button>
       </ion-col>
     </ion-row>
   </ion-card>
 
-  <dictation-card [dictation]="dictation"></dictation-card>
+  <dictation-card #dictationCard [dictation]="dictation"></dictation-card>
   <practice-history-list [histories]="histories" [mark]="mark" ></practice-history-list>
 </ion-content>
