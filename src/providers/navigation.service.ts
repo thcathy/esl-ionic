@@ -3,10 +3,7 @@ import {Injectable} from '@angular/core';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import {App} from "ionic-angular";
-import {DictationPracticePage} from "../pages/dictation-practice/dictation-practice";
 import {Dictation} from "../entity/dictation";
-
-
 
 @Injectable()
 export class NavigationService {

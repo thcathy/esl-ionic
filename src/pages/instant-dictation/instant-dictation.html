@@ -7,12 +7,17 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>InstantDictationPage</ion-title>
+    <ion-title>Create Dictation</ion-title>
   </ion-navbar>
 
 </ion-header>
 
 
 <ion-content padding>
-
+  <p>Input the vocabularies, one box per vocabulary<p>
+  <p>example: "apple", "bus stop", "ice-cream"</p>
+  <ion-item *ngFor="let vocab of vocabs; let i = index;">
+    <ion-label floating>{{i}}</ion-label>
+    <ion-input [(ngModel)]="vocab" type="text" maxlength="30"></ion-input>
+  </ion-item>
 </ion-content>

@@ -44,6 +44,7 @@ import {IdTokenInterceptor} from "./interceptor/IdTokenInterceptor";
 import {HttpErrorInterceptor} from "./interceptor/HttpErrorInterceptor";
 import {PracticeCompletePage} from "../pages/practice-complete/practice-complete";
 import {NavigationService} from "../providers/navigation.service";
+import {InstantDictationPage} from "../pages/instant-dictation/instant-dictation";
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -71,6 +72,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     DictationViewPage,
     DictationPracticePage,
     PracticeCompletePage,
+    InstantDictationPage,
   ],
   imports: [
     BrowserModule,
@@ -94,7 +96,8 @@ export function HttpLoaderFactory(http: HttpClient) {
         { component: SignupPage, name: 'SignupPage', segment: 'signup' },
         { component: HomePage, name: 'HomePage', segment: 'home'},
         { component: DictationViewPage, name: 'DictationViewPage', segment: 'dictation-view/:dictationId'},
-        { component: DictationPracticePage, name: 'DictationPracticePage', segment: 'dictation-practice/:dictationId'}
+        { component: DictationPracticePage, name: 'DictationPracticePage', segment: 'dictation-practice/:dictationId'},
+        { component: InstantDictationPage, name: 'InstantDictationPage', segment: 'instant-dictation'}
       ]
     }),
     IonicStorageModule.forRoot(),
@@ -128,6 +131,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     DictationViewPage,
     DictationPracticePage,
     PracticeCompletePage,
+    InstantDictationPage,
   ],
   providers: [
     { provide: ErrorHandler, useClass: IonicErrorHandler },
