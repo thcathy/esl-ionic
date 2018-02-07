@@ -17,13 +17,20 @@ export class PracticeCompletePage {
   mark: number;
   histories: VocabPracticeHistory[] = [];
   recommended: boolean;
+  finished: boolean = false;
 
   constructor(
         public navCtrl: NavController,
         public navParams: NavParams,
         public navService: NavigationService,
         public dictationService: DictationService) {
-    this.getNavParams();
+    this.getNavParams()
+    this.dictationService.createHistory(this.dictation.id, this.mark, this.histories)
+      .subscribe(
+        d => this.dictation = d,
+        e => alert(e),
+        () => this.finished = true
+        );
   }
 
   getNavParams() {

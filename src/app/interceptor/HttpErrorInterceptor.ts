@@ -5,7 +5,8 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/observable/empty';
-import 'rxjs/add/operator/retry'; // don't forget the imports
+import 'rxjs/add/operator/retry';
+import {ErrorObservable} from "rxjs/observable/ErrorObservable"; // don't forget the imports
 
 @Injectable()
 export class HttpErrorInterceptor implements HttpInterceptor {
@@ -22,11 +23,8 @@ export class HttpErrorInterceptor implements HttpInterceptor {
           console.error(`Backend returned code ${err.status}, body was: ${err.error}`);
         }
 
-        // ...optionally return a default fallback value so app can continue (pick one)
-        // which could be a default value (which has to be a HttpResponse here)
-        // return Observable.of(new HttpResponse({body: [{name: "Default value..."}]}));
-        // or simply an empty observable
-        return Observable.empty<HttpEvent<any>>();
+        return new ErrorObservable(
+          `Server Error! (${err.status})`);
       });
   }
 }
