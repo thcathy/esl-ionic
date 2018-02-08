@@ -1,11 +1,11 @@
 
 export class Vocab {
   constructor(
-    public id: number,
-    public word: string,
-    public totalCorrect: number,
-    public totalWrong: number,
-    public createdDate: Date
+    public id?: number,
+    public word?: string,
+    public totalCorrect?: number,
+    public totalWrong?: number,
+    public createdDate?: Date
   ) { }
 
   public toString() {

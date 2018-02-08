@@ -23,8 +23,17 @@ export class HttpErrorInterceptor implements HttpInterceptor {
           console.error(`Backend returned code ${err.status}, body was: ${err.error}`);
         }
 
-        return new ErrorObservable(
-          `Server Error! (${err.status})`);
+        if (this.isUnknownError(err)) {
+          //alert(`Cannot connect to Server, please check your network!`);
+          console.error(`Cannot connect to Server, please check your network!`);
+          return Observable.empty<HttpEvent<any>>();
+        } else {
+          return new ErrorObservable(`Server Error! (${err.status})`);
+        }
       });
+  }
+
+  isUnknownError(err: HttpErrorResponse) {
+    return err.status == 0 && err.statusText.toLowerCase().lastIndexOf('unknown') >= 0;
   }
 }

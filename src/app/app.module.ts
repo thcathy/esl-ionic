@@ -45,6 +45,7 @@ import {HttpErrorInterceptor} from "./interceptor/HttpErrorInterceptor";
 import {PracticeCompletePage} from "../pages/practice-complete/practice-complete";
 import {NavigationService} from "../providers/navigation.service";
 import {InstantDictationPage} from "../pages/instant-dictation/instant-dictation";
+import {ReactiveFormsModule} from "@angular/forms";
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -109,6 +110,7 @@ export function HttpLoaderFactory(http: HttpClient) {
       }
     }),
     ComponentsModule,
+    ReactiveFormsModule,
   ],
   bootstrap: [IonicApp],
   entryComponents: [
