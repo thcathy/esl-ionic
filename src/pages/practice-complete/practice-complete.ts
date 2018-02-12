@@ -24,19 +24,32 @@ export class PracticeCompletePage {
         public navParams: NavParams,
         public navService: NavigationService,
         public dictationService: DictationService) {
-    this.getNavParams()
-    this.dictationService.createHistory(this.dictation.id, this.mark, this.histories)
-      .subscribe(
-        d => this.dictation = d,
-        e => alert(e),
-        () => this.finished = true
-        );
+    this.getNavParams();
+    this.createHistory();
   }
 
   getNavParams() {
     this.dictation = this.navParams.get('dictation');
     this.mark = this.navParams.get('mark');
     this.histories = this.navParams.get('histories');
+  }
+
+  createHistory() {
+    if (this.dictationService.isInstantDictation(this.dictation)) return;
+
+    this.dictationService.createHistory(this.dictation.id, this.mark, this.histories)
+      .subscribe(
+        d => this.dictation = d,
+        e => alert(e),
+        () => this.finished = true
+      );
+  }
+
+  retryDictation() {
+    if (this.dictationService.isInstantDictation(this.dictation))
+      this.navCtrl.setRoot('InstantDictationPage');
+    else
+      this.navService.startDictation(this.dictation);
   }
 
   recommend() {

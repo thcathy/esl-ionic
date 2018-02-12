@@ -43,4 +43,8 @@ export class DictationService {
     });
   }
 
+  isInstantDictation(dictation: Dictation): boolean {
+    return dictation.id < 0;
+  }
+
 }

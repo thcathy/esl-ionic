@@ -31,7 +31,7 @@ export class ScoreComponent {
   @Input()
   set mark(mark: number) {
     this._mark = mark;
-    this.state = 'highlight';
+    if (mark != 0) this.state = 'highlight';
   }
 
   get mark(): number { return this._mark; }

@@ -2,39 +2,26 @@ import {Member} from "./member";
 import {Vocab} from "./vocab";
 
 export class Dictation {
-  constructor(
-    public title: string,
-    public suitableMinAge: number,
-    public suitableMaxAge: number,
-    public rating: number,
-    public totalRated: number,
-    public description: string,
-    public tags: string,
-    public isPublicAccess: boolean,
-    public totalAttempt: number,
-    public password: string,
-    public notAllowIPA: boolean,
-    public notAllowRandomCharacters: boolean,
-    public showImage: boolean,
-    public lastPracticeDate: Date,
-    public lastModifyDate: Date,
-    public article: string,
-    public creator: Member,
-    public vocabs: Vocab[],
-    public createdDate: Date,
-    public totalRecommended: number,
-    public id: number
-  ) { }
-
-  public toString() {
-    return JSON.stringify(this);
-  }
-
-  public getType() {
-    if (this.article == null || this.article.length < 1) {
-      return "Vocab";
-    } else {
-      return "Article";
-    }
-  }
+  title?: string;
+  suitableMinAge?: number;
+  suitableMaxAge?: number;
+  rating?: number;
+  totalRated?: number;
+  description?: string;
+  tags?: string;
+  isPublicAccess?: boolean;
+  totalAttempt?: number;
+  password?: string;
+  notAllowIPA?: boolean;
+  notAllowRandomCharacters?: boolean;
+  showImage?: boolean;
+  lastPracticeDate?: Date;
+  lastModifyDate?: Date;
+  article?: string;
+  creator?: Member;
+  vocabs?: Vocab[];
+  createdDate?: Date;
+  totalRecommended?: number;
+  id?: number;
 }
+

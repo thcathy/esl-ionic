@@ -21,6 +21,25 @@ page-home {
     }
   }
 
+  .card-button {
+    ion-card-content {
+      background-color: #488aff;
+      font-size: 2rem;
+
+      i {
+        font-size: 7rem;
+      }
+
+      button {
+        background-color: white;
+      }
+
+      button:hover {
+        background-color: #c2ddff !important;
+      }
+    }
+  }
+
   .appImage {
     height: 50px; padding: 4px;
   }

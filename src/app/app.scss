@@ -141,6 +141,16 @@
   max-height: 36px;
 }
 
+.toolbar-title {
+  color: white;
+}
+
+.menu-content {
+  ion-list {
+    background-color: white;
+  }
+}
+
 ion-content {
   background-image: url('../assets/img/main_bg.jpg');
   background-position: left 300px;

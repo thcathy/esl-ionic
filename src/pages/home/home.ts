@@ -5,6 +5,7 @@ import {RankingService} from "../../providers/ranking/ranking.service";
 import {MemberScoreRanking} from "../../entity/member-score-ranking";
 import {DictationService} from "../../providers/dictation/dictation.service";
 import {DictationStatistics} from "../../entity/dictation-statistics";
+import {InAppBrowser} from "@ionic-native/in-app-browser";
 
 /**
  * Generated class for the HomePage page.
@@ -26,7 +27,8 @@ export class HomePage {
               public navParams: NavParams,
               public appService: AppService,
               public rankingService: RankingService,
-              public dictationService: DictationService
+              public dictationService: DictationService,
+              public iab: InAppBrowser
   ) {
     this.rankingService.randomTopScore().subscribe(rank => this.memberScoreRanking = rank);
     this.dictationService.randomDictationStatistics().subscribe(stat => this.dictationStat = stat);
@@ -34,6 +36,15 @@ export class HomePage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad HomePage');
+  }
+
+  goInstantDictation() {
+    this.navCtrl.setRoot('InstantDictationPage');
+  }
+
+  goFFSdotcom() {
+    const browser = this.iab.create('https://www.funfunspell.com/', '_system');
+    browser.show();
   }
 
 }

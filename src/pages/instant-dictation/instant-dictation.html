@@ -1,11 +1,11 @@
 <ion-header>
-
   <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
     <ion-title>Create Dictation</ion-title>
   </ion-navbar>
-
 </ion-header>
-
 
 <ion-content padding>
   <ion-card class="card">
@@ -13,14 +13,16 @@
       <h3>Input the vocabularies, one box per vocabulary</h3>
       <h4>example: "apple", "bus stop", "ice-cream"</h4>
 
-      <form [formGroup]="inputForm" novalidate>
+      <form [formGroup]="inputForm" novalidate (keydown.enter)="$event.preventDefault()">
         <ion-grid formArrayName="vocabs">
           <ion-row>
-            <ion-col col-12 col-sm-6 col-md-4 col-lg-3
+            <ion-col col-6 col-sm-6 col-md-4 col-lg-3
                      *ngFor="let vocab of vocabs.controls; let i = index;" [formGroupName]="i">
               <ion-item class="vocabInput">
-                <ion-input formControlName="word" maxlength="30" placeholder="{{i+1}}"
-                           color="{{ vocab.invalid && (vocab.dirty || vocab.touched) ? 'danger' : 'primary' }}"></ion-input>
+                <ion-input id="vocab{{i}}" formControlName="word" maxlength="30" placeholder="{{i+1}}"
+                           color="{{ vocab.invalid && (vocab.dirty || vocab.touched) ? 'danger' : 'primary' }}"
+                           (keyup.enter) ="keytab($event, i)">
+                </ion-input>
               </ion-item>
               <div class="error-text" *ngIf="vocab.invalid && (vocab.dirty || vocab.touched)">Invalid vocabulary</div>
             </ion-col>

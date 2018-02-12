@@ -1,7 +1,25 @@
 page-instant-dictation {
   .vocabInput {
+    padding-left: 0px;
+
     .text-input {
       margin: 0px;
     }
+  }
+
+  .error-text {
+    color: color($colors, danger);
+  }
+
+  h3 {
+    font-size: 2rem !important;
+    color: #009688 !important;
+    padding: 8px 8px 0px 8px;
+  }
+
+  h4 {
+    font-size: 1.8rem !important;
+    color: #aaaaaa !important;
+    padding: 0px 8px 0px 8px;
   }
 }

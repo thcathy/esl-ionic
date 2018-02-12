@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import {IonicPage, LoadingController, NavController, NavParams} from 'ionic-angular';
 import {Dictation} from "../../entity/dictation";
 import {VocabPracticeService} from "../../providers/practice/vocab-practice.service";
 import {VocabPractice} from "../../entity/voacb-practice";
@@ -29,9 +29,13 @@ export class DictationPracticePage {
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
+    public loadingCtrl: LoadingController,
     public vocabPracticeService: VocabPracticeService,
     public dictationService: DictationService
   ) {
+    let loader = this.loadingCtrl.create({ content: "Please wait..." });
+    loader.present();
+
     this.dictation = navParams.get('dictation');
     this.dictationId = navParams.data.dictationId;
     this.init();
@@ -42,6 +46,7 @@ export class DictationPracticePage {
           this.vocabPractices.push(p);
 
           if (this.vocabPractices.length == 1) {
+            loader.dismissAll();
             this.speak();
           }
         })
