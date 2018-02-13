@@ -2,8 +2,9 @@
   <app-header title="Dictation Practice"></app-header>
 </ion-header>
 
-<ion-content padding>
-  <ion-card class="card" *ngIf="currentQuestion()">
+<ion-content>
+  <div style="padding: 16px;">
+    <ion-card class="card" *ngIf="currentQuestion()">
     <ion-card-header>
       Question {{ questionIndex + 1 }}
       <score float-right [mark]="mark"></score>
@@ -35,5 +36,8 @@
       </ion-grid>
     </ion-card-content>
   </ion-card>
-  <practice-history-list [histories]="histories" [mark]="mark" ></practice-history-list>
+
+    <practice-history-list [histories]="histories" [mark]="mark"></practice-history-list>
+  </div>
+  <footer></footer>
 </ion-content>

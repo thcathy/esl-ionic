@@ -1,5 +1,4 @@
 <ion-header>
-
   <ion-navbar>
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
@@ -8,56 +7,58 @@
       <img src="assets/img/logo.png" class="navbar-logo" />
     </ion-title>
   </ion-navbar>
-
 </ion-header>
 
+<ion-content>
+  <div style="padding: 16px;">
+    <ion-card class="header">
+      <ion-card-header>
+        <i class="fas fa-leaf"></i> FunFunSpell
+      </ion-card-header>
+      <ion-card-content>
+        Online Dictation
+      </ion-card-content>
+      <ion-grid>
+        <ion-row>
+          <ion-col col-6 col-sm-6 col-md-4 col-lg-3>
+            <ion-card class="card-button">
+              <ion-card-content>
+                <div><i class="fas fa-rocket"></i></div>
+                <div>Input & Start</div>
+                <div><button ion-button outline (click)="goInstantDictation()">Quick</button></div>
 
-<ion-content padding>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+          <ion-col col-6 col-sm-6 col-md-4 col-lg-3>
+            <ion-card class="card-button">
+              <ion-card-content>
+                <div><i class="fas fa-headphones"></i></div>
+                <div>Create & Save</div>
+                <div><button ion-button outline (click)="goFFSdotcom()">Create</button></div>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card>
 
-  <ion-card class="header">
-    <ion-card-header>
-      <i class="fas fa-leaf"></i> FunFunSpell
-    </ion-card-header>
-    <ion-card-content>
-      Online Dictation
-    </ion-card-content>
-    <ion-grid>
-      <ion-row>
-        <ion-col col-6 col-sm-6 col-md-4 col-lg-3>
-          <ion-card class="card-button">
-            <ion-card-content>
-              <div><i class="fas fa-rocket"></i></div>
-              <div>Input & Start</div>
-              <div><button ion-button outline (click)="goInstantDictation()">Quick</button></div>
+    <member-score-ranking [ranking]="memberScoreRanking"></member-score-ranking>
 
-            </ion-card-content>
-          </ion-card>
-        </ion-col>
-        <ion-col col-6 col-sm-6 col-md-4 col-lg-3>
-          <ion-card class="card-button">
-            <ion-card-content>
-              <div><i class="fas fa-headphones"></i></div>
-              <div>Create & Save</div>
-              <div><button ion-button outline (click)="goFFSdotcom()">Create</button></div>
-            </ion-card-content>
-          </ion-card>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-  </ion-card>
+    <dictation-statistics [stat]="dictationStat"></dictation-statistics>
 
-  <member-score-ranking [ranking]="memberScoreRanking"></member-score-ranking>
-
-  <dictation-statistics [stat]="dictationStat"></dictation-statistics>
-
-  <div padding-top>
-    <a href="https://itunes.apple.com/app/apple-store/id1289059131?mt=8">
-      <img class="appImage" src="https://linkmaker.itunes.apple.com/assets/shared/badges/en-us/appstore-lrg.svg"/>
-    </a>
-    <a
-      href="https://play.google.com/store/apps/details?id=com.funfunspell&amp;pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1">
-      <img class="appImage" src="assets/img/en_badge_web_generic.png"/>
-    </a>
+    <div padding-top>
+      <a href="https://itunes.apple.com/app/apple-store/id1289059131?mt=8">
+        <img class="appImage" src="https://linkmaker.itunes.apple.com/assets/shared/badges/en-us/appstore-lrg.svg"/>
+      </a>
+      <a
+        href="https://play.google.com/store/apps/details?id=com.funfunspell&amp;pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1">
+        <img class="appImage" src="assets/img/en_badge_web_generic.png"/>
+      </a>
+    </div>
   </div>
 
+  <footer></footer>
 </ion-content>
+
+

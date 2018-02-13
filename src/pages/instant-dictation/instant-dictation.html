@@ -7,42 +7,46 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content padding>
-  <ion-card class="card">
-    <ion-card-content>
-      <h3>Input the vocabularies, one box per vocabulary</h3>
-      <h4>example: "apple", "bus stop", "ice-cream"</h4>
+<ion-content>
+  <div style="padding: 16px;">
+    <ion-card class="card">
+      <ion-card-content>
+        <h3>Input the vocabularies, one box per vocabulary</h3>
+        <h4>example: "apple", "bus stop", "ice-cream"</h4>
 
-      <form [formGroup]="inputForm" novalidate (keydown.enter)="$event.preventDefault()">
-        <ion-grid formArrayName="vocabs">
-          <ion-row>
-            <ion-col col-6 col-sm-6 col-md-4 col-lg-3
-                     *ngFor="let vocab of vocabs.controls; let i = index;" [formGroupName]="i">
-              <ion-item class="vocabInput">
-                <ion-input id="vocab{{i}}" formControlName="word" maxlength="30" placeholder="{{i+1}}"
-                           color="{{ vocab.invalid && (vocab.dirty || vocab.touched) ? 'danger' : 'primary' }}"
-                           (keyup.enter) ="keytab($event, i)">
-                </ion-input>
-              </ion-item>
-              <div class="error-text" *ngIf="vocab.invalid && (vocab.dirty || vocab.touched)">Invalid vocabulary</div>
+        <form [formGroup]="inputForm" novalidate (keydown.enter)="$event.preventDefault()">
+          <ion-grid formArrayName="vocabs">
+            <ion-row>
+              <ion-col col-6 col-sm-6 col-md-4 col-lg-3
+                       *ngFor="let vocab of vocabs.controls; let i = index;" [formGroupName]="i">
+                <ion-item class="vocabInput">
+                  <ion-input id="vocab{{i}}" formControlName="word" maxlength="30" placeholder="{{i+1}}"
+                             color="{{ vocab.invalid && (vocab.dirty || vocab.touched) ? 'danger' : 'primary' }}"
+                             (keyup.enter) ="keytab($event, i)">
+                  </ion-input>
+                </ion-item>
+                <div class="error-text" *ngIf="vocab.invalid && (vocab.dirty || vocab.touched)">Invalid vocabulary</div>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+          <ion-item>
+            <ion-label>Show image</ion-label>
+            <ion-checkbox formControlName="showImage"></ion-checkbox>
+          </ion-item>
+          <ion-row no-padding>
+            <ion-col>
+              <button ion-button outline (click)="clearVocabs()" style="margin: 5px;"><i class="fas fa-times"></i>&nbsp;Clear inputs</button>
+            </ion-col>
+            <ion-col text-right>
+              <button ion-button item-end color="secondary" (click)="start()" style="margin: 5px;" [disabled]="inputForm.invalid">
+                <i class="fas fa-pencil-alt"></i>&nbsp;Start
+              </button>
             </ion-col>
           </ion-row>
-        </ion-grid>
-        <ion-item>
-          <ion-label>Show image</ion-label>
-          <ion-checkbox formControlName="showImage"></ion-checkbox>
-        </ion-item>
-        <ion-row no-padding>
-          <ion-col>
-            <button ion-button outline (click)="clearVocabs()" style="margin: 5px;"><i class="fas fa-times"></i>&nbsp;Clear inputs</button>
-          </ion-col>
-          <ion-col text-right>
-            <button ion-button item-end color="secondary" (click)="start()" style="margin: 5px;" [disabled]="inputForm.invalid">
-              <i class="fas fa-pencil-alt"></i>&nbsp;Start
-            </button>
-          </ion-col>
-        </ion-row>
-      </form>
-    </ion-card-content>
-  </ion-card>
+        </form>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <footer></footer>
 </ion-content>

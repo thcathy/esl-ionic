@@ -8,6 +8,7 @@ import { PracticeHistoryListComponent } from './practice-history-list/practice-h
 import { ScoreComponent } from './score/score';
 import { AppHeaderComponent } from './app-header/app-header';
 import { DictationCardComponent } from './dictation-card/dictation-card';
+import { FooterComponent } from './footer/footer';
 
 @NgModule({
 	declarations: [MemberScoreRankingComponent,
@@ -16,7 +17,8 @@ import { DictationCardComponent } from './dictation-card/dictation-card';
     PracticeHistoryListComponent,
     ScoreComponent,
     AppHeaderComponent,
-    DictationCardComponent],
+    DictationCardComponent,
+    FooterComponent],
 	imports: [
 	  IonicModule,
     TranslateModule,
@@ -27,6 +29,7 @@ import { DictationCardComponent } from './dictation-card/dictation-card';
     PracticeHistoryListComponent,
     ScoreComponent,
     AppHeaderComponent,
-    DictationCardComponent]
+    DictationCardComponent,
+    FooterComponent]
 })
 export class ComponentsModule {}
