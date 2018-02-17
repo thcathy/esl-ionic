@@ -15,7 +15,7 @@
           <ion-col center text-center>Attempts: {{ dictation.totalAttempt }}</ion-col>
           <ion-col center text-right><i class="far fa-thumbs-up"></i> {{dictation.totalRecommended}}</ion-col>
         </ion-row>
-        <button ion-button outline item-end (click)="openDictation(dictation)">View</button>
+        <button ion-button outline item-end (click)="navService.openDictation(dictation)">View</button>
       </ion-item>
     </ion-list>
   </ion-card-content>

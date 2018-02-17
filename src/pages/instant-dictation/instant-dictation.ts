@@ -4,6 +4,7 @@ import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from "@angul
 import {Dictation} from "../../entity/dictation";
 import {Vocab} from "../../entity/vocab";
 import {NavigationService} from "../../providers/navigation.service";
+import {Storage} from "@ionic/storage";
 
 @IonicPage()
 @Component({
@@ -21,7 +22,8 @@ export class InstantDictationPage {
     public navCtrl: NavController,
     public navParams: NavParams,
     public formBuilder: FormBuilder,
-    public navService: NavigationService) {
+    public navService: NavigationService,
+    public storage: Storage) {
     this.createForm();
   }
 
@@ -47,15 +49,13 @@ export class InstantDictationPage {
   }
 
   getFromLocalStorage() {
-    let dictationString = localStorage.getItem(this.INSTANT_DICTATION_KEY);
-    if (dictationString != null) {
-      let dictation: Dictation = JSON.parse(dictationString);
+    this.storage.get(this.INSTANT_DICTATION_KEY).then((dictation: Dictation) => {
       this.inputForm.get('showImage').setValue(dictation.showImage);
 
       for (let i = 0; i < dictation.vocabs.length; i++) {
         this.vocabs.at(i).setValue(dictation.vocabs[i]);
       }
-    }
+    });
   }
 
   clearVocabs() {
@@ -66,7 +66,7 @@ export class InstantDictationPage {
 
   start() {
     let d = this.prepareDictation();
-    localStorage.setItem(this.INSTANT_DICTATION_KEY,JSON.stringify(d));
+    this.storage.set(this.INSTANT_DICTATION_KEY, d);
     this.navService.startDictation(this.prepareDictation());
   }
 

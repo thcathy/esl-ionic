@@ -18,10 +18,10 @@ export class DictationService {
   constructor (private http: HttpClient) {
   }
 
-  private randomStatUrl = ENV.apiHost + '/dictation/random-stat'
-  private getByIdUrl = ENV.apiHost + '/dictation/get/'
-  private recommendUrl = ENV.apiHost + '/dictation/recommend/'
-  private createHistoryUrl = ENV.apiHost + '/dictation/history/create'
+  private randomStatUrl = ENV.apiHost + '/dictation/random-stat';
+  private getByIdUrl = ENV.apiHost + '/dictation/get/';
+  private recommendUrl = ENV.apiHost + '/dictation/recommend/';
+  private createHistoryUrl = ENV.apiHost + '/dictation/history/create';
 
   randomDictationStatistics(): Observable<DictationStatistics> {
     return this.http.get<DictationStatistics>(this.randomStatUrl);

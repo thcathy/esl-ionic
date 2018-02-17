@@ -1,0 +1,67 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>
+      Create Dictation
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <div style="padding: 16px;">
+    <ion-card class="input-form">
+      <ion-card-content>
+        <form [formGroup]="inputForm" novalidate>
+          <ion-item>
+            <ion-label stacked>Title *</ion-label>
+            <ion-input type="text" formControlName="title" placeholder="Dictation {{now | date:'yyyy-MM-dd HH:mm'}}"></ion-input>
+          </ion-item>
+          <div *ngIf="title.invalid && (title.dirty || title.touched)" class="error-text">
+            <div *ngIf="title.errors.required">Title is required.</div>
+            <div *ngIf="title.errors.minlength">Title must be at least 5 characters long.</div>
+            <div *ngIf="title.errors.maxlength">Title cannot over 50 characters long.</div>
+          </div>
+          <ion-item>
+            <ion-label stacked>Description</ion-label>
+            <ion-input type="text" formControlName="description"></ion-input>
+          </ion-item>
+          <div *ngIf="description.invalid && (description.dirty || description.touched)" class="error-text">
+            <div *ngIf="description.errors.maxlength">Title cannot over 100 characters long.</div>
+          </div>
+          <ion-item>
+            <ion-label>Show image</ion-label>
+            <ion-toggle style="padding-right: 30px;" formControlName="showImage"></ion-toggle>
+          </ion-item>
+          <ion-item>
+            <ion-label style="margin: inherit;">For Student (Age)</ion-label>
+            <ion-select style="padding-right: 30px;" formControlName="suitableStudent" interface="popover">
+              <ion-option value="Any">Any</ion-option>
+              <ion-option value="Kindergarten">Kindergarten (3-5)</ion-option>
+              <ion-option value="JuniorPrimary">Junior Primary (6-8)</ion-option>
+              <ion-option value="SeniorPrimary">Senior Primary (9-11)</ion-option>
+              <ion-option value="JuniorSecondary">Junior Secondary (12-14)</ion-option>
+              <ion-option value="SeniorSecondary">Senior Secondary (15-17)</ion-option>
+            </ion-select>
+          </ion-item>
+          <ion-item>
+            <ion-label stacked>Vocabulary * (separate by space or comma)</ion-label>
+            <ion-textarea placeholder="apple bus-stop cat" formControlName="vocabulary" rows="5"></ion-textarea>
+          </ion-item>
+          <div *ngIf="vocabulary.invalid && (vocabulary.dirty || vocabulary.touched)" class="error-text">
+            <div *ngIf="vocabulary.errors.maxVocabulary">Cannot over 50 vocabulary in 1 dictation.</div>
+          </div>
+
+          <button ion-button float-right item-end color="secondary" (click)="createDictation()" style="margin: 16px;" [disabled]="inputForm.invalid">
+            <i class="fas fa-pencil-alt"></i>&nbsp;Start
+          </button>
+
+        </form>
+      </ion-card-content>
+    </ion-card>
+
+  </div>
+
+  <footer></footer>
+</ion-content>

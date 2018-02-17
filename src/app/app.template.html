@@ -5,7 +5,10 @@
 
     <ion-header>
       <ion-toolbar>
-        <ion-title>Menu</ion-title>
+        <ion-title>
+          <span *ngIf="!authService.isAuthenticated()">Menu</span>
+          <span *ngIf="authService.isAuthenticated()">Hi, {{authService.userProfile?.name}}</span>
+        </ion-title>
       </ion-toolbar>
     </ion-header>
 
@@ -19,6 +22,7 @@
           <ion-icon item-start [name]="p.icon" [color]="isActive(p)"></ion-icon>
           {{p.title}}
         </button>
+        <button ion-item (click)="nav.setRoot('EditDictationPage'); menu.close();">Create Dictation</button>
       </ion-list>
 
       <ion-list>
@@ -29,6 +33,12 @@
           <ion-icon item-start [name]="p.icon" [color]="isActive(p)"></ion-icon>
           {{p.title}}
         </button>
+      </ion-list>
+
+      <ion-list>
+        <ion-list-header>Auth0</ion-list-header>
+        <button ion-item *ngIf="!authService.isAuthenticated()" (click)="authService.login()"><ion-icon name="log-in"></ion-icon> Login</button>
+        <button ion-item *ngIf="authService.isAuthenticated()" (click)="authService.logout(); menu.close();"><ion-icon name="log-out"></ion-icon> Logout</button>
       </ion-list>
 
       <ion-list>
@@ -61,7 +71,7 @@
 
     <ion-header>
       <ion-toolbar>
-        <ion-title>Menu</ion-title>
+        <ion-title>Hi, {{authService.userProfile?.name}}</ion-title>
       </ion-toolbar>
     </ion-header>
 
@@ -75,6 +85,7 @@
           <ion-icon item-start [name]="p.icon" [color]="isActive(p)"></ion-icon>
           {{p.title}}
         </button>
+        <button ion-item (click)="nav.setRoot('EditDictationPage'); menu.close();">Create Dictation</button>
       </ion-list>
 
       <ion-list>
@@ -88,12 +99,19 @@
       </ion-list>
 
       <ion-list>
+        <ion-list-header>Auth0</ion-list-header>
+        <button ion-item *ngIf="authService.isAuthenticated()" (click)="authService.logout(); menu.close();"><ion-icon name="log-out"></ion-icon> Logout</button>
+      </ion-list>
+
+      <ion-list>
         <ion-list-header>
-          Tutorial
+          Language
         </ion-list-header>
-        <button ion-item menuClose (click)="openTutorial()">
-          <ion-icon item-start name="hammer"></ion-icon>
-          Show Tutorial
+        <button ion-item menuClose (click)="changeLanguage('en')">
+          Eng
+        </button>
+        <button ion-item menuClose (click)="changeLanguage('zh')">
+          繁
         </button>
       </ion-list>
 

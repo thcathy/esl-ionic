@@ -46,6 +46,9 @@ import {PracticeCompletePage} from "../pages/practice-complete/practice-complete
 import {NavigationService} from "../providers/navigation.service";
 import {InstantDictationPage} from "../pages/instant-dictation/instant-dictation";
 import {ReactiveFormsModule} from "@angular/forms";
+import {AuthService} from "../providers/auth.service";
+import {EditDictationPage} from "../pages/edit-dictation/edit-dictation";
+import {MemberDictationService} from "../providers/dictation/member-dictation.service";
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -74,6 +77,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     DictationPracticePage,
     PracticeCompletePage,
     InstantDictationPage,
+    EditDictationPage,
   ],
   imports: [
     BrowserModule,
@@ -98,7 +102,8 @@ export function HttpLoaderFactory(http: HttpClient) {
         { component: HomePage, name: 'HomePage', segment: 'home'},
         { component: DictationViewPage, name: 'DictationViewPage', segment: 'dictation-view/:dictationId'},
         { component: DictationPracticePage, name: 'DictationPracticePage', segment: 'dictation-practice/:dictationId'},
-        { component: InstantDictationPage, name: 'InstantDictationPage', segment: 'instant-dictation'}
+        { component: InstantDictationPage, name: 'InstantDictationPage', segment: 'instant-dictation'},
+        { component: EditDictationPage, name: 'EditDictationPage', segment: 'edit-dictation'}
       ]
     }),
     IonicStorageModule.forRoot(),
@@ -134,6 +139,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     DictationPracticePage,
     PracticeCompletePage,
     InstantDictationPage,
+    EditDictationPage,
   ],
   providers: [
     { provide: ErrorHandler, useClass: IonicErrorHandler },
@@ -146,6 +152,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     RankingService,
     DictationService,
     VocabPracticeService,
+    MemberDictationService,
+    AuthService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: IdTokenInterceptor,

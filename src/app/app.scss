@@ -153,7 +153,7 @@
 
 ion-content {
   background-image: url('../assets/img/main_bg.jpg');
-  background-position: left 300px;
+  background-position: left 100px;
   background-color: #46c6fc !important;
   background-repeat: no-repeat;
 }
@@ -208,5 +208,26 @@ ion-content {
   .button-inner {
     height: 2rem;
     font-size: 1.6rem;
+  }
+}
+
+.error-text {
+  color: color($colors, danger);
+}
+
+.input-form {
+  .label {
+    font-size: 1.4rem !important;
+    color: #555555 !important;
+  }
+
+  ion-label {
+    margin: inherit;
+  }
+
+  ion-item {
+    margin-left: 16px;
+    padding-left: 0px;
+    padding-top: 8px;
   }
 }

@@ -22,6 +22,9 @@ import { ConferenceData } from '../providers/conference-data';
 import { UserData } from '../providers/user-data';
 import {HomePage} from "../pages/home/home";
 import {InstantDictationPage} from "../pages/instant-dictation/instant-dictation";
+import {AuthService} from "../providers/auth.service";
+
+import Auth0Cordova from '@auth0/cordova';
 
 export interface PageInterface {
   title: string;
@@ -73,7 +76,8 @@ export class ConferenceApp {
     public confData: ConferenceData,
     public storage: Storage,
     public splashScreen: SplashScreen,
-    public translate: TranslateService
+    public translate: TranslateService,
+    public authService: AuthService,
   ) {
 
     // Check if the user has already seen the tutorial
@@ -86,6 +90,8 @@ export class ConferenceApp {
         }
         this.platformReady()
       });
+
+    this.authService.handleAuthentication();
 
     // load the conference data
     confData.load();
@@ -159,6 +165,10 @@ export class ConferenceApp {
     // Call any initial plugins when ready
     this.platform.ready().then(() => {
       this.splashScreen.hide();
+
+      (<any>window).handleOpenURL = (url) => {
+        Auth0Cordova.onRedirectUri(url);
+      };
     });
   }
 

@@ -5,23 +5,36 @@ import {
   HttpEvent,
   HttpInterceptor
 } from '@angular/common/http';
-import { Observable } from 'rxjs/Observable';
+import {Observable} from 'rxjs/Rx'
+import {Storage} from "@ionic/storage";
+import 'rxjs/add/observable/fromPromise';
 
 @Injectable()
 export class IdTokenInterceptor implements HttpInterceptor {
 
-  constructor() {}
+  constructor(public storage: Storage
+  ) {}
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    //const idToken = localStorage.getItem('id_token');
-//
-    //if (idToken) {
-    //  request = request.clone({
-    //    setHeaders: {
-    //      Authorization: `Bearer ${idToken}`
+    //return Observable.fromPromise(this.storage.get('id_token'))
+    //  .mergeMap((token: String) => {
+    //    if (token != null) {
+    //      request = request.clone({
+    //        setHeaders: {Authorization: `Bearer ${token}`}
+    //      });
     //    }
+    //    return next.handle(request);
     //  });
-    //}
+
+    let idToken = localStorage.getItem('id_token');
+
+    if (idToken) {
+      request = request.clone({
+        setHeaders: {
+          Authorization: `Bearer ${idToken}`
+        }
+      });
+    }
 
     return next.handle(request);
   }
