@@ -5,6 +5,7 @@ import Auth0 from 'auth0-js';
 import {AppService} from "./app.service";
 import {HomePage} from "../pages/home/home";
 import {Storage} from "@ionic/storage";
+import {MemberHomePage} from "../pages/member-home/member-home";
 
 const auth0CordovaConfig = {
   // needed for auth0
@@ -76,7 +77,7 @@ export class AuthService {
         this.events.publish('user:login');
         window.location.hash = '';
         this.setSession(authResult);
-        this.getNavCtrl().setRoot(HomePage);
+        this.getNavCtrl().setRoot(MemberHomePage);
         this.getProfile((err) => {
           console.warn(`cannot get profile: ${err}`);
         });
@@ -107,7 +108,7 @@ export class AuthService {
         this.zone.run(() => {
           this.userProfile = profile;
         });
-        this.getNavCtrl().setRoot(HomePage);
+        this.getNavCtrl().setRoot(MemberHomePage);
       });
     });
   }

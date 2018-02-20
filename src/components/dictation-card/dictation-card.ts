@@ -32,13 +32,6 @@ export class DictationCardComponent {
               public navService: NavigationService)
   {}
 
-  suitableAge(dictation: Dictation) {
-    if (dictation.suitableMaxAge < 1 || dictation.suitableMinAge < 1)
-      return "SuitableAge.Any";
-    else
-      return dictation.suitableMinAge + " - " + dictation.suitableMaxAge;
-  }
-
   highlightRecommend() {
     this.recommendState = 'highlight';
   }

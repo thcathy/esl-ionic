@@ -9,6 +9,7 @@ import { ScoreComponent } from './score/score';
 import { AppHeaderComponent } from './app-header/app-header';
 import { DictationCardComponent } from './dictation-card/dictation-card';
 import { FooterComponent } from './footer/footer';
+import { DictationListComponent } from './dictation-list/dictation-list';
 
 @NgModule({
 	declarations: [MemberScoreRankingComponent,
@@ -18,7 +19,8 @@ import { FooterComponent } from './footer/footer';
     ScoreComponent,
     AppHeaderComponent,
     DictationCardComponent,
-    FooterComponent],
+    FooterComponent,
+    DictationListComponent],
 	imports: [
 	  IonicModule,
     TranslateModule,
@@ -30,6 +32,7 @@ import { FooterComponent } from './footer/footer';
     ScoreComponent,
     AppHeaderComponent,
     DictationCardComponent,
-    FooterComponent]
+    FooterComponent,
+    DictationListComponent]
 })
 export class ComponentsModule {}

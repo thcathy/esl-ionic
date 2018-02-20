@@ -82,8 +82,7 @@ export class InstantDictationPage {
       vocabs: vocabInputs,
       totalRecommended: 0,
       title: new Date().toDateString(),
-      suitableMaxAge: -1,
-      suitableMinAge: -1,
+      suitableStudent: 'Any',
     };
 
   }

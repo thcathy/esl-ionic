@@ -22,6 +22,7 @@
           <ion-icon item-start [name]="p.icon" [color]="isActive(p)"></ion-icon>
           {{p.title}}
         </button>
+        <button ion-item (click)="nav.setRoot('MemberHomePage'); menu.close();">My Home</button>
         <button ion-item (click)="nav.setRoot('EditDictationPage'); menu.close();">Create Dictation</button>
       </ion-list>
 

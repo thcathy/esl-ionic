@@ -49,6 +49,7 @@ import {ReactiveFormsModule} from "@angular/forms";
 import {AuthService} from "../providers/auth.service";
 import {EditDictationPage} from "../pages/edit-dictation/edit-dictation";
 import {MemberDictationService} from "../providers/dictation/member-dictation.service";
+import {MemberHomePage} from "../pages/member-home/member-home";
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -78,6 +79,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     PracticeCompletePage,
     InstantDictationPage,
     EditDictationPage,
+    MemberHomePage,
   ],
   imports: [
     BrowserModule,
@@ -103,7 +105,8 @@ export function HttpLoaderFactory(http: HttpClient) {
         { component: DictationViewPage, name: 'DictationViewPage', segment: 'dictation-view/:dictationId'},
         { component: DictationPracticePage, name: 'DictationPracticePage', segment: 'dictation-practice/:dictationId'},
         { component: InstantDictationPage, name: 'InstantDictationPage', segment: 'instant-dictation'},
-        { component: EditDictationPage, name: 'EditDictationPage', segment: 'edit-dictation'}
+        { component: EditDictationPage, name: 'EditDictationPage', segment: 'edit-dictation'},
+        { component: MemberHomePage, name: 'MemberHomePage', segment: 'member-home'}
       ]
     }),
     IonicStorageModule.forRoot(),
@@ -140,6 +143,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     PracticeCompletePage,
     InstantDictationPage,
     EditDictationPage,
+    MemberHomePage,
   ],
   providers: [
     { provide: ErrorHandler, useClass: IonicErrorHandler },

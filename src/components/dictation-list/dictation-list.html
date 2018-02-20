@@ -1,0 +1,36 @@
+<ion-card class="card dictation-list" style="margin-top: 12px;">
+  <ion-card-header>
+    <i class="fas fa-edit"></i> I created dictations
+  </ion-card-header>
+  <ion-card-content>
+    <ion-list>
+      <ion-item *ngFor="let dictation of viewDictations; let i = index">
+        <ion-row>
+          <ion-col class="heading">{{dictation.title}}</ion-col>
+          <ion-col text-right>{{ dictation.createdDate | date: 'yyyy-MM-dd' }}</ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col class="col-label">Vocabs:</ion-col>
+          <ion-col>{{ dictation.vocabs.length }}</ion-col>
+          <ion-col class="col-label" text-left>Attempts:</ion-col>
+          <ion-col>{{ dictation.totalAttempt }}</ion-col>
+          <ion-col center text-right><i class="far fa-thumbs-up"></i> {{dictation.totalRecommended}}</ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col class="col-label">Suitable:</ion-col>
+          <ion-col>{{ dictation.suitableStudent }}</ion-col>
+          <ion-col text-right>Show Image: <i class="fas fa-check" *ngIf="dictation.showImage"></i><i class="fas fa-times" *ngIf="!dictation.showImage"></i></ion-col>
+        </ion-row>
+        <button ion-button outline item-end (click)="navService.openDictation(dictation)">View</button>
+      </ion-item>
+    </ion-list>
+    <ion-row>
+      <ion-col>
+        <button ion-button clear (click)="newer()" *ngIf="page > 0"><i class="fas fa-angle-left"></i> Newer</button>
+      </ion-col>
+      <ion-col text-right>
+        <button ion-button clear (click)="older()" *ngIf="showOlder">Older <i class="fas fa-angle-right"></i></button>
+      </ion-col>
+    </ion-row>
+  </ion-card-content>
+</ion-card>

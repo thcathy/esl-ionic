@@ -23,8 +23,13 @@ export class MemberDictationService {
   }
 
   private createDictationUrl = ENV.apiHost + '/member/dictation/create';
+  private getAllDictationUrl = ENV.apiHost + '/member/dictation/getall';
 
   createDictation(request: CreateDictationRequest): Observable<Dictation> {
     return this.http.post<Dictation>(this.createDictationUrl, request);
+  }
+
+  getAllDictation(): Observable<Dictation[]> {
+    return this.http.get<Dictation[]>(this.getAllDictationUrl);
   }
 }

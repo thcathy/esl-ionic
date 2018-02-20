@@ -3,8 +3,6 @@ import {Vocab} from "./vocab";
 
 export class Dictation {
   title?: string;
-  suitableMinAge?: number;
-  suitableMaxAge?: number;
   rating?: number;
   totalRated?: number;
   description?: string;
@@ -23,5 +21,6 @@ export class Dictation {
   createdDate?: Date;
   totalRecommended?: number;
   id?: number;
+  suitableStudent?: string;
 }
 
