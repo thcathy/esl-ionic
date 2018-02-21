@@ -26,6 +26,7 @@ export class DictationCardComponent {
   @Input() dictation: Dictation;
   @Input() start: boolean = false;
   @Input() retry: boolean = false;
+  @Input() edit: boolean = false;
   recommendState: string = 'normal';
 
   constructor(public navCtrl: NavController,

@@ -26,4 +26,11 @@ export class NavigationService {
       dictationId: dictation.id
     });
   }
+
+  editDictation(dictation: Dictation) {
+    let navCtrl = this.app.getActiveNav();
+    navCtrl.setRoot('EditDictationPage', {
+      dictation: dictation
+    });
+  }
 }

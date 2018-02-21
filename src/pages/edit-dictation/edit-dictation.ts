@@ -14,6 +14,7 @@ import {Loading} from "ionic-angular/components/loading/loading";
 export class EditDictationPage {
   inputForm: FormGroup;
   loader: Loading;
+  dictation: Dictation;
 
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
@@ -24,6 +25,8 @@ export class EditDictationPage {
               public loadingCtrl: LoadingController,
   ) {
     this.createForm();
+    this.dictation = navParams.get('dictation');
+    this.setupForm(this.dictation);
   }
 
   get title() { return this.inputForm.get('title'); }
@@ -41,6 +44,16 @@ export class EditDictationPage {
       'vocabulary': new FormControl('', [Validators.required, maxVocabularyValidator(50)]),
       'suitableStudent': 'Any',
     });
+  }
+
+  setupForm(dictation: Dictation) {
+    if (dictation == null) return;
+
+    this.title.setValue(dictation.title);
+    this.description.setValue(dictation.description);
+    this.showImage.setValue(dictation.showImage);
+    this.suitableStudent.setValue(dictation.suitableStudent);
+    this.vocabulary.setValue(dictation.vocabs.map(v => v.word).concat(" "));
   }
 
   createDictation() {

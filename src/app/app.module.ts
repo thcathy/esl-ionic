@@ -50,6 +50,7 @@ import {AuthService} from "../providers/auth.service";
 import {EditDictationPage} from "../pages/edit-dictation/edit-dictation";
 import {MemberDictationService} from "../providers/dictation/member-dictation.service";
 import {MemberHomePage} from "../pages/member-home/member-home";
+import {ServerService} from "../providers/server.service";
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -158,6 +159,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     VocabPracticeService,
     MemberDictationService,
     AuthService,
+    ServerService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: IdTokenInterceptor,

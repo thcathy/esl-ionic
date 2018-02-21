@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 
-import { Events, MenuController, Nav, Platform } from 'ionic-angular';
+import {Events, MenuController, Nav, Platform} from 'ionic-angular';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
 import { Storage } from '@ionic/storage';
@@ -77,7 +77,7 @@ export class ConferenceApp {
     public storage: Storage,
     public splashScreen: SplashScreen,
     public translate: TranslateService,
-    public authService: AuthService,
+    public authService: AuthService
   ) {
 
     // Check if the user has already seen the tutorial
@@ -91,7 +91,7 @@ export class ConferenceApp {
         this.platformReady()
       });
 
-    this.authService.handleAuthentication();
+    //this.authService.handleAuthentication();
 
     // load the conference data
     confData.load();
@@ -108,6 +108,13 @@ export class ConferenceApp {
     translate.setDefaultLang('en');
     // the lang to use, if the lang isn't available, it will use the current loader to get them
     translate.use('en');
+  }
+
+  ngAfterViewInit(){
+    this.authService.handleAuthentication();
+    (<any>window).handleOpenURL = (url) => {
+      Auth0Cordova.onRedirectUri(url);
+    };
   }
 
   openPage(page: PageInterface) {
@@ -165,10 +172,6 @@ export class ConferenceApp {
     // Call any initial plugins when ready
     this.platform.ready().then(() => {
       this.splashScreen.hide();
-
-      (<any>window).handleOpenURL = (url) => {
-        Auth0Cordova.onRedirectUri(url);
-      };
     });
   }
 

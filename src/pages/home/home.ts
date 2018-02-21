@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import {AlertController, IonicPage, NavController, NavParams} from 'ionic-angular';
 import {AppService} from "../../providers/app.service";
 import {RankingService} from "../../providers/ranking/ranking.service";
 import {MemberScoreRanking} from "../../entity/member-score-ranking";
 import {DictationService} from "../../providers/dictation/dictation.service";
 import {DictationStatistics} from "../../entity/dictation-statistics";
 import {InAppBrowser} from "@ionic-native/in-app-browser";
+import {ServerService} from "../../providers/server.service";
 
 /**
  * Generated class for the HomePage page.
@@ -28,14 +29,26 @@ export class HomePage {
               public appService: AppService,
               public rankingService: RankingService,
               public dictationService: DictationService,
-              public iab: InAppBrowser
+              public iab: InAppBrowser,
+              public serverService: ServerService,
+              public alertCtrl: AlertController
   ) {
-    this.rankingService.randomTopScore().subscribe(rank => this.memberScoreRanking = rank);
-    this.dictationService.randomDictationStatistics().subscribe(stat => this.dictationStat = stat);
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad HomePage');
+    this.serverService.healthCheck().subscribe(_data=>{},e => {
+      let alert = this.alertCtrl.create({
+        title: `Cannot connect to server! Please try again later (${e})`,
+        buttons: [
+          'Ok'
+        ]
+      });
+
+      alert.present();
+    });
+
+    this.rankingService.randomTopScore().subscribe(rank => this.memberScoreRanking = rank, _e=>{});
+    this.dictationService.randomDictationStatistics().subscribe(stat => this.dictationStat = stat, _e=>{});
   }
 
   goInstantDictation() {

@@ -1,4 +1,4 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component} from '@angular/core';
 import {IonicPage, LoadingController, NavController, NavParams} from 'ionic-angular';
 import {MemberDictationService} from "../../providers/dictation/member-dictation.service";
 import {Dictation} from "../../entity/dictation";
@@ -23,9 +23,6 @@ export class MemberHomePage {
       loader.dismissAll();
       this.createdDictations = dictations;
     });
-  }
-
-  ionViewDidLoad() {
   }
 
 }
