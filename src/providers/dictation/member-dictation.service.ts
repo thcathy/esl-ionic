@@ -16,6 +16,15 @@ export interface CreateDictationRequest {
   suitableStudent: string;
 }
 
+export interface EditDictationRequest {
+  dictationId?: number;
+  title: string;
+  description?: string;
+  showImage: boolean;
+  vocabulary: string[];
+  suitableStudent: string;
+}
+
 @Injectable()
 export class MemberDictationService {
 
@@ -23,10 +32,15 @@ export class MemberDictationService {
   }
 
   private createDictationUrl = ENV.apiHost + '/member/dictation/create';
+  private editDictationUrl = ENV.apiHost + '/member/dictation/edit';
   private getAllDictationUrl = ENV.apiHost + '/member/dictation/getall';
 
   createDictation(request: CreateDictationRequest): Observable<Dictation> {
     return this.http.post<Dictation>(this.createDictationUrl, request);
+  }
+
+  createOrAmendDictation(request: EditDictationRequest): Observable<Dictation> {
+    return this.http.post<Dictation>(this.editDictationUrl, request);
   }
 
   getAllDictation(): Observable<Dictation[]> {

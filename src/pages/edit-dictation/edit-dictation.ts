@@ -53,7 +53,7 @@ export class EditDictationPage {
     this.description.setValue(dictation.description);
     this.showImage.setValue(dictation.showImage);
     this.suitableStudent.setValue(dictation.suitableStudent);
-    this.vocabulary.setValue(dictation.vocabs.map(v => v.word).concat(" "));
+    this.vocabulary.setValue(dictation.vocabs.map(v => v.word).join(' '));
   }
 
   createDictation() {
@@ -88,7 +88,7 @@ export class EditDictationPage {
 
 export function maxVocabularyValidator(max: number): ValidatorFn {
   return (control: AbstractControl): {[key: string]: any} => {
-    const tooLarge = control.value.split(/[\s,]+/).length > max;
+    const tooLarge = control.value != null && control.value.split(/[\s,]+/).length > max;
     return tooLarge ? {'maxVocabulary': {value: control.value}} : null;
   };
 }
