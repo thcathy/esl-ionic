@@ -1,7 +1,10 @@
 import { Component } from '@angular/core';
 import {AlertController, IonicPage, LoadingController, NavController, NavParams} from 'ionic-angular';
 import {AbstractControl, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators} from "@angular/forms";
-import {CreateDictationRequest, MemberDictationService} from "../../providers/dictation/member-dictation.service";
+import {
+  EditDictationRequest,
+  MemberDictationService
+} from "../../providers/dictation/member-dictation.service";
 import {Dictation} from "../../entity/dictation";
 import {NavigationService} from "../../providers/navigation.service";
 import {Loading} from "ionic-angular/components/loading/loading";
@@ -15,6 +18,7 @@ export class EditDictationPage {
   inputForm: FormGroup;
   loader: Loading;
   dictation: Dictation;
+  isEdit: boolean;
 
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
@@ -26,6 +30,7 @@ export class EditDictationPage {
   ) {
     this.createForm();
     this.dictation = navParams.get('dictation');
+    this.isEdit = this.dictation != null;
     this.setupForm(this.dictation);
   }
 
@@ -56,9 +61,10 @@ export class EditDictationPage {
     this.vocabulary.setValue(dictation.vocabs.map(v => v.word).join(' '));
   }
 
-  createDictation() {
+  saveDictation() {
     this.loader = this.loadingCtrl.create({ content: "Please wait..." });
-    this.memberDictationService.createDictation(<CreateDictationRequest>{
+    this.memberDictationService.createOrAmendDictation(<EditDictationRequest>{
+      dictationId: this.dictation.id || -1,
       title: this.title.value,
       description: this.description.value,
       showImage: this.showImage.value,

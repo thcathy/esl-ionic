@@ -53,7 +53,7 @@
             <div *ngIf="vocabulary.errors.maxVocabulary">Cannot over 50 vocabulary in 1 dictation.</div>
           </div>
 
-          <button ion-button float-right item-end color="secondary" (click)="createDictation()" style="margin: 16px;" [disabled]="inputForm.invalid">
+          <button ion-button float-right item-end color="secondary" (click)="saveDictation()" style="margin: 16px;" [disabled]="inputForm.invalid">
             <i class="fas fa-pencil-alt"></i>&nbsp;Save
           </button>
 
