@@ -65,8 +65,19 @@ export class AuthService {
       console.log('login by auth0 web page');
       this.auth0.authorize();
     }
-
   }
+
+  public signUp(): void {
+    if (this.appService.isApp()) {
+      this.loginCordova(true);
+    } else {
+      console.log('sign up by auth0 web page');
+      this.auth0.authorize({
+        initialScreen: 'signUp'
+      });
+    }
+  }
+
 
   public handleAuthentication(): void {
     console.log('handleAuthentication');
@@ -88,9 +99,12 @@ export class AuthService {
     });
   }
 
-  public loginCordova() {
+  public loginCordova(signUp = false) {
     const client = new Auth0Cordova(auth0CordovaConfig);
     const options = { scope: 'openid profile offline_access' };
+    if (signUp) {
+      options['initialScreen'] = 'signUp';
+    }
 
     client.authorize(options, (err, authResult) => {
       if(err) {

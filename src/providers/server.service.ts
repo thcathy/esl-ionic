@@ -18,7 +18,7 @@ export class ServerService {
   private healthUrl = ENV.apiHost + '/health';
 
   healthCheck(): Observable<String> {
-    console.error(`CALLING HEALTH CHECK`);
+    console.log(`Calling health check`);
     return this.http.get<String>(this.healthUrl);
   }
 

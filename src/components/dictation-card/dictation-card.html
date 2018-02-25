@@ -49,7 +49,7 @@
       </ion-row>
     </ion-grid>
     <div padding *ngIf="start || retry">
-      <button *ngIf="start" ion-button (click)="navService.editDictation(dictation)"><i class="fas fa-edit"></i>&nbsp;Edit</button>
+      <button *ngIf="edit" ion-button (click)="navService.editDictation(dictation)"><i class="fas fa-edit"></i>&nbsp;Edit</button>
       <button *ngIf="start" ion-button (click)="navService.startDictation(dictation)"><i class="fas fa-play"></i>&nbsp;Start</button>
       <button *ngIf="retry" ion-button (click)="navService.startDictation(dictation)"><i class="fas fa-redo"></i>&nbsp;Retry</button>
     </div>

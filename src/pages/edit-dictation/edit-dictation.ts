@@ -8,6 +8,7 @@ import {
 import {Dictation} from "../../entity/dictation";
 import {NavigationService} from "../../providers/navigation.service";
 import {Loading} from "ionic-angular/components/loading/loading";
+import {AuthService} from "../../providers/auth.service";
 
 @IonicPage()
 @Component({
@@ -27,7 +28,13 @@ export class EditDictationPage {
               public navService: NavigationService,
               public alertCtrl: AlertController,
               public loadingCtrl: LoadingController,
+              public authService: AuthService,
   ) {
+    if (!this.authService.isAuthenticated()) {
+      this.authService.login();
+      return;
+    }
+
     this.createForm();
     this.dictation = navParams.get('dictation');
     this.isEdit = this.dictation != null;
@@ -64,7 +71,7 @@ export class EditDictationPage {
   saveDictation() {
     this.loader = this.loadingCtrl.create({ content: "Please wait..." });
     this.memberDictationService.createOrAmendDictation(<EditDictationRequest>{
-      dictationId: this.dictation.id || -1,
+      dictationId: this.dictation ? this.dictation.id : -1,
       title: this.title.value,
       description: this.description.value,
       showImage: this.showImage.value,
@@ -77,7 +84,7 @@ export class EditDictationPage {
   }
 
   viewDictation(dictation: Dictation) {
-    this.navService.openDictation(dictation);
+    this.navService.openDictation(dictation, `Dictation ${dictation.title} is updated successfully`);
   }
 
   showError(err: string) {

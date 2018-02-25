@@ -7,15 +7,9 @@ import { Storage } from '@ionic/storage';
 
 import {TranslateService} from '@ngx-translate/core';
 
-import { AboutPage } from '../pages/about/about';
-import { AccountPage } from '../pages/account/account';
 import { LoginPage } from '../pages/login/login';
-import { MapPage } from '../pages/map/map';
 import { SignupPage } from '../pages/signup/signup';
-import { TabsPage } from '../pages/tabs-page/tabs-page';
 import { TutorialPage } from '../pages/tutorial/tutorial';
-import { SchedulePage } from '../pages/schedule/schedule';
-import { SpeakerListPage } from '../pages/speaker-list/speaker-list';
 import { SupportPage } from '../pages/support/support';
 
 import { ConferenceData } from '../providers/conference-data';
@@ -25,16 +19,19 @@ import {InstantDictationPage} from "../pages/instant-dictation/instant-dictation
 import {AuthService} from "../providers/auth.service";
 
 import Auth0Cordova from '@auth0/cordova';
+import {MemberHomePage} from "../pages/member-home/member-home";
+import {EditDictationPage} from "../pages/edit-dictation/edit-dictation";
 
 export interface PageInterface {
   title: string;
   name: string;
   component: any;
-  icon: string;
+  icon?: string;
   logsOut?: boolean;
   index?: number;
   tabName?: string;
   tabComponent?: any;
+  iconClass?: string;
 }
 
 @Component({
@@ -49,17 +46,16 @@ export class ConferenceApp {
   // the left menu only works after login
   // the login page disables the left menu
   appPages: PageInterface[] = [
-    { title: 'Home', name: 'HomePage', component: HomePage, icon: 'home' },
-    { title: 'Instant Dictation', name: 'InstantDictationPage', component: InstantDictationPage, icon: '' },
-    { title: 'Schedule', name: 'TabsPage', component: TabsPage, tabComponent: SchedulePage, index: 0, icon: 'calendar' },
-    { title: 'Speakers', name: 'TabsPage', component: TabsPage, tabComponent: SpeakerListPage, index: 1, icon: 'contacts' },
-    { title: 'Map', name: 'TabsPage', component: TabsPage, tabComponent: MapPage, index: 2, icon: 'map' },
-    { title: 'About', name: 'TabsPage', component: TabsPage, tabComponent: AboutPage, index: 3, icon: 'information-circle' },
+    { title: 'Home', name: 'HomePage', component: HomePage, icon: 'home', iconClass: 'fas fa-home' },
+    //{ title: 'Schedule', name: 'TabsPage', component: TabsPage, tabComponent: SchedulePage, index: 0, icon: 'calendar' },
+    //{ title: 'Speakers', name: 'TabsPage', component: TabsPage, tabComponent: SpeakerListPage, index: 1, icon: 'contacts' },
+    //{ title: 'Map', name: 'TabsPage', component: TabsPage, tabComponent: MapPage, index: 2, icon: 'map' },
+    //{ title: 'About', name: 'TabsPage', component: TabsPage, tabComponent: AboutPage, index: 3, icon: 'information-circle' },
+    { title: 'Quick Dictation', name: 'InstantDictationPage', component: InstantDictationPage, iconClass: 'fas fa-rocket' },
   ];
   loggedInPages: PageInterface[] = [
-    { title: 'Account', name: 'AccountPage', component: AccountPage, icon: 'person' },
-    { title: 'Support', name: 'SupportPage', component: SupportPage, icon: 'help' },
-    { title: 'Logout', name: 'TabsPage', component: TabsPage, icon: 'log-out', logsOut: true }
+    { title: 'My Dictation', name: 'MemberHomePage', component: MemberHomePage, iconClass: 'fas fa-list' },
+    { title: 'Create Dictation', name: 'EditDictationPage', component: EditDictationPage, iconClass: 'fas fa-edit' }
   ];
   loggedOutPages: PageInterface[] = [
     { title: 'Login', name: 'LoginPage', component: LoginPage, icon: 'log-in' },
@@ -91,7 +87,7 @@ export class ConferenceApp {
         this.platformReady()
       });
 
-    //this.authService.handleAuthentication();
+    this.authService.handleAuthentication();
 
     // load the conference data
     confData.load();
@@ -115,6 +111,13 @@ export class ConferenceApp {
     (<any>window).handleOpenURL = (url) => {
       Auth0Cordova.onRedirectUri(url);
     };
+  }
+
+  openLoggedInPage(page: PageInterface) {
+    if (!this.authService.isAuthenticated())
+      this.authService.login();
+    else
+      this.openPage(page);
   }
 
   openPage(page: PageInterface) {
@@ -181,13 +184,13 @@ export class ConferenceApp {
     // Tabs are a special case because they have their own navigation
     if (childNav) {
       if (childNav.getSelected() && childNav.getSelected().root === page.tabComponent) {
-        return 'primary';
+        return '#488aff';
       }
       return;
     }
 
     if (this.nav.getActive() && this.nav.getActive().name === page.name) {
-      return 'primary';
+      return '#488aff';
     }
     return;
   }

@@ -8,7 +8,12 @@ export class AppService {
   ) { }
 
   isApp(): boolean {
-    return this.platform.is('ios') || this.platform.is('android');
+    console.log(`platforms: ${this.platform._platforms}`);
+    if(this.platform.is('core') || this.platform.is('mobileweb') || document.URL.startsWith('http')) {
+      return false;
+    } else {
+      return true;
+    }
   }
 
 }

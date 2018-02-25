@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import {IonicPage, NavController, NavParams, ToastController} from 'ionic-angular';
 import {Dictation} from "../../entity/dictation";
 import {DictationService} from "../../providers/dictation/dictation.service";
 import {AuthService} from "../../providers/auth.service";
@@ -18,10 +18,12 @@ export class DictationViewPage {
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
               public dictationService: DictationService,
-              public authService: AuthService
+              public authService: AuthService,
+              public toastCtrl: ToastController
   ) {
     this.dictation = navParams.get('dictation');
     this.dictationId = navParams.data.dictationId;
+    this.presentToast(navParams.get('toastMessage'));
 
     if (this.dictation == null && this.dictationId > 0)
       this.dictationService.getById(this.dictationId)
@@ -29,7 +31,16 @@ export class DictationViewPage {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad DictationViewPage');
   }
 
+  private presentToast(toastMessage: string) {
+    if (toastMessage !== null) {
+      let toast = this.toastCtrl.create({
+        message: toastMessage,
+        duration: 5000,
+        position: 'top'
+      });
+      toast.present();
+    }
+  }
 }

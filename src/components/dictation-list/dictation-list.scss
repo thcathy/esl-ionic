@@ -3,6 +3,7 @@ dictation-list {
     ion-item {
       padding-left: 0px;
       font-size: 1.4rem;
+      color: #475062;
     }
   }
 
@@ -15,7 +16,7 @@ dictation-list {
   }
 
   .heading {
-    color: color($colors, primary);
+    color: #000;
     font-size: 1.6rem;
   }
 }

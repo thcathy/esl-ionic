@@ -25,7 +25,7 @@
               <ion-card-content>
                 <div><i class="fas fa-rocket"></i></div>
                 <div>Input & Start</div>
-                <div><button ion-button outline (click)="goInstantDictation()">Quick</button></div>
+                <div><button ion-button outline (click)="openInstantDictation()">Quick</button></div>
 
               </ion-card-content>
             </ion-card>
@@ -35,7 +35,7 @@
               <ion-card-content>
                 <div><i class="fas fa-headphones"></i></div>
                 <div>Create & Save</div>
-                <div><button ion-button outline (click)="goFFSdotcom()">Create</button></div>
+                <div><button ion-button outline (click)="openCreateDictationPage()">Create</button></div>
               </ion-card-content>
             </ion-card>
           </ion-col>
@@ -48,7 +48,7 @@
     <dictation-statistics [stat]="dictationStat"></dictation-statistics>
 
     <div padding-top>
-      <a href="https://itunes.apple.com/app/apple-store/id1289059131?mt=8">
+      <a href="https://itunes.apple.com/app/apple-store/id1289059131?mt=8" style=" text-decoration: none;">
         <img class="appImage" src="https://linkmaker.itunes.apple.com/assets/shared/badges/en-us/appstore-lrg.svg"/>
       </a>
       <a

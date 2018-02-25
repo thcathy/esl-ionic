@@ -36,9 +36,10 @@ export class HomePage {
   }
 
   ionViewDidLoad() {
-    this.serverService.healthCheck().subscribe(_data=>{},e => {
+    this.serverService.healthCheck().subscribe(_data=>{},_e => {
       let alert = this.alertCtrl.create({
-        title: `Cannot connect to server! Please try again later (${e})`,
+        title: `Connection Error!`,
+        subTitle: `Please connect to network or Try again later`,
         buttons: [
           'Ok'
         ]
@@ -51,13 +52,17 @@ export class HomePage {
     this.dictationService.randomDictationStatistics().subscribe(stat => this.dictationStat = stat, _e=>{});
   }
 
-  goInstantDictation() {
+  openInstantDictation() {
     this.navCtrl.setRoot('InstantDictationPage');
   }
 
   goFFSdotcom() {
     const browser = this.iab.create('https://www.funfunspell.com/', '_system');
     browser.show();
+  }
+
+  openCreateDictationPage() {
+    this.navCtrl.setRoot('EditDictationPage');
   }
 
 }

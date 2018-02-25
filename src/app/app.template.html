@@ -1,7 +1,7 @@
 <ion-split-pane>
 
   <!-- logged out menu -->
-  <ion-menu id="loggedOutMenu" [content]="content">
+  <ion-menu [content]="content">
 
     <ion-header>
       <ion-toolbar>
@@ -15,18 +15,39 @@
     <ion-content class="outer-content menu-content">
 
       <ion-list>
-        <ion-list-header>
-          Navigate
-        </ion-list-header>
-        <button ion-item menuClose *ngFor="let p of appPages" (click)="openPage(p)">
-          <ion-icon item-start [name]="p.icon" [color]="isActive(p)"></ion-icon>
-          {{p.title}}
+        <ion-list-header>Fun Fun Spell</ion-list-header>
+        <button ion-item menuClose *ngFor="let p of appPages" (click)="openPage(p)" [style.color]="isActive(p)">
+          <i [ngClass]="p.iconClass" item-start></i> {{p.title}}
         </button>
-        <button ion-item (click)="nav.setRoot('MemberHomePage'); menu.close();">My Home</button>
-        <button ion-item (click)="nav.setRoot('EditDictationPage'); menu.close();">Create Dictation</button>
       </ion-list>
 
       <ion-list>
+        <ion-list-header>Member</ion-list-header>
+        <button ion-item menuClose *ngFor="let p of loggedInPages" (click)="openPage(p)" [style.color]="isActive(p)">
+          <i [ngClass]="p.iconClass" item-start></i> {{p.title}}
+        </button>
+      </ion-list>
+
+      <ion-list>
+        <ion-list-header>Account</ion-list-header>
+        <button ion-item menuClose *ngIf="!authService.isAuthenticated()" (click)="authService.login();">
+          <i class="fas fa-sign-in-alt" item-start></i> Login
+        </button>
+        <button ion-item menuClose *ngIf="!authService.isAuthenticated()" (click)="authService.signUp();">
+          <i class="fas fa-user-plus" item-start></i> Sign Up
+        </button>
+        <button ion-item menuClose *ngIf="authService.isAuthenticated()" (click)="authService.logout();">
+          <i class="fas fa-sign-out-alt" item-start></i> Logout
+        </button>
+      </ion-list>
+
+      <ion-list>
+        <ion-list-header>Language</ion-list-header>
+        <button ion-item menuClose (click)="changeLanguage('en')">Eng</button>
+        <button ion-item menuClose (click)="changeLanguage('zh')">繁</button>
+      </ion-list>
+
+      <!--<ion-list>
         <ion-list-header>
           Account
         </ion-list-header>
@@ -34,15 +55,9 @@
           <ion-icon item-start [name]="p.icon" [color]="isActive(p)"></ion-icon>
           {{p.title}}
         </button>
-      </ion-list>
+      </ion-list>-->
 
-      <ion-list>
-        <ion-list-header>Auth0</ion-list-header>
-        <button ion-item *ngIf="!authService.isAuthenticated()" (click)="authService.login()"><ion-icon name="log-in"></ion-icon> Login</button>
-        <button ion-item *ngIf="authService.isAuthenticated()" (click)="authService.logout(); menu.close();"><ion-icon name="log-out"></ion-icon> Logout</button>
-      </ion-list>
-
-      <ion-list>
+      <!--<ion-list>
         <ion-list-header>
           Tutorial
         </ion-list-header>
@@ -50,72 +65,7 @@
           <ion-icon item-start name="hammer"></ion-icon>
           Show Tutorial
         </button>
-      </ion-list>
-
-      <ion-list>
-        <ion-list-header>
-          Language
-        </ion-list-header>
-        <button ion-item menuClose (click)="changeLanguage('en')">
-          Eng
-        </button>
-        <button ion-item menuClose (click)="changeLanguage('zh')">
-          繁
-        </button>
-      </ion-list>
-    </ion-content>
-
-  </ion-menu>
-
-  <!-- logged in menu -->
-  <ion-menu id="loggedInMenu" [content]="content">
-
-    <ion-header>
-      <ion-toolbar>
-        <ion-title>Hi, {{authService.userProfile?.name}}</ion-title>
-      </ion-toolbar>
-    </ion-header>
-
-    <ion-content class="outer-content">
-
-      <ion-list>
-        <ion-list-header>
-          Navigate
-        </ion-list-header>
-        <button ion-item menuClose *ngFor="let p of appPages" (click)="openPage(p)">
-          <ion-icon item-start [name]="p.icon" [color]="isActive(p)"></ion-icon>
-          {{p.title}}
-        </button>
-        <button ion-item (click)="nav.setRoot('EditDictationPage'); menu.close();">Create Dictation</button>
-      </ion-list>
-
-      <ion-list>
-        <ion-list-header>
-          Account
-        </ion-list-header>
-        <button ion-item menuClose *ngFor="let p of loggedInPages" (click)="openPage(p)">
-          <ion-icon item-start [name]="p.icon" [color]="isActive(p)"></ion-icon>
-          {{p.title}}
-        </button>
-      </ion-list>
-
-      <ion-list>
-        <ion-list-header>Auth0</ion-list-header>
-        <button ion-item *ngIf="authService.isAuthenticated()" (click)="authService.logout(); menu.close();"><ion-icon name="log-out"></ion-icon> Logout</button>
-      </ion-list>
-
-      <ion-list>
-        <ion-list-header>
-          Language
-        </ion-list-header>
-        <button ion-item menuClose (click)="changeLanguage('en')">
-          Eng
-        </button>
-        <button ion-item menuClose (click)="changeLanguage('zh')">
-          繁
-        </button>
-      </ion-list>
-
+      </ion-list>-->
     </ion-content>
 
   </ion-menu>

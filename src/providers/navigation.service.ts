@@ -19,11 +19,12 @@ export class NavigationService {
     });
   }
 
-  openDictation(dictation: Dictation) {
+  openDictation(dictation: Dictation, toastMessage: string = null) {
     let navCtrl = this.app.getActiveNav();
     navCtrl.setRoot('DictationViewPage', {
       dictation: dictation,
-      dictationId: dictation.id
+      dictationId: dictation.id,
+      toastMessage: toastMessage,
     });
   }
 
