@@ -6,7 +6,7 @@
     <ion-header>
       <ion-toolbar>
         <ion-title>
-          <span *ngIf="!authService.isAuthenticated()">Menu</span>
+          <span *ngIf="!authService.isAuthenticated()">{{ 'Menu' | translate }}</span>
           <span *ngIf="authService.isAuthenticated()">Hi, {{authService.userProfile?.name}}</span>
         </ion-title>
       </ion-toolbar>
@@ -17,32 +17,28 @@
       <ion-list>
         <ion-list-header>Fun Fun Spell</ion-list-header>
         <button ion-item menuClose *ngFor="let p of appPages" (click)="openPage(p)" [style.color]="isActive(p)">
-          <i [ngClass]="p.iconClass" item-start></i> {{p.title}}
+          <i [ngClass]="p.iconClass" item-start></i> {{p.title | translate}}
+        </button>
+        <button ion-item menuClose *ngFor="let p of loggedInPages" (click)="openLoggedInPage(p)" [style.color]="isActive(p)">
+          <i [ngClass]="p.iconClass" item-start></i> {{p.title | translate}}
         </button>
       </ion-list>
 
       <ion-list>
-        <ion-list-header>Member</ion-list-header>
-        <button ion-item menuClose *ngFor="let p of loggedInPages" (click)="openPage(p)" [style.color]="isActive(p)">
-          <i [ngClass]="p.iconClass" item-start></i> {{p.title}}
-        </button>
-      </ion-list>
-
-      <ion-list>
-        <ion-list-header>Account</ion-list-header>
+        <ion-list-header>{{ 'Account' | translate }}</ion-list-header>
         <button ion-item menuClose *ngIf="!authService.isAuthenticated()" (click)="authService.login();">
-          <i class="fas fa-sign-in-alt" item-start></i> Login
+          <i class="fas fa-sign-in-alt" item-start></i> {{ 'Login' | translate }}
         </button>
         <button ion-item menuClose *ngIf="!authService.isAuthenticated()" (click)="authService.signUp();">
-          <i class="fas fa-user-plus" item-start></i> Sign Up
+          <i class="fas fa-user-plus" item-start></i> {{ 'Sign Up' | translate }}
         </button>
         <button ion-item menuClose *ngIf="authService.isAuthenticated()" (click)="authService.logout();">
-          <i class="fas fa-sign-out-alt" item-start></i> Logout
+          <i class="fas fa-sign-out-alt" item-start></i> {{ 'Logout' | translate }}
         </button>
       </ion-list>
 
       <ion-list>
-        <ion-list-header>Language</ion-list-header>
+        <ion-list-header>{{ 'Language' | translate }}</ion-list-header>
         <button ion-item menuClose (click)="changeLanguage('en')">Eng</button>
         <button ion-item menuClose (click)="changeLanguage('zh')">繁</button>
       </ion-list>

@@ -5,5 +5,31 @@
   "LatestPracticed":"剛被練習的默書",
   "SuitableAge": {
     "Any": "所有"
-  }
+  },
+  "Menu": "目錄",
+  "Hi": "妳好",
+  "Home": "主頁",
+  "Quick Dictation": "快速默書",
+  "My Dictation": "我的默書",
+  "Create Dictation": "建立默書",
+  "Login": "登入",
+  "Sign Up": "登記帳戶",
+  "Logout": "登出",
+  "Account": "帳戶",
+  "Language": "語言",
+  "": "",
+  "": "",
+  "": "",
+  "": "",
+  "": "",
+  "": "",
+  "": "",
+  "": "",
+  "": "",
+  "": "",
+  "": "",
+  "": "",
+  "": "",
+  "": ""
+
 }

@@ -8,13 +8,6 @@ import {DictationStatistics} from "../../entity/dictation-statistics";
 import {InAppBrowser} from "@ionic-native/in-app-browser";
 import {ServerService} from "../../providers/server.service";
 
-/**
- * Generated class for the HomePage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
-
 @IonicPage()
 @Component({
   selector: 'page-home',
