@@ -11,11 +11,11 @@
           <ion-col text-right>{{ dictation.creator.name.fullName }}</ion-col>
         </ion-row>
         <ion-row>
-          <ion-col center text-left>Vocabs: {{ dictation.vocabs.length }}</ion-col>
-          <ion-col center text-center>Attempts: {{ dictation.totalAttempt }}</ion-col>
+          <ion-col center text-left>{{ 'TotalVocabs' | translate }}: {{ dictation.vocabs.length }}</ion-col>
+          <ion-col center text-center>{{ 'Attempts' | translate }}: {{ dictation.totalAttempt }}</ion-col>
           <ion-col center text-right><i class="far fa-thumbs-up"></i> {{dictation.totalRecommended}}</ion-col>
         </ion-row>
-        <button ion-button outline item-end (click)="navService.openDictation(dictation)">View</button>
+        <button ion-button outline item-end (click)="navService.openDictation(dictation)">{{ 'ViewDictation' | translate }}</button>
       </ion-item>
     </ion-list>
   </ion-card-content>

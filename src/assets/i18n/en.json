@@ -5,5 +5,12 @@
   "LatestPracticed":"Last Dictation Practiced",
   "SuitableAge": {
     "Any": "Any"
-  }
+  },
+  "Menu_Quick": "Quick",
+  "Menu_Create": "Create",
+  "Input and Start": "Input & Start",
+  "Create and Save": "Create & Save",
+  "TotalVocabs": "Vocabs",
+  "ViewDictation": "View"
+
 }

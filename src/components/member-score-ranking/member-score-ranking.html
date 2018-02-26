@@ -1,7 +1,7 @@
 
 <ion-card class="card" *ngIf="ranking" style="margin-top: 12px;">
   <ion-card-header>
-    <i class="fas fa-trophy"></i> Ranking - {{ ranking?.scores[0]?.scoreYearMonth > 2000000000 ? 'All Times' : ranking?.scores[0]?.yearMonthAsDate | date: 'MM yyyy' }}
+    <i class="fas fa-trophy"></i> {{ 'Ranking' | translate }} - {{ ranking?.scores[0]?.scoreYearMonth > 2000000000 ? 'All Times' : ranking?.scores[0]?.yearMonthAsDate | date: 'MM yyyy' }}
   </ion-card-header>
   <ion-card-content>
     <ion-list>
