@@ -7,6 +7,7 @@ import {DictationService} from "../../providers/dictation/dictation.service";
 import {DictationStatistics} from "../../entity/dictation-statistics";
 import {InAppBrowser} from "@ionic-native/in-app-browser";
 import {ServerService} from "../../providers/server.service";
+import {TranslateService} from "@ngx-translate/core";
 
 @IonicPage()
 @Component({
@@ -24,18 +25,17 @@ export class HomePage {
               public dictationService: DictationService,
               public iab: InAppBrowser,
               public serverService: ServerService,
-              public alertCtrl: AlertController
+              public alertCtrl: AlertController,
+              public translate: TranslateService,
   ) {
   }
 
   ionViewDidLoad() {
     this.serverService.healthCheck().subscribe(_data=>{},_e => {
       let alert = this.alertCtrl.create({
-        title: `Connection Error!`,
-        subTitle: `Please connect to network or Try again later`,
-        buttons: [
-          'Ok'
-        ]
+        title: `${this.translate.instant('Connection Error')}!`,
+        subTitle: this.translate.instant('Please connect to network or Try again later'),
+        buttons: [this.translate.instant('OK')]
       });
 
       alert.present();

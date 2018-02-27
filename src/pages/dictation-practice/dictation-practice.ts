@@ -60,7 +60,7 @@ export class DictationPracticePage {
 
     this.questionIndex = 0;
     this.mark = 0;
-    this.phonics = "Phonetics";
+    this.phonics = "Phonetic";
   }
 
   speak() {

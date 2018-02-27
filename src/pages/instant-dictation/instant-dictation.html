@@ -1,18 +1,13 @@
 <ion-header>
-  <ion-navbar>
-    <button ion-button menuToggle>
-      <ion-icon name="menu"></ion-icon>
-    </button>
-    <ion-title>Create Dictation</ion-title>
-  </ion-navbar>
+  <app-header title="Quick Dictation"></app-header>
 </ion-header>
 
 <ion-content>
   <div style="padding: 16px;">
     <ion-card class="card">
       <ion-card-content>
-        <h3>Input the vocabularies, one box per vocabulary</h3>
-        <h4>example: "apple", "bus stop", "ice-cream"</h4>
+        <h3>{{'Input vocabulary'|translate}}:</h3>
+        <h4>{{'example'|translate}}: "apple", "bus stop", "ice-cream"</h4>
 
         <form [formGroup]="inputForm" novalidate (keydown.enter)="$event.preventDefault()">
           <ion-grid formArrayName="vocabs">
@@ -25,21 +20,21 @@
                              (keyup.enter) ="keytab($event, i)">
                   </ion-input>
                 </ion-item>
-                <div class="error-text" *ngIf="vocab.invalid && (vocab.dirty || vocab.touched)">Invalid vocabulary</div>
+                <div class="error-text" *ngIf="vocab.invalid && (vocab.dirty || vocab.touched)">{{'Invalid input'|translate}}</div>
               </ion-col>
             </ion-row>
           </ion-grid>
           <ion-item>
-            <ion-label>Show image</ion-label>
+            <ion-label>{{'Show Image'|translate}}</ion-label>
             <ion-toggle formControlName="showImage"></ion-toggle>
           </ion-item>
           <ion-row no-padding>
             <ion-col>
-              <button ion-button outline (click)="clearVocabs()" style="margin: 5px;"><i class="fas fa-times"></i>&nbsp;Clear inputs</button>
+              <button ion-button outline (click)="clearVocabs()" style="margin: 5px;"><i class="fas fa-times"></i>&nbsp;{{'Clear inputs'|translate}}</button>
             </ion-col>
             <ion-col text-right>
               <button ion-button item-end color="secondary" (click)="start()" style="margin: 5px;" [disabled]="inputForm.invalid">
-                <i class="fas fa-pencil-alt"></i>&nbsp;Start
+                <i class="fas fa-pencil-alt"></i>&nbsp;{{'Start'|translate}}
               </button>
             </ion-col>
           </ion-row>

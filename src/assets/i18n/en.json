@@ -6,11 +6,21 @@
   "SuitableAge": {
     "Any": "Any"
   },
+  "SuitableStudent": {
+    "Any": "Any",
+    "Kindergarten": "Kindergarten",
+    "JuniorPrimary": "Junior Primary",
+    "SeniorPrimary": "Senior Primary",
+    "JuniorSecondary": "Junior Secondary",
+    "SeniorSecondary": "Senior Secondary"
+  },
   "Menu_Quick": "Quick",
   "Menu_Create": "Create",
   "Input and Start": "Input & Start",
   "Create and Save": "Create & Save",
   "TotalVocabs": "Vocabs",
-  "ViewDictation": "View"
+  "ViewDictation": "View",
+  "CompletePracticeHeader": "You got {{mark}} marks in {{totalQuestion}} questions",
+  "UpdatedDictation": "Dictation {{title}} is updated successfully"
 
 }

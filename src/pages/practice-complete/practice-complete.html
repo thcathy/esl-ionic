@@ -1,20 +1,18 @@
 <ion-header>
-  <app-header title="Finished"></app-header>
+  <app-header title="Finished Practice"></app-header>
 </ion-header>
 
 <ion-content>
   <div style="padding: 16px;">
     <ion-card class="card">
-      <ion-card-header style="font-size: 1.8rem;">
-        You got {{ mark }} marks in {{ histories.length }} questions
-      </ion-card-header>
+      <ion-card-header style="font-size: 1.8rem;">{{ 'CompletePracticeHeader' | translate:{mark:mark, totalQuestion: histories.length} }}</ion-card-header>
       <ion-row no-padding>
         <ion-col>
-          <button ion-button (click)="retryDictation()" style="margin: 5px;"><i class="fas fa-redo"></i>&nbsp;Retry Dictation</button>
+          <button ion-button (click)="retryDictation()" style="margin: 5px;"><i class="fas fa-redo"></i>&nbsp;{{'Retry'|translate}}</button>
         </ion-col>
         <ion-col text-right>
           <button *ngIf="dictation.id > 0" ion-button item-end color="secondary" (click)="recommend()" style="margin: 5px;" [disabled]="recommended">
-            <i class="far fa-thumbs-up"></i>&nbsp;{{ recommended ? 'Recommended' : 'Recommend' }}
+            <i class="far fa-thumbs-up"></i>&nbsp;{{ recommended ? 'Recommended' : 'Recommend' | translate }}
           </button>
         </ion-col>
       </ion-row>

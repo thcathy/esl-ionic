@@ -1,5 +1,5 @@
 <div style="display: inline-block;"
      [@change]="state"
      (@change.done)="changeDone($event)">
-  Mark: {{ mark }} <span *ngIf="total">/ {{ total }}</span>
+  {{'Marks'|translate}}: {{ mark }} <span *ngIf="total">/ {{ total }}</span>
 </div>

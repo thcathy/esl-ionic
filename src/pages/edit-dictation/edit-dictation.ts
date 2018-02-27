@@ -9,6 +9,8 @@ import {Dictation} from "../../entity/dictation";
 import {NavigationService} from "../../providers/navigation.service";
 import {Loading} from "ionic-angular/components/loading/loading";
 import {AuthService} from "../../providers/auth.service";
+import {TranslateService} from "@ngx-translate/core";
+import {Observable} from "rxjs/Observable";
 
 @IonicPage()
 @Component({
@@ -29,6 +31,7 @@ export class EditDictationPage {
               public alertCtrl: AlertController,
               public loadingCtrl: LoadingController,
               public authService: AuthService,
+              public translate: TranslateService,
   ) {
     if (!this.authService.isAuthenticated()) {
       this.authService.login();
@@ -84,17 +87,24 @@ export class EditDictationPage {
   }
 
   viewDictation(dictation: Dictation) {
-    this.navService.openDictation(dictation, `Dictation ${dictation.title} is updated successfully`);
+    this.translate.get('UpdatedDictation', {title: dictation.title}).subscribe((msg: string) => {
+      this.navService.openDictation(dictation, msg);
+    });
   }
 
   showError(err: string) {
     this.loader.dismissAll();
-    let alert = this.alertCtrl.create({
-      title: 'Cannot create dictation',
-      subTitle: err,
-      buttons: ['OK']
+    const title =  this.translate.get('Fail to create dictation');
+    const button = this.translate.get('OK');
+
+    Observable.combineLatest(title, button).subscribe(([title, button])=>{
+      let alert = this.alertCtrl.create({
+        title: title,
+        subTitle: err,
+        buttons: [button]
+      });
+      alert.present();
     });
-    alert.present();
   }
 
 }

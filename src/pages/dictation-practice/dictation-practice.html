@@ -6,7 +6,7 @@
   <div style="padding: 16px;">
     <ion-card class="card" *ngIf="currentQuestion()">
     <ion-card-header>
-      Question {{ questionIndex + 1 }}
+      {{'Question'|translate}} {{ questionIndex + 1 }}
       <score float-right [mark]="mark"></score>
     </ion-card-header>
 
@@ -16,17 +16,17 @@
           <ion-col col-12 col-sm-12 col-md-6>
             <ion-row>
               <ion-col text-center>
-                <button ion-button round class="speakBtn" (click)="speak()"><i class="fas fa-headphones"></i>&nbsp;Speak</button>
+                <button ion-button round class="speakBtn" (click)="speak()"><i class="fas fa-headphones"></i>&nbsp;{{'Listen'|translate}}</button>
               </ion-col>
               <ion-col text-center>
-                <button ion-button round class="phonicsBtn" (click)="showPhonics()">{{phonics}}</button>
+                <button ion-button round class="phonicsBtn" (click)="showPhonics()">{{phonics|translate}}</button>
               </ion-col>
             </ion-row>
             <ion-item class="answerInput">
-              <ion-label floating>Answer</ion-label>
+              <ion-label floating>{{'Answer'|translate}}</ion-label>
               <ion-input [(ngModel)]="answer" type="text" maxlength="30" (keyup.enter)="submitAnswer()"></ion-input>
             </ion-item>
-            <button ion-button full class="submitBtn" (click)="submitAnswer()">Submit</button>
+            <button ion-button full class="submitBtn" (click)="submitAnswer()">{{'Submit'|translate}}</button>
 
           </ion-col>
           <ion-col col-12 col-sm-12 col-md-6>
