@@ -35,7 +35,7 @@ export class InstantDictationPage {
 
     for (let i = 0; i < this.maxVocab; i++) {
       this.vocabs.push(this.formBuilder.group({
-        'word': new FormControl('',[Validators.pattern("([a-zA-Z -']+)?")])
+        'word': new FormControl('',[Validators.pattern("([a-zA-Z \\-']+)?")])
       }));
     }
   }

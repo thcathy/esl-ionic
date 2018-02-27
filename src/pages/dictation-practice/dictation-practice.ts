@@ -6,6 +6,7 @@ import {VocabPractice} from "../../entity/voacb-practice";
 import {VocabPracticeHistory} from "../../interfaces/vocab-practice-history";
 import {DictationService} from "../../providers/dictation/dictation.service";
 import {PracticeCompletePage} from "../practice-complete/practice-complete";
+import {TranslateService} from "@ngx-translate/core";
 
 declare var responsiveVoice: any;
 
@@ -31,9 +32,10 @@ export class DictationPracticePage {
     public navParams: NavParams,
     public loadingCtrl: LoadingController,
     public vocabPracticeService: VocabPracticeService,
-    public dictationService: DictationService
+    public dictationService: DictationService,
+    public translateService: TranslateService,
   ) {
-    let loader = this.loadingCtrl.create({ content: "Please wait..." });
+    let loader = this.loadingCtrl.create({ content: translateService.instant('Please wait') + "..." });
     loader.present();
 
     this.dictation = navParams.get('dictation');

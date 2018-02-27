@@ -30,12 +30,7 @@
           <ion-item>
             <ion-label style="margin: inherit;">{{'Suitable'|translate}} ({{'Age'|translate}})</ion-label>
             <ion-select style="padding-right: 30px;" formControlName="suitableStudent" interface="popover">
-              <ion-option value="Any">{{'SuitableStudent.Any'|translate}}</ion-option>
-              <ion-option value="Kindergarten">{{'SuitableStudent.Kindergarten'|translate}} (3-5)</ion-option>
-              <ion-option value="JuniorPrimary">{{'SuitableStudent.JuniorPrimary'|translate}} (6-8)</ion-option>
-              <ion-option value="SeniorPrimary">{{'SuitableStudent.SeniorPrimary'|translate}} (9-11)</ion-option>
-              <ion-option value="JuniorSecondary">{{'SuitableStudent.JuniorSecondary'|translate}} (12-14)</ion-option>
-              <ion-option value="SeniorSecondary">{{'SuitableStudent.SeniorSecondary'|translate}} (15-17)</ion-option>
+              <ion-option *ngFor="let state of suitableStudentOptions" [value]="state">{{'SuitableStudent.' + state|translate}}</ion-option>
             </ion-select>
           </ion-item>
           <ion-item>

@@ -10,7 +10,9 @@ import {NavigationService} from "../../providers/navigation.service";
 import {Loading} from "ionic-angular/components/loading/loading";
 import {AuthService} from "../../providers/auth.service";
 import {TranslateService} from "@ngx-translate/core";
-import {Observable} from "rxjs/Observable";
+import {suitableStudentOptions} from "../../entity/dictation";
+import {Observable} from 'rxjs/Rx'
+import 'rxjs/add/operator/combineLatest';
 
 @IonicPage()
 @Component({
@@ -22,6 +24,7 @@ export class EditDictationPage {
   loader: Loading;
   dictation: Dictation;
   isEdit: boolean;
+  suitableStudentOptions = suitableStudentOptions;
 
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
@@ -59,6 +62,7 @@ export class EditDictationPage {
       'vocabulary': new FormControl('', [Validators.required, maxVocabularyValidator(50)]),
       'suitableStudent': 'Any',
     });
+    this.inputForm.get('suitableStudent').setValue('Any');
   }
 
   setupForm(dictation: Dictation) {
@@ -72,7 +76,7 @@ export class EditDictationPage {
   }
 
   saveDictation() {
-    this.loader = this.loadingCtrl.create({ content: "Please wait..." });
+    this.loader = this.loadingCtrl.create({ content: this.translate.instant('Please wait') + "..." });
     this.memberDictationService.createOrAmendDictation(<EditDictationRequest>{
       dictationId: this.dictation ? this.dictation.id : -1,
       title: this.title.value,

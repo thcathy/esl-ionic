@@ -8,11 +8,11 @@
   },
   "SuitableStudent": {
     "Any": "Any",
-    "Kindergarten": "Kindergarten",
-    "JuniorPrimary": "Junior Primary",
-    "SeniorPrimary": "Senior Primary",
-    "JuniorSecondary": "Junior Secondary",
-    "SeniorSecondary": "Senior Secondary"
+    "Kindergarten": "Kindergarten (3-5)",
+    "JuniorPrimary": "Junior Primary (6-8)",
+    "SeniorPrimary": "Senior Primary (9-11)",
+    "JuniorSecondary": "Junior Secondary (12-14)",
+    "SeniorSecondary": "Senior Secondary (15-17)"
   },
   "Menu_Quick": "Quick",
   "Menu_Create": "Create",
