@@ -73,7 +73,6 @@
     <preference name="SplashScreenDelay" value="3000" />
     <preference name="AndroidLaunchMode" value="singleTask" />
     <engine name="android" spec="^6.2.3" />
-    <engine name="ios" spec="^4.5.2" />
     <plugin name="cordova-plugin-crosswalk-webview" spec="^2.3.0">
         <variable name="XWALK_VERSION" value="22+" />
         <variable name="XWALK_LITEVERSION" value="xwalk_core_library_canary:17+" />
@@ -95,4 +94,5 @@
         <variable name="ANDROID_HOST" value="thcathy.auth0.com" />
         <variable name="ANDROID_PATHPREFIX" value="/cordova/com.esl.ionic/callback" />
     </plugin>
+    <engine name="ios" spec="~4.5.4" />
 </widget>
