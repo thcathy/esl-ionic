@@ -7,7 +7,7 @@
       <ion-toolbar>
         <ion-title>
           <span *ngIf="!authService.isAuthenticated()">{{ 'Menu' | translate }}</span>
-          <span *ngIf="authService.isAuthenticated()">Hi, {{authService.userProfile?.name}}</span>
+          <span *ngIf="authService.isAuthenticated()">{{'Hi'|translate}}, {{authService.userProfile?.name}}</span>
         </ion-title>
       </ion-toolbar>
     </ion-header>

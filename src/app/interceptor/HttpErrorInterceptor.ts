@@ -26,10 +26,8 @@ export class HttpErrorInterceptor implements HttpInterceptor {
         if (this.isUnknownError(err)) {
           //alert(`Cannot connect to Server, please check your network!`);
           console.error(`Cannot connect to Server, please check your network!`);
-          return new ErrorObservable(`Cannot connect to Server`);
-        } else {
-          return new ErrorObservable(`Server Error! (${err.status})`);
         }
+        return new ErrorObservable(`Server Error! (${err.status})`);
       });
   }
 

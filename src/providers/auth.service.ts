@@ -66,7 +66,7 @@ export class AuthService {
     } else {
       console.log('login by auth0 web page');
       this.auth0.authorize({
-        language: this.getAuth0Language()
+        languageBaseUrl: this.getAuth0Language()
       });
     }
   }
@@ -78,7 +78,7 @@ export class AuthService {
       console.log('sign up by auth0 web page');
       this.auth0.authorize({
         initialScreen: 'signUp',
-        language: this.getAuth0Language()
+        languageBaseUrl: this.getAuth0Language()
       });
     }
   }
@@ -109,7 +109,7 @@ export class AuthService {
     const options = { scope: 'openid profile offline_access' };
     if (signUp) {
       options['initialScreen'] = 'signUp';
-      options['language'] = this.getAuth0Language();
+      options['languageBaseUrl'] = this.getAuth0Language();
     }
 
     client.authorize(options, (err, authResult) => {

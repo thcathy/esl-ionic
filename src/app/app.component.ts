@@ -21,11 +21,6 @@ import {AuthService} from "../providers/auth.service";
 import Auth0Cordova from '@auth0/cordova';
 import {MemberHomePage} from "../pages/member-home/member-home";
 import {EditDictationPage} from "../pages/edit-dictation/edit-dictation";
-import {TabsPage} from "../pages/tabs-page/tabs-page";
-import {SchedulePage} from "../pages/schedule/schedule";
-import {SpeakerListPage} from "../pages/speaker-list/speaker-list";
-import {MapPage} from "../pages/map/map";
-import {AboutPage} from "../pages/about/about";
 
 export interface PageInterface {
   title: string;
@@ -52,10 +47,10 @@ export class ConferenceApp {
   // the login page disables the left menu
   appPages: PageInterface[] = [
     { title: 'Home', name: 'HomePage', component: HomePage, icon: 'home', iconClass: 'fas fa-home' },
-    { title: 'Schedule', name: 'TabsPage', component: TabsPage, tabComponent: SchedulePage, index: 0, icon: 'calendar' },
-    { title: 'Speakers', name: 'TabsPage', component: TabsPage, tabComponent: SpeakerListPage, index: 1, icon: 'contacts' },
-    { title: 'Map', name: 'TabsPage', component: TabsPage, tabComponent: MapPage, index: 2, icon: 'map' },
-    { title: 'About', name: 'TabsPage', component: TabsPage, tabComponent: AboutPage, index: 3, icon: 'information-circle' },
+    //{ title: 'Schedule', name: 'TabsPage', component: TabsPage, tabComponent: SchedulePage, index: 0, icon: 'calendar' },
+    //{ title: 'Speakers', name: 'TabsPage', component: TabsPage, tabComponent: SpeakerListPage, index: 1, icon: 'contacts' },
+    //{ title: 'Map', name: 'TabsPage', component: TabsPage, tabComponent: MapPage, index: 2, icon: 'map' },
+    //{ title: 'About', name: 'TabsPage', component: TabsPage, tabComponent: AboutPage, index: 3, icon: 'information-circle' },
     { title: 'Quick Dictation', name: 'InstantDictationPage', component: InstantDictationPage, iconClass: 'fas fa-rocket' },
   ];
   loggedInPages: PageInterface[] = [
@@ -207,7 +202,7 @@ export class ConferenceApp {
 
   private initLanguage() {
     this.translate.addLangs(["en", "zh"]);
-    this.translate.setDefaultLang('en');
+    this.translate.setDefaultLang(this.defaultLanguage);
     this.storage.get(this.languageKey).then(locale => {
       // the lang to use, if the lang isn't available, it will use the current loader to get them
       this.translate.use(locale);

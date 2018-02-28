@@ -73,7 +73,7 @@
   "Clear inputs": "清除輸入",
   "Finished Practice": "完成練習",
   "CompletePracticeHeader": "你在 {{totalQuestion}} 個問題中得到 {{mark}} 分",
-  "Fail to create dictation": "",
+  "Fail to create or update dictation": "未能建立或更新聽寫練習",
   "OK": "確定",
   "Connection Error": "連接錯誤",
   "Please connect to network or Try again later": "請連接網絡或稍後再試",
