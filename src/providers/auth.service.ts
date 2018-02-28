@@ -6,6 +6,7 @@ import {AppService} from "./app.service";
 import {HomePage} from "../pages/home/home";
 import {Storage} from "@ionic/storage";
 import {MemberHomePage} from "../pages/member-home/member-home";
+import {TranslateService} from "@ngx-translate/core";
 
 const auth0CordovaConfig = {
   // needed for auth0
@@ -44,7 +45,8 @@ export class AuthService {
               public zone: NgZone,
               protected appService: AppService,
               public storage: Storage,
-              public events: Events) {
+              public events: Events,
+              public translate: TranslateService) {
     try {
       this.userProfile = JSON.parse(localStorage.getItem('profile'));
       this.idToken = localStorage.getItem(this.idTokenKey);
@@ -63,7 +65,9 @@ export class AuthService {
       this.loginCordova();
     } else {
       console.log('login by auth0 web page');
-      this.auth0.authorize();
+      this.auth0.authorize({
+        language: this.getAuth0Language()
+      });
     }
   }
 
@@ -73,7 +77,8 @@ export class AuthService {
     } else {
       console.log('sign up by auth0 web page');
       this.auth0.authorize({
-        initialScreen: 'signUp'
+        initialScreen: 'signUp',
+        language: this.getAuth0Language()
       });
     }
   }
@@ -104,6 +109,7 @@ export class AuthService {
     const options = { scope: 'openid profile offline_access' };
     if (signUp) {
       options['initialScreen'] = 'signUp';
+      options['language'] = this.getAuth0Language();
     }
 
     client.authorize(options, (err, authResult) => {
@@ -180,5 +186,14 @@ export class AuthService {
       return false;
     }
     return true;
+  }
+
+  private getAuth0Language() {
+    const locale = this.translate.currentLang;
+    if (locale != null) {
+      if (locale.indexOf("zh") > -1)
+        return "zh-tw";
+    }
+    return "en";
   }
 }

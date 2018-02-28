@@ -44,6 +44,7 @@
           </ion-item>
           <div *ngIf="vocabulary.invalid && (vocabulary.dirty || vocabulary.touched)" class="error-text">
             <div *ngIf="vocabulary.errors.maxVocabulary">{{'Cannot over 50 vocabulary'|translate}}</div>
+            <div *ngIf="vocabulary.errors.pattern">{{'Cannot contain invalid character(s)'|translate}}</div>
           </div>
 
           <button ion-button float-right item-end color="secondary" (click)="saveDictation()" style="margin: 16px;" [disabled]="inputForm.invalid">

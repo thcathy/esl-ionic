@@ -68,6 +68,8 @@ export class ConferenceApp {
     { title: 'Signup', name: 'SignupPage', component: SignupPage, icon: 'person-add' }
   ];
   rootPage: any;
+  defaultLanguage = 'en';
+  languageKey = 'language';
 
   constructor(
     public events: Events,
@@ -94,6 +96,8 @@ export class ConferenceApp {
 
     this.authService.handleAuthentication();
 
+    this.initLanguage();
+
     // load the conference data
     confData.load();
 
@@ -105,10 +109,6 @@ export class ConferenceApp {
 
     this.listenToLoginEvents();
 
-    translate.addLangs(["en", "zh"]);
-    translate.setDefaultLang('en');
-    // the lang to use, if the lang isn't available, it will use the current loader to get them
-    translate.use('en');
   }
 
   ngAfterViewInit(){
@@ -202,5 +202,15 @@ export class ConferenceApp {
 
   changeLanguage(lang: string) {
     this.translate.use(lang);
+    this.storage.set(this.languageKey, lang);
+  }
+
+  private initLanguage() {
+    this.translate.addLangs(["en", "zh"]);
+    this.translate.setDefaultLang('en');
+    this.storage.get(this.languageKey).then(locale => {
+      // the lang to use, if the lang isn't available, it will use the current loader to get them
+      this.translate.use(locale);
+    });
   }
 }

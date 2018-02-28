@@ -59,7 +59,7 @@ export class EditDictationPage {
       'title': new FormControl('', [Validators.required, Validators.minLength(5),  Validators.maxLength(50)]),
       'description': new FormControl('', [Validators.maxLength(100)]),
       'showImage': true,
-      'vocabulary': new FormControl('', [Validators.required, maxVocabularyValidator(50)]),
+      'vocabulary': new FormControl('', [Validators.required, maxVocabularyValidator(50), Validators.pattern("^([a-zA-Z ]++[\\-,]?)+")]),
       'suitableStudent': 'Any',
     });
     this.inputForm.get('suitableStudent').setValue('Any');
@@ -101,11 +101,11 @@ export class EditDictationPage {
     const title =  this.translate.get('Fail to create dictation');
     const button = this.translate.get('OK');
 
-    Observable.combineLatest(title, button).subscribe(([title, button])=>{
+    Observable.combineLatest(title, button).subscribe(([titleString, buttonString])=>{
       let alert = this.alertCtrl.create({
-        title: title,
+        title: titleString,
         subTitle: err,
-        buttons: [button]
+        buttons: [buttonString]
       });
       alert.present();
     });
