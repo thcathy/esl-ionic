@@ -13,6 +13,7 @@ import {TranslateService} from "@ngx-translate/core";
 import {suitableStudentOptions} from "../../entity/dictation";
 import {Observable} from 'rxjs/Rx'
 import 'rxjs/add/operator/combineLatest';
+import {GoogleAnalytics} from "@ionic-native/google-analytics";
 
 @IonicPage()
 @Component({
@@ -35,6 +36,7 @@ export class EditDictationPage {
               public loadingCtrl: LoadingController,
               public authService: AuthService,
               public translate: TranslateService,
+              public ga: GoogleAnalytics,
   ) {
     if (!this.authService.isAuthenticated()) {
       this.authService.login();
@@ -53,6 +55,10 @@ export class EditDictationPage {
   get vocabulary() { return this.inputForm.get('vocabulary'); }
   get showImage() { return this.inputForm.get('showImage'); }
   get suitableStudent() { return this.inputForm.get('suitableStudent'); }
+
+  ionViewWillEnter() {
+    this.ga.trackView('edit-dictation')
+  }
 
   createForm() {
     this.inputForm = this.formBuilder.group({

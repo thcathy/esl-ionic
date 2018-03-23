@@ -8,6 +8,7 @@ import {DictationStatistics} from "../../entity/dictation-statistics";
 import {InAppBrowser} from "@ionic-native/in-app-browser";
 import {ServerService} from "../../providers/server.service";
 import {TranslateService} from "@ngx-translate/core";
+import {GoogleAnalytics} from "@ionic-native/google-analytics";
 
 @IonicPage()
 @Component({
@@ -27,6 +28,7 @@ export class HomePage {
               public serverService: ServerService,
               public alertCtrl: AlertController,
               public translate: TranslateService,
+              public ga: GoogleAnalytics,
   ) {
   }
 
@@ -43,6 +45,10 @@ export class HomePage {
 
     this.rankingService.randomTopScore().subscribe(rank => this.memberScoreRanking = rank, _e=>{});
     this.dictationService.randomDictationStatistics().subscribe(stat => this.dictationStat = stat, _e=>{});
+  }
+
+  ionViewWillEnter() {
+    this.ga.trackView('home')
   }
 
   openInstantDictation() {

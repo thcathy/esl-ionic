@@ -5,6 +5,7 @@ import {Dictation} from "../../entity/dictation";
 import {Vocab} from "../../entity/vocab";
 import {NavigationService} from "../../providers/navigation.service";
 import {Storage} from "@ionic/storage";
+import {GoogleAnalytics} from "@ionic-native/google-analytics";
 
 @IonicPage()
 @Component({
@@ -23,7 +24,9 @@ export class InstantDictationPage {
     public navParams: NavParams,
     public formBuilder: FormBuilder,
     public navService: NavigationService,
-    public storage: Storage) {
+    public storage: Storage,
+    public ga: GoogleAnalytics,
+    ) {
     this.createForm();
   }
 
@@ -38,6 +41,10 @@ export class InstantDictationPage {
         'word': new FormControl('',[Validators.pattern("([a-zA-Z \\-']+)?")])
       }));
     }
+  }
+
+  ionViewWillEnter() {
+    this.ga.trackView('instant-dictation')
   }
 
   get vocabs(): FormArray {

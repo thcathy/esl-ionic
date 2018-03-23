@@ -21,6 +21,7 @@ import {AuthService} from "../providers/auth.service";
 import Auth0Cordova from '@auth0/cordova';
 import {MemberHomePage} from "../pages/member-home/member-home";
 import {EditDictationPage} from "../pages/edit-dictation/edit-dictation";
+import {GoogleAnalytics} from "@ionic-native/google-analytics";
 
 export interface PageInterface {
   title: string;
@@ -75,7 +76,8 @@ export class ConferenceApp {
     public storage: Storage,
     public splashScreen: SplashScreen,
     public translate: TranslateService,
-    public authService: AuthService
+    public authService: AuthService,
+    public ga: GoogleAnalytics
   ) {
 
     // Check if the user has already seen the tutorial
@@ -175,6 +177,14 @@ export class ConferenceApp {
     // Call any initial plugins when ready
     this.platform.ready().then(() => {
       this.splashScreen.hide();
+
+      this.ga.startTrackerWithId('UA-114755687-1')
+        .then(() => {
+          console.log('Google analytics is ready now');
+          // Tracker is ready
+          // You can now track pages or set additional information such as AppVersion or UserId
+        })
+        .catch(e => console.log('Error starting GoogleAnalytics', e));
     });
   }
 

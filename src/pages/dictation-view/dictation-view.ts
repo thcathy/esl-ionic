@@ -3,6 +3,7 @@ import {IonicPage, NavController, NavParams, ToastController} from 'ionic-angula
 import {Dictation} from "../../entity/dictation";
 import {DictationService} from "../../providers/dictation/dictation.service";
 import {AuthService} from "../../providers/auth.service";
+import {GoogleAnalytics} from "@ionic-native/google-analytics";
 
 @IonicPage({
   segment: 'dictation-view/:dictationId', // will be used in browser as URL
@@ -19,7 +20,8 @@ export class DictationViewPage {
               public navParams: NavParams,
               public dictationService: DictationService,
               public authService: AuthService,
-              public toastCtrl: ToastController
+              public toastCtrl: ToastController,
+              public ga: GoogleAnalytics,
   ) {
     this.dictation = navParams.get('dictation');
     this.dictationId = navParams.data.dictationId;
@@ -30,7 +32,8 @@ export class DictationViewPage {
         .toPromise().then(d => this.dictation = d);
   }
 
-  ionViewDidLoad() {
+  ionViewWillEnter() {
+    this.ga.trackView('dictation-view')
   }
 
   private presentToast(toastMessage: string) {

@@ -3,6 +3,7 @@ import {IonicPage, LoadingController, NavController, NavParams} from 'ionic-angu
 import {MemberDictationService} from "../../providers/dictation/member-dictation.service";
 import {Dictation} from "../../entity/dictation";
 import {TranslateService} from "@ngx-translate/core";
+import {GoogleAnalytics} from "@ionic-native/google-analytics";
 
 @IonicPage()
 @Component({
@@ -17,7 +18,8 @@ export class MemberHomePage {
     public navParams: NavParams,
     public loadingCtrl: LoadingController,
     public memberDictationService: MemberDictationService,
-    public translateService: TranslateService
+    public translateService: TranslateService,
+    public ga: GoogleAnalytics,
   ) {
     let loader = this.loadingCtrl.create({ content: translateService.instant('Please wait') + "..." });
     loader.present();
@@ -26,6 +28,10 @@ export class MemberHomePage {
       loader.dismissAll();
       this.createdDictations = dictations;
     });
+  }
+
+  ionViewWillEnter() {
+    this.ga.trackView('member-home')
   }
 
 }

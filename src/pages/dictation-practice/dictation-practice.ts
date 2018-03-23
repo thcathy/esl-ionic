@@ -7,6 +7,7 @@ import {VocabPracticeHistory} from "../../interfaces/vocab-practice-history";
 import {DictationService} from "../../providers/dictation/dictation.service";
 import {PracticeCompletePage} from "../practice-complete/practice-complete";
 import {TranslateService} from "@ngx-translate/core";
+import {GoogleAnalytics} from "@ionic-native/google-analytics";
 
 declare var responsiveVoice: any;
 
@@ -34,6 +35,7 @@ export class DictationPracticePage {
     public vocabPracticeService: VocabPracticeService,
     public dictationService: DictationService,
     public translateService: TranslateService,
+    public ga: GoogleAnalytics,
   ) {
     let loader = this.loadingCtrl.create({ content: translateService.instant('Please wait') + "..." });
     loader.present();
@@ -63,6 +65,10 @@ export class DictationPracticePage {
     this.questionIndex = 0;
     this.mark = 0;
     this.phonics = "Phonetic";
+  }
+
+  ionViewWillEnter() {
+    this.ga.trackView('dictation-practice')
   }
 
   speak() {

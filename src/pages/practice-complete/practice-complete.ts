@@ -4,6 +4,7 @@ import {NavigationService} from "../../providers/navigation.service";
 import {VocabPracticeHistory} from "../../interfaces/vocab-practice-history";
 import {Dictation} from "../../entity/dictation";
 import {DictationService} from "../../providers/dictation/dictation.service";
+import {GoogleAnalytics} from "@ionic-native/google-analytics";
 
 @IonicPage()
 @Component({
@@ -23,9 +24,15 @@ export class PracticeCompletePage {
         public navCtrl: NavController,
         public navParams: NavParams,
         public navService: NavigationService,
-        public dictationService: DictationService) {
+        public dictationService: DictationService,
+        public ga: GoogleAnalytics,
+  ) {
     this.getNavParams();
     this.createHistory();
+  }
+
+  ionViewWillEnter() {
+    this.ga.trackView('practice-complete')
   }
 
   getNavParams() {
