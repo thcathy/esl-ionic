@@ -7,17 +7,17 @@ import {HomePage} from "../pages/home/home";
 import {Storage} from "@ionic/storage";
 import {MemberHomePage} from "../pages/member-home/member-home";
 import {TranslateService} from "@ngx-translate/core";
+import * as auth0 from 'auth0-js';
 
-const auth0CordovaConfig = {
+export const auth0CordovaConfig = {
   // needed for auth0
-  clientID: 'W8nTboR1CzD4nyytnxnnIYn2JhiVU1PL',
+  clientID: 'Q2x3VfMKsuKtmXuBbuwuTw3ARDZ1xpBS',
 
   // needed for auth0cordova
-  clientId: 'W8nTboR1CzD4nyytnxnnIYn2JhiVU1PL',
+  clientId: 'Q2x3VfMKsuKtmXuBbuwuTw3ARDZ1xpBS',
   domain: 'thcathy.auth0.com',
-  callbackURL: location.href,
   packageIdentifier: 'com.esl.ionic',
-  scope: 'openid profile'
+  audience: 'https://thcathy.auth0.com/userinfo'
 };
 
 @Injectable()
@@ -38,7 +38,7 @@ export class AuthService {
     scope: 'openid profile'
   });
 
-  auth0Cordova = new Auth0.WebAuth(auth0CordovaConfig);
+  auth0Cordova = new auth0.WebAuth(auth0CordovaConfig);
 
 
   constructor(protected app: App,
@@ -50,6 +50,7 @@ export class AuthService {
     try {
       this.userProfile = JSON.parse(localStorage.getItem('profile'));
       this.idToken = localStorage.getItem(this.idTokenKey);
+      this.accessToken = localStorage.getItem(this.accessTokenKey);
     } catch (e) {
       localStorage.setItem(this.idTokenKey, null);
     }
@@ -113,21 +114,26 @@ export class AuthService {
     }
 
     client.authorize(options, (err, authResult) => {
+      console.log(`authResult: ${JSON.stringify(authResult)}`);
       if(err) {
         throw err;
       }
-      this.setSession(authResult);
+
+      localStorage.setItem(this.accessTokenKey, authResult.accessToken);
+      localStorage.setItem(this.idTokenKey, authResult.idToken);
+      this.accessToken = authResult.accessToken;
+      // Set access token expiration
+      const expiresAt = JSON.stringify((authResult.expiresIn * 1000) + new Date().getTime());
+      localStorage.setItem(this.expiresAtKey, expiresAt);
+      // Fetch user's profile info
       this.auth0Cordova.client.userInfo(this.accessToken, (err, profile) => {
-        if(err) {
+        if (err) {
+          console.error(`${JSON.stringify(err)}`);
           this.getNavCtrl().setRoot(HomePage);
           throw err;
         }
 
-        profile.user_metadata = profile.user_metadata || {};
-        localStorage.setItem('profile', JSON.stringify(profile));
-        this.zone.run(() => {
-          this.userProfile = profile;
-        });
+        this.zone.run(() => this.userProfile = profile);
         this.getNavCtrl().setRoot(MemberHomePage);
       });
     });
@@ -149,9 +155,13 @@ export class AuthService {
     localStorage.removeItem('access_token');
     localStorage.removeItem('id_token');
     localStorage.removeItem('expires_at');
+
+
+    this.accessToken = null;
+    this.userProfile = null;
+
     // Go back to the home route
     this.getNavCtrl().setRoot(HomePage);
-    this.userProfile = null;
   }
 
   public isAuthenticated(): boolean {

@@ -82,12 +82,13 @@ export class ConferenceApp {
 
     // Check if the user has already seen the tutorial
     this.storage.get('hasSeenTutorial')
-      .then((hasSeenTutorial) => {
-        if (hasSeenTutorial) {
-          this.rootPage = HomePage;
-        } else {
-          this.rootPage = TutorialPage;
-        }
+      .then((_hasSeenTutorial) => {
+        //if (_hasSeenTutorial) {
+        //  this.rootPage = HomePage;
+        //} else {
+        //  this.rootPage = TutorialPage;
+        //}
+        this.rootPage = HomePage;
         this.platformReady()
       });
 
@@ -110,9 +111,6 @@ export class ConferenceApp {
 
   ngAfterViewInit(){
     this.authService.handleAuthentication();
-    (<any>window).handleOpenURL = (url) => {
-      Auth0Cordova.onRedirectUri(url);
-    };
   }
 
   openLoggedInPage(page: PageInterface) {
@@ -185,6 +183,13 @@ export class ConferenceApp {
           // You can now track pages or set additional information such as AppVersion or UserId
         })
         .catch(e => console.log('Error starting GoogleAnalytics', e));
+
+      // Add this function
+      (<any>window).handleOpenURL = (url) => {
+        console.log(`url: ${url}`);
+        debugger;
+        Auth0Cordova.onRedirectUri(url);
+      };
     });
   }
 
@@ -214,8 +219,7 @@ export class ConferenceApp {
     this.translate.addLangs(["en", "zh"]);
     this.translate.setDefaultLang(this.defaultLanguage);
     this.storage.get(this.languageKey).then(locale => {
-      // the lang to use, if the lang isn't available, it will use the current loader to get them
-      this.translate.use(locale);
+      if (locale != null) this.translate.use(locale);
     });
   }
 }

@@ -32,7 +32,7 @@ export class IdTokenInterceptor implements HttpInterceptor {
       request = request.clone({
         setHeaders: {
           Authorization: `Bearer ${idToken}`,
-          UserId: 'google-oauth2|111915626940466766867'
+          //UserId: 'google-oauth2|111915626940466766867'
         }
       });
     }
