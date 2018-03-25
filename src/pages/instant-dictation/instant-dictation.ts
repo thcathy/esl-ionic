@@ -32,7 +32,7 @@ export class InstantDictationPage {
 
   createForm() {
     this.inputForm = this.formBuilder.group({
-      showImage: '',
+      showImage: true,
       vocabs: this.formBuilder.array([])
     });
 
@@ -57,10 +57,13 @@ export class InstantDictationPage {
 
   getFromLocalStorage() {
     this.storage.get(this.INSTANT_DICTATION_KEY).then((dictation: Dictation) => {
+      console.log(`dictation: ${JSON.stringify(dictation)}`);
+      if (dictation==null) return;
+
       this.inputForm.get('showImage').setValue(dictation.showImage);
 
       for (let i = 0; i < dictation.vocabs.length; i++) {
-        this.vocabs.at(i).setValue(dictation.vocabs[i]);
+        this.vocabs.at(i).patchValue(dictation.vocabs[i]);
       }
     });
   }
