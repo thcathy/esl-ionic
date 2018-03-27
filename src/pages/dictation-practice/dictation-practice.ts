@@ -8,6 +8,8 @@ import {DictationService} from "../../providers/dictation/dictation.service";
 import {PracticeCompletePage} from "../practice-complete/practice-complete";
 import {TranslateService} from "@ngx-translate/core";
 import {GoogleAnalytics} from "@ionic-native/google-analytics";
+import {TextToSpeech} from "@ionic-native/text-to-speech";
+import {AppService} from "../../providers/app.service";
 
 declare var responsiveVoice: any;
 
@@ -36,6 +38,8 @@ export class DictationPracticePage {
     public dictationService: DictationService,
     public translateService: TranslateService,
     public ga: GoogleAnalytics,
+    public tts: TextToSpeech,
+    public appService: AppService,
   ) {
     let loader = this.loadingCtrl.create({ content: translateService.instant('Please wait') + "..." });
     loader.present();
@@ -76,7 +80,14 @@ export class DictationPracticePage {
       var audio = new Audio(this.vocabPractices[this.questionIndex].activePronounceLink);
       audio.play();
     } else {
-      responsiveVoice.speak(this.vocabPractices[this.questionIndex].word);
+      if (this.appService.isApp()) {
+        this.tts.speak(this.vocabPractices[this.questionIndex].word)
+          .then(() => console.log('Success by tts'))
+          .catch((reason: any) => console.log(reason));
+      } else {
+        console.log(`speak by responsive voice`);
+        responsiveVoice.speak(this.vocabPractices[this.questionIndex].word);
+      }
     }
   }
 
@@ -130,7 +141,7 @@ export class DictationPracticePage {
   }
 
   private preNextQuestion() {
-    this.phonics = "Phonetics";
+    this.phonics = "Phonetic";
     this.answer = '';
   }
 

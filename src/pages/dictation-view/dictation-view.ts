@@ -30,6 +30,8 @@ export class DictationViewPage {
     if (this.dictation == null && this.dictationId > 0)
       this.dictationService.getById(this.dictationId)
         .toPromise().then(d => this.dictation = d);
+
+    console.log(`userId: ${this.dictation.creator.userId}, userProfile: ${JSON.stringify(authService.userProfile)}`);
   }
 
   ionViewWillEnter() {

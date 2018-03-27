@@ -17,7 +17,7 @@
         </ion-col>
         <ion-col text-right>
           <button *ngIf="dictation.id > 0" ion-button item-end color="secondary" (click)="recommend()" style="margin: 5px;" [disabled]="recommended">
-            <i class="far fa-thumbs-up"></i>&nbsp;{{ recommended ? 'Recommended' : 'Recommend' | translate }}
+            <i class="far fa-thumbs-up"></i>&nbsp;{{ recommendBtnText() }}
           </button>
         </ion-col>
       </ion-row>

@@ -2,4 +2,15 @@ page-edit-dictation {
   .error-text div {
     padding-left: 16px;
   }
+
+  .input-form {
+    .label {
+      font-size: 1.6rem !important;
+      color: #007d6f !important;
+    }
+
+    ::placeholder {
+      color: #BBBBBB;
+    }
+  }
 }

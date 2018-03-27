@@ -14,7 +14,7 @@
         <form [formGroup]="inputForm" novalidate>
           <ion-item>
             <ion-label stacked>{{'Title'|translate}} *</ion-label>
-            <ion-input type="text" formControlName="title" placeholder="Dictation {{now | date:'yyyy-MM-dd HH:mm'}}"></ion-input>
+            <ion-input type="text" formControlName="title" placeholder="Dictation {{now | date:'yyyy-MM-dd'}}"></ion-input>
           </ion-item>
           <div *ngIf="title.invalid && (title.dirty || title.touched)" class="error-text">
             <div *ngIf="title.errors.required">{{'Title is required'|translate}}</div>
@@ -29,7 +29,7 @@
             <div *ngIf="description.errors.maxlength">{{'Description cannot over 100 characters long'|translate}}</div>
           </div>
           <ion-item>
-            <ion-label>{{'Show Image'|translate}}</ion-label>
+            <ion-label><i class="far fa-images"></i> {{'Show Image'|translate}}</ion-label>
             <ion-toggle style="padding-right: 30px;" formControlName="showImage"></ion-toggle>
           </ion-item>
           <ion-item>

@@ -5,6 +5,7 @@ import {VocabPracticeHistory} from "../../interfaces/vocab-practice-history";
 import {Dictation} from "../../entity/dictation";
 import {DictationService} from "../../providers/dictation/dictation.service";
 import {GoogleAnalytics} from "@ionic-native/google-analytics";
+import {TranslateService} from "@ngx-translate/core";
 
 @IonicPage()
 @Component({
@@ -26,6 +27,7 @@ export class PracticeCompletePage {
         public navService: NavigationService,
         public dictationService: DictationService,
         public ga: GoogleAnalytics,
+        public translate: TranslateService,
   ) {
     this.getNavParams();
     this.createHistory();
@@ -65,6 +67,13 @@ export class PracticeCompletePage {
       this.recommended = true;
       this.dictationCard.highlightRecommend();
     })
+  }
+
+  recommendBtnText(): string {
+    if (this.recommended)
+      return this.translate.instant('Recommended');
+    else
+      return this.translate.instant('Recommend');
   }
 
 }

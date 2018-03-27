@@ -133,7 +133,10 @@ export class AuthService {
           throw err;
         }
 
-        this.zone.run(() => this.userProfile = profile);
+        this.zone.run(() => {
+          localStorage.setItem('profile', JSON.stringify(profile));
+          this.userProfile = profile;
+        });
         this.getNavCtrl().setRoot(MemberHomePage);
       });
     });

@@ -10,16 +10,14 @@
           <ion-col text-right>{{ dictation.createdDate | date: 'yyyy-MM-dd' }}</ion-col>
         </ion-row>
         <ion-row>
-          <ion-col class="col-label">{{ 'TotalVocabs' | translate }}:</ion-col>
-          <ion-col>{{ dictation.vocabs.length }}</ion-col>
-          <ion-col class="col-label" text-left>{{ 'Finished' | translate }}:</ion-col>
-          <ion-col>{{ dictation.totalAttempt }}</ion-col>
-          <ion-col center text-right><i class="far fa-thumbs-up"></i> {{dictation.totalRecommended}}</ion-col>
+          <ion-col><i class="fas fa-list-ol"></i> {{ dictation.vocabs.length }}</ion-col>
+          <ion-col><i class="fas fa-pencil-alt"></i> {{ dictation.totalAttempt }}</ion-col>
+          <ion-col><i class="far fa-thumbs-up"></i> {{dictation.totalRecommended}}</ion-col>
+          <ion-col><i class="far fa-images"></i> <i class="fas fa-check" *ngIf="dictation.showImage"></i><i class="fas fa-times" *ngIf="!dictation.showImage"></i></ion-col>
         </ion-row>
         <ion-row>
           <ion-col class="col-label">{{ 'Suitable' | translate }}:</ion-col>
-          <ion-col>{{ dictation.suitableStudent }}</ion-col>
-          <ion-col text-right>{{ 'Show Image' | translate }}: <i class="fas fa-check" *ngIf="dictation.showImage"></i><i class="fas fa-times" *ngIf="!dictation.showImage"></i></ion-col>
+          <ion-col>{{ 'SuitableStudent.' + dictation.suitableStudent | translate }}</ion-col>
         </ion-row>
         <button ion-button outline item-end (click)="navService.openDictation(dictation)">{{ 'ViewDictation' | translate }}</button>
       </ion-item>

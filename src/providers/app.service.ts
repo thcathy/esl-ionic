@@ -8,8 +8,8 @@ export class AppService {
   ) { }
 
   isApp(): boolean {
-    console.log(`platforms: ${this.platform._platforms}`);
-    if(this.platform.is('core') || this.platform.is('mobileweb') || document.URL.startsWith('http')) {
+    console.log(`platforms: ${this.platform._platforms}, url: ${document.URL}`);
+    if(this.platform.is('core') || this.platform.is('mobileweb')) {
       return false;
     } else {
       return true;
