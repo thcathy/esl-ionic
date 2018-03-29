@@ -30,5 +30,8 @@
         <button ion-button clear (click)="older()" *ngIf="showOlder">{{ 'Older' | translate }} <i class="fas fa-angle-right"></i></button>
       </ion-col>
     </ion-row>
+    <ion-row style="border-top: .55px solid #c8c7cc;">
+      <ion-col text-right><button ion-button clear (click)="navService.editDictation()" *ngIf="showCreateButton"><i class="far fa-edit"></i> {{ 'Create Dictation' | translate }}</button></ion-col>
+    </ion-row>
   </ion-card-content>
 </ion-card>

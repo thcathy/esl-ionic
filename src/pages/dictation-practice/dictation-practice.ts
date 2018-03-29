@@ -110,16 +110,18 @@ export class DictationPracticePage {
   submitAnswer() {
     this.checkAnswer();
     this.questionIndex++;
-    if (this.end()) {
-      this.navCtrl.setRoot(PracticeCompletePage, {
-        'dictation': this.dictation,
-        'mark': this.mark,
-        'histories': this.histories
-      });
-    } else {
-      this.preNextQuestion();
-      this.speak();
-    }
+    this.waitForNextQuestion().then(() => {
+      if (this.end()) {
+        this.navCtrl.setRoot(PracticeCompletePage, {
+          'dictation': this.dictation,
+          'mark': this.mark,
+          'histories': this.histories
+        });
+      } else {
+        this.preNextQuestion();
+        this.speak();
+      }
+    });
   }
 
   end(): boolean {
@@ -145,4 +147,21 @@ export class DictationPracticePage {
     this.answer = '';
   }
 
+  async waitForNextQuestion() {
+    if (this.questionIndex >= this.vocabPractices.length && this.questionIndex < this.dictation.vocabs.length) {
+      let loader = this.loadingCtrl.create({ content: this.translateService.instant('Please wait') + "..." });
+      loader.present();
+
+      while (this.questionIndex >= this.vocabPractices.length) {
+        console.log(`waiting for question api return`);
+        await this.sleep(100);
+      }
+
+      loader.dismissAll();
+    }
+  }
+
+  sleep(ms = 0) {
+    return new Promise(r => setTimeout(r, ms));
+  }
 }

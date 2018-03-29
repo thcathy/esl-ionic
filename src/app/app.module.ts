@@ -55,6 +55,7 @@ import {GoogleAnalytics} from "@ionic-native/google-analytics";
 import {DisplayService} from "../providers/display.service";
 import {TextToSpeech} from "@ionic-native/text-to-speech";
 import {MemberService} from "../providers/member/member.service";
+import {PipesModule} from "../pipes/pipes.module";
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -124,6 +125,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     }),
     ComponentsModule,
     ReactiveFormsModule,
+    PipesModule,
   ],
   bootstrap: [IonicApp],
   entryComponents: [

@@ -10,12 +10,16 @@ export class DictationListComponent implements OnChanges {
   private dictationPerPage: number = 5;
 
   @Input() dictations: Array<Dictation>;
+  @Input() showCreateButton: boolean;
   viewDictations: Array<Dictation>;
   page: number;
   showOlder: boolean;
 
-  constructor(public navService: NavigationService) {
+  constructor(
+    public navService: NavigationService,
+  ) {
     this.page = 0;
+    this.showCreateButton = false;
   }
 
   ngOnChanges(_changes: SimpleChanges) {

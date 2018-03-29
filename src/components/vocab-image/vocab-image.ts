@@ -1,14 +1,18 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 
 @Component({
   selector: 'vocab-image',
   templateUrl: 'vocab-image.html'
 })
-export class VocabImageComponent {
+export class VocabImageComponent implements OnChanges {
   @Input() images: String[];
   index: number;
 
   constructor() {
+    this.index = 0;
+  }
+
+  ngOnChanges(_changes: SimpleChanges) {
     this.index = 0;
   }
 

@@ -36,10 +36,17 @@ export class DictationService {
   }
 
   createHistory(id: number, mark: number, histories: Array<VocabPracticeHistory>): Observable<Dictation> {
+    let trimmedSizeHistories = histories.map((h) => {
+      h.question.picsFullPaths = [];
+      h.question.picsFullPathsInString = '';
+      h.question.grades = [];
+      return h;
+    });
+
     return this.http.post<Dictation>(this.createHistoryUrl, {
       dictationId: id,
       mark: mark,
-      histories: histories
+      histories: trimmedSizeHistories
     });
   }
 

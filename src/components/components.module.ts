@@ -10,6 +10,7 @@ import { AppHeaderComponent } from './app-header/app-header';
 import { DictationCardComponent } from './dictation-card/dictation-card';
 import { FooterComponent } from './footer/footer';
 import { DictationListComponent } from './dictation-list/dictation-list';
+import {PipesModule} from "../pipes/pipes.module";
 
 @NgModule({
 	declarations: [MemberScoreRankingComponent,
@@ -24,6 +25,7 @@ import { DictationListComponent } from './dictation-list/dictation-list';
 	imports: [
 	  IonicModule,
     TranslateModule,
+    PipesModule,
   ],
 	exports: [MemberScoreRankingComponent,
     DictationStatisticsComponent,

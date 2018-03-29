@@ -11,5 +11,5 @@
       </button>
     </ion-col>
   </ion-row>
-  <img [src]="images[index]" class="image" />
+  <img [src]="images[index] | safeHtml" class="image" />
 </ion-card>

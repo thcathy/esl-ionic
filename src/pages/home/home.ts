@@ -44,7 +44,10 @@ export class HomePage {
     });
 
     this.rankingService.randomTopScore().subscribe(rank => this.memberScoreRanking = rank, _e=>{});
-    this.dictationService.randomDictationStatistics().subscribe(stat => this.dictationStat = stat, _e=>{});
+    this.dictationService.randomDictationStatistics().subscribe(stat => {
+      stat.dictations = stat.dictations.filter((d) => d.vocabs.length > 0);
+      this.dictationStat = stat, _e=>{}
+    });
   }
 
   ionViewWillEnter() {
