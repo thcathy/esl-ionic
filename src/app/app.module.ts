@@ -52,7 +52,9 @@ import {MemberDictationService} from "../providers/dictation/member-dictation.se
 import {MemberHomePage} from "../pages/member-home/member-home";
 import {ServerService} from "../providers/server.service";
 import {GoogleAnalytics} from "@ionic-native/google-analytics";
+import {DisplayService} from "../providers/display.service";
 import {TextToSpeech} from "@ionic-native/text-to-speech";
+import {MemberService} from "../providers/member/member.service";
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -160,7 +162,9 @@ export function HttpLoaderFactory(http: HttpClient) {
     DictationService,
     VocabPracticeService,
     MemberDictationService,
+    MemberService,
     AuthService,
+    DisplayService,
     ServerService,
     GoogleAnalytics,
     TextToSpeech,

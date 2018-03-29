@@ -8,6 +8,7 @@ import {Storage} from "@ionic/storage";
 import {MemberHomePage} from "../pages/member-home/member-home";
 import {TranslateService} from "@ngx-translate/core";
 import * as auth0 from 'auth0-js';
+import {MemberService} from "./member/member.service";
 
 export const auth0CordovaConfig = {
   // needed for auth0
@@ -35,7 +36,7 @@ export class AuthService {
     responseType: 'token id_token',
     audience: 'https://thcathy.auth0.com/userinfo',
     redirectUri: window.location.origin,
-    scope: 'openid profile'
+    scope: 'openid profile email'
   });
 
   auth0Cordova = new auth0.WebAuth(auth0CordovaConfig);
@@ -46,7 +47,8 @@ export class AuthService {
               protected appService: AppService,
               public storage: Storage,
               public events: Events,
-              public translate: TranslateService) {
+              public translate: TranslateService,
+              public memberService: MemberService) {
     try {
       this.userProfile = JSON.parse(localStorage.getItem('profile'));
       this.idToken = localStorage.getItem(this.idTokenKey);
@@ -94,9 +96,11 @@ export class AuthService {
         this.events.publish('user:login');
         window.location.hash = '';
         this.setSession(authResult);
-        this.getNavCtrl().setRoot(MemberHomePage);
         this.getProfile((err) => {
           console.warn(`cannot get profile: ${err}`);
+        });
+        this.memberService.getProfile().subscribe((_m) => {
+          this.getNavCtrl().setRoot(MemberHomePage);
         });
       } else if (err) {
         this.getNavCtrl().setRoot(HomePage);
@@ -107,7 +111,7 @@ export class AuthService {
 
   public loginCordova(signUp = false) {
     const client = new Auth0Cordova(auth0CordovaConfig);
-    const options = { scope: 'openid profile offline_access' };
+    const options = { scope: 'openid profile offline_access email' };
     if (signUp) {
       options['initialScreen'] = 'signUp';
       options['languageBaseUrl'] = this.getAuth0Language();
@@ -125,6 +129,9 @@ export class AuthService {
       // Set access token expiration
       const expiresAt = JSON.stringify((authResult.expiresIn * 1000) + new Date().getTime());
       localStorage.setItem(this.expiresAtKey, expiresAt);
+
+
+
       // Fetch user's profile info
       this.auth0Cordova.client.userInfo(this.accessToken, (err, profile) => {
         if (err) {
@@ -137,7 +144,9 @@ export class AuthService {
           localStorage.setItem('profile', JSON.stringify(profile));
           this.userProfile = profile;
         });
-        this.getNavCtrl().setRoot(MemberHomePage);
+        this.memberService.getProfile().subscribe((_m) => {
+          this.getNavCtrl().setRoot(MemberHomePage);
+        });
       });
     });
   }

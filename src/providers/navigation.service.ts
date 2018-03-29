@@ -12,7 +12,8 @@ export class NavigationService {
   }
 
   startDictation(dictation: Dictation) {
-    let navCtrl = this.app.getActiveNav();
+    let navCtrl = this.app.getActiveNavs()[0];
+    console.log(`${navCtrl.id}`);
     navCtrl.setRoot('DictationPracticePage', {
       'dictation': dictation,
       'dictationId': dictation.id,
@@ -20,7 +21,8 @@ export class NavigationService {
   }
 
   openDictation(dictation: Dictation, toastMessage: string = null) {
-    let navCtrl = this.app.getActiveNav();
+    let navCtrl = this.app.getActiveNavs()[0];
+    console.log(`${navCtrl.id}`);
     navCtrl.setRoot('DictationViewPage', {
       dictation: dictation,
       dictationId: dictation.id,
@@ -29,7 +31,7 @@ export class NavigationService {
   }
 
   editDictation(dictation: Dictation) {
-    let navCtrl = this.app.getActiveNav();
+    let navCtrl = this.app.getActiveNavs()[0];
     navCtrl.setRoot('EditDictationPage', {
       dictation: dictation
     });
