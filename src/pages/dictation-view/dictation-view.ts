@@ -31,7 +31,7 @@ export class DictationViewPage {
       this.dictationService.getById(this.dictationId)
         .toPromise().then(d => this.dictation = d);
 
-    console.log(`userId: ${this.dictation.creator.userId}, userProfile: ${JSON.stringify(authService.userProfile)}`);
+    console.log(`userId: ${this.dictation.creator.emailAddress}, userProfile: ${JSON.stringify(authService.userProfile)}`);
   }
 
   ionViewWillEnter() {
