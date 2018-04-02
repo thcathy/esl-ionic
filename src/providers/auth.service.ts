@@ -112,9 +112,9 @@ export class AuthService {
   public loginCordova(signUp = false) {
     const client = new Auth0Cordova(auth0CordovaConfig);
     const options = { scope: 'openid profile offline_access email' };
+    options['languageBaseUrl'] = this.getAuth0Language();
     if (signUp) {
       options['initialScreen'] = 'signUp';
-      options['languageBaseUrl'] = this.getAuth0Language();
     }
 
     client.authorize(options, (err, authResult) => {
@@ -129,7 +129,6 @@ export class AuthService {
       // Set access token expiration
       const expiresAt = JSON.stringify((authResult.expiresIn * 1000) + new Date().getTime());
       localStorage.setItem(this.expiresAtKey, expiresAt);
-
 
 
       // Fetch user's profile info
@@ -212,10 +211,14 @@ export class AuthService {
 
   private getAuth0Language() {
     const locale = this.translate.currentLang;
+    let result = "en";
     if (locale != null) {
-      if (locale.indexOf("zh") > -1)
-        return "zh-tw";
+      if (locale.indexOf("zh-Hans") > -1)
+        result = "zh-tw";
+      else if (locale.indexOf("zh-Hant") > -1)
+        result = "zh";
     }
-    return "en";
+    console.log(`set auth0 lang based on ${locale} to ${result}`);
+    return result;
   }
 }

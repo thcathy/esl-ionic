@@ -216,7 +216,7 @@ export class ConferenceApp {
   }
 
   private initLanguage() {
-    this.translate.addLangs(["en", "zh"]);
+    this.translate.addLangs(["en", "zh-Hans", "zh-Hant"]);
     this.translate.setDefaultLang(this.defaultLanguage);
     this.storage.get(this.languageKey).then(locale => {
       if (locale != null) this.translate.use(locale);
