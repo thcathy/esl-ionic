@@ -8,7 +8,7 @@
         <ion-badge item-start style="background-color: #4CAF50; margin: 0px;">{{ i+1 }}</ion-badge>
         <ion-row>
           <ion-col>{{ dictation.title | slice:0:17 }}{{ dictation.title.length > 17 ? '...' : '' }}</ion-col>
-          <ion-col text-right>{{displayService.displayName(dictation.creator) | slice:0:17}}{{displayService.displayName(dictation.creator).length > 17 ? '...' : '' }}</ion-col>
+          <ion-col text-right>{{displayService?.displayName(dictation.creator) | slice:0:17}}{{displayService?.displayName(dictation.creator).length > 17 ? '...' : '' }}</ion-col>
         </ion-row>
         <ion-row class="sub-row">
           <ion-col><i class="fas fa-list-ol"></i> {{ dictation.vocabs.length }}</ion-col>

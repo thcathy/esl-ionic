@@ -17,7 +17,9 @@ export class InstantDictationPage {
   private INSTANT_DICTATION_KEY = 'INSTANT_DICTATION_KEY';
 
   maxVocab: number = 20;
-  inputForm: FormGroup;
+  byWordInputForm: FormGroup;
+  bySentenceInputForm: FormGroup;
+  type: string = 'byword';
 
   constructor(
     public navCtrl: NavController,
@@ -31,7 +33,7 @@ export class InstantDictationPage {
   }
 
   createForm() {
-    this.inputForm = this.formBuilder.group({
+    this.byWordInputForm = this.formBuilder.group({
       showImage: true,
       vocabs: this.formBuilder.array([])
     });
@@ -41,6 +43,10 @@ export class InstantDictationPage {
         'word': new FormControl('',[Validators.pattern("([a-zA-Z \\-']+)?")])
       }));
     }
+
+    this.bySentenceInputForm = this.formBuilder.group({
+      article: new FormControl('',[Validators.minLength(1)])
+    });
   }
 
   ionViewWillEnter() {
@@ -48,7 +54,7 @@ export class InstantDictationPage {
   }
 
   get vocabs(): FormArray {
-    return this.inputForm.get('vocabs') as FormArray;
+    return this.byWordInputForm.get('vocabs') as FormArray;
   }
 
   ionViewDidLoad() {
@@ -60,7 +66,7 @@ export class InstantDictationPage {
       console.log(`dictation: ${JSON.stringify(dictation)}`);
       if (dictation==null) return;
 
-      this.inputForm.get('showImage').setValue(dictation.showImage);
+      this.byWordInputForm.get('showImage').setValue(dictation.showImage);
 
       for (let i = 0; i < dictation.vocabs.length; i++) {
         this.vocabs.at(i).patchValue(dictation.vocabs[i]);
@@ -71,22 +77,43 @@ export class InstantDictationPage {
   clearVocabs() {
     this.vocabs.controls.forEach(x => {
       x.patchValue({word: ''})
-    })
+    });
   }
 
-  start() {
-    let d = this.prepareDictation();
+  clearArticle() {
+    this.bySentenceInputForm.get('article').setValue('');
+  }
+
+  startByWord() {
+    let d = this.prepareVocabDictation();
     this.storage.set(this.INSTANT_DICTATION_KEY, d);
-    this.navService.startDictation(this.prepareDictation());
+    this.navService.startDictation(d);
   }
 
-  prepareDictation(): Dictation {
-    const formModel = this.inputForm.value;
+  startBySentence() {
+    let d = this.prepareArticleDictation();
+    this.storage.set(this.INSTANT_DICTATION_KEY, d);
+    this.navService.startDictation(d);
+  }
+
+  prepareArticleDictation(): Dictation {
+    return <Dictation>{
+      id: -1,
+      article: this.bySentenceInputForm.get('article').value,
+      totalRecommended: 0,
+      title: new Date().toDateString(),
+      suitableStudent: 'Any',
+    };
+
+  }
+
+  prepareVocabDictation(): Dictation {
+    const formModel = this.byWordInputForm.value;
     const vocabInputs: Vocab[] = formModel.vocabs
       .map(v => new Vocab(v.word))
       .filter(v => v.word.length > 0);
 
-    return {
+    return <Dictation>{
       id: -1,
       showImage: formModel.showImage as boolean,
       vocabs: vocabInputs,

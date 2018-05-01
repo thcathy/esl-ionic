@@ -2,15 +2,12 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Observable} from 'rxjs/Observable';
 
-import {ENV} from "@app/env";
-
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import {DictationStatistics} from "../../entity/dictation-statistics";
 import {Dictation} from "../../entity/dictation";
 import {VocabPracticeHistory} from "../../interfaces/vocab-practice-history";
-
-
+import {ENV} from "../../environment/environment.prod";
 
 @Injectable()
 export class DictationService {

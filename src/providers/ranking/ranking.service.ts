@@ -3,11 +3,10 @@ import {HttpClient} from "@angular/common/http";
 import {Service} from "../root.service";
 import {Observable} from 'rxjs/Observable';
 
-import {ENV} from "@app/env";
-
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import {MemberScoreRanking} from "../../entity/member-score-ranking";
+import {ENV} from "../../environment/environment";
 
 
 

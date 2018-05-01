@@ -3,11 +3,11 @@ import {HttpClient, HttpParams} from "@angular/common/http";
 import {Service} from "../root.service";
 import {Observable} from 'rxjs/Observable';
 
-import {ENV} from "@app/env";
 
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import {VocabPractice} from "../../entity/voacb-practice";
+import {ENV} from "../../environment/environment";
 
 
 

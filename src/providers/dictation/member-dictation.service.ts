@@ -2,11 +2,10 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Observable} from 'rxjs/Observable';
 
-import {ENV} from "@app/env";
-
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import {Dictation} from "../../entity/dictation";
+import {ENV} from "../../environment/environment";
 
 export interface CreateDictationRequest {
   title: string;
