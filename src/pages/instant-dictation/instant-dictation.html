@@ -56,10 +56,10 @@
           </div>
 
           <div *ngSwitchCase="'bysentence'">
-            <h3>{{'Input an passage and start'|translate}}:</h3>
-            <form [formGroup]="bySentenceInputForm" novalidate (keydown.enter)="$event.preventDefault()">
+            <h3>{{'Input an passage'|translate}}:</h3>
+            <form class="articleInput" [formGroup]="bySentenceInputForm" novalidate (keydown.enter)="$event.preventDefault()">
               <ion-item>
-                <ion-textarea formControlName="article" rows="5"></ion-textarea>
+                <ion-textarea class="textarea" formControlName="article" rows="10"></ion-textarea>
               </ion-item>
             </form>
             <ion-row no-padding>

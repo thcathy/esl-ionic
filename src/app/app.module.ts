@@ -56,6 +56,8 @@ import {DisplayService} from "../providers/display.service";
 import {TextToSpeech} from "@ionic-native/text-to-speech";
 import {MemberService} from "../providers/member/member.service";
 import {PipesModule} from "../pipes/pipes.module";
+import {ArticleDictationPage} from "../pages/article-dictation/article-dictation";
+import {ArticleDictationService} from "../providers/dictation/article-dictation.service";
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -86,6 +88,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     InstantDictationPage,
     EditDictationPage,
     MemberHomePage,
+    ArticleDictationPage,
   ],
   imports: [
     BrowserModule,
@@ -112,7 +115,8 @@ export function HttpLoaderFactory(http: HttpClient) {
         { component: DictationPracticePage, name: 'DictationPracticePage', segment: 'dictation-practice/:dictationId'},
         { component: InstantDictationPage, name: 'InstantDictationPage', segment: 'instant-dictation'},
         { component: EditDictationPage, name: 'EditDictationPage', segment: 'edit-dictation'},
-        { component: MemberHomePage, name: 'MemberHomePage', segment: 'member-home'}
+        { component: MemberHomePage, name: 'MemberHomePage', segment: 'member-home'},
+        { component: ArticleDictationPage, name: 'ArticleDictationPage', segment: 'ArticleDictationPage'}
       ]
     }),
     IonicStorageModule.forRoot(),
@@ -151,6 +155,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     InstantDictationPage,
     EditDictationPage,
     MemberHomePage,
+    ArticleDictationPage,
   ],
   providers: [
     { provide: ErrorHandler, useClass: IonicErrorHandler },
@@ -168,6 +173,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     AuthService,
     DisplayService,
     ServerService,
+    ArticleDictationService,
     GoogleAnalytics,
     TextToSpeech,
     {

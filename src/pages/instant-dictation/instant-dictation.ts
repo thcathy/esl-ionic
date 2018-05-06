@@ -67,10 +67,13 @@ export class InstantDictationPage {
       if (dictation==null) return;
 
       this.byWordInputForm.get('showImage').setValue(dictation.showImage);
-
-      for (let i = 0; i < dictation.vocabs.length; i++) {
-        this.vocabs.at(i).patchValue(dictation.vocabs[i]);
+      if (dictation.vocabs != null) {
+        for (let i = 0; i < dictation.vocabs.length; i++) {
+          this.vocabs.at(i).patchValue(dictation.vocabs[i]);
+        }
       }
+
+      this.bySentenceInputForm.get('article').setValue(dictation.article);
     });
   }
 
@@ -93,7 +96,7 @@ export class InstantDictationPage {
   startBySentence() {
     let d = this.prepareArticleDictation();
     this.storage.set(this.INSTANT_DICTATION_KEY, d);
-    this.navService.startDictation(d);
+    this.navService.startArticleDictation(d);
   }
 
   prepareArticleDictation(): Dictation {

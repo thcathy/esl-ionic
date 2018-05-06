@@ -11,6 +11,19 @@ page-instant-dictation {
     color: #007d6f !important;
   }
 
+  .articleInput {
+    ion-item {
+      padding-left: 8px;
+    }
+
+    .textarea {
+      border: 1px solid #dddddd;
+      margin: 8px 0px 8px 0px;
+      font-size: 1.2rem;
+    }
+
+  }
+
   h3 {
     font-size: 2rem !important;
     color: #007d6f !important;

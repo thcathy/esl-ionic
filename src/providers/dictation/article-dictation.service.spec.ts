@@ -44,4 +44,43 @@ describe('ArticleDictationService', () => {
     expect(sentences[5]).toBe('Monday.');
   });
 
+  it("checkAnswer in different cases",() => {
+    const question = `Jane Bailey described Miss Tweddle-Taylor, 51, as a "well-loved member of staff" and "wonderful friend and colleague".`;
+    const testcases = [
+      {
+        answer: `Jane Bailey described Miss Tweddle-Taylor, 51, as a well-loved member of staff and wonderful friend and colleague.`,
+        result: [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true]
+      },
+      {
+        answer: `Bailey described Miss Tweddle-Taylor, 51, as a well-loved member of staff and wonderful friend and colleague.`,
+        result: [false, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true]
+      },
+      {
+        answer: `Tweddle-Taylor member`,
+        result: [false, false, false, false, true, true, false, false, false, true, false, false, false, false, false, false, false]
+      },
+      {
+        answer: `abc Tweddle-Taylor member`,
+        result: [false, false, false, false, true, true, false, false, false, true, false, false, false, false, false, false, false]
+      },
+      {
+        answer: `abc bailey described as a well lived member of staff and wonderful friend and colleague`,
+        result: [false, true, true, false, false, true, true, true, false, true, true, true, true, true, true, true, true]
+      },
+      {
+        answer: `Jane Bailey described Miss Tweddle-Taylor, five one, as a well-loved member of staff and wonderful friend and colleague.`,
+        result: [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true]
+      }
+    ];
+
+    testcases.forEach((t) => {
+      const history = service.checkAnswer(question, t.answer);
+      expect(compare(t.result,history.isCorrect)).toBe(true);
+    });
+  });
+
 });
+
+function compare(arr1: boolean[], arr2: boolean[]) {
+  return JSON.stringify(arr1)==JSON.stringify(arr2);
+}

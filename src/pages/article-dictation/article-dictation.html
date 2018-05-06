@@ -1,0 +1,45 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>{{'Dictation Practice' | translate}}</ion-title>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content>
+  <div style="padding: 16px;">
+    <ion-card class="card">
+      <ion-card-header>
+        {{'Sentence'|translate}} {{ currentSentence + 1 }}/{{sentences.length}}
+        <!--<score float-right [mark]="mark"></score>-->
+      </ion-card-header>
+
+      <ion-card-content style="font-size: 1.6rem">
+        <ion-grid>
+          <ion-row>
+            <ion-col col-12 col-sm-12 col-md-6>
+              <button ion-button class="speakBtn" (click)="speak()"><i class="fas fa-headphones"></i>&nbsp;{{'Listen'|translate}}</button>
+              <button ion-button class="stopBtn" (click)="stop()"><i class="fas fa-stop"></i>&nbsp;{{'Stop'|translate}}</button>
+            </ion-col>
+            <ion-col col-12 col-sm-12 col-md-6 text-right>
+              <button ion-button outline class="rateBtn" (click)="slower()"><i class="fas fa-bicycle"></i>&nbsp;{{'Slower'|translate}}</button>
+              <button ion-button outline class="rateBtn" (click)="faster()"><i class="fas fa-rocket"></i>&nbsp;{{'Faster'|translate}}</button>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-item class="answerInput">
+              <ion-label floating>{{'Answer'|translate}}</ion-label>
+              <ion-input [(ngModel)]="answer" type="text" maxlength="255" (keyup.enter)="submitAnswer()"></ion-input>
+            </ion-item>
+            <button ion-button full class="submitBtn" (click)="submitAnswer()">{{'Submit'|translate}}</button>
+          </ion-row>
+        </ion-grid>
+      </ion-card-content>
+    </ion-card>
+
+    <!--<practice-history-list [histories]="histories" [mark]="mark"></practice-history-list>-->
+  </div>
+  <footer></footer>
+</ion-content>

@@ -11,19 +11,27 @@ export class NavigationService {
   constructor(public app: App) {
   }
 
-  startDictation(dictation: Dictation) {
+  private getNavigationController() {
     let navCtrl = this.app.getActiveNavs()[0];
     console.log(`${navCtrl.id}`);
-    navCtrl.setRoot('DictationPracticePage', {
+    return navCtrl;
+  }
+
+  startDictation(dictation: Dictation) {
+    this.getNavigationController().setRoot('DictationPracticePage', {
       'dictation': dictation,
       'dictationId': dictation.id,
     });
   }
 
+  startArticleDictation(dictation: Dictation) {
+    this.getNavigationController().setRoot('ArticleDictationPage', {
+      'dictation': dictation
+    });
+  }
+
   openDictation(dictation: Dictation, toastMessage: string = null) {
-    let navCtrl = this.app.getActiveNavs()[0];
-    console.log(`${navCtrl.id}`);
-    navCtrl.setRoot('DictationViewPage', {
+    this.getNavigationController().setRoot('DictationViewPage', {
       dictation: dictation,
       dictationId: dictation.id,
       toastMessage: toastMessage,
@@ -31,8 +39,7 @@ export class NavigationService {
   }
 
   editDictation(dictation: Dictation) {
-    let navCtrl = this.app.getActiveNavs()[0];
-    navCtrl.setRoot('EditDictationPage', {
+    this.getNavigationController().setRoot('EditDictationPage', {
       dictation: dictation
     });
   }
