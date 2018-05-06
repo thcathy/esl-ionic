@@ -58,6 +58,7 @@ import {MemberService} from "../providers/member/member.service";
 import {PipesModule} from "../pipes/pipes.module";
 import {ArticleDictationPage} from "../pages/article-dictation/article-dictation";
 import {ArticleDictationService} from "../providers/dictation/article-dictation.service";
+import {ArticleDictationCompletePage} from "../pages/article-dictation-complete/article-dictation-complete";
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -88,7 +89,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     InstantDictationPage,
     EditDictationPage,
     MemberHomePage,
-    ArticleDictationPage,
+    ArticleDictationPage, ArticleDictationCompletePage,
   ],
   imports: [
     BrowserModule,
@@ -116,7 +117,8 @@ export function HttpLoaderFactory(http: HttpClient) {
         { component: InstantDictationPage, name: 'InstantDictationPage', segment: 'instant-dictation'},
         { component: EditDictationPage, name: 'EditDictationPage', segment: 'edit-dictation'},
         { component: MemberHomePage, name: 'MemberHomePage', segment: 'member-home'},
-        { component: ArticleDictationPage, name: 'ArticleDictationPage', segment: 'ArticleDictationPage'}
+        { component: ArticleDictationPage, name: 'ArticleDictationPage', segment: 'ArticleDictationPage'},
+        { component: ArticleDictationCompletePage, name: 'ArticleDictationCompletePage', segment: 'ArticleDictationCompletePage'},
       ]
     }),
     IonicStorageModule.forRoot(),
@@ -155,7 +157,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     InstantDictationPage,
     EditDictationPage,
     MemberHomePage,
-    ArticleDictationPage,
+    ArticleDictationPage, ArticleDictationCompletePage,
   ],
   providers: [
     { provide: ErrorHandler, useClass: IonicErrorHandler },

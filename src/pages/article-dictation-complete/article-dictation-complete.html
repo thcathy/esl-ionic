@@ -1,0 +1,29 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>{{'Dictation Practice' | translate}}</ion-title>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content>
+  <div style="padding: 16px;">
+    <ion-card class="card">
+      <ion-card-header style="font-size: 1.8rem;">{{ 'CompletePracticeHeader' | translate:{mark:mark, totalQuestion: histories.length} }}</ion-card-header>
+      <ion-row no-padding>
+        <ion-col>
+          <button ion-button (click)="retryDictation()" style="margin: 5px;"><i class="fas fa-redo"></i>&nbsp;{{'Retry'|translate}}</button>
+        </ion-col>
+        <ion-col text-right>
+          <button *ngIf="dictation.id > 0" ion-button item-end color="secondary" (click)="recommend()" style="margin: 5px;" [disabled]="recommended">
+            <i class="far fa-thumbs-up"></i>&nbsp;{{ recommendBtnText() }}
+          </button>
+        </ion-col>
+      </ion-row>
+    </ion-card>
+
+  </div>
+  <footer></footer>
+</ion-content>
