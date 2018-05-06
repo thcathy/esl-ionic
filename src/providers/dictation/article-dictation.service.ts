@@ -21,7 +21,7 @@ export class ArticleDictationService {
       .map((s) => this.splitLongLineByFullstop(s)).reduce((a, b) => a.concat(b), [])
       .map((s) => this.splitLongLingByComma(s)).reduce((a, b) => a.concat(b), [])
       .map((s) => this.splitLongLineBySpace(s)).reduce((a, b) => a.concat(b), [])
-      .filter((s) => !s || s.length > 0);
+      .filter((s) => !ValidationUtils.isBlankString(s));
   }
 
   splitLongLineBySpace(input: string): string[] {

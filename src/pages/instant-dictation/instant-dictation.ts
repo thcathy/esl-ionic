@@ -6,6 +6,7 @@ import {Vocab} from "../../entity/vocab";
 import {NavigationService} from "../../providers/navigation.service";
 import {Storage} from "@ionic/storage";
 import {GoogleAnalytics} from "@ionic-native/google-analytics";
+import {ValidationUtils} from "../../utils/validation-utils";
 
 @IonicPage()
 @Component({
@@ -66,14 +67,15 @@ export class InstantDictationPage {
       console.log(`dictation: ${JSON.stringify(dictation)}`);
       if (dictation==null) return;
 
-      this.byWordInputForm.get('showImage').setValue(dictation.showImage);
-      if (dictation.vocabs != null) {
+      if (!ValidationUtils.isBlankString(dictation.article)) {
+        this.type = 'bysentence';
+        this.bySentenceInputForm.get('article').setValue(dictation.article);
+      } else {
+        this.byWordInputForm.get('showImage').setValue(dictation.showImage);
         for (let i = 0; i < dictation.vocabs.length; i++) {
           this.vocabs.at(i).patchValue(dictation.vocabs[i]);
         }
       }
-
-      this.bySentenceInputForm.get('article').setValue(dictation.article);
     });
   }
 

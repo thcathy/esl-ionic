@@ -1,4 +1,5 @@
 import {ArticleDictationService} from "./article-dictation.service";
+import {ValidationUtils} from "../../utils/validation-utils";
 
 describe('ArticleDictationService', () => {
   let service: ArticleDictationService;
@@ -42,6 +43,17 @@ describe('ArticleDictationService', () => {
     expect(sentences[3]).toBe(`The death happened at Hamerton Zoo Park`);
     expect(sentences[4]).toBe(', near Huntingdon, at about 11:15 BST on');
     expect(sentences[5]).toBe('Monday.');
+  });
+
+  it("No sentence is empty", () => {
+    const article = `Alerts are a great way to offer the user the ability to choose a specific action or list of actions. They also can provide the user with important information, or require them to make a decision (or multiple decisions).
+
+From a UI perspective, Alerts can be thought of as`;
+
+    const sentences = service.divideToSentences(article);
+    console.log(`divided: ${sentences}`);
+    const allIsNotEmpty = sentences.every((s) => !ValidationUtils.isBlankString(s));
+    expect(allIsNotEmpty).toBe(true);
   });
 
   it("checkAnswer in different cases",() => {

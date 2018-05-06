@@ -5,6 +5,7 @@ import {ArticleDictationService} from "../../providers/dictation/article-dictati
 import {AppService} from "../../providers/app.service";
 import {TextToSpeech} from "@ionic-native/text-to-speech";
 import {GoogleAnalytics} from "@ionic-native/google-analytics";
+import {SentenceHistory} from "../../entity/sentence-history";
 
 declare var responsiveVoice: any;
 
@@ -19,7 +20,8 @@ export class ArticleDictationPage {
   speakingRate: number = 0.7;
   currentSentence: number = 0;
   mark: number = 0;
-  answer: string;
+  answer: string = "";
+  histories: SentenceHistory[] = [];
 
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
@@ -64,6 +66,19 @@ export class ArticleDictationPage {
     } else {
       console.log(`speak by responsive voice`);
       responsiveVoice.speak(this.sentences[this.currentSentence], "UK English Female", {rate: this.speakingRate});
+    }
+  }
+
+  submitAnswer() {
+    this.histories.unshift(
+      this.articleDictationService.checkAnswer(this.sentences[this.currentSentence], this.answer)
+    );
+
+    this.currentSentence++;
+    this.answer = "";
+
+    if (this.currentSentence >= this.sentences.length) {
+      // go to ending page
     }
   }
 }
