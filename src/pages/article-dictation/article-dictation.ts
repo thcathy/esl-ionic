@@ -6,6 +6,7 @@ import {AppService} from "../../providers/app.service";
 import {TextToSpeech} from "@ionic-native/text-to-speech";
 import {GoogleAnalytics} from "@ionic-native/google-analytics";
 import {SentenceHistory} from "../../entity/sentence-history";
+import {ArticleDictationCompletePage} from "../article-dictation-complete/article-dictation-complete";
 
 declare var responsiveVoice: any;
 
@@ -78,7 +79,10 @@ export class ArticleDictationPage {
     this.answer = "";
 
     if (this.currentSentence >= this.sentences.length) {
-      // go to ending page
+      this.navCtrl.setRoot(ArticleDictationCompletePage, {
+        'dictation': this.dictation,
+        'histories': this.histories.reverse()
+      });
     }
   }
 }
