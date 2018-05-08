@@ -4,6 +4,7 @@ import {Dictation} from "../../entity/dictation";
 import {SentenceHistory} from "../../entity/sentence-history";
 import {DictationService} from "../../providers/dictation/dictation.service";
 import {NavigationService} from "../../providers/navigation.service";
+import {GoogleAnalytics} from "@ionic-native/google-analytics";
 
 @IonicPage()
 @Component({
@@ -21,9 +22,14 @@ export class ArticleDictationCompletePage {
     public navParams: NavParams,
     public dictationService: DictationService,
     public navService: NavigationService,
+    public ga: GoogleAnalytics,
   ) {
     this.getNavParams();
     this.calculateCorrect(this.histories);
+  }
+
+  ionViewDidLoad() {
+    this.ga.trackView('article-dictation-complete');
   }
 
   getNavParams() {

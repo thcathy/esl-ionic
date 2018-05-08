@@ -59,6 +59,7 @@ import {PipesModule} from "../pipes/pipes.module";
 import {ArticleDictationPage} from "../pages/article-dictation/article-dictation";
 import {ArticleDictationService} from "../providers/dictation/article-dictation.service";
 import {ArticleDictationCompletePage} from "../pages/article-dictation-complete/article-dictation-complete";
+import {SpeechService} from "../providers/speech.service";
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -166,12 +167,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     InAppBrowser,
     SplashScreen,
     AppService,
-    NavigationService,
-    RankingService,
-    DictationService,
-    VocabPracticeService,
-    MemberDictationService,
-    MemberService,
+    NavigationService, RankingService,
+    DictationService, VocabPracticeService, MemberDictationService, MemberService, SpeechService,
     AuthService,
     DisplayService,
     ServerService,

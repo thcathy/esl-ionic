@@ -1,5 +1,6 @@
 import {Component, Input} from '@angular/core';
 import {SentenceHistory} from "../../entity/sentence-history";
+import {SpeechService} from "../../providers/speech.service";
 
 @Component({
   selector: 'sentence-histories',
@@ -8,7 +9,7 @@ import {SentenceHistory} from "../../entity/sentence-history";
 export class SentenceHistoriesComponent {
   @Input() histories: SentenceHistory[];
 
-  constructor() {
+  constructor(public speechService: SpeechService) {
   }
 
 }

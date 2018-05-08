@@ -1,6 +1,7 @@
 <div>
   <ion-list>
     <ion-item *ngFor="let history of histories; let i = index">
+      <button item-start ion-button clear style="margin: 4px 0.3rem 4px 0;" (click)="speechService.speak(history.question)"><i class="fas fa-headphones"></i></button>
       <!--<ion-badge item-start style="margin: 0px; margin-right: 4px;">{{ histories.length - i }}</ion-badge>-->
       <p><span *ngFor="let word of history.questionSegments; let j = index"
                [class.green]="history.isCorrect[j]"

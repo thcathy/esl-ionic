@@ -3,12 +3,11 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import {Dictation} from "../../entity/dictation";
 import {ArticleDictationService} from "../../providers/dictation/article-dictation.service";
 import {AppService} from "../../providers/app.service";
-import {TextToSpeech} from "@ionic-native/text-to-speech";
 import {GoogleAnalytics} from "@ionic-native/google-analytics";
 import {SentenceHistory} from "../../entity/sentence-history";
 import {ArticleDictationCompletePage} from "../article-dictation-complete/article-dictation-complete";
-
-declare var responsiveVoice: any;
+import {SpeechService} from "../../providers/speech.service";
+import {TextToSpeech} from "@ionic-native/text-to-speech";
 
 @IonicPage()
 @Component({
@@ -28,8 +27,10 @@ export class ArticleDictationPage {
               public navParams: NavParams,
               public appService: AppService,
               public ga: GoogleAnalytics,
-              public tts: TextToSpeech,
-              public articleDictationService: ArticleDictationService) {
+              public articleDictationService: ArticleDictationService,
+              public speechService: SpeechService,
+              public tts: TextToSpeech
+  ) {
     this.dictation = navParams.get('dictation');
     this.sentences = articleDictationService.divideToSentences(this.dictation.article);
     console.log(`divided into ${this.sentences.length} sentences`);
@@ -40,34 +41,21 @@ export class ArticleDictationPage {
   }
 
   stop() {
-    if (this.appService.isApp()) {
-      this.tts.stop().then(() => console.log(`stopped tss`));
-    } else {
-      responsiveVoice.stop();
-    }
+    this.speechService.stop();
   }
 
   slower() {
-    if (this.speakingRate > 0) this.speakingRate -= 0.1;
+    this.speakingRate = this.speakingRate - 0.1;
+    if (this.speakingRate < 0.01) this.speakingRate = 0.1;
   }
 
   faster() {
-    if (this.speakingRate < 1.0) this.speakingRate += 0.1;
+    this.speakingRate = this.speakingRate + 0.1;
+    if (this.speakingRate > 0.99) this.speakingRate = 1.0;
   }
 
   speak() {
-    if (this.appService.isApp()) {
-      this.tts.speak({
-        text: this.sentences[this.currentSentence],
-        locale: 'en-US',
-        rate: this.speakingRate
-      })
-        .then(() => console.log('Success by tts'))
-        .catch((reason: any) => console.log(reason));
-    } else {
-      console.log(`speak by responsive voice`);
-      responsiveVoice.speak(this.sentences[this.currentSentence], "UK English Female", {rate: this.speakingRate});
-    }
+    this.speechService.speak(this.sentences[this.currentSentence], this.speakingRate);
   }
 
   submitAnswer() {
