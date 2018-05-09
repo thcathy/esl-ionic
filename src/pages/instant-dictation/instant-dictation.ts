@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import {AlertController, IonicPage, NavController, NavParams} from 'ionic-angular';
 import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {Dictation} from "../../entity/dictation";
 import {Vocab} from "../../entity/vocab";
@@ -7,6 +7,7 @@ import {NavigationService} from "../../providers/navigation.service";
 import {Storage} from "@ionic/storage";
 import {GoogleAnalytics} from "@ionic-native/google-analytics";
 import {ValidationUtils} from "../../utils/validation-utils";
+import {TranslateService} from "@ngx-translate/core";
 
 @IonicPage()
 @Component({
@@ -29,6 +30,8 @@ export class InstantDictationPage {
     public navService: NavigationService,
     public storage: Storage,
     public ga: GoogleAnalytics,
+    public alertCtrl: AlertController,
+    public translate: TranslateService,
     ) {
     this.createForm();
   }
@@ -46,7 +49,7 @@ export class InstantDictationPage {
     }
 
     this.bySentenceInputForm = this.formBuilder.group({
-      article: new FormControl('',[Validators.minLength(1)])
+      article: new FormControl('',[Validators.required])
     });
   }
 
@@ -72,8 +75,10 @@ export class InstantDictationPage {
         this.bySentenceInputForm.get('article').setValue(dictation.article);
       } else {
         this.byWordInputForm.get('showImage').setValue(dictation.showImage);
-        for (let i = 0; i < dictation.vocabs.length; i++) {
-          this.vocabs.at(i).patchValue(dictation.vocabs[i]);
+        if (dictation.vocabs != null) {
+          for (let i = 0; i < dictation.vocabs.length; i++) {
+            this.vocabs.at(i).patchValue(dictation.vocabs[i]);
+          }
         }
       }
     });
@@ -91,6 +96,16 @@ export class InstantDictationPage {
 
   startByWord() {
     let d = this.prepareVocabDictation();
+    if (d.vocabs.length < 1) {
+      let alert = this.alertCtrl.create({
+        title: `${this.translate.instant('At least input 1 word')}!`,
+        subTitle: '',
+        buttons: [this.translate.instant('OK')]
+      });
+      alert.present();
+      return;
+    }
+
     this.storage.set(this.INSTANT_DICTATION_KEY, d);
     this.navService.startDictation(d);
   }
@@ -116,7 +131,7 @@ export class InstantDictationPage {
     const formModel = this.byWordInputForm.value;
     const vocabInputs: Vocab[] = formModel.vocabs
       .map(v => new Vocab(v.word))
-      .filter(v => v.word.length > 0);
+      .filter(v => !ValidationUtils.isBlankString(v.word));
 
     return <Dictation>{
       id: -1,

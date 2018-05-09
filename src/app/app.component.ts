@@ -77,7 +77,7 @@ export class ConferenceApp {
     public splashScreen: SplashScreen,
     public translate: TranslateService,
     public authService: AuthService,
-    public ga: GoogleAnalytics
+    public ga: GoogleAnalytics,
   ) {
 
     // Check if the user has already seen the tutorial

@@ -18,18 +18,18 @@ export class SpeechService {
   speak(text: string, rate = 0.7) {
     rate = Math.round(rate * 10) / 10;
     console.log(`speak ${text} in speed ${rate}`);
-    //if (this.appService.isApp()) {
-    //  this.tts.speak({
-    //    text: text,
-    //    locale: 'en-US',
-    //    rate: rate
-    //  })
-    //    .then(() => console.log(`Speak by tts: ${text}`))
-    //    .catch((reason: any) => console.log(reason));
-    //} else {
+    if (this.appService.isApp()) {
+      this.tts.speak({
+        text: text,
+        locale: 'en-US',
+        rate: rate * 2
+      })
+        .then(() => console.log(`Speak by tts: ${text}`))
+        .catch((reason: any) => console.log(reason));
+    } else {
       console.log(`speak by responsive voice: ${text}`);
       responsiveVoice.speak(text, "UK English Female", {rate: rate});
-    //}
+    }
   }
 
   stop() {
