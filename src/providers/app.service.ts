@@ -16,4 +16,8 @@ export class AppService {
     }
   }
 
+  openFunFunSpell() {
+    window.open('https://www.funfunspell.com/', '_system');
+  }
+
 }

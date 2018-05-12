@@ -44,25 +44,9 @@
         <button ion-item menuClose (click)="changeLanguage('zh-Hans')">简体</button>
       </ion-list>
 
-      <!--<ion-list>
-        <ion-list-header>
-          Account
-        </ion-list-header>
-        <button ion-item menuClose *ngFor="let p of loggedOutPages" (click)="openPage(p)">
-          <ion-icon item-start [name]="p.icon" [color]="isActive(p)"></ion-icon>
-          {{p.title}}
-        </button>
-      </ion-list>-->
-
-      <!--<ion-list>
-        <ion-list-header>
-          Tutorial
-        </ion-list-header>
-        <button ion-item menuClose (click)="openTutorial()">
-          <ion-icon item-start name="hammer"></ion-icon>
-          Show Tutorial
-        </button>
-      </ion-list>-->
+      <ion-list>
+        <button ion-item menuClose (click)="appService.openFunFunSpell()"><i class="fas fa-external-link-alt" item-start></i>{{'More English Excerises at'|translate}}<br/>funfunspell.com</button>
+      </ion-list>
     </ion-content>
 
   </ion-menu>

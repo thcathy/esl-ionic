@@ -22,6 +22,7 @@ import Auth0Cordova from '@auth0/cordova';
 import {MemberHomePage} from "../pages/member-home/member-home";
 import {EditDictationPage} from "../pages/edit-dictation/edit-dictation";
 import {GoogleAnalytics} from "@ionic-native/google-analytics";
+import {AppService} from "../providers/app.service";
 
 export interface PageInterface {
   title: string;
@@ -78,6 +79,7 @@ export class ConferenceApp {
     public translate: TranslateService,
     public authService: AuthService,
     public ga: GoogleAnalytics,
+    public appService: AppService,
   ) {
 
     // Check if the user has already seen the tutorial
@@ -222,4 +224,5 @@ export class ConferenceApp {
       if (locale != null) this.translate.use(locale);
     });
   }
+
 }
