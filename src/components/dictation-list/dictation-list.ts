@@ -1,6 +1,7 @@
 import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {Dictation} from "../../entity/dictation";
 import {NavigationService} from "../../providers/navigation.service";
+import {DisplayService} from "../../providers/display.service";
 
 @Component({
   selector: 'dictation-list',
@@ -17,6 +18,7 @@ export class DictationListComponent implements OnChanges {
 
   constructor(
     public navService: NavigationService,
+    public displayService: DisplayService,
   ) {
     this.page = 0;
     this.showCreateButton = false;

@@ -8,6 +8,7 @@ import {Storage} from "@ionic/storage";
 import {GoogleAnalytics} from "@ionic-native/google-analytics";
 import {ValidationUtils} from "../../utils/validation-utils";
 import {TranslateService} from "@ngx-translate/core";
+import {DictationService} from "../../providers/dictation/dictation.service";
 
 @IonicPage()
 @Component({
@@ -32,6 +33,7 @@ export class InstantDictationPage {
     public ga: GoogleAnalytics,
     public alertCtrl: AlertController,
     public translate: TranslateService,
+    public dictationService: DictationService,
     ) {
     this.createForm();
   }
@@ -70,7 +72,7 @@ export class InstantDictationPage {
       console.log(`dictation: ${JSON.stringify(dictation)}`);
       if (dictation==null) return;
 
-      if (!ValidationUtils.isBlankString(dictation.article)) {
+      if (this.dictationService.isSentenceDictation(dictation)) {
         this.type = 'bysentence';
         this.bySentenceInputForm.get('article').setValue(dictation.article);
       } else {
@@ -113,7 +115,7 @@ export class InstantDictationPage {
   startBySentence() {
     let d = this.prepareArticleDictation();
     this.storage.set(this.INSTANT_DICTATION_KEY, d);
-    this.navService.startArticleDictation(d);
+    this.navService.startDictation(d);
   }
 
   prepareArticleDictation(): Dictation {

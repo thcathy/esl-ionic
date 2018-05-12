@@ -38,9 +38,27 @@
               <ion-option *ngFor="let state of suitableStudentOptions" [value]="state">{{'SuitableStudent.' + state|translate}}</ion-option>
             </ion-select>
           </ion-item>
-          <ion-item>
+          <ion-row radio-group class="radio" [formControl]="inputForm.controls['type']">
+            <ion-col>
+              <ion-item>
+                <ion-label>{{'Single Word'|translate}}</ion-label>
+                <ion-radio value="word"></ion-radio>
+              </ion-item>
+            </ion-col>
+            <ion-col>
+              <ion-item>
+                <ion-label>{{'Sentence'|translate}}</ion-label>
+                <ion-radio value="sentence"></ion-radio>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+          <ion-item *ngIf="inputForm.controls['type'].value == 'word'">
             <ion-label stacked>{{'Vocabulary'|translate}} * ({{'separate by space or comma'|translate}})</ion-label>
             <ion-textarea placeholder="apple bus-stop cat" formControlName="vocabulary" rows="5"></ion-textarea>
+          </ion-item>
+          <ion-item *ngIf="inputForm.controls['type'].value == 'sentence'">
+            <ion-label stacked>{{'Input an passage'|translate}} *:</ion-label>
+            <ion-textarea class="textarea" formControlName="article" rows="10" style="font-size: 1.4rem;"></ion-textarea>
           </ion-item>
           <div *ngIf="vocabulary.invalid && (vocabulary.dirty || vocabulary.touched)" class="error-text">
             <div *ngIf="vocabulary.errors.maxVocabulary">{{'Cannot over 50 vocabulary'|translate}}</div>

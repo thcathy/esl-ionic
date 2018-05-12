@@ -11,7 +11,7 @@
           <ion-col text-right>{{displayService?.displayName(dictation.creator) | slice:0:17}}{{displayService?.displayName(dictation.creator).length > 17 ? '...' : '' }}</ion-col>
         </ion-row>
         <ion-row class="sub-row">
-          <ion-col><i class="fas fa-list-ol"></i> {{ dictation.vocabs.length }}</ion-col>
+          <ion-col style="min-width: 110px;"><i class="fas fa-list-ol"></i> {{ displayService.totalQuestion(dictation) }}</ion-col>
           <ion-col><i class="fas fa-pencil-alt"></i> {{ dictation.totalAttempt }}</ion-col>
           <ion-col><i class="far fa-thumbs-up"></i> {{dictation.totalRecommended}}</ion-col>
         </ion-row>

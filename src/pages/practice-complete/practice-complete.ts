@@ -54,13 +54,6 @@ export class PracticeCompletePage {
       );
   }
 
-  retryDictation() {
-    if (this.dictationService.isInstantDictation(this.dictation))
-      this.navCtrl.setRoot('InstantDictationPage');
-    else
-      this.navService.startDictation(this.dictation);
-  }
-
   recommend() {
     this.dictationService.recommend(this.dictation.id).subscribe(d => {
       this.dictation = d;

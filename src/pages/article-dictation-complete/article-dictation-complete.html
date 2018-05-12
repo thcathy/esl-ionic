@@ -14,19 +14,22 @@
       <ion-card-header style="font-size: 1.8rem;">{{ 'Completed dictation' | translate }}</ion-card-header>
       <ion-row no-padding>
         <ion-col>
-          <button ion-button (click)="retryDictation()" style="margin: 5px;"><i class="fas fa-redo"></i>&nbsp;{{'Retry'|translate}}</button>
+          <button ion-button (click)="navService.retryDictation(dictation)" style="margin: 5px;"><i class="fas fa-redo"></i>&nbsp;{{'Retry'|translate}}</button>
         </ion-col>
-        <!--<ion-col text-right>
+        <ion-col text-right>
           <button *ngIf="dictation.id > 0" ion-button item-end color="secondary" (click)="recommend()" style="margin: 5px;" [disabled]="recommended">
             <i class="far fa-thumbs-up"></i>&nbsp;{{ recommendBtnText() }}
           </button>
-        </ion-col>-->
+        </ion-col>
       </ion-row>
+    </ion-card>
+    <dictation-card #dictationCard [dictation]="dictation" [showContent]="false"></dictation-card>
+    <ion-card class="card" style="margin-top: 8px;">
       <h3><i class="fas fa-check"></i> {{totalCorrect}} ({{totalCorrect / (totalCorrect + totalWrong) * 100 | number:'1.0-0'}}%)
         / <span class="red"><i class="fas fa-times"></i> {{totalWrong}} ({{totalWrong / (totalCorrect + totalWrong) * 100 | number:'1.0-0'}}%)</span></h3>
+      <sentence-histories [histories]="histories"></sentence-histories>
     </ion-card>
 
-    <sentence-histories [histories]="histories"></sentence-histories>
   </div>
   <footer></footer>
 </ion-content>

@@ -14,6 +14,8 @@ import {suitableStudentOptions} from "../../entity/dictation";
 import {Observable} from 'rxjs/Rx'
 import 'rxjs/add/operator/combineLatest';
 import {GoogleAnalytics} from "@ionic-native/google-analytics";
+import {ValidationUtils} from "../../utils/validation-utils";
+import {DictationService} from "../../providers/dictation/dictation.service";
 
 @IonicPage()
 @Component({
@@ -37,6 +39,7 @@ export class EditDictationPage {
               public authService: AuthService,
               public translate: TranslateService,
               public ga: GoogleAnalytics,
+              public dictationService: DictationService,
   ) {
     if (!this.authService.isAuthenticated()) {
       this.authService.login();
@@ -53,8 +56,10 @@ export class EditDictationPage {
   get now() { return new Date(); }
   get description() { return this.inputForm.get('description'); }
   get vocabulary() { return this.inputForm.get('vocabulary'); }
+  get article() { return this.inputForm.get('article'); }
   get showImage() { return this.inputForm.get('showImage'); }
   get suitableStudent() { return this.inputForm.get('suitableStudent'); }
+  get type() { return this.inputForm.get('type'); }
 
   ionViewWillEnter() {
     this.ga.trackView('edit-dictation')
@@ -65,7 +70,9 @@ export class EditDictationPage {
       'title': new FormControl('', [Validators.required, Validators.minLength(5),  Validators.maxLength(50)]),
       'description': new FormControl('', [Validators.maxLength(100)]),
       'showImage': true,
-      'vocabulary': new FormControl('', [Validators.required, maxVocabularyValidator(50), Validators.pattern("^([a-zA-Z ]+[\\-,]?)+")]),
+      'vocabulary': new FormControl('', [maxVocabularyValidator(50), Validators.pattern("^([a-zA-Z ]+[\\-,]?)+")]),
+      'article': '',
+      'type': 'word',
       'suitableStudent': 'Any',
     });
     this.inputForm.get('suitableStudent').setValue('Any');
@@ -79,21 +86,44 @@ export class EditDictationPage {
     this.showImage.setValue(dictation.showImage);
     this.suitableStudent.setValue(dictation.suitableStudent);
     this.vocabulary.setValue(dictation.vocabs.map(v => v.word).join(' '));
+    this.article.setValue(dictation.article);
+    this.type.setValue(this.dictationService.isSentenceDictation(dictation) ? 'sentence' : 'word');
   }
 
   saveDictation() {
+    if (this.isEmptyDictation()) {
+      return;
+    }
+
     this.loader = this.loadingCtrl.create({ content: this.translate.instant('Please wait') + "..." });
     this.memberDictationService.createOrAmendDictation(<EditDictationRequest>{
       dictationId: this.dictation ? this.dictation.id : -1,
       title: this.title.value,
       description: this.description.value,
       showImage: this.showImage.value,
-      vocabulary: this.vocabulary.value.split(/[\s,]+/),
+      vocabulary: this.type.value == 'word' ?  this.vocabulary.value.split(/[\s,]+/) : [],
+      article: this.type.value == 'sentence' ? this.article.value : '',
       suitableStudent: this.suitableStudent.value
     }).subscribe(
       dic => this.viewDictation(dic),
         err => this.showError(err)
     );
+  }
+
+  isEmptyDictation() {
+    if (!ValidationUtils.isBlankString(this.vocabulary.value)
+      || !ValidationUtils.isBlankString(this.article.value)) {
+      return false;
+    }
+
+    let alert = this.alertCtrl.create({
+      title: `${this.translate.instant('Cannot find any word or sentence')}!`,
+      subTitle: '',
+      buttons: [this.translate.instant('OK')]
+    });
+    alert.present();
+
+    return true;
   }
 
   viewDictation(dictation: Dictation) {

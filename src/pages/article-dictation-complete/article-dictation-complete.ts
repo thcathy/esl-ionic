@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import {Dictation} from "../../entity/dictation";
 import {SentenceHistory} from "../../entity/sentence-history";
 import {DictationService} from "../../providers/dictation/dictation.service";
 import {NavigationService} from "../../providers/navigation.service";
 import {GoogleAnalytics} from "@ionic-native/google-analytics";
+import {TranslateService} from "@ngx-translate/core";
 
 @IonicPage()
 @Component({
@@ -12,10 +13,13 @@ import {GoogleAnalytics} from "@ionic-native/google-analytics";
   templateUrl: 'article-dictation-complete.html',
 })
 export class ArticleDictationCompletePage {
+  @ViewChild('dictationCard') dictationCard;
+
   dictation: Dictation;
   histories: SentenceHistory[];
   totalWrong: number;
   totalCorrect: number;
+  recommended: boolean;
 
   constructor(
     public navCtrl: NavController,
@@ -23,6 +27,7 @@ export class ArticleDictationCompletePage {
     public dictationService: DictationService,
     public navService: NavigationService,
     public ga: GoogleAnalytics,
+    public translate: TranslateService
   ) {
     this.getNavParams();
     this.calculateCorrect(this.histories);
@@ -46,12 +51,19 @@ export class ArticleDictationCompletePage {
     this.totalWrong = histories.map(wrongs).reduce(sumAccumulator);
   }
 
-  retryDictation() {
-    if (this.dictationService.isInstantDictation(this.dictation))
-      this.navCtrl.setRoot('InstantDictationPage');
-    else
-      this.navService.startDictation(this.dictation);
+  recommend() {
+    this.dictationService.recommend(this.dictation.id).subscribe(d => {
+      this.dictation = d;
+      this.recommended = true;
+      this.dictationCard.highlightRecommend();
+    })
   }
 
+  recommendBtnText(): string {
+    if (this.recommended)
+      return this.translate.instant('Recommended');
+    else
+      return this.translate.instant('Recommend');
+  }
 
 }

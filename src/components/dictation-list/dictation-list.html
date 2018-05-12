@@ -10,10 +10,9 @@
           <ion-col text-right>{{ dictation.createdDate | date: 'yyyy-MM-dd' }}</ion-col>
         </ion-row>
         <ion-row>
-          <ion-col><i class="fas fa-list-ol"></i> {{ dictation.vocabs.length }}</ion-col>
+          <ion-col style="min-width: 110px;"><i class="fas fa-list-ol"></i> {{ displayService.totalQuestion(dictation) }}</ion-col>
           <ion-col><i class="fas fa-pencil-alt"></i> {{ dictation.totalAttempt }}</ion-col>
           <ion-col><i class="far fa-thumbs-up"></i> {{dictation.totalRecommended}}</ion-col>
-          <ion-col><i class="far fa-images"></i> <i class="fas fa-check" *ngIf="dictation.showImage"></i><i class="fas fa-times" *ngIf="!dictation.showImage"></i></ion-col>
         </ion-row>
         <ion-row>
           <ion-col class="col-label">{{ 'Suitable' | translate }}:</ion-col>

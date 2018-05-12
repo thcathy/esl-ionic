@@ -3,6 +3,7 @@ import {Dictation} from "../../entity/dictation";
 import {NavController} from "ionic-angular";
 import {NavigationService} from "../../providers/navigation.service";
 import {animate, state, style, transition, trigger} from "@angular/animations";
+import {DictationService} from "../../providers/dictation/dictation.service";
 
 @Component({
   selector: 'dictation-card',
@@ -27,10 +28,13 @@ export class DictationCardComponent {
   @Input() start: boolean = false;
   @Input() retry: boolean = false;
   @Input() edit: boolean = false;
+  @Input() showContent: boolean = true;
   recommendState: string = 'normal';
 
   constructor(public navCtrl: NavController,
-              public navService: NavigationService)
+              public navService: NavigationService,
+              public dictationService: DictationService,
+              )
   {}
 
   highlightRecommend() {

@@ -42,9 +42,13 @@
           </table>
           <!--<span id="spinner" class="w3-hide"><i class="fa fa-spinner w3-spin" style="font-size:36px"></i></span>-->
         </ion-col>
-        <ion-col col-12 col-sm-12 col-md-6>
+        <ion-col col-12 col-sm-12 col-md-6 *ngIf="showContent && !dictationService.isSentenceDictation(dictation)">
           <div style="padding-bottom: 4px;" class="table-heading">{{'Vocabulary'|translate}} ({{dictation.vocabs.length}}):</div>
           <span *ngFor="let vocab of dictation.vocabs"><ion-badge style="background-color: #4CAF50; margin-right: 4px;">{{ vocab.word }}</ion-badge></span>
+        </ion-col>
+        <ion-col col-12 col-sm-12 col-md-6 *ngIf="showContent && dictationService.isSentenceDictation(dictation)">
+          <div style="padding-bottom: 4px;" class="table-heading">{{'Article'|translate}}:</div>
+          <p>{{dictation.article}}</p>
         </ion-col>
       </ion-row>
     </ion-grid>

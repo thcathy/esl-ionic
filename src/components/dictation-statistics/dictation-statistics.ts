@@ -16,7 +16,8 @@ export class DictationStatisticsComponent {
   constructor(
     public navCtrl: NavController,
     public navService: NavigationService,
-    public displayService: DisplayService) {
+    public displayService: DisplayService,
+    ) {
   }
 
   openDictation(dictation: Dictation) {

@@ -7,14 +7,6 @@ import 'rxjs/add/operator/catch';
 import {Dictation} from "../../entity/dictation";
 import {ENV} from "../../environment/environment";
 
-export interface CreateDictationRequest {
-  title: string;
-  description?: string;
-  showImage: boolean;
-  vocabulary: string[];
-  suitableStudent: string;
-}
-
 export interface EditDictationRequest {
   dictationId?: number;
   title: string;
@@ -22,6 +14,7 @@ export interface EditDictationRequest {
   showImage: boolean;
   vocabulary: string[];
   suitableStudent: string;
+  article: string;
 }
 
 @Injectable()

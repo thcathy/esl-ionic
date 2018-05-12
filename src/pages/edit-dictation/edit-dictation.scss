@@ -12,5 +12,11 @@ page-edit-dictation {
     ::placeholder {
       color: #BBBBBB;
     }
+
+    .radio {
+      ion-item {
+        margin-left: 12px;
+      }
+    }
   }
 }
