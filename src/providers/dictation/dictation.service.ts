@@ -7,7 +7,7 @@ import 'rxjs/add/operator/catch';
 import {DictationStatistics} from "../../entity/dictation-statistics";
 import {Dictation} from "../../entity/dictation";
 import {VocabPracticeHistory} from "../../interfaces/vocab-practice-history";
-import {ENV} from "../../environment/environment.prod";
+import {ENV} from "../../environment/environment";
 import {ValidationUtils} from "../../utils/validation-utils";
 
 @Injectable()
@@ -30,6 +30,7 @@ export class DictationService {
   }
 
   recommend(id: number): Observable<Dictation> {
+    console.log(`recommend dictation ${id} by url ${this.recommendUrl}`);
     return this.http.get<Dictation>(this.recommendUrl + id);
   }
 
