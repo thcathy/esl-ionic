@@ -5,7 +5,7 @@ import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import {Dictation} from "../../entity/dictation";
-import {ENV} from "../../environment/environment";
+import { ENV } from '@environment';
 
 export interface EditDictationRequest {
   dictationId?: number;

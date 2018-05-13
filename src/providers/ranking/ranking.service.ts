@@ -6,7 +6,7 @@ import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import {MemberScoreRanking} from "../../entity/member-score-ranking";
-import {ENV} from "../../environment/environment";
+import { ENV } from '@environment';
 
 
 

@@ -3,6 +3,9 @@
     "version": "0.0.1",
     "description": "An Ionic project",
     "license": "Apache-2.0",
+    "config": {
+        "ionic_webpack": "./src/config/webpack.config.js"
+    },
     "repository": {
         "type": "git",
         "url": "https://github.com/ionic-team/ionic-conference-app.git"
@@ -25,7 +28,7 @@
         "@angular/animations": "^5.2.6",
         "@angular/common": "5.0.0",
         "@angular/compiler": "5.0.0",
-        "@angular/compiler-cli": "5.0.0",
+        "@angular/compiler-cliA": "5.0.0",
         "@angular/core": "5.0.0",
         "@angular/forms": "5.0.0",
         "@angular/http": "5.0.0",
@@ -42,7 +45,8 @@
         "@ngx-translate/core": "^9.1.1",
         "@ngx-translate/http-loader": "^2.0.1",
         "auth0-js": "^9.3.0",
-        "cordova-android": "git+https://github.com/apache/cordova-android.git",
+        "cordova-android": "6.3.0",
+        "cordova-android-support-gradle-release": "^1.4.2",
         "cordova-browser": "5.0.3",
         "cordova-ios": "4.5.4",
         "cordova-plugin-crosswalk-webview": "^2.4.0",

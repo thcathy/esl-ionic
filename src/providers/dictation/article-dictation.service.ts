@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 
-import {ENV} from "../../environment/environment";
+import { ENV } from '@environment';
 import {SentenceHistory} from "../../entity/sentence-history";
 import {ValidationUtils} from "../../utils/validation-utils";
 

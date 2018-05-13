@@ -7,7 +7,7 @@ import 'rxjs/add/operator/catch';
 import {DictationStatistics} from "../../entity/dictation-statistics";
 import {Dictation} from "../../entity/dictation";
 import {VocabPracticeHistory} from "../../interfaces/vocab-practice-history";
-import {ENV} from "../../environment/environment";
+import { ENV } from '@environment';
 import {ValidationUtils} from "../../utils/validation-utils";
 
 @Injectable()

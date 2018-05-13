@@ -19,7 +19,10 @@
       "dom",
       "es2015"
     ],
-    "baseUrl": "./src"
+    "baseUrl": "./src",
+    "paths": {
+      "@environment": ["config/environment.prod"]
+    }
   },
   "include": [
     "src/**/*.ts"

@@ -19,10 +19,11 @@ export class SpeechService {
     rate = Math.round(rate * 10) / 10;
     console.log(`speak ${text} in speed ${rate}`);
     if (this.appService.isApp()) {
+      if (this.appService.isIOS()) rate = rate * 2;
       this.tts.speak({
         text: text,
         locale: 'en-US',
-        rate: rate * 2
+        rate: rate
       })
         .then(() => console.log(`Speak by tts: ${text}`))
         .catch((reason: any) => console.log(reason));
