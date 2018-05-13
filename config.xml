@@ -78,7 +78,7 @@
     <preference name="orientation" value="default" />
     <preference name="ScrollEnabled" value="false" />
     <preference name="StatusBarStyle" value="default" />
-    <preference name="android-minSdkVersion" value="18" />
+    <preference name="android-minSdkVersion" value="19" />
     <preference name="BackupWebStorage" value="none" />
     <preference name="SplashScreen" value="screen" />
     <preference name="SplashMaintainAspectRatio" value="true" />
@@ -114,6 +114,6 @@
     <plugin name="cordova-plugin-google-analytics" spec="~1.8.3" />
     <plugin name="cordova-plugin-tts" spec="^0.2.3" />
     <engine name="browser" spec="5.0.3" />
-    <engine name="android" spec="git+https://github.com/apache/cordova-android.git" />
+    <engine name="android" spec="6.3.0" />
     <engine name="ios" spec="4.5.4" />
 </widget>
