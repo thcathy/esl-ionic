@@ -28,7 +28,7 @@
           <div *ngIf="description.invalid && (description.dirty || description.touched)" class="error-text">
             <div *ngIf="description.errors.maxlength">{{'Description cannot over 100 characters long'|translate}}</div>
           </div>
-          <ion-item>
+          <ion-item *ngIf="type.value=='word'">
             <ion-label><i class="far fa-images"></i> {{'Show Image'|translate}}</ion-label>
             <ion-toggle style="padding-right: 30px;" formControlName="showImage"></ion-toggle>
           </ion-item>

@@ -19,7 +19,7 @@
               <td class="table-heading">{{ 'Suitable' | translate }}</td>
               <td>{{ 'SuitableStudent.' + dictation.suitableStudent | translate }}</td>
             </tr>
-            <tr>
+            <tr *ngIf="!dictationService.isSentenceDictation(dictation)">
               <td class="table-heading">{{ 'Show Image' | translate }}</td>
               <td>
                 <i class="fas fa-check" *ngIf="dictation.showImage"></i>
