@@ -29,6 +29,7 @@ export class SpeechService {
         .catch((reason: any) => console.log(reason));
     } else {
       console.log(`speak by responsive voice: ${text}`);
+      responsiveVoice.cancel();
       responsiveVoice.speak(text, "UK English Female", {rate: rate});
     }
   }
@@ -37,7 +38,7 @@ export class SpeechService {
     if (this.appService.isApp()) {
       this.tts.stop().then(() => console.log(`stopped tss`));
     } else {
-      responsiveVoice.stop();
+      responsiveVoice.cancel();
     }
   }
 }

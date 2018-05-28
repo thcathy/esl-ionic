@@ -1,5 +1,5 @@
-import {Component} from '@angular/core';
-import {IonicPage, LoadingController, NavController, NavParams} from 'ionic-angular';
+import {Component, ViewChild} from '@angular/core';
+import {IonicPage, Loading, LoadingController, NavController, NavParams} from 'ionic-angular';
 import {Dictation} from "../../entity/dictation";
 import {VocabPracticeService} from "../../providers/practice/vocab-practice.service";
 import {VocabPractice} from "../../entity/voacb-practice";
@@ -8,10 +8,8 @@ import {DictationService} from "../../providers/dictation/dictation.service";
 import {PracticeCompletePage} from "../practice-complete/practice-complete";
 import {TranslateService} from "@ngx-translate/core";
 import {GoogleAnalytics} from "@ionic-native/google-analytics";
-import {TextToSpeech} from "@ionic-native/text-to-speech";
 import {AppService} from "../../providers/app.service";
-
-declare var responsiveVoice: any;
+import {SpeechService} from "../../providers/speech.service";
 
 @IonicPage({
   segment: 'dictation-practice/:dictationId', // will be used in browser as URL
@@ -29,6 +27,8 @@ export class DictationPracticePage {
   answer: string;
   mark: number;
   histories: VocabPracticeHistory[] = [];
+  loader: Loading;
+  @ViewChild('answerElement') answerInput;
 
   constructor(
     public navCtrl: NavController,
@@ -38,27 +38,18 @@ export class DictationPracticePage {
     public dictationService: DictationService,
     public translateService: TranslateService,
     public ga: GoogleAnalytics,
-    public tts: TextToSpeech,
     public appService: AppService,
+    public speechService: SpeechService,
   ) {
-    let loader = this.loadingCtrl.create({ content: translateService.instant('Please wait') + "..." });
-    loader.present();
+    this.loader = this.loadingCtrl.create({ content: translateService.instant('Please wait') + "..." });
+    this.loader.present();
 
     this.dictation = navParams.get('dictation');
     this.dictationId = navParams.data.dictationId;
-    this.init();
 
-    this.dictation.vocabs.forEach((vocab) => {
-      vocabPracticeService.getQuestion(vocab.word, this.dictation.showImage)
-        .subscribe((p) => {
-          this.vocabPractices.push(p);
-
-          if (this.vocabPractices.length == 1) {
-            loader.dismissAll();
-            this.speak();
-          }
-        })
-    });
+    // trigger audio for this page
+    var audio = new Audio('');
+    audio.play();
   }
 
   private init() {
@@ -75,20 +66,34 @@ export class DictationPracticePage {
     this.ga.trackView('dictation-practice')
   }
 
+  ionViewDidEnter() {
+    this.init();
+
+    this.dictation.vocabs.forEach((vocab) => {
+      this.vocabPracticeService.getQuestion(vocab.word, this.dictation.showImage)
+        .subscribe((p) => {
+          this.vocabPractices.push(p);
+
+          if (this.vocabPractices.length == 1) {
+            this.loader.dismissAll();
+            this.speak();
+          }
+        })
+    });
+  }
+
   speak() {
     if (this.vocabPractices[this.questionIndex].activePronounceLink) {
       var audio = new Audio(this.vocabPractices[this.questionIndex].activePronounceLink);
       audio.play();
     } else {
-      if (this.appService.isApp()) {
-        this.tts.speak(this.vocabPractices[this.questionIndex].word)
-          .then(() => console.log('Success by tts'))
-          .catch((reason: any) => console.log(reason));
-      } else {
-        console.log(`speak by responsive voice`);
-        responsiveVoice.speak(this.vocabPractices[this.questionIndex].word);
-      }
+      this.speechService.speak(this.vocabPractices[this.questionIndex].word);
     }
+    this.focusAnswer();
+  }
+
+  focusAnswer() {
+    if (this.answerInput) this.answerInput.setFocus();
   }
 
   showPhonics() {

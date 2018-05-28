@@ -12,6 +12,7 @@ import { FooterComponent } from './footer/footer';
 import { DictationListComponent } from './dictation-list/dictation-list';
 import {PipesModule} from "../pipes/pipes.module";
 import { SentenceHistoriesComponent } from './sentence-histories/sentence-histories';
+import { MemberScoreListComponent } from './member-score-list/member-score-list';
 
 @NgModule({
 	declarations: [MemberScoreRankingComponent,
@@ -23,7 +24,8 @@ import { SentenceHistoriesComponent } from './sentence-histories/sentence-histor
     DictationCardComponent,
     FooterComponent,
     DictationListComponent,
-    SentenceHistoriesComponent],
+    SentenceHistoriesComponent,
+    MemberScoreListComponent],
 	imports: [
 	  IonicModule,
     TranslateModule,
@@ -38,6 +40,7 @@ import { SentenceHistoriesComponent } from './sentence-histories/sentence-histor
     DictationCardComponent,
     FooterComponent,
     DictationListComponent,
-    SentenceHistoriesComponent]
+    SentenceHistoriesComponent,
+    MemberScoreListComponent]
 })
 export class ComponentsModule {}

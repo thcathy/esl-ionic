@@ -21,7 +21,6 @@
           <ion-row>
             <ion-col col-12 col-sm-12 col-md-6>
               <button ion-button class="speakBtn" (click)="speak()"><i class="fas fa-headphones"></i>&nbsp;{{'Listen'|translate}}</button>
-              <button ion-button class="stopBtn" (click)="stop()"><i class="fas fa-stop"></i>&nbsp;{{'Stop'|translate}}</button>
             </ion-col>
             <ion-col col-12 col-sm-12 col-md-6 text-right>
               <button ion-button outline class="rateBtn" (click)="slower()"><i class="fas fa-bicycle"></i>&nbsp;{{'Slower'|translate}}</button>
@@ -31,7 +30,7 @@
           <ion-row>
             <ion-item class="answerInput">
               <ion-label floating>{{'Answer'|translate}}</ion-label>
-              <ion-input [(ngModel)]="answer" type="text" maxlength="255" (keyup.enter)="submitAnswer()"></ion-input>
+              <ion-input #answerElement [(ngModel)]="answer" type="text" maxlength="255" (keyup.enter)="submitAnswer()"></ion-input>
             </ion-item>
             <button ion-button full class="submitBtn" (click)="submitAnswer()">{{'Submit'|translate}}</button>
           </ion-row>

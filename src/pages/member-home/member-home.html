@@ -9,9 +9,16 @@
 
 
 <ion-content>
-  <div style="padding: 16px;">
-    <dictation-list [dictations]="createdDictations" showCreateButton="true"></dictation-list>
-  </div>
+  <ion-grid>
+   <ion-row>
+     <ion-col col-12 col-sm-12 col-md-6>
+       <member-score-list [allTimesScore]="allTimesScore" [scores]="latestScore"></member-score-list>
+     </ion-col>
+     <ion-col col-12 col-sm-12 col-md-6>
+       <dictation-list [dictations]="createdDictations" showCreateButton="true"></dictation-list>
+     </ion-col>
+   </ion-row>
+  </ion-grid>
 
   <footer></footer>
 </ion-content>

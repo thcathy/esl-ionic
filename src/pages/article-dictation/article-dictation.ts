@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import {Dictation} from "../../entity/dictation";
 import {ArticleDictationService} from "../../providers/dictation/article-dictation.service";
@@ -7,7 +7,6 @@ import {GoogleAnalytics} from "@ionic-native/google-analytics";
 import {SentenceHistory} from "../../entity/sentence-history";
 import {ArticleDictationCompletePage} from "../article-dictation-complete/article-dictation-complete";
 import {SpeechService} from "../../providers/speech.service";
-import {TextToSpeech} from "@ionic-native/text-to-speech";
 
 @IonicPage()
 @Component({
@@ -22,6 +21,7 @@ export class ArticleDictationPage {
   mark: number = 0;
   answer: string = "";
   histories: SentenceHistory[] = [];
+  @ViewChild('answerElement') answerInput;
 
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
@@ -29,19 +29,15 @@ export class ArticleDictationPage {
               public ga: GoogleAnalytics,
               public articleDictationService: ArticleDictationService,
               public speechService: SpeechService,
-              public tts: TextToSpeech
   ) {
     this.dictation = navParams.get('dictation');
     this.sentences = articleDictationService.divideToSentences(this.dictation.article);
     console.log(`divided into ${this.sentences.length} sentences`);
+    this.speak();
   }
 
   ionViewDidLoad() {
     this.ga.trackView('article-dictation')
-  }
-
-  stop() {
-    this.speechService.stop();
   }
 
   slower() {
@@ -56,6 +52,7 @@ export class ArticleDictationPage {
 
   speak() {
     this.speechService.speak(this.sentences[this.currentSentence], this.speakingRate);
+    this.focusAnswer();
   }
 
   submitAnswer() {
@@ -72,5 +69,11 @@ export class ArticleDictationPage {
         'histories': this.histories.reverse()
       });
     }
+
+    this.speak();
+  }
+
+  focusAnswer() {
+    if (this.answerInput) this.answerInput.setFocus();
   }
 }

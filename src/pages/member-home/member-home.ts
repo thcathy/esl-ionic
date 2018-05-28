@@ -37,7 +37,8 @@ export class MemberHomePage {
     });
   }
 
-  setScores(scores: MemberScore[]) {
+  private setScores(scores: MemberScore[]) {
+    console.log(`${scores.length} scores is returned`);
     this.allTimesScore = scores.find(s => s.scoreYearMonth > 999999);
     this.latestScore = scores.filter(s => s.scoreYearMonth < 999999)
                               .sort( (a,b) => a.scoreYearMonth - b.scoreYearMonth);
