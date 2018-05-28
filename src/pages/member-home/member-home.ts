@@ -4,6 +4,8 @@ import {MemberDictationService} from "../../providers/dictation/member-dictation
 import {Dictation} from "../../entity/dictation";
 import {TranslateService} from "@ngx-translate/core";
 import {GoogleAnalytics} from "@ionic-native/google-analytics";
+import {MemberScore} from "../../entity/member-score";
+import {RankingService} from "../../providers/ranking/ranking.service";
 
 @IonicPage()
 @Component({
@@ -12,6 +14,8 @@ import {GoogleAnalytics} from "@ionic-native/google-analytics";
 })
 export class MemberHomePage {
   createdDictations: Array<Dictation>;
+  allTimesScore: MemberScore;
+  latestScore: MemberScore[];
 
   constructor(
     public navCtrl: NavController,
@@ -19,15 +23,24 @@ export class MemberHomePage {
     public loadingCtrl: LoadingController,
     public memberDictationService: MemberDictationService,
     public translateService: TranslateService,
+    public rankingService: RankingService,
     public ga: GoogleAnalytics,
   ) {
     let loader = this.loadingCtrl.create({ content: translateService.instant('Please wait') + "..." });
     loader.present();
 
+    rankingService.allTimesAndLast6Score().subscribe(this.setScores);
+
     memberDictationService.getAllDictation().subscribe(dictations => {
       loader.dismissAll();
       this.createdDictations = dictations;
     });
+  }
+
+  setScores(scores: MemberScore[]) {
+    this.allTimesScore = scores.find(s => s.scoreYearMonth > 999999);
+    this.latestScore = scores.filter(s => s.scoreYearMonth < 999999)
+                              .sort( (a,b) => a.scoreYearMonth - b.scoreYearMonth);
   }
 
   ionViewWillEnter() {
