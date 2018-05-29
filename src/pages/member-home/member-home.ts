@@ -29,7 +29,7 @@ export class MemberHomePage {
     let loader = this.loadingCtrl.create({ content: translateService.instant('Please wait') + "..." });
     loader.present();
 
-    rankingService.allTimesAndLast6Score().subscribe(this.setScores);
+    rankingService.allTimesAndLast6Score().subscribe((s) => this.setScores(s));
 
     memberDictationService.getAllDictation().subscribe(dictations => {
       loader.dismissAll();
