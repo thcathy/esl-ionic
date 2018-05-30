@@ -9,6 +9,7 @@ import {MemberHomePage} from "../pages/member-home/member-home";
 import {TranslateService} from "@ngx-translate/core";
 import * as auth0 from 'auth0-js';
 import {MemberService} from "./member/member.service";
+import {NavigationRequest, NavigationService} from "./navigation.service";
 
 export const auth0CordovaConfig = {
   // needed for auth0
@@ -27,6 +28,7 @@ export class AuthService {
   idTokenKey = 'id_token';
   expiresAtKey = 'expires_at';
   accessTokenKey = 'access_token';
+  navigationRequestKey = 'navigation_request';
   accessToken: string;
   idToken: string;
 
@@ -48,7 +50,8 @@ export class AuthService {
               public storage: Storage,
               public events: Events,
               public translate: TranslateService,
-              public memberService: MemberService) {
+              public memberService: MemberService,
+              public navigationService: NavigationService) {
     try {
       this.userProfile = JSON.parse(localStorage.getItem('profile'));
       this.idToken = localStorage.getItem(this.idTokenKey);
@@ -62,7 +65,8 @@ export class AuthService {
     return this.app.getRootNav();
   }
 
-  public login(): void {
+  public login(redirectRequest?: NavigationRequest): void {
+    this.storage.set(this.navigationRequestKey, redirectRequest);
     if (this.appService.isApp()) {
       console.log('login by cordova');
       this.loginCordova();
@@ -86,27 +90,9 @@ export class AuthService {
     }
   }
 
-
   public handleAuthentication(): void {
     console.log('handleAuthentication');
-
-    this.auth0.parseHash((err, authResult) => {
-      console.log(`handleAuthentication: err ${err}, result ${authResult}`);
-      if (authResult && authResult.accessToken && authResult.idToken) {
-        this.events.publish('user:login');
-        window.location.hash = '';
-        this.setSession(authResult);
-        this.getProfile((err) => {
-          console.warn(`cannot get profile: ${err}`);
-        });
-        this.memberService.getProfile().subscribe((_m) => {
-          this.getNavCtrl().setRoot(MemberHomePage);
-        });
-      } else if (err) {
-        this.getNavCtrl().setRoot(HomePage);
-        console.log(err);
-      }
-    });
+    this.auth0.parseHash((err, authResult) => this.handleAuthResult(this.auth0Cordova, authResult, err));
   }
 
   public loginCordova(signUp = false) {
@@ -117,37 +103,7 @@ export class AuthService {
       options['initialScreen'] = 'signUp';
     }
 
-    client.authorize(options, (err, authResult) => {
-      console.log(`authResult: ${JSON.stringify(authResult)}`);
-      if(err) {
-        throw err;
-      }
-
-      localStorage.setItem(this.accessTokenKey, authResult.accessToken);
-      localStorage.setItem(this.idTokenKey, authResult.idToken);
-      this.accessToken = authResult.accessToken;
-      // Set access token expiration
-      const expiresAt = JSON.stringify((authResult.expiresIn * 1000) + new Date().getTime());
-      localStorage.setItem(this.expiresAtKey, expiresAt);
-
-
-      // Fetch user's profile info
-      this.auth0Cordova.client.userInfo(this.accessToken, (err, profile) => {
-        if (err) {
-          console.error(`${JSON.stringify(err)}`);
-          this.getNavCtrl().setRoot(HomePage);
-          throw err;
-        }
-
-        this.zone.run(() => {
-          localStorage.setItem('profile', JSON.stringify(profile));
-          this.userProfile = profile;
-        });
-        this.memberService.getProfile().subscribe((_m) => {
-          this.getNavCtrl().setRoot(MemberHomePage);
-        });
-      });
-    });
+    client.authorize(options, (err, authResult) => this.handleAuthResult(this.auth0Cordova, authResult, err));
   }
 
   private setSession(authResult): void {
@@ -156,6 +112,7 @@ export class AuthService {
     const expiresAt = JSON.stringify((authResult.expiresIn * 1000) + new Date().getTime());
     console.info(`expiresAt: ${expiresAt}`);
 
+    this.accessToken = authResult.accessToken;
     localStorage.setItem(this.accessTokenKey, authResult.accessToken);
     localStorage.setItem(this.idTokenKey, authResult.idToken);
     localStorage.setItem(this.expiresAtKey, expiresAt);
@@ -182,23 +139,6 @@ export class AuthService {
     return Date.now() < expiresAt;
   }
 
-  public getProfile(cb): void {
-    const accessToken = localStorage.getItem('access_token');
-    if (!accessToken) {
-      throw new Error('Access token must exist to fetch profile');
-    }
-
-    const self = this;
-    this.auth0.client.userInfo(accessToken, (err, profile) => {
-      if (profile) {
-        console.log(`user profile: ${JSON.stringify(profile)}`);
-        localStorage.setItem('profile', JSON.stringify(profile));
-        self.userProfile = profile;
-      }
-      cb(err, profile);
-    });
-  }
-
   public requireAuthenticated(): boolean {
     if (!this.isAuthenticated()) {
       console.log(`require login, redirect to login page`);
@@ -220,5 +160,44 @@ export class AuthService {
     }
     console.log(`set auth0 lang based on ${locale} to ${result}`);
     return result;
+  }
+
+  private handleAuthResult(auth0WebAuth: any, authResult: any, err: any) {
+    console.log(`authResult: ${JSON.stringify(authResult)}`);
+    if (err) {
+      console.log(err);
+      this.getNavCtrl().setRoot(HomePage);
+    }
+
+    if (authResult && authResult.accessToken && authResult.idToken) {
+      this.setSession(authResult);
+
+      auth0WebAuth.client.userInfo(this.accessToken, (err, profile) => {
+        if (err) {
+          console.error(`${JSON.stringify(err)}`);
+          this.getNavCtrl().setRoot(HomePage);
+          throw err;
+        }
+
+        this.zone.run(() => {
+          localStorage.setItem('profile', JSON.stringify(profile));
+          this.userProfile = profile;
+        });
+        this.redirectAfterLogin();
+      });
+    }
+  }
+
+  private redirectAfterLogin() {
+    this.storage.get(this.navigationRequestKey).then((request) => {
+      if (request != null) {
+        this.storage.set(this.navigationRequestKey, null);
+        this.navigationService.goTo(request);
+      } else {
+        this.memberService.getProfile().subscribe((_m) => {
+          this.getNavCtrl().setRoot(MemberHomePage);
+        });
+      }
+    });
   }
 }

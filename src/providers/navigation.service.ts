@@ -6,6 +6,12 @@ import {App} from "ionic-angular";
 import {Dictation} from "../entity/dictation";
 import {DictationService} from "./dictation/dictation.service";
 
+
+export interface NavigationRequest {
+  destination: any;
+  params: any;
+}
+
 @Injectable()
 export class NavigationService {
 
@@ -17,6 +23,10 @@ export class NavigationService {
     let navCtrl = this.app.getActiveNavs()[0];
     console.log(`${navCtrl.id}`);
     return navCtrl;
+  }
+
+  goTo(request: NavigationRequest) {
+    this.getNavigationController().setRoot(request.destination, request.params);
   }
 
   startDictation(dictation: Dictation) {
