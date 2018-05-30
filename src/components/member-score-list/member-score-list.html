@@ -10,7 +10,7 @@
         <span float-right><i class="fas fa-star" style="color: gold"></i> {{allTimesScore.score}}</span>
       </ion-item>
       <ion-item *ngFor="let score of scores; let i = index">
-        {{ score.yearMonthAsDate | date: 'MMM yyyy' }}
+        {{ score.yearMonthAsDate | date: 'yyyy/MM' }}
         <span float-right><i class="fas fa-star" style="color: gold"></i> {{score.score}}</span>
       </ion-item>
     </ion-list>
