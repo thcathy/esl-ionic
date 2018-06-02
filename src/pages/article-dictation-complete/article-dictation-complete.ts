@@ -31,9 +31,11 @@ export class ArticleDictationCompletePage {
   ) {
     this.getNavParams();
     this.calculateCorrect(this.histories);
-    dictationService.createHistory(this.dictation.id, this.totalCorrect / 10, []).subscribe(d => {
-      this.dictation = d;
-    });
+    if (!dictationService.isInstantDictation(this.dictation)) {
+      dictationService.createHistory(this.dictation.id, this.totalCorrect / 10, []).subscribe(d => {
+        this.dictation = d;
+      });
+    }
   }
 
   ionViewDidLoad() {

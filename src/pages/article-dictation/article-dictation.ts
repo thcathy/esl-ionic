@@ -68,9 +68,9 @@ export class ArticleDictationPage {
         'dictation': this.dictation,
         'histories': this.histories.reverse()
       });
+    } else {
+      this.speak();
     }
-
-    this.speak();
   }
 
   focusAnswer() {

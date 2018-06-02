@@ -42,7 +42,10 @@ export class EditDictationPage {
               public dictationService: DictationService,
   ) {
     if (!this.authService.isAuthenticated()) {
-      this.authService.login();
+      this.authService.login({
+        destination: 'EditDictationPage',
+        params: {dictation: navParams.get('dictation')}
+      });
       return;
     }
 
@@ -85,9 +88,13 @@ export class EditDictationPage {
     this.description.setValue(dictation.description);
     this.showImage.setValue(dictation.showImage);
     this.suitableStudent.setValue(dictation.suitableStudent);
-    this.vocabulary.setValue(dictation.vocabs.map(v => v.word).join(' '));
-    this.article.setValue(dictation.article);
-    this.type.setValue(this.dictationService.isSentenceDictation(dictation) ? 'sentence' : 'word');
+    if (this.dictationService.isSentenceDictation(dictation)) {
+      this.type.setValue('sentence');
+      this.article.setValue(dictation.article);
+    } else {
+      this.type.setValue('word');
+      this.vocabulary.setValue(dictation.vocabs.map(v => v.word).join(' '));
+    }
   }
 
   saveDictation() {
@@ -101,7 +108,7 @@ export class EditDictationPage {
       title: this.title.value,
       description: this.description.value,
       showImage: this.showImage.value,
-      vocabulary: this.type.value == 'word' ?  this.vocabulary.value.split(/[\s,]+/) : [],
+      vocabulary: this.type.value == 'word' ?  this.vocabulary.value.split(/[\s,]+/).filter(v => !ValidationUtils.isBlankString(v)) : [],
       article: this.type.value == 'sentence' ? this.article.value : '',
       suitableStudent: this.suitableStudent.value
     }).subscribe(
