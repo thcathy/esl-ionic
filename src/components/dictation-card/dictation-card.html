@@ -52,10 +52,17 @@
         </ion-col>
       </ion-row>
     </ion-grid>
-    <div padding *ngIf="start || retry">
-      <button *ngIf="edit" ion-button (click)="navService.editDictation(dictation)"><i class="fas fa-edit"></i>&nbsp;{{'Edit'|translate}}</button>
-      <button *ngIf="start" ion-button (click)="navService.startDictation(dictation)"><i class="fas fa-play"></i>&nbsp;{{'Start'|translate}}</button>
-      <button *ngIf="retry" ion-button (click)="navService.startDictation(dictation)"><i class="fas fa-redo"></i>&nbsp;{{'Retry'|translate}}</button>
-    </div>
+    <ion-row>
+      <ion-col>
+        <button *ngIf="start" ion-button (click)="navService.startDictation(dictation)"><i class="fas fa-play"></i>&nbsp;{{'Start'|translate}}</button>
+        <button *ngIf="retry" ion-button (click)="navService.startDictation(dictation)"><i class="fas fa-redo"></i>&nbsp;{{'Retry'|translate}}</button>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <button *ngIf="edit" color="secondary" ion-button (click)="navService.editDictation(dictation)"><i class="fas fa-edit"></i>&nbsp;{{'Edit'|translate}}</button>
+        <button *ngIf="edit" color="danger" ion-button (click)="checkDeleteDictation()"><i class="fas fa-trash"></i>&nbsp;{{'Delete'|translate}}</button>
+      </ion-col>
+    </ion-row>
   </ion-card-content>
 </ion-card>

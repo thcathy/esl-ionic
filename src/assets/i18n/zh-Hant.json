@@ -97,10 +97,18 @@
   "Sentence(s)": "句子",
   "Vocab(s)": "字詞",
   "My Scores": "我的分數",
+  "Delete": "刪除",
+  "Confirm": "確定",
+  "Cancel": "取消",
+  "DeletedDictation": "練習 {{title}} 成功刪除",
+  "Error": "錯誤",
+  "Fail to delete dictation": "無法刪除練習",
+  "Delete this dictation": "刪除這個練習",
   "": "",
   "": "",
   "": "",
   "": "",
   "": ""
+
 
 }

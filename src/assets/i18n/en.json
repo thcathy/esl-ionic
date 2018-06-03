@@ -21,6 +21,6 @@
   "TotalVocabs": "Vocabs",
   "ViewDictation": "View",
   "CompletePracticeHeader": "You got {{mark}} marks in {{totalQuestion}} questions",
-  "UpdatedDictation": "Dictation {{title}} is updated successfully"
-
+  "UpdatedDictation": "Dictation {{title}} is updated",
+  "DeletedDictation": "Dictation {{title}} is deleted"
 }

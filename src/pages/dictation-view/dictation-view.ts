@@ -42,7 +42,7 @@ export class DictationViewPage {
     if (toastMessage !== null) {
       let toast = this.toastCtrl.create({
         message: toastMessage,
-        duration: 5000,
+        duration: 3000,
         position: 'top'
       });
       toast.present();

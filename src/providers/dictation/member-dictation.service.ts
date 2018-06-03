@@ -25,6 +25,7 @@ export class MemberDictationService {
 
   private editDictationUrl = ENV.apiHost + '/member/dictation/edit';
   private getAllDictationUrl = ENV.apiHost + '/member/dictation/getall';
+  private deleteDictationUrl = ENV.apiHost + '/member/dictation/delete/';
 
   createOrAmendDictation(request: EditDictationRequest): Observable<Dictation> {
     return this.http.post<Dictation>(this.editDictationUrl, request);
@@ -32,5 +33,9 @@ export class MemberDictationService {
 
   getAllDictation(): Observable<Dictation[]> {
     return this.http.get<Dictation[]>(this.getAllDictationUrl);
+  }
+
+  deleteDictation(id: number) {
+    return this.http.get<Dictation>(this.deleteDictationUrl + id);
   }
 }
