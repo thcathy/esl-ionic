@@ -2,7 +2,10 @@ import { Component } from '@angular/core';
 
 import { AlertController, NavController } from 'ionic-angular';
 
-import { UserData } from '../../providers/user-data';
+import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import {MemberService} from "../../providers/member/member.service";
+import {Member} from "../../entity/member";
+import {maxVocabularyValidator} from "../edit-dictation/edit-dictation";
 
 
 @Component({
@@ -10,62 +13,29 @@ import { UserData } from '../../providers/user-data';
   templateUrl: 'account.html'
 })
 export class AccountPage {
-  username: string;
+  inputForm: FormGroup;
+  member: Member;
 
-  constructor(public alertCtrl: AlertController, public nav: NavController, public userData: UserData) {
-
+  constructor(
+    public alertCtrl: AlertController,
+    public nav: NavController,
+    public memberService: MemberService,
+    public formBuilder: FormBuilder,
+  ) {
+    this.memberService.getProfile().subscribe((m) => this.member = m);
   }
 
-  ngAfterViewInit() {
-    this.getUsername();
-  }
-
-  updatePicture() {
-    console.log('Clicked to update picture');
-  }
-
-  // Present an alert with the current username populated
-  // clicking OK will update the username and display it
-  // clicking Cancel will close the alert and do nothing
-  changeUsername() {
-    let alert = this.alertCtrl.create({
-      title: 'Change Username',
-      buttons: [
-        'Cancel'
-      ]
+  createForm() {
+    this.inputForm = this.formBuilder.group({
+      'title': new FormControl('', [Validators.required, Validators.minLength(5),  Validators.maxLength(50)]),
+      'description': new FormControl('', [Validators.maxLength(100)]),
+      'showImage': true,
+      'vocabulary': new FormControl('', [maxVocabularyValidator(50), Validators.pattern("^([a-zA-Z ]+[\\-,]?)+")]),
+      'article': '',
+      'type': 'word',
+      'suitableStudent': 'Any',
     });
-    alert.addInput({
-      name: 'username',
-      value: this.username,
-      placeholder: 'username'
-    });
-    alert.addButton({
-      text: 'Ok',
-      handler: (data: any) => {
-        this.userData.setUsername(data.username);
-        this.getUsername();
-      }
-    });
-
-    alert.present();
+    this.inputForm.get('suitableStudent').setValue('Any');
   }
 
-  getUsername() {
-    this.userData.getUsername().then((username) => {
-      this.username = username;
-    });
-  }
-
-  changePassword() {
-    console.log('Clicked to change password');
-  }
-
-  logout() {
-    this.userData.logout();
-    this.nav.setRoot('LoginPage');
-  }
-
-  support() {
-    this.nav.push('SupportPage');
-  }
 }

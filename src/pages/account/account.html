@@ -3,21 +3,77 @@
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title>Account</ion-title>
+    <ion-title>{{'My Account' | translate}}</ion-title>
   </ion-navbar>
 </ion-header>
 
-<ion-content class="outer-content">
-  <div padding-top text-center *ngIf="username">
-    <img src="http://www.gravatar.com/avatar?d=mm&s=140" alt="avatar">
-    <h2>{{username}}</h2>
+<ion-content>
+  <div style="padding: 16px;">
+    <ion-card class="input-form">
+      <ion-card-content>
+        <form [formGroup]="inputForm" novalidate>
+          <ion-item>
+            <ion-label stacked>{{'Title'|translate}} *</ion-label>
+            <ion-input type="text" formControlName="title" placeholder="Dictation {{now | date:'yyyy-MM-dd'}}"></ion-input>
+          </ion-item>
+          <div *ngIf="title.invalid && (title.dirty || title.touched)" class="error-text">
+            <div *ngIf="title.errors.required">{{'Title is required'|translate}}</div>
+            <div *ngIf="title.errors.minlength">{{'Title must be at least 5 characters long'|translate}}</div>
+            <div *ngIf="title.errors.maxlength">{{'Title cannot over 50 characters long'|translate}}</div>
+          </div>
+          <ion-item>
+            <ion-label stacked>{{'Description'|translate}}</ion-label>
+            <ion-input type="text" formControlName="description"></ion-input>
+          </ion-item>
+          <div *ngIf="description.invalid && (description.dirty || description.touched)" class="error-text">
+            <div *ngIf="description.errors.maxlength">{{'Description cannot over 100 characters long'|translate}}</div>
+          </div>
+          <ion-item *ngIf="type.value=='word'">
+            <ion-label><i class="far fa-images"></i> {{'Show Image'|translate}}</ion-label>
+            <ion-toggle style="padding-right: 30px;" formControlName="showImage"></ion-toggle>
+          </ion-item>
+          <ion-item>
+            <ion-label style="margin: inherit;">{{'Suitable'|translate}} ({{'Age'|translate}})</ion-label>
+            <ion-select style="padding-right: 30px;" formControlName="suitableStudent" interface="popover">
+              <ion-option *ngFor="let state of suitableStudentOptions" [value]="state">{{'SuitableStudent.' + state|translate}}</ion-option>
+            </ion-select>
+          </ion-item>
+          <ion-row radio-group class="radio" [formControl]="inputForm.controls['type']">
+            <ion-col>
+              <ion-item>
+                <ion-label>{{'Single Word'|translate}}</ion-label>
+                <ion-radio value="word"></ion-radio>
+              </ion-item>
+            </ion-col>
+            <ion-col>
+              <ion-item>
+                <ion-label>{{'Sentence'|translate}}</ion-label>
+                <ion-radio value="sentence"></ion-radio>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+          <ion-item *ngIf="inputForm.controls['type'].value == 'word'">
+            <ion-label stacked>{{'Vocabulary'|translate}} * ({{'separate by space or comma'|translate}})</ion-label>
+            <ion-textarea placeholder="apple bus-stop cat" formControlName="vocabulary" rows="5"></ion-textarea>
+          </ion-item>
+          <ion-item *ngIf="inputForm.controls['type'].value == 'sentence'">
+            <ion-label stacked>{{'Input an passage'|translate}} *:</ion-label>
+            <ion-textarea class="textarea" formControlName="article" rows="10" style="font-size: 1.4rem;"></ion-textarea>
+          </ion-item>
+          <div *ngIf="vocabulary.invalid && (vocabulary.dirty || vocabulary.touched)" class="error-text">
+            <div *ngIf="vocabulary.errors.maxVocabulary">{{'Cannot over 50 vocabulary'|translate}}</div>
+            <div *ngIf="vocabulary.errors.pattern">{{'Cannot contain invalid character(s)'|translate}}</div>
+          </div>
 
-    <ion-list inset>
-      <button ion-item (click)="updatePicture()">Update Picture</button>
-      <button ion-item (click)="changeUsername()">Change Username</button>
-      <button ion-item (click)="changePassword()">Change Password</button>
-      <button ion-item (click)="support()">Support</button>
-      <button ion-item (click)="logout()">Logout</button>
-    </ion-list>
+          <button ion-button float-right item-end color="secondary" (click)="saveDictation()" style="margin: 16px;" [disabled]="inputForm.invalid">
+            <i class="fas fa-pencil-alt"></i>&nbsp;{{'Save'|translate}}
+          </button>
+
+        </form>
+      </ion-card-content>
+    </ion-card>
+
   </div>
+
+  <footer></footer>
 </ion-content>

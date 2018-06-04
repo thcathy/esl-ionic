@@ -32,6 +32,9 @@
         <button ion-item menuClose *ngIf="!authService.isAuthenticated()" (click)="authService.signUp();">
           <i class="fas fa-user-plus" item-start></i> {{ 'Sign Up' | translate }}
         </button>
+        <button ion-item menuClose *ngIf="authService.isAuthenticated()" (click)="nav">
+          <i class="fas fa-user" item-start></i> {{ 'My Account' | translate }}
+        </button>
         <button ion-item menuClose *ngIf="authService.isAuthenticated()" (click)="authService.logout();">
           <i class="fas fa-sign-out-alt" item-start></i> {{ 'Logout' | translate }}
         </button>
