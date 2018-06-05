@@ -5,7 +5,6 @@ import { AlertController, NavController } from 'ionic-angular';
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {MemberService} from "../../providers/member/member.service";
 import {Member} from "../../entity/member";
-import {maxVocabularyValidator} from "../edit-dictation/edit-dictation";
 
 
 @Component({
@@ -22,20 +21,42 @@ export class AccountPage {
     public memberService: MemberService,
     public formBuilder: FormBuilder,
   ) {
-    this.memberService.getProfile().subscribe((m) => this.member = m);
+    this.createForm();
+    this.memberService.getProfile().subscribe((m) => {
+      this.member = m;
+      this.setFormValue(m);
+    });
+  }
+
+  get firstName() { return this.inputForm.get('firstName'); }
+  get lastName() { return this.inputForm.get('lastName'); }
+  get birthday() { return this.inputForm.get('birthday'); }
+  get address() { return this.inputForm.get('address'); }
+  get phoneNumber() { return this.inputForm.get('phoneNumber'); }
+  get school() { return this.inputForm.get('school'); }
+
+  setFormValue(member: Member) {
+    this.firstName.setValue(member.name.firstName);
+    this.lastName.setValue(member.name.lastName);
+    this.birthday.setValue(member.birthday);
+    this.address.setValue(member.address);
+    this.phoneNumber.setValue(member.phoneNumber);
+    this.school.setValue(member.school);
   }
 
   createForm() {
     this.inputForm = this.formBuilder.group({
-      'title': new FormControl('', [Validators.required, Validators.minLength(5),  Validators.maxLength(50)]),
-      'description': new FormControl('', [Validators.maxLength(100)]),
-      'showImage': true,
-      'vocabulary': new FormControl('', [maxVocabularyValidator(50), Validators.pattern("^([a-zA-Z ]+[\\-,]?)+")]),
-      'article': '',
-      'type': 'word',
-      'suitableStudent': 'Any',
+      'firstName': new FormControl('', [Validators.maxLength(50)]),
+      'lastName': new FormControl('', [Validators.maxLength(50)]),
+      'birthday': '',
+      'address': new FormControl('', [Validators.maxLength(500)]),
+      'phoneNumber': new FormControl('', [Validators.maxLength(20)]),
+      'school': new FormControl('', [Validators.maxLength(200)]),
     });
-    this.inputForm.get('suitableStudent').setValue('Any');
+  }
+
+  save() {
+
   }
 
 }

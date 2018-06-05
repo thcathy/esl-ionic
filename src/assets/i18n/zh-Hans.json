@@ -105,7 +105,7 @@
   "Fail to delete dictation": "无法删除练习",
   "Delete this dictation": "删除这个练习",
   "My Account": "我的帐户",
-  "": "",
+  "CharactersTooLong": "不能超过{{length}}个字符",
   "": "",
   "": "",
   "": "",

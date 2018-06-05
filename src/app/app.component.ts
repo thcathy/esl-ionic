@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 
-import {Events, MenuController, Nav, Platform} from 'ionic-angular';
+import {Events, MenuController, Nav, NavController, Platform} from 'ionic-angular';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
 import { Storage } from '@ionic/storage';
@@ -23,6 +23,7 @@ import {MemberHomePage} from "../pages/member-home/member-home";
 import {EditDictationPage} from "../pages/edit-dictation/edit-dictation";
 import {GoogleAnalytics} from "@ionic-native/google-analytics";
 import {AppService} from "../providers/app.service";
+import {NavigationService} from "../providers/navigation.service";
 
 export interface PageInterface {
   title: string;
@@ -79,7 +80,7 @@ export class ConferenceApp {
     public translate: TranslateService,
     public authService: AuthService,
     public ga: GoogleAnalytics,
-    public appService: AppService,
+    public appService: AppService
   ) {
 
     // Check if the user has already seen the tutorial
