@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 
-import { AlertController, NavController } from 'ionic-angular';
+import {AlertController, NavController, ToastController} from 'ionic-angular';
 
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
-import {MemberService} from "../../providers/member/member.service";
+import {MemberService, UpdateMemberRequest} from "../../providers/member/member.service";
 import {Member} from "../../entity/member";
+import {TranslateService} from "@ngx-translate/core";
 
 
 @Component({
@@ -16,10 +17,11 @@ export class AccountPage {
   member: Member;
 
   constructor(
-    public alertCtrl: AlertController,
     public nav: NavController,
     public memberService: MemberService,
     public formBuilder: FormBuilder,
+    public toastCtrl: ToastController,
+    public translate: TranslateService,
   ) {
     this.createForm();
     this.memberService.getProfile().subscribe((m) => {
@@ -30,7 +32,7 @@ export class AccountPage {
 
   get firstName() { return this.inputForm.get('firstName'); }
   get lastName() { return this.inputForm.get('lastName'); }
-  get birthday() { return this.inputForm.get('birthday'); }
+  get birthday() { return new Date(this.inputForm.get('birthday')); }
   get address() { return this.inputForm.get('address'); }
   get phoneNumber() { return this.inputForm.get('phoneNumber'); }
   get school() { return this.inputForm.get('school'); }
@@ -49,14 +51,33 @@ export class AccountPage {
       'firstName': new FormControl('', [Validators.maxLength(50)]),
       'lastName': new FormControl('', [Validators.maxLength(50)]),
       'birthday': '',
-      'address': new FormControl('', [Validators.maxLength(500)]),
-      'phoneNumber': new FormControl('', [Validators.maxLength(20)]),
-      'school': new FormControl('', [Validators.maxLength(200)]),
+      'address': new FormControl('', [Validators.maxLength(200)]),
+      'phoneNumber': new FormControl('', [Validators.maxLength(20), Validators.pattern("^[0-9]*$")]),
+      'school': new FormControl('', [Validators.maxLength(100)]),
     });
   }
 
   save() {
+    this.memberService.update(<UpdateMemberRequest>{
+      firstName: this.firstName.value,
+      lastName: this.lastName.value,
+      address: this.address.value,
+      birthday: this.birthday.value ? new Date(this.birthday.value).getTime() : null,
+      phoneNumber: this.phoneNumber.value,
+      school: this.school.value
+    }).subscribe(
+      _m => this.showToast('Personal information updated'),
+      _e => this.showToast('Error when update personal information')
+    )
+  }
 
+  showToast(message: string) {
+    let toast = this.toastCtrl.create({
+      message: this.translate.instant(message),
+      duration: 3000,
+      position: 'top'
+    });
+    toast.present();
   }
 
 }
