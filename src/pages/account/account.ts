@@ -32,7 +32,7 @@ export class AccountPage {
 
   get firstName() { return this.inputForm.get('firstName'); }
   get lastName() { return this.inputForm.get('lastName'); }
-  get birthday() { return new Date(this.inputForm.get('birthday')); }
+  get birthday() { return this.inputForm.get('birthday'); }
   get address() { return this.inputForm.get('address'); }
   get phoneNumber() { return this.inputForm.get('phoneNumber'); }
   get school() { return this.inputForm.get('school'); }
@@ -40,7 +40,7 @@ export class AccountPage {
   setFormValue(member: Member) {
     this.firstName.setValue(member.name.firstName);
     this.lastName.setValue(member.name.lastName);
-    this.birthday.setValue(member.birthday);
+    this.birthday.setValue(new Date(member.birthday).toISOString());
     this.address.setValue(member.address);
     this.phoneNumber.setValue(member.phoneNumber);
     this.school.setValue(member.school);
@@ -62,7 +62,7 @@ export class AccountPage {
       firstName: this.firstName.value,
       lastName: this.lastName.value,
       address: this.address.value,
-      birthday: this.birthday.value ? new Date(this.birthday.value).getTime() : null,
+      birthday: this.birthday.value ? new Date(this.birthday.value) : null,
       phoneNumber: this.phoneNumber.value,
       school: this.school.value
     }).subscribe(
