@@ -1,12 +1,20 @@
 import {VocabPracticeService} from "./vocab-practice.service";
 import {HttpClient} from "@angular/common/http";
+import {TestBed} from "@angular/core/testing";
 
 describe('VocabPracticeService', () => {
   let service: VocabPracticeService;
 
   beforeEach(() => {
-    const httpClient = jasmine.createSpyObj('HttpClient', ['']);
-    service = new VocabPracticeService(httpClient);
+    const spyHttpClient = jasmine.createSpyObj('HttpClient', ['']);
+
+    TestBed.configureTestingModule({
+      providers: [
+        VocabPracticeService,
+        { provide: HttpClient, useValue: spyHttpClient }
+        ]
+    });
+    service = TestBed.get(VocabPracticeService);
   });
 
   it('isWordEqual ignore space or hyphen', () => {
