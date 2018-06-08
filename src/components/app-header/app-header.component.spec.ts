@@ -1,11 +1,9 @@
 import {ComponentFixture, ComponentFixtureAutoDetect, TestBed} from "@angular/core/testing";
 import {AppHeaderComponent} from "./app-header";
 import {IonicModule} from "ionic-angular";
-import {TranslateLoader, TranslateModule} from "@ngx-translate/core";
-import {HttpClient} from "@angular/common/http";
-import {HttpLoaderFactory} from "../../app/app.module";
+import {TranslateModule} from "@ngx-translate/core";
 
-describe('AppHeaderComponent (minimal)', () => {
+describe('AppHeaderComponent', () => {
   let fixture: ComponentFixture<AppHeaderComponent>;
   let component: AppHeaderComponent;
   let appHeaderElement: HTMLElement;

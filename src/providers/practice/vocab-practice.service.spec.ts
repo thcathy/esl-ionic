@@ -1,19 +1,25 @@
 import {VocabPracticeService} from "./vocab-practice.service";
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import {HttpClient} from "@angular/common/http";
 import {TestBed} from "@angular/core/testing";
 
 describe('VocabPracticeService', () => {
+  let httpClient: HttpClient;
+  let httpTestingController: HttpTestingController;
   let service: VocabPracticeService;
 
   beforeEach(() => {
-    const spyHttpClient = jasmine.createSpyObj('HttpClient', ['']);
-
     TestBed.configureTestingModule({
+      imports: [
+        HttpClientTestingModule
+      ],
       providers: [
-        VocabPracticeService,
-        { provide: HttpClient, useValue: spyHttpClient }
-        ]
+        VocabPracticeService
+      ]
     });
+
+    httpClient = TestBed.get(HttpClient);
+    httpTestingController = TestBed.get(HttpTestingController);
     service = TestBed.get(VocabPracticeService);
   });
 
