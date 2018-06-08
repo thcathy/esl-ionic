@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 
-import {AlertController, NavController, ToastController} from 'ionic-angular';
+import {NavController, ToastController} from 'ionic-angular';
 
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {MemberService, UpdateMemberRequest} from "../../providers/member/member.service";

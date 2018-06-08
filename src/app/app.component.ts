@@ -23,7 +23,6 @@ import {MemberHomePage} from "../pages/member-home/member-home";
 import {EditDictationPage} from "../pages/edit-dictation/edit-dictation";
 import {GoogleAnalytics} from "@ionic-native/google-analytics";
 import {AppService} from "../providers/app.service";
-import {NavigationService} from "../providers/navigation.service";
 
 export interface PageInterface {
   title: string;

@@ -6,7 +6,6 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import {Member} from "../../entity/member";
 import { ENV } from '@environment';
-import {Dictation} from "../../entity/dictation";
 
 export interface UpdateMemberRequest {
   lastName?: string;
