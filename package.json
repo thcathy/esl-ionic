@@ -1,14 +1,14 @@
 {
     "name": "esl-ionic",
     "version": "0.0.1",
-    "description": "An Ionic project",
+    "description": "FunFunSpell interface using ionic",
     "license": "Apache-2.0",
     "config": {
         "ionic_webpack": "./src/config/webpack.config.js"
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/ionic-team/ionic-conference-app.git"
+        "url": "https://github.com/thcathy/esl-ionic"
     },
     "scripts": {
         "build": "ionic-app-scripts build",
