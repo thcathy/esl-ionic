@@ -5,7 +5,10 @@ module.exports = {
   devtool: 'inline-source-map',
 
   resolve: {
-    extensions: ['.ts', '.js']
+    extensions: ['.ts', '.js'],
+    alias: {
+      "@environment": path.resolve('./src/config/environment.dev.ts')
+    }
   },
 
   module: {
