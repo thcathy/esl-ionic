@@ -226,4 +226,7 @@ export class ConferenceApp {
     });
   }
 
+  openContactUs() {
+    window.open(this.translate.instant('ContactUsUrl'), '_system');
+  }
 }
