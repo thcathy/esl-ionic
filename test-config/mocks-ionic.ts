@@ -12,11 +12,11 @@ export class PlatformMock {
     return true;
   }
 
-  public registerBackButtonAction(fn: Function, priority?: number): Function {
+  public registerBackButtonAction(_fn: Function, _priority?: number): Function {
     return (() => true);
   }
 
-  public hasFocus(ele: HTMLElement): boolean {
+  public hasFocus(_ele: HTMLElement): boolean {
     return true;
   }
 
@@ -28,7 +28,7 @@ export class PlatformMock {
     return true;
   }
 
-  public getElementComputedStyle(container: any): any {
+  public getElementComputedStyle(_container: any): any {
     return {
       paddingLeft: '10',
       paddingTop: '10',
@@ -41,7 +41,7 @@ export class PlatformMock {
     return callback;
   }
 
-  public registerListener(ele: any, eventName: string, callback: any): Function {
+  public registerListener(_ele: any, _eventName: string, _callback: any): Function {
     return (() => true);
   }
 
@@ -49,7 +49,7 @@ export class PlatformMock {
     return window;
   }
 
-  public raf(callback: any): number {
+  public raf(_callback: any): number {
     return 1;
   }
 
@@ -57,7 +57,7 @@ export class PlatformMock {
     return setTimeout(callback, timer);
   }
 
-  public cancelTimeout(id: any) {
+  public cancelTimeout(_id: any) {
     // do nothing
   }
 
@@ -79,19 +79,19 @@ export class SplashScreenMock extends SplashScreen {
 }
 
 export class NavMock {
- 
+
   public pop(): any {
     return new Promise(function(resolve: Function): void {
       resolve();
     });
   }
- 
+
   public push(): any {
     return new Promise(function(resolve: Function): void {
       resolve();
     });
   }
- 
+
   public getActive(): any {
     return {
       'instance': {
@@ -99,12 +99,12 @@ export class NavMock {
       },
     };
   }
- 
+
   public setRoot(): any {
     return true;
   }
 
-  public registerChildNav(nav: any): void {
+  public registerChildNav(_nav: any): void {
     return ;
   }
 
@@ -113,3 +113,5 @@ export class NavMock {
 export class DeepLinkerMock {
 
 }
+
+export const googleAnalyticsSpy = () => { return jasmine.createSpyObj('GoogleAnalytics', ['']); }

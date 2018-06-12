@@ -9,6 +9,7 @@ buildios() {
 }
 
 buildAndroid() {
+  export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_05.jdk/Contents/Home
   ionic cordova build android --prod --release
   jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore my-release-key.jks  -storepass funfunspell platforms/android/app/build/outputs/apk/release/app-release-unsigned.apk esl-dictation
   rm esl-dictation.apk

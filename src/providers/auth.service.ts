@@ -166,7 +166,7 @@ export class AuthService {
     console.log(`authResult: ${JSON.stringify(authResult)}`);
     if (err) {
       console.log(err);
-      this.getNavCtrl().setRoot(HomePage);
+      //this.getNavCtrl().setRoot(HomePage);
     }
 
     if (authResult && authResult.accessToken && authResult.idToken) {

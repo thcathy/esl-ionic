@@ -6,6 +6,7 @@ import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {MemberService, UpdateMemberRequest} from "../../providers/member/member.service";
 import {Member} from "../../entity/member";
 import {TranslateService} from "@ngx-translate/core";
+import {GoogleAnalytics} from "@ionic-native/google-analytics";
 
 
 @Component({
@@ -22,12 +23,17 @@ export class AccountPage {
     public formBuilder: FormBuilder,
     public toastCtrl: ToastController,
     public translate: TranslateService,
+    public ga: GoogleAnalytics,
   ) {
     this.createForm();
     this.memberService.getProfile().subscribe((m) => {
       this.member = m;
       this.setFormValue(m);
     });
+  }
+
+  ionViewWillEnter() {
+    this.ga.trackView('account');
   }
 
   get firstName() { return this.inputForm.get('firstName'); }
