@@ -23,6 +23,7 @@ import {MemberHomePage} from "../pages/member-home/member-home";
 import {EditDictationPage} from "../pages/edit-dictation/edit-dictation";
 import {GoogleAnalytics} from "@ionic-native/google-analytics";
 import {AppService} from "../providers/app.service";
+import {SearchDictationPage} from "../pages/search-dictation/search-dictation";
 
 export interface PageInterface {
   title: string;
@@ -54,6 +55,7 @@ export class ConferenceApp {
     //{ title: 'Map', name: 'TabsPage', component: TabsPage, tabComponent: MapPage, index: 2, icon: 'map' },
     //{ title: 'About', name: 'TabsPage', component: TabsPage, tabComponent: AboutPage, index: 3, icon: 'information-circle' },
     { title: 'Quick Dictation', name: 'InstantDictationPage', component: InstantDictationPage, iconClass: 'fas fa-rocket' },
+    { title: 'Search Dictation', name: 'SearchDictationPage', component: SearchDictationPage, iconClass: 'fas fa-search' },
   ];
   loggedInPages: PageInterface[] = [
     { title: 'My Dictation', name: 'MemberHomePage', component: MemberHomePage, iconClass: 'fas fa-list' },

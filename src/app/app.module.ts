@@ -60,6 +60,7 @@ import {ArticleDictationPage} from "../pages/article-dictation/article-dictation
 import {ArticleDictationService} from "../providers/dictation/article-dictation.service";
 import {ArticleDictationCompletePage} from "../pages/article-dictation-complete/article-dictation-complete";
 import {SpeechService} from "../providers/speech.service";
+import {SearchDictationPage} from "../pages/search-dictation/search-dictation";
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -69,28 +70,11 @@ export function HttpLoaderFactory(http: HttpClient) {
 @NgModule({
   declarations: [
     ConferenceApp,
-    AboutPage,
-    AccountPage,
-    LoginPage,
-    MapPage,
-    PopoverPage,
-    SchedulePage,
-    ScheduleFilterPage,
-    SessionDetailPage,
-    SignupPage,
-    SpeakerDetailPage,
-    SpeakerListPage,
-    TabsPage,
-    TutorialPage,
-    SupportPage,
-    HomePage,
-    DictationViewPage,
-    DictationPracticePage,
-    PracticeCompletePage,
-    InstantDictationPage,
-    EditDictationPage,
-    MemberHomePage,
-    ArticleDictationPage, ArticleDictationCompletePage,
+    AboutPage, AccountPage, LoginPage, MapPage, PopoverPage, SchedulePage,
+    ScheduleFilterPage, SessionDetailPage, SignupPage, SpeakerDetailPage, SpeakerListPage,
+    TabsPage, TutorialPage, SupportPage, HomePage, DictationViewPage, DictationPracticePage,
+    PracticeCompletePage, InstantDictationPage, EditDictationPage, MemberHomePage,
+    ArticleDictationPage, ArticleDictationCompletePage, SearchDictationPage
   ],
   imports: [
     BrowserModule,
@@ -136,29 +120,10 @@ export function HttpLoaderFactory(http: HttpClient) {
   ],
   bootstrap: [IonicApp],
   entryComponents: [
-    ConferenceApp,
-    AboutPage,
-    AccountPage,
-    LoginPage,
-    MapPage,
-    PopoverPage,
-    SchedulePage,
-    ScheduleFilterPage,
-    SessionDetailPage,
-    SignupPage,
-    SpeakerDetailPage,
-    SpeakerListPage,
-    TabsPage,
-    TutorialPage,
-    SupportPage,
-    HomePage,
-    DictationViewPage,
-    DictationPracticePage,
-    PracticeCompletePage,
-    InstantDictationPage,
-    EditDictationPage,
-    MemberHomePage,
-    ArticleDictationPage, ArticleDictationCompletePage,
+    ConferenceApp, AboutPage, AccountPage, LoginPage, MapPage, PopoverPage, SchedulePage, ScheduleFilterPage, SessionDetailPage, SignupPage,
+    SpeakerDetailPage, SpeakerListPage, TabsPage, TutorialPage, SupportPage, HomePage, DictationViewPage, DictationPracticePage,
+    PracticeCompletePage, InstantDictationPage, EditDictationPage, MemberHomePage, ArticleDictationPage, ArticleDictationCompletePage,
+    SearchDictationPage
   ],
   providers: [
     { provide: ErrorHandler, useClass: IonicErrorHandler },

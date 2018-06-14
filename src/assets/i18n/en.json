@@ -23,6 +23,7 @@
   "CompletePracticeHeader": "You got {{mark}} marks in {{totalQuestion}} questions",
   "UpdatedDictation": "Dictation {{title}} is updated",
   "DeletedDictation": "Dictation {{title}} is deleted",
-  "CharactersTooLong": " cannot over {{length}} characters long",
+  "CharactersTooShort": " cannot less than {{length}} characters",
+  "CharactersTooLong": " cannot over {{length}} characters",
   "ContactUsUrl": "https://goo.gl/forms/XtQdla9UKYDlAiRl2"
 }

@@ -10,6 +10,16 @@ import {VocabPracticeHistory} from "../../interfaces/vocab-practice-history";
 import { ENV } from '@environment';
 import {ValidationUtils} from "../../utils/validation-utils";
 
+export interface SearchDictationRequest {
+  keyword?: string;
+  searchTitle?: boolean;
+  searchDescription?: boolean;
+  minDate?: Date;
+  maxDate?: Date;
+  creator?: string;
+  suitableStudent?: string;
+}
+
 @Injectable()
 export class DictationService {
 
@@ -20,6 +30,7 @@ export class DictationService {
   private getByIdUrl = ENV.apiHost + '/dictation/get/';
   private recommendUrl = ENV.apiHost + '/dictation/recommend/';
   private createHistoryUrl = ENV.apiHost + '/dictation/history/create';
+  private searchDictationUrl = ENV.apiHost + '/dictation/search';
 
   randomDictationStatistics(): Observable<DictationStatistics> {
     return this.http.get<DictationStatistics>(this.randomStatUrl);
@@ -55,5 +66,9 @@ export class DictationService {
 
   isSentenceDictation(dictation: Dictation): boolean {
     return !ValidationUtils.isBlankString(dictation.article);
+  }
+
+  search(request: SearchDictationRequest): Observable<Dictation[]> {
+    return this.http.post<Dictation[]>(this.searchDictationUrl, request);
   }
 }

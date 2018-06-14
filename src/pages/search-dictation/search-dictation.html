@@ -1,18 +1,64 @@
-<!--
-  Generated template for the SearchDictationPage page.
-
-  See http://ionicframework.com/docs/components/#navigation for more info on
-  Ionic pages and navigation.
--->
 <ion-header>
-
   <ion-navbar>
-    <ion-title>search-dictation</ion-title>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>{{'Search Dictation' | translate}}</ion-title>
   </ion-navbar>
-
 </ion-header>
 
+<ion-content>
+  <div style="padding: 16px;">
+    <ion-card class="input-form">
+      <ion-card-content>
+        <form [formGroup]="inputForm" novalidate>
+          <ion-item>
+            <ion-label stacked><i class="fas fa-search"></i></ion-label>
+            <ion-input id="keywordInput" type="text" formControlName="keyword"></ion-input>
+          </ion-item>
+          <div *ngIf="keyword.invalid && (keyword.dirty || keyword.touched)" class="error-text">
+            <div *ngIf="keyword.errors.minlength">{{'CharactersTooShort'|translate:{length: '5'} }}</div>
+            <div *ngIf="keyword.errors.maxlength">{{'CharactersTooLong'|translate:{length: '50'} }}</div>
+          </div>
+          <ion-item>
+            <ion-label stacked>{{'Created By'|translate}}</ion-label>
+            <ion-input type="text" formControlName="creator"></ion-input>
+          </ion-item>
+          <div *ngIf="creator.invalid && (creator.dirty || creator.touched)" class="error-text">
+            <div *ngIf="creator.errors.minlength">{{'CharactersTooShort'|translate:{length: '3'} }}</div>
+            <div *ngIf="creator.errors.maxlength">{{'CharactersTooLong'|translate:{length: '50'} }}</div>
+          </div>
+          <ion-item>
+            <ion-label style="margin: inherit;">{{'Suitable'|translate}} ({{'Age'|translate}})</ion-label>
+            <ion-select style="padding-right: 30px;" formControlName="suitableStudent" interface="popover">
+              <ion-option *ngFor="let state of suitableStudentOptions" [value]="state">{{'SuitableStudent.' + state|translate}}</ion-option>
+            </ion-select>
+          </ion-item>
+          <ion-item>
+            <ion-label stacked>{{'Last update date'|translate}}</ion-label>
+            <ion-grid>
+              <ion-row>
+                <ion-col col-6 col-sm-6 col-md-4>
+                  <ion-datetime displayFormat="YYYY-MM-DD" min="2010" max="2018" formControlName="minDate"></ion-datetime>
+                </ion-col>
+                <ion-col col-6 col-sm-6 col-md-4>-</ion-col>
+                <ion-col col-6 col-sm-6 col-md-4>
+                  <ion-datetime displayFormat="YYYY-MM-DD" min="2010" max="2020" formControlName="maxDate"></ion-datetime>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-item>
 
-<ion-content padding>
+          <button ion-button float-right item-end color="secondary" (click)="search()" style="margin: 16px;" [disabled]="inputForm.invalid">
+            <i class="fas fa-pencil-alt"></i>&nbsp;{{'Search'|translate}}
+          </button>
+        </form>
 
+        <div *ngIf="results">{{'Search Result'|translate}}:</div>
+        <dictation-list [dictations]="results"></dictation-list>
+      </ion-card-content>
+    </ion-card>
+
+  </div>
+  <footer></footer>
 </ion-content>

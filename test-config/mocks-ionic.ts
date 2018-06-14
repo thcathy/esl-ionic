@@ -114,4 +114,4 @@ export class DeepLinkerMock {
 
 }
 
-export const googleAnalyticsSpy = () => { return jasmine.createSpyObj('GoogleAnalytics', ['']); }
+export const GoogleAnalyticsSpy = () => { return jasmine.createSpyObj('GoogleAnalytics', ['trackView']); };

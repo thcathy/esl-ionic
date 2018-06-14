@@ -6,7 +6,7 @@ import {of} from "rxjs/observable/of";
 import {member1} from "../../../test-config/test-data";
 import {MemberService} from "../../providers/member/member.service";
 import {FormsModule} from "@angular/forms";
-import {googleAnalyticsSpy, NavMock} from "../../../test-config/mocks-ionic";
+import {GoogleAnalyticsSpy, NavMock} from "../../../test-config/mocks-ionic";
 import {GoogleAnalytics} from "@ionic-native/google-analytics";
 
 describe('AccountPage', () => {
@@ -16,7 +16,6 @@ describe('AccountPage', () => {
 
   beforeEach(() => {
     const memberService = jasmine.createSpyObj('MemberService', ['getProfile']);
-    //const googleAnalytics = jasmine.createSpyObj('GoogleAnalytics', ['']);
     getProfileSpy = memberService.getProfile.and.returnValue(of(member1));
 
     TestBed.configureTestingModule({
@@ -31,7 +30,7 @@ describe('AccountPage', () => {
         { provide: MemberService, useValue: memberService},
         ToastController,
         { provide: NavController, useValue: NavMock },
-        { provide: GoogleAnalytics, useValue: googleAnalyticsSpy() }
+        { provide: GoogleAnalytics, useValue: GoogleAnalyticsSpy() }
       ]
     }).compileComponents();
     fixture = TestBed.createComponent(AccountPage);
