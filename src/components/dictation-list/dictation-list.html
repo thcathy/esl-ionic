@@ -1,6 +1,6 @@
-<ion-card class="card dictation-list" style="margin-top: 12px;">
+<ion-card class="card dictation-list" style="margin-top: 12px;" *ngIf="dictations">
   <ion-card-header>
-    <i class="fas fa-edit"></i> {{ 'My Dictation Created' | translate }}
+    <i class="fas fa-edit"></i> {{ title | translate }}
   </ion-card-header>
   <ion-card-content>
     <ion-list>

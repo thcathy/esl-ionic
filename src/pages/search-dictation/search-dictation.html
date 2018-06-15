@@ -13,28 +13,28 @@
       <ion-card-content>
         <form [formGroup]="inputForm" novalidate>
           <ion-item>
-            <ion-label stacked><i class="fas fa-search"></i></ion-label>
+            <ion-label><i class="fas fa-search"></i></ion-label>
             <ion-input id="keywordInput" type="text" formControlName="keyword"></ion-input>
           </ion-item>
           <div *ngIf="keyword.invalid && (keyword.dirty || keyword.touched)" class="error-text">
             <div *ngIf="keyword.errors.minlength">{{'CharactersTooShort'|translate:{length: '5'} }}</div>
             <div *ngIf="keyword.errors.maxlength">{{'CharactersTooLong'|translate:{length: '50'} }}</div>
           </div>
-          <ion-item>
-            <ion-label stacked>{{'Created By'|translate}}</ion-label>
+          <ion-item *ngIf="moreOptions">
+            <ion-label>{{'Created By'|translate}}</ion-label>
             <ion-input type="text" formControlName="creator"></ion-input>
           </ion-item>
           <div *ngIf="creator.invalid && (creator.dirty || creator.touched)" class="error-text">
             <div *ngIf="creator.errors.minlength">{{'CharactersTooShort'|translate:{length: '3'} }}</div>
             <div *ngIf="creator.errors.maxlength">{{'CharactersTooLong'|translate:{length: '50'} }}</div>
           </div>
-          <ion-item>
+          <ion-item *ngIf="moreOptions">
             <ion-label style="margin: inherit;">{{'Suitable'|translate}} ({{'Age'|translate}})</ion-label>
             <ion-select style="padding-right: 30px;" formControlName="suitableStudent" interface="popover">
               <ion-option *ngFor="let state of suitableStudentOptions" [value]="state">{{'SuitableStudent.' + state|translate}}</ion-option>
             </ion-select>
           </ion-item>
-          <ion-item>
+          <ion-item *ngIf="moreOptions">
             <ion-label stacked>{{'Last update date'|translate}}</ion-label>
             <ion-grid>
               <ion-row>
@@ -49,13 +49,17 @@
             </ion-grid>
           </ion-item>
 
-          <button ion-button float-right item-end color="secondary" (click)="search()" style="margin: 16px;" [disabled]="inputForm.invalid">
-            <i class="fas fa-pencil-alt"></i>&nbsp;{{'Search'|translate}}
+          <button ion-button float-left (click)="moreOptions = true" style="margin: 16px;" [disabled]="showDetails">
+            <i class="fas fa-search"></i>&nbsp;{{'More Options'|translate}}
+          </button>
+
+          <button ion-button float-right item-end (click)="search()" style="margin: 16px;" [disabled]="inputForm.invalid">
+            <i class="fas fa-search"></i>&nbsp;{{'Search'|translate}}
           </button>
         </form>
 
         <div *ngIf="results">{{'Search Result'|translate}}:</div>
-        <dictation-list [dictations]="results"></dictation-list>
+        <dictation-list [dictations]="results" title="Search Result"></dictation-list>
       </ion-card-content>
     </ion-card>
 

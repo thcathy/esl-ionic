@@ -12,7 +12,7 @@ import {DictationService} from "../../providers/dictation/dictation.service";
 })
 export class SearchDictationPage {
   inputForm: FormGroup;
-  showDetails: boolean = false;
+  moreOptions: boolean = false;
   results: Dictation[];
 
   constructor(
@@ -51,6 +51,6 @@ export class SearchDictationPage {
       creator: this.creator.value,
       suitableStudent: this.suitableStudent.value
     }).subscribe(r => this.results = r);
-    this.showDetails = false;
+    this.moreOptions = false;
   }
 }
