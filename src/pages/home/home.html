@@ -4,7 +4,7 @@
       <ion-icon name="menu"></ion-icon>
     </button>
     <ion-title>
-      <img src="assets/img/logo_hd.png" class="navbar-logo" />
+      <img src="assets/img/logo_new.png" class="navbar-logo" />
     </ion-title>
   </ion-navbar>
 </ion-header>
@@ -28,12 +28,21 @@
               </ion-card-content>
             </ion-card>
           </ion-col>
-          <ion-col col-6 col-sm-6 col-md-4 col-lg-3>
+          <ion-col col-6 col-sm-6 col-md-4 col-lg-3 class="hidden-md-down">
             <ion-card class="card-button">
               <ion-card-content>
                 <div><i class="fas fa-headphones"></i></div>
                 <div>{{ 'Create and Save' | translate }}</div>
                 <div><button ion-button outline (click)="openCreateDictationPage()">{{ 'Menu_Create' | translate }}</button></div>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+          <ion-col col-6 col-sm-6 col-md-4 col-lg-3>
+            <ion-card class="card-button">
+              <ion-card-content>
+                <div><i class="fas fa-search"></i></div>
+                <div>{{ 'Find & Start' | translate }}</div>
+                <div><button ion-button outline (click)="openSearchDictationPage()">{{ 'Search' | translate }}</button></div>
               </ion-card-content>
             </ion-card>
           </ion-col>

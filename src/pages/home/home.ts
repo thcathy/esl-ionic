@@ -66,4 +66,7 @@ export class HomePage {
     this.navCtrl.setRoot('EditDictationPage');
   }
 
+  openSearchDictationPage() {
+    this.navCtrl.setRoot('SearchDictationPage');
+  }
 }

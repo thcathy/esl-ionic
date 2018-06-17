@@ -10,7 +10,7 @@ import {NavigationService} from "../../providers/navigation.service";
 import {Loading} from "ionic-angular/components/loading/loading";
 import {AuthService} from "../../providers/auth.service";
 import {TranslateService} from "@ngx-translate/core";
-import {suitableStudentOptions} from "../../entity/dictation";
+import {SuitableStudentOptions} from "../../entity/dictation";
 import {Observable} from 'rxjs/Rx'
 import 'rxjs/add/operator/combineLatest';
 import {GoogleAnalytics} from "@ionic-native/google-analytics";
@@ -27,7 +27,7 @@ export class EditDictationPage {
   loader: Loading;
   dictation: Dictation;
   isEdit: boolean;
-  suitableStudentOptions = suitableStudentOptions;
+  suitableStudentOptions = SuitableStudentOptions;
 
   constructor(public navCtrl: NavController,
               public navParams: NavParams,

@@ -3,6 +3,7 @@
     <i class="fas fa-edit"></i> {{ title | translate }}
   </ion-card-header>
   <ion-card-content>
+    <div text-center *ngIf="dictations?.length == 0" style="padding: 16px;">{{ 'No dictation' | translate}}</div>
     <ion-list>
       <ion-item *ngFor="let dictation of viewDictations; let i = index">
         <ion-row>

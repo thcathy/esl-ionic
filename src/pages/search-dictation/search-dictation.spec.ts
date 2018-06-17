@@ -58,7 +58,7 @@ describe('SearchDictationPage', () => {
   }));
 
   it('form is validated', fakeAsync(() => {
-    component.keyword.setValue('abcd');
+    component.keyword.setValue('ab');
     expect(component.keyword.errors.minlength).toBeDefined();
     component.keyword.setValue('123456789012345678901234567890123456789012345678901');
     expect(component.keyword.errors.maxlength).toBeDefined();
@@ -67,6 +67,20 @@ describe('SearchDictationPage', () => {
     expect(component.creator.errors.minlength).toBeDefined();
     component.creator.setValue('123456789012345678901234567890123456789012345678901');
     expect(component.creator.errors.maxlength).toBeDefined();
+  }));
+
+  it('date options are pre-set', fakeAsync(() => {
+    const thisMonth = new Date().getMonth();
+    const options = component.createDateOptions();
+
+    expect(options[0].option).toBe('Any');
+    expect(options[0].date).not.toBeDefined();
+    expect(options[1].option).toBe('Within 1 Month');
+    expect([1, -11]).toContain(thisMonth - options[1].date.getMonth());
+    expect(options[2].option).toBe('Within 3 Month');
+    expect([3, -9]).toContain(thisMonth - options[2].date.getMonth());
+    expect(options[3].option).toBe('Within Half Year');
+    expect([6, -6]).toContain(thisMonth - options[3].date.getMonth());
   }));
 
 });

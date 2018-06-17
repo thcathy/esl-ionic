@@ -104,6 +104,7 @@ export function HttpLoaderFactory(http: HttpClient) {
         { component: MemberHomePage, name: 'MemberHomePage', segment: 'member-home'},
         { component: ArticleDictationPage, name: 'ArticleDictationPage', segment: 'ArticleDictationPage'},
         { component: ArticleDictationCompletePage, name: 'ArticleDictationCompletePage', segment: 'ArticleDictationCompletePage'},
+        { component: SearchDictationPage, name: 'SearchDictationPage', segment: 'SearchDictationPage'}
       ]
     }),
     IonicStorageModule.forRoot(),

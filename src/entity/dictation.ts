@@ -24,5 +24,5 @@ export class Dictation {
   suitableStudent?: string;
 }
 
-export const suitableStudentOptions = ['Any','Kindergarten','JuniorPrimary','SeniorPrimary','JuniorSecondary','SeniorSecondary'];
+export const SuitableStudentOptions = ['Any','Kindergarten','JuniorPrimary','SeniorPrimary','JuniorSecondary','SeniorSecondary'];
 
