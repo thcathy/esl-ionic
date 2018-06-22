@@ -9,6 +9,7 @@ import {Dictation} from "../../entity/dictation";
 import {VocabPracticeHistory} from "../../interfaces/vocab-practice-history";
 import { ENV } from '@environment';
 import {ValidationUtils} from "../../utils/validation-utils";
+import {SentenceHistory} from "../../entity/sentence-history";
 
 export interface SearchDictationRequest {
   keyword?: string;
@@ -18,6 +19,15 @@ export interface SearchDictationRequest {
   maxDate?: Date;
   creator?: string;
   suitableStudent?: string;
+}
+
+export interface CreateDictationHistoryRequest {
+  dictationId?: number;
+  mark?: number;
+  correct?: number;
+  wrong?: number;
+  histories?: VocabPracticeHistory[];
+  historyJSON?: string;
 }
 
 @Injectable()
@@ -57,6 +67,47 @@ export class DictationService {
       dictationId: id,
       mark: mark,
       histories: sizeTrimmedHistories
+    });
+  }
+
+  createHistory(request: CreateDictationHistoryRequest): Observable<Dictation> {
+    return this.http.post<Dictation>(this.createHistoryUrl, request);
+  }
+
+  createSentenceDictationHistory(dictation: Dictation, correct: number, wrong: number, histories: SentenceHistory[]): Observable<Dictation> {
+    return this.createHistory({
+      dictationId: dictation.id,
+      mark: correct / 10,
+      correct: correct,
+      wrong:wrong,
+      historyJSON: JSON.stringify({
+        dictation: dictation,
+        correct: correct,
+        wrong: wrong,
+        histories: histories
+      })
+    });
+  }
+
+  createVocabDictationHistory(dictation: Dictation, mark: number, histories: Array<VocabPracticeHistory>): Observable<Dictation>  {
+    let sizeTrimmedHistories = histories.map((h) => {
+      h.question.picsFullPaths = [];
+      h.question.picsFullPathsInString = '';
+      h.question.grades = [];
+      return h;
+    });
+
+    return this.createHistory({
+      dictationId: dictation.id,
+      mark: mark,
+      correct: mark,
+      wrong: histories.length - mark,
+      histories: sizeTrimmedHistories,
+      historyJSON: JSON.stringify({
+        dictation: dictation,
+        mark: mark,
+        histories: sizeTrimmedHistories
+      })
     });
   }
 

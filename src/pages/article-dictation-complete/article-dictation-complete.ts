@@ -32,9 +32,8 @@ export class ArticleDictationCompletePage {
     this.getNavParams();
     this.calculateCorrect(this.histories);
     if (!dictationService.isInstantDictation(this.dictation)) {
-      dictationService.createHistory(this.dictation.id, this.totalCorrect / 10, []).subscribe(d => {
-        this.dictation = d;
-      });
+      dictationService.createSentenceDictationHistory(this.dictation, this.totalCorrect, this.totalWrong, this.histories)
+        .subscribe(d => { this.dictation = d; });
     }
   }
 

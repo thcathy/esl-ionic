@@ -46,7 +46,7 @@ export class PracticeCompletePage {
   createHistory() {
     if (this.dictationService.isInstantDictation(this.dictation)) return;
 
-    this.dictationService.createHistory(this.dictation.id, this.mark, this.histories)
+    this.dictationService.createVocabDictationHistory(this.dictation, this.mark, this.histories)
       .subscribe(
         d => this.dictation = d,
         e => alert(e),

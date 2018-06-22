@@ -16,6 +16,7 @@ export const member1 = new Member(
   new Date('2008-01-01'));
 
 export const dictation1 = <Dictation>{
+  id: 1,
   title: 'test dictation 1',
   article: 'sentence to learn'
 };
