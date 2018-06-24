@@ -20,6 +20,7 @@ export class ArticleDictationCompletePage {
   totalWrong: number;
   totalCorrect: number;
   recommended: boolean;
+  historyStored: boolean;
 
   constructor(
     public navCtrl: NavController,
@@ -31,7 +32,7 @@ export class ArticleDictationCompletePage {
   ) {
     this.getNavParams();
     this.calculateCorrect(this.histories);
-    if (!dictationService.isInstantDictation(this.dictation)) {
+    if (!dictationService.isInstantDictation(this.dictation) && !this.historyStored) {
       dictationService.createSentenceDictationHistory(this.dictation, this.totalCorrect, this.totalWrong, this.histories)
         .subscribe(d => { this.dictation = d; });
     }
@@ -44,6 +45,7 @@ export class ArticleDictationCompletePage {
   getNavParams() {
     this.dictation = this.navParams.get('dictation');
     this.histories = this.navParams.get('histories');
+    this.historyStored = this.navParams.get('historyStored');
   }
 
   private calculateCorrect(histories: SentenceHistory[]) {

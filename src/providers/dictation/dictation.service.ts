@@ -55,21 +55,6 @@ export class DictationService {
     return this.http.get<Dictation>(this.recommendUrl + id);
   }
 
-  createHistory(id: number, mark: number, histories: Array<VocabPracticeHistory>): Observable<Dictation> {
-    let sizeTrimmedHistories = histories.map((h) => {
-      h.question.picsFullPaths = [];
-      h.question.picsFullPathsInString = '';
-      h.question.grades = [];
-      return h;
-    });
-
-    return this.http.post<Dictation>(this.createHistoryUrl, {
-      dictationId: id,
-      mark: mark,
-      histories: sizeTrimmedHistories
-    });
-  }
-
   createHistory(request: CreateDictationHistoryRequest): Observable<Dictation> {
     return this.http.post<Dictation>(this.createHistoryUrl, request);
   }
@@ -94,6 +79,7 @@ export class DictationService {
       h.question.picsFullPaths = [];
       h.question.picsFullPathsInString = '';
       h.question.grades = [];
+      h.question.activePronounceLink = '';
       return h;
     });
 

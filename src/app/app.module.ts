@@ -61,6 +61,7 @@ import {ArticleDictationService} from "../providers/dictation/article-dictation.
 import {ArticleDictationCompletePage} from "../pages/article-dictation-complete/article-dictation-complete";
 import {SpeechService} from "../providers/speech.service";
 import {SearchDictationPage} from "../pages/search-dictation/search-dictation";
+import {PracticeHistoryService} from "../providers/dictation/practice-history.service";
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -139,6 +140,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     DisplayService,
     ServerService,
     ArticleDictationService,
+    PracticeHistoryService,
     GoogleAnalytics,
     TextToSpeech,
     {

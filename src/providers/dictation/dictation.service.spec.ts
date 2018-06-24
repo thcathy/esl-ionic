@@ -19,8 +19,8 @@ describe('DictationService', () => {
   it('createVocabDictationHistory will call http post with expected parameters', () => {
     const dictation1 = <Dictation>{ id: 1 };
     const vocabHistories1 = [
-      <VocabPracticeHistory>{ question: {picsFullPaths: 'https://abc1.com', picsFullPathsInString: 'https://abc1.com'} },
-      <VocabPracticeHistory>{ question: {picsFullPaths: 'https://abc2.com', picsFullPathsInString: 'https://abc2.com'} }
+      <VocabPracticeHistory>{ question: {picsFullPaths: ['https://abc1.com'], picsFullPathsInString: 'https://abc1.com'} },
+      <VocabPracticeHistory>{ question: {picsFullPaths: ['https://abc2.com'], picsFullPathsInString: 'https://abc2.com'} }
     ];
 
     service.createVocabDictationHistory(dictation1, 1, vocabHistories1);

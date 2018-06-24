@@ -20,6 +20,7 @@ export class PracticeCompletePage {
   histories: VocabPracticeHistory[] = [];
   recommended: boolean;
   finished: boolean = false;
+  historyStored: boolean;
 
   constructor(
         public navCtrl: NavController,
@@ -41,10 +42,11 @@ export class PracticeCompletePage {
     this.dictation = this.navParams.get('dictation');
     this.mark = this.navParams.get('mark');
     this.histories = this.navParams.get('histories');
+    this.historyStored = this.navParams.get('historyStored');
   }
 
   createHistory() {
-    if (this.dictationService.isInstantDictation(this.dictation)) return;
+    if (this.dictationService.isInstantDictation(this.dictation) || this.historyStored) return;
 
     this.dictationService.createVocabDictationHistory(this.dictation, this.mark, this.histories)
       .subscribe(

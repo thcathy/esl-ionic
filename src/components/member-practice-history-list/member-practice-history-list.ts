@@ -1,51 +1,56 @@
-import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
-import {Dictation} from "../../entity/dictation";
+import {Component, Input} from '@angular/core';
 import {NavigationService} from "../../providers/navigation.service";
-import {DisplayService} from "../../providers/display.service";
+import {PracticeHistory} from "../../entity/practice-models";
+import {ValidationUtils} from "../../utils/validation-utils";
+import {DictationService} from "../../providers/dictation/dictation.service";
+import {LoadingController, ToastController} from "ionic-angular";
+import Any = jasmine.Any;
+import {TranslateService} from "@ngx-translate/core";
+import {Dictation} from "../../entity/dictation";
 
 @Component({
   selector: 'member-practice-history-list',
   templateUrl: 'member-practice-history-list.html'
 })
-export class MemberPracticeHistoryListComponent implements OnChanges {
-  private dictationPerPage: number = 5;
-
-  @Input() dictations: Array<Dictation>;
-  @Input() showCreateButton: boolean;
-  @Input() title: string;
-
-  viewDictations: Array<Dictation>;
-  page: number;
-  showOlder: boolean;
+export class MemberPracticeHistoryListComponent {
+  @Input() histories: PracticeHistory[];
+  loader;
 
   constructor(
     public navService: NavigationService,
-    public displayService: DisplayService,
-  ) {
-    this.page = 0;
-    this.showCreateButton = false;
+    public dictationSerivce: DictationService,
+    public loadingCtrl: LoadingController,
+    public translateService: TranslateService,
+    public toastCtrl: ToastController,
+  ) {}
+
+  getDictationTitle(historyJSON: string) {
+    if (ValidationUtils.isBlankString(historyJSON)) return '';
+
+    const history = JSON.parse(historyJSON);
+    return history.dictation.title;
   }
 
-  ngOnChanges(_changes: SimpleChanges) {
-    if (this.dictations != null) {
-      this.sliceDictations();
-      this.showOlder = this.dictations.length > this.dictationPerPage;
-    }
+  openHistory(history: PracticeHistory) {
+    this.loader = this.loadingCtrl.create({ content: this.translateService.instant('Please wait') + "..." })
+    this.loader.present();
+    this.dictationSerivce.getById(history.dictationId)
+      .subscribe(d => this.openDictation(d),  e => this.showCannotGetDictation(e))
   }
 
-  older() {
-    this.page++;
-    this.sliceDictations();
-    this.showOlder = this.dictations.length >  this.dictationPerPage * (this.page+1);
+  openDictation(d: Dictation) {
+    this.loader.dismissAll();
+    this.navService.openDictation(d);
   }
 
-  newer() {
-    this.page--;
-    this.sliceDictations();
-    this.showOlder=true;
-  }
-
-  sliceDictations() {
-    this.viewDictations = this.dictations.slice(this.page * this.dictationPerPage, (this.page+1) * this.dictationPerPage);
+  showCannotGetDictation(error) {
+    console.warn(`Cannot get dictation: ${JSON.stringify(error)}`);
+    this.loader.dismissAll();
+    let toast = this.toastCtrl.create({
+      message: this.translateService.instant('Dictation not found'),
+      duration: 3000,
+      position: 'top'
+    });
+    toast.present();
   }
 }

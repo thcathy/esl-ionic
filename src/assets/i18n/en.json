@@ -26,5 +26,6 @@
   "DeletedDictation": "Dictation {{title}} is deleted",
   "CharactersTooShort": " cannot less than {{length}} characters",
   "CharactersTooLong": " cannot over {{length}} characters",
-  "ContactUsUrl": "https://goo.gl/forms/XtQdla9UKYDlAiRl2"
+  "ContactUsUrl": "https://goo.gl/forms/XtQdla9UKYDlAiRl2",
+  "LastTimesPractice": "Last {{times}} Practice Results"
 }

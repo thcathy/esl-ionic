@@ -1,6 +1,7 @@
 import {Member} from "../src/entity/member";
 import {Name} from "../src/entity/name";
 import {Dictation} from "../src/entity/dictation";
+import {SentenceHistory} from "../src/entity/sentence-history";
 
 export const member1 = new Member(
   1,
@@ -20,5 +21,9 @@ export const dictation1 = <Dictation>{
   title: 'test dictation 1',
   article: 'sentence to learn'
 };
+
+export const dictation1Histories = [
+  <SentenceHistory>{question: 'sentence to learn', answer: 'sentence to learn', questionSegments: [''], isCorrect: [true]}
+]
 
 
