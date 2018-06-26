@@ -11,7 +11,7 @@
         <ion-row>
           <ion-col>{{ h.createdDate | date: 'yyyy-MM-dd' }}</ion-col>
           <ion-col>
-            <span class="green"><i class="fas fa-check "></i> {{h.correct}} ({{h.correct / (h.correct + h.wrong) * 100 | number:'1.0-0'}}%)</span>
+            <span class="dark-green"><i class="fas fa-check "></i> {{h.correct}} ({{h.correct / (h.correct + h.wrong) * 100 | number:'1.0-0'}}%)</span>
             /
             <span class="red"><i class="fas fa-times"></i> {{h.wrong}} ({{h.wrong / (h.correct + h.wrong) * 100 | number:'1.0-0'}}%)</span>
           </ion-col>
