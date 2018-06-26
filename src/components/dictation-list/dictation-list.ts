@@ -27,6 +27,7 @@ export class DictationListComponent implements OnChanges {
   }
 
   ngOnChanges(_changes: SimpleChanges) {
+    this.page = 0;
     if (this.dictations != null) {
       this.sliceDictations();
       this.showOlder = this.dictations.length > this.dictationPerPage;
