@@ -27,16 +27,16 @@
       <ion-list>
         <ion-list-header>{{ 'Account' | translate }}</ion-list-header>
         <button ion-item menuClose *ngIf="!authService.isAuthenticated()" (click)="authService.login();">
-          <i class="fas fa-sign-in-alt" item-start></i> {{ 'Login' | translate }}
+          <fa-icon [icon]="['fas', 'sign-in-alt']" item-start></fa-icon> {{ 'Login' | translate }}
         </button>
         <button ion-item menuClose *ngIf="!authService.isAuthenticated()" (click)="authService.signUp();">
-          <i class="fas fa-user-plus" item-start></i> {{ 'Sign Up' | translate }}
+          <fa-icon [icon]="['fas', 'user-plus']" item-start></fa-icon> {{ 'Sign Up' | translate }}
         </button>
         <button ion-item menuClose *ngIf="authService.isAuthenticated()" (click)="nav.setRoot('AccountPage')">
-          <i class="fas fa-user" item-start></i> {{ 'My Account' | translate }}
+          <fa-icon [icon]="['fas', 'user']" item-start></fa-icon> {{ 'My Account' | translate }}
         </button>
         <button ion-item menuClose *ngIf="authService.isAuthenticated()" (click)="authService.logout();">
-          <i class="fas fa-sign-out-alt" item-start></i> {{ 'Logout' | translate }}
+          <fa-icon [icon]="['fas', 'sign-out-alt']" item-start></fa-icon> {{ 'Logout' | translate }}
         </button>
       </ion-list>
 
@@ -48,8 +48,8 @@
       </ion-list>
 
       <ion-list>
-        <button ion-item menuClose (click)="openContactUs()"><i class="fas fa-external-link-alt" item-start></i>{{'Contact Us'|translate}}</button>
-        <button ion-item menuClose (click)="appService.openFunFunSpell()"><i class="fas fa-external-link-alt" item-start></i>{{'More Exercises at'|translate}}<br/>funfunspell.com</button>
+        <button ion-item menuClose (click)="openContactUs()"><fa-icon [icon]="['fas', 'external-link-alt']" item-start></fa-icon>{{'Contact Us'|translate}}</button>
+        <button ion-item menuClose (click)="appService.openFunFunSpell()"><fa-icon [icon]="['fas', 'external-link-alt']" item-start></fa-icon>{{'More Exercises at'|translate}}<br/>funfunspell.com</button>
       </ion-list>
     </ion-content>
 

@@ -1,11 +1,12 @@
 import {Component, ViewChild} from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import {IonicPage, LoadingController, NavController, NavParams, ToastController} from 'ionic-angular';
 import {Dictation} from "../../entity/dictation";
 import {SentenceHistory} from "../../entity/sentence-history";
 import {DictationService} from "../../providers/dictation/dictation.service";
 import {NavigationService} from "../../providers/navigation.service";
 import {GoogleAnalytics} from "@ionic-native/google-analytics";
 import {TranslateService} from "@ngx-translate/core";
+import {PracticeHistory} from "../../entity/practice-models";
 
 @IonicPage()
 @Component({
@@ -21,6 +22,7 @@ export class ArticleDictationCompletePage {
   totalCorrect: number;
   recommended: boolean;
   historyStored: boolean;
+  loader;
 
   constructor(
     public navCtrl: NavController,
@@ -28,7 +30,10 @@ export class ArticleDictationCompletePage {
     public dictationService: DictationService,
     public navService: NavigationService,
     public ga: GoogleAnalytics,
-    public translate: TranslateService
+    public translate: TranslateService,
+    public loadingCtrl: LoadingController,
+    public translateService: TranslateService,
+    public toastCtrl: ToastController,
   ) {
     this.getNavParams();
     this.calculateCorrect(this.histories);
@@ -70,6 +75,33 @@ export class ArticleDictationCompletePage {
       return this.translate.instant('Recommended');
     else
       return this.translate.instant('Recommend');
+  }
+
+  getDictationThenOpen() {
+    if (this.dictationService.isInstantDictation(this.dictation)) {
+      this.openDictation(this.dictation);
+    } else {
+      this.loader = this.loadingCtrl.create({ content: this.translateService.instant('Please wait') + "..." })
+      this.loader.present();
+      this.dictationService.getById(this.dictation.id)
+        .subscribe(d => this.openDictation(d),  e => this.showCannotGetDictation(e))
+    }
+  }
+
+  openDictation(d: Dictation) {
+    if (this.loader) this.loader.dismissAll();
+    this.navService.retryDictation(d);
+  }
+
+  showCannotGetDictation(error) {
+    console.warn(`Cannot get dictation: ${JSON.stringify(error)}`);
+    this.loader.dismissAll();
+    let toast = this.toastCtrl.create({
+      message: this.translateService.instant('Dictation not found'),
+      duration: 3000,
+      position: 'top'
+    });
+    toast.present();
   }
 
 }

@@ -2,11 +2,9 @@ import {Component, Input} from '@angular/core';
 import {NavigationService} from "../../providers/navigation.service";
 import {PracticeHistory} from "../../entity/practice-models";
 import {ValidationUtils} from "../../utils/validation-utils";
+import {NavController} from "ionic-angular";
 import {DictationService} from "../../providers/dictation/dictation.service";
-import {LoadingController, ToastController} from "ionic-angular";
-import Any = jasmine.Any;
-import {TranslateService} from "@ngx-translate/core";
-import {Dictation} from "../../entity/dictation";
+import {PracticeCompletePage} from "../../pages/practice-complete/practice-complete";
 
 @Component({
   selector: 'member-practice-history-list',
@@ -14,14 +12,11 @@ import {Dictation} from "../../entity/dictation";
 })
 export class MemberPracticeHistoryListComponent {
   @Input() histories: PracticeHistory[];
-  loader;
 
   constructor(
     public navService: NavigationService,
-    public dictationSerivce: DictationService,
-    public loadingCtrl: LoadingController,
-    public translateService: TranslateService,
-    public toastCtrl: ToastController,
+    public navCtrl: NavController,
+    public dictationService: DictationService,
   ) {}
 
   getDictationTitle(historyJSON: string) {
@@ -32,25 +27,22 @@ export class MemberPracticeHistoryListComponent {
   }
 
   openHistory(history: PracticeHistory) {
-    this.loader = this.loadingCtrl.create({ content: this.translateService.instant('Please wait') + "..." })
-    this.loader.present();
-    this.dictationSerivce.getById(history.dictationId)
-      .subscribe(d => this.openDictation(d),  e => this.showCannotGetDictation(e))
+    const historyObj = JSON.parse(history.historyJSON);
+    if (this.dictationService.isSentenceDictation(historyObj['dictation'])) {
+      this.navCtrl.setRoot('ArticleDictationCompletePage', {
+        'dictation': historyObj['dictation'],
+        'histories': historyObj['histories'],
+        'historyStored': true
+      });
+    } else {
+      this.navCtrl.setRoot(PracticeCompletePage, {
+        'dictation': historyObj['dictation'],
+        'histories': historyObj['histories'],
+        'mark': historyObj['mark'],
+        'historyStored': true
+      });
+    }
+
   }
 
-  openDictation(d: Dictation) {
-    this.loader.dismissAll();
-    this.navService.openDictation(d);
-  }
-
-  showCannotGetDictation(error) {
-    console.warn(`Cannot get dictation: ${JSON.stringify(error)}`);
-    this.loader.dismissAll();
-    let toast = this.toastCtrl.create({
-      message: this.translateService.instant('Dictation not found'),
-      duration: 3000,
-      position: 'top'
-    });
-    toast.present();
-  }
 }

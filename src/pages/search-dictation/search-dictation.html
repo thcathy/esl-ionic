@@ -13,7 +13,7 @@
       <ion-card-content>
         <form [formGroup]="inputForm" novalidate>
           <ion-item>
-            <ion-label><i class="fas fa-search"></i></ion-label>
+            <ion-label><fa-icon [icon]="['fas', 'search']"></fa-icon></ion-label>
             <ion-input id="keywordInput" type="text" formControlName="keyword"></ion-input>
           </ion-item>
           <div *ngIf="keyword.invalid && (keyword.dirty || keyword.touched)" class="error-text">
@@ -46,7 +46,7 @@
           </button>
 
           <button ion-button float-right item-end (click)="search()" style="margin: 16px;" [disabled]="inputForm.invalid">
-            <i class="fas fa-search"></i>&nbsp;{{'Search'|translate}}
+            <fa-icon [icon]="['fas', 'search']"></fa-icon>&nbsp;{{'Search'|translate}}
           </button>
         </form>
       </ion-card-content>

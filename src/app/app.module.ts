@@ -10,6 +10,11 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 
 import { IonicStorageModule } from '@ionic/storage';
 
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { fas } from '@fortawesome/free-solid-svg-icons';
+import { far } from '@fortawesome/free-regular-svg-icons';
+
 import { ConferenceApp } from './app.component';
 
 import { AboutPage } from '../pages/about/about';
@@ -68,6 +73,8 @@ export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
 
+library.add(fas, far);
+
 @NgModule({
   declarations: [
     ConferenceApp,
@@ -119,6 +126,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     ComponentsModule,
     ReactiveFormsModule,
     PipesModule,
+    FontAwesomeModule,
   ],
   bootstrap: [IonicApp],
   entryComponents: [

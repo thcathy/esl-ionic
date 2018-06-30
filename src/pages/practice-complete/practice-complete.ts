@@ -1,5 +1,5 @@
 import {Component, ViewChild} from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import {IonicPage, LoadingController, NavController, NavParams, ToastController} from 'ionic-angular';
 import {NavigationService} from "../../providers/navigation.service";
 import {VocabPracticeHistory} from "../../interfaces/vocab-practice-history";
 import {Dictation} from "../../entity/dictation";
@@ -21,6 +21,7 @@ export class PracticeCompletePage {
   recommended: boolean;
   finished: boolean = false;
   historyStored: boolean;
+  loader;
 
   constructor(
         public navCtrl: NavController,
@@ -29,6 +30,9 @@ export class PracticeCompletePage {
         public dictationService: DictationService,
         public ga: GoogleAnalytics,
         public translate: TranslateService,
+        public loadingCtrl: LoadingController,
+        public translateService: TranslateService,
+        public toastCtrl: ToastController,
   ) {
     this.getNavParams();
     this.createHistory();
@@ -69,6 +73,33 @@ export class PracticeCompletePage {
       return this.translate.instant('Recommended');
     else
       return this.translate.instant('Recommend');
+  }
+
+  getDictationThenOpen() {
+    if (this.dictationService.isInstantDictation(this.dictation)) {
+      this.openDictation(this.dictation);
+    } else {
+      this.loader = this.loadingCtrl.create({ content: this.translateService.instant('Please wait') + "..." })
+      this.loader.present();
+      this.dictationService.getById(this.dictation.id)
+        .subscribe(d => this.openDictation(d),  e => this.showCannotGetDictation(e))
+    }
+  }
+
+  openDictation(d: Dictation) {
+    if (this.loader) this.loader.dismissAll();
+    this.navService.retryDictation(d);
+  }
+
+  showCannotGetDictation(error) {
+    console.warn(`Cannot get dictation: ${JSON.stringify(error)}`);
+    this.loader.dismissAll();
+    let toast = this.toastCtrl.create({
+      message: this.translateService.instant('Dictation not found'),
+      duration: 3000,
+      position: 'top'
+    });
+    toast.present();
   }
 
 }

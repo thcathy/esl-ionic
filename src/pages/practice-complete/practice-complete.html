@@ -13,13 +13,13 @@
       <ion-card-header style="font-size: 1.8rem;">{{ 'CompletePracticeHeader' | translate:{mark:mark, totalQuestion: histories.length} }}</ion-card-header>
       <ion-row no-padding>
         <ion-col>
-          <button ion-button (click)="navService.retryDictation(dictation)" style="margin: 5px;"><i class="fas fa-redo"></i>&nbsp;{{'Retry'|translate}}</button>
+          <button ion-button (click)="getDictationThenOpen()" style="margin: 5px;"><fa-icon [icon]="['fas', 'redo']"></fa-icon>&nbsp;{{'Retry'|translate}}</button>
         </ion-col>
         <ion-col text-right>
           <button *ngIf="dictation.id > 0" ion-button item-end color="secondary" (click)="recommend()" style="margin: 5px;" [disabled]="recommended">
-            <i class="far fa-thumbs-up"></i>&nbsp;{{ recommendBtnText() }}
+            <fa-icon [icon]="['far', 'thumbs-up']"></fa-icon>&nbsp;{{ recommendBtnText() }}
           </button>
-          <button *ngIf="dictation.id <= 0" ion-button item-end color="secondary" (click)="navService.editDictation(dictation)" style="margin: 5px;"><i class="fas fa-save"></i>&nbsp;{{'Save'|translate}}</button>
+          <button *ngIf="dictation.id <= 0" ion-button item-end color="secondary" (click)="navService.editDictation(dictation)" style="margin: 5px;"><fa-icon [icon]="['fas', 'save']"></fa-icon>&nbsp;{{'Save'|translate}}</button>
         </ion-col>
       </ion-row>
     </ion-card>

@@ -13,8 +13,8 @@
 
     <ion-card class="card">
       <ion-segment mode="md" color="secondary" [(ngModel)]="type">
-        <ion-segment-button value="byword"><i class="fas fa-th"></i>&nbsp;{{'By Word'|translate}}</ion-segment-button>
-        <ion-segment-button value="bysentence"><i class="fas fa-list"></i>&nbsp;{{'By Sentence'|translate}}</ion-segment-button>
+        <ion-segment-button value="byword"><fa-icon [icon]="['fas', 'th']"></fa-icon>&nbsp;{{'By Word'|translate}}</ion-segment-button>
+        <ion-segment-button value="bysentence"><fa-icon [icon]="['fas', 'list']"></fa-icon>&nbsp;{{'By Sentence'|translate}}</ion-segment-button>
       </ion-segment>
 
       <ion-card-content>
@@ -39,17 +39,17 @@
                 </ion-row>
               </ion-grid>
               <ion-item>
-                <ion-label><i class="far fa-images"></i> {{'Show Image'|translate}}</ion-label>
+                <ion-label><fa-icon [icon]="['far', 'images']"></fa-icon> {{'Show Image'|translate}}</ion-label>
                 <ion-toggle formControlName="showImage"></ion-toggle>
               </ion-item>
             </form>
             <ion-row no-padding>
               <ion-col>
-                <button ion-button outline (click)="clearVocabs()" style="margin: 5px;"><i class="fas fa-times"></i>&nbsp;{{'Clear inputs'|translate}}</button>
+                <button ion-button outline (click)="clearVocabs()" style="margin: 5px;"><fa-icon [icon]="['fas', 'times']"></fa-icon>&nbsp;{{'Clear inputs'|translate}}</button>
               </ion-col>
               <ion-col text-right>
                 <button ion-button item-end color="secondary" (click)="startByWord()" style="margin: 5px;" [disabled]="byWordInputForm.invalid">
-                  <i class="fas fa-pencil-alt"></i>&nbsp;{{'Start'|translate}}
+                  <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>&nbsp;{{'Start'|translate}}
                 </button>
               </ion-col>
             </ion-row>
@@ -64,11 +64,11 @@
             </form>
             <ion-row no-padding>
               <ion-col>
-                <button ion-button outline (click)="clearArticle()" style="margin: 5px;"><i class="fas fa-times"></i>&nbsp;{{'Clear inputs'|translate}}</button>
+                <button ion-button outline (click)="clearArticle()" style="margin: 5px;"><fa-icon [icon]="['fas', 'times']"></fa-icon>&nbsp;{{'Clear inputs'|translate}}</button>
               </ion-col>
               <ion-col text-right>
                 <button ion-button item-end color="secondary" (click)="startBySentence()" style="margin: 5px;" [disabled]="bySentenceInputForm.invalid">
-                  <i class="fas fa-pencil-alt"></i>&nbsp;{{'Start'|translate}}
+                  <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>&nbsp;{{'Start'|translate}}
                 </button>
               </ion-col>
             </ion-row>

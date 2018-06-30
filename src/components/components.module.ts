@@ -14,6 +14,7 @@ import {PipesModule} from "../pipes/pipes.module";
 import { SentenceHistoriesComponent } from './sentence-histories/sentence-histories';
 import { MemberScoreListComponent } from './member-score-list/member-score-list';
 import {MemberPracticeHistoryListComponent} from "./member-practice-history-list/member-practice-history-list";
+import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
 
 @NgModule({
 	declarations: [MemberScoreRankingComponent,
@@ -33,6 +34,7 @@ import {MemberPracticeHistoryListComponent} from "./member-practice-history-list
 	  IonicModule,
     TranslateModule,
     PipesModule,
+    FontAwesomeModule,
   ],
 	exports: [MemberScoreRankingComponent,
     DictationStatisticsComponent,

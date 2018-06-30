@@ -14,20 +14,20 @@
       <ion-card-header style="font-size: 1.8rem;">{{ 'Completed dictation' | translate }}</ion-card-header>
       <ion-row no-padding>
         <ion-col>
-          <button ion-button (click)="navService.retryDictation(dictation)" style="margin: 5px;"><i class="fas fa-redo"></i>&nbsp;{{'Retry'|translate}}</button>
+          <button ion-button (click)="getDictationThenOpen()" style="margin: 5px;"><fa-icon [icon]="['fas', 'redo']"></fa-icon>&nbsp;{{'Retry'|translate}}</button>
         </ion-col>
         <ion-col text-right>
           <button *ngIf="dictation.id > 0" ion-button item-end color="secondary" (click)="recommend()" style="margin: 5px;" [disabled]="recommended">
-            <i class="far fa-thumbs-up"></i>&nbsp;{{ recommendBtnText() }}
+            <fa-icon [icon]="['far', 'thumbs-up']"></fa-icon>&nbsp;{{ recommendBtnText() }}
           </button>
-          <button *ngIf="dictation.id <= 0" ion-button item-end color="secondary" (click)="navService.editDictation(dictation)" style="margin: 5px;"><i class="fas fa-save"></i>&nbsp;{{'Save'|translate}}</button>
+          <button *ngIf="dictation.id <= 0" ion-button item-end color="secondary" (click)="navService.editDictation(dictation)" style="margin: 5px;"><fa-icon [icon]="['fas', 'save']"></fa-icon>&nbsp;{{'Save'|translate}}</button>
         </ion-col>
       </ion-row>
     </ion-card>
     <dictation-card #dictationCard [dictation]="dictation" [showContent]="false"></dictation-card>
     <ion-card class="card" style="margin-top: 8px;">
-      <h3><i class="fas fa-check"></i> {{totalCorrect}} ({{totalCorrect / (totalCorrect + totalWrong) * 100 | number:'1.0-0'}}%)
-        / <span class="red"><i class="fas fa-times"></i> {{totalWrong}} ({{totalWrong / (totalCorrect + totalWrong) * 100 | number:'1.0-0'}}%)</span></h3>
+      <h3><fa-icon [icon]="['fas', 'check']"></fa-icon> {{totalCorrect}} ({{totalCorrect / (totalCorrect + totalWrong) * 100 | number:'1.0-0'}}%)
+        / <span class="red"><fa-icon [icon]="['fas', 'times']"></fa-icon> {{totalWrong}} ({{totalWrong / (totalCorrect + totalWrong) * 100 | number:'1.0-0'}}%)</span></h3>
       <sentence-histories [histories]="histories"></sentence-histories>
     </ion-card>
 

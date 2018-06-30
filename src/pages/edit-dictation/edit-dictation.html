@@ -29,7 +29,7 @@
             <div *ngIf="description.errors.maxlength">{{'Description cannot over 100 characters long'|translate}}</div>
           </div>
           <ion-item *ngIf="type.value=='word'">
-            <ion-label><i class="far fa-images"></i> {{'Show Image'|translate}}</ion-label>
+            <ion-label><fa-icon [icon]="['far', 'images']"></fa-icon> {{'Show Image'|translate}}</ion-label>
             <ion-toggle style="padding-right: 30px;" formControlName="showImage"></ion-toggle>
           </ion-item>
           <ion-item>
@@ -66,7 +66,7 @@
           </div>
 
           <button ion-button float-right item-end color="secondary" (click)="saveDictation()" style="margin: 16px;" [disabled]="inputForm.invalid">
-            <i class="fas fa-pencil-alt"></i>&nbsp;{{'Save'|translate}}
+            <fa-icon [icon]="['fas', 'save']"></fa-icon>&nbsp;{{'Save'|translate}}
           </button>
 
         </form>

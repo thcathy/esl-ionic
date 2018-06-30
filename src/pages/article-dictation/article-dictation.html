@@ -20,11 +20,11 @@
         <ion-grid>
           <ion-row>
             <ion-col col-12 col-sm-12 col-md-6>
-              <button ion-button class="speakBtn" (click)="speak()"><i class="fas fa-headphones"></i>&nbsp;{{'Listen'|translate}}</button>
+              <button ion-button class="speakBtn" (click)="speak()"><fa-icon [icon]="['fas', 'headphones']"></fa-icon>&nbsp;{{'Listen'|translate}}</button>
             </ion-col>
             <ion-col col-12 col-sm-12 col-md-6 text-right>
-              <button ion-button outline class="rateBtn" (click)="slower()"><i class="fas fa-bicycle"></i>&nbsp;{{'Slower'|translate}}</button>
-              <button ion-button outline class="rateBtn" (click)="faster()"><i class="fas fa-rocket"></i>&nbsp;{{'Faster'|translate}}</button>
+              <button ion-button outline class="rateBtn" (click)="slower()"><fa-icon [icon]="['fas', 'bicycle']"></fa-icon>&nbsp;{{'Slower'|translate}}</button>
+              <button ion-button outline class="rateBtn" (click)="faster()"><fa-icon [icon]="['fas', 'rocket']"></fa-icon>&nbsp;{{'Faster'|translate}}</button>
             </ion-col>
           </ion-row>
           <ion-row>
