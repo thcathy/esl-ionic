@@ -69,6 +69,14 @@ export class DictationCardComponent {
     alert.present();
   }
 
+  openSearchByIdPopup() {
+    let alert = this.alertCtrl.create({
+      title: `${this.translate.instant('You can use the ID number to search this dictation')}`,
+      buttons: [this.translate.instant('OK')]
+    });
+    alert.present();
+  }
+
   deleteDictation = () => {
     this.memberDictationService.deleteDictation(this.dictation.id)
       .subscribe(this.afterDelete, this.failDelete);
