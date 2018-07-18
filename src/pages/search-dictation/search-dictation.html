@@ -14,7 +14,7 @@
         <form [formGroup]="inputForm" novalidate>
           <ion-item>
             <ion-label><fa-icon [icon]="['fas', 'search']"></fa-icon></ion-label>
-            <ion-input id="keywordInput" type="text" formControlName="keyword" placeholder="Type in dictation id or part of title / description"></ion-input>
+            <ion-input id="keywordInput" type="text" formControlName="keyword" placeholder="{{'ID or part of title / description' | translate}}"></ion-input>
           </ion-item>
           <div *ngIf="keyword.invalid && (keyword.dirty || keyword.touched)" class="error-text">
             <div *ngIf="keyword.errors.minlength">{{'CharactersTooShort'|translate:{length: '3'} }}</div>

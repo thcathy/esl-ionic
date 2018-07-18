@@ -8,6 +8,7 @@ import {MemberService} from "../../providers/member/member.service";
 import {FormsModule} from "@angular/forms";
 import {GoogleAnalyticsSpy, NavMock} from "../../../test-config/mocks-ionic";
 import {GoogleAnalytics} from "@ionic-native/google-analytics";
+import {CUSTOM_ELEMENTS_SCHEMA} from "@angular/core";
 
 describe('AccountPage', () => {
   let fixture: ComponentFixture<AccountPage>;
@@ -25,6 +26,7 @@ describe('AccountPage', () => {
         TranslateModule.forRoot(),
         FormsModule
       ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [
         { provide: ComponentFixtureAutoDetect, useValue: true },
         { provide: MemberService, useValue: memberService},
