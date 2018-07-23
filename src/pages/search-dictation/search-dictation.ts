@@ -92,4 +92,8 @@ export class SearchDictationPage {
 
     return options;
   }
+
+  showHistory(ev: any) {
+
+  }
 }
