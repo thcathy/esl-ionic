@@ -17,6 +17,10 @@
             <div *ngIf="keyword.errors.minlength">{{'CharactersTooShort'|translate:{length: '3'} }}</div>
             <div *ngIf="keyword.errors.maxlength">{{'CharactersTooLong'|translate:{length: '50'} }}</div>
           </div>
+          <ion-list style="position: absolute; min-width: 30%; z-index: 1001;">
+            <ion-item>a</ion-item>
+            <ion-item>b</ion-item>
+          </ion-list>
           <ion-item *ngIf="moreOptions">
             <ion-label>{{'Created By'|translate}}</ion-label>
             <ion-input type="text" formControlName="creator"></ion-input>
