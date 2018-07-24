@@ -96,4 +96,8 @@ export class SearchDictationPage {
   showHistory(ev: any) {
 
   }
+
+  getResults(keyword:string) {
+    return ['aaa','bbb'];
+  }
 }

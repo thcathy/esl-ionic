@@ -1,3 +1,22 @@
 page-search-dictation {
+  .autocomplete {
+    width: calc(100% - 48px);
+    position: absolute;
+    z-index: 999;
 
+    ion-item {
+      height: 1rem;
+      img {
+        max-height: 2.5rem;
+        width: auto;
+        margin: auto;
+        display: block;
+      }
+    }
+
+    ion-item:hover {
+      cursor: pointer;
+      background: #f1f1f1
+    }
+  }
 }
