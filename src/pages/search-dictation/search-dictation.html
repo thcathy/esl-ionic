@@ -12,15 +12,14 @@
     <ion-card class="input-form">
       <ion-card-content>
         <form [formGroup]="inputForm" novalidate>
-          <ion-searchbar (ionInput)="showHistory()" formControlName="keyword"></ion-searchbar>
+          <ion-searchbar (ionInput)="filterHistory($event)" formControlName="keyword"></ion-searchbar>
+          <ion-list class="autocomplete" *ngIf="showHistory">
+            <ion-item *ngFor="let h of showHistory">{{h}} <fa-icon item-end [icon]="['fas', 'history']"></fa-icon></ion-item>
+          </ion-list>
           <div *ngIf="keyword.invalid && (keyword.dirty || keyword.touched)" class="error-text">
             <div *ngIf="keyword.errors.minlength">{{'CharactersTooShort'|translate:{length: '3'} }}</div>
             <div *ngIf="keyword.errors.maxlength">{{'CharactersTooLong'|translate:{length: '50'} }}</div>
           </div>
-          <ion-list class="autocomplete">
-            <ion-item>a</ion-item>
-            <ion-item>b</ion-item>
-          </ion-list>
           <ion-item *ngIf="moreOptions">
             <ion-label>{{'Created By'|translate}}</ion-label>
             <ion-input type="text" formControlName="creator"></ion-input>

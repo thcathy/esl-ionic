@@ -122,5 +122,15 @@ describe('SearchDictationPage', () => {
     expect(storageSpy.set.calls.mostRecent().args[1].length).toEqual(10);
   });
 
+  it('showHistory only contain history which is started with input keyword', () => {
+    component.history = ['apple','banana','await'];
+    component.keyword.setValue('a');
+    component.filterHistory(null);
+
+    expect(component.showHistory.length).toBe(2);
+    expect(component.showHistory[0]).toBe('apple');
+    expect(component.showHistory[1]).toBe('await');
+  })
+
 });
 
