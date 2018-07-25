@@ -6,6 +6,7 @@ import {Dictation, SuitableStudentOptions} from "../../entity/dictation";
 import {DictationService} from "../../providers/dictation/dictation.service";
 import {TranslateService} from "@ngx-translate/core";
 import {Storage} from "@ionic/storage";
+import {ValidationUtils} from "../../utils/validation-utils";
 
 export interface DateSearchOption {
   option: string;
@@ -43,8 +44,7 @@ export class SearchDictationPage {
 
   ionViewDidLoad() {
     this.storage.get(this.SEARCH_HISTORY_KEY).then(h => {
-      console.log(`askjfkldsajlkdjsaf: ${h}`);
-      this.history = h;
+      this.history = h ? h : [];
     });
     this.ga.trackView('search-dictation');
   }
@@ -123,6 +123,8 @@ export class SearchDictationPage {
   }
 
   private addToHistory(value: String) {
+    if (this.history.find(h => h == value)) return;
+
     this.history.unshift(value);
     if (this.history.length > this.MAX_HISTORY) this.history.pop();
     this.storage.set(this.SEARCH_HISTORY_KEY, this.history);
@@ -130,7 +132,19 @@ export class SearchDictationPage {
 
   filterHistory(event: any) {
     const input = this.keyword.value;
-    this.showHistory = this.history.filter(value => value.startsWith(input));
+    if (ValidationUtils.isBlankString(input))
+      this.showHistory = [];
+    else
+      this.showHistory = this.history.filter(value => value.startsWith(input) && value != input);
+  }
+
+  setKeyword(h: String) {
+    this.keyword.setValue(h);
+    this.showHistory = [];
+  }
+
+  clearShowHistory() {
+    this.showHistory = [];
   }
 }
 

@@ -3,20 +3,28 @@ page-search-dictation {
     width: calc(100% - 48px);
     position: absolute;
     z-index: 999;
+    background: #f1f1f1;
 
     ion-item {
-      height: 1rem;
+      background: inherit;
       img {
-        max-height: 2.5rem;
         width: auto;
         margin: auto;
         display: block;
       }
     }
 
+    .item-block {
+      min-height: 0.8rem;
+    }
+
+    fa-icon {
+      color: #777777;
+    }
+
     ion-item:hover {
       cursor: pointer;
-      background: #f1f1f1
+      background: #dddddd;
     }
   }
 }

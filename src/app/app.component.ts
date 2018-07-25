@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 
-import {Events, MenuController, Nav, Platform} from 'ionic-angular';
+import {Config, Events, MenuController, Nav, Platform} from 'ionic-angular';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
 import { Storage } from '@ionic/storage';
@@ -81,7 +81,8 @@ export class ConferenceApp {
     public translate: TranslateService,
     public authService: AuthService,
     public ga: GoogleAnalytics,
-    public appService: AppService
+    public appService: AppService,
+    public config: Config,
   ) {
 
     // Check if the user has already seen the tutorial
@@ -179,6 +180,7 @@ export class ConferenceApp {
     // Call any initial plugins when ready
     this.platform.ready().then(() => {
       this.splashScreen.hide();
+      this.config.set('backButtonText', '');
 
       this.ga.startTrackerWithId('UA-114755687-1')
         .then(() => {

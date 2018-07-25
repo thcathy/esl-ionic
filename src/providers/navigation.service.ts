@@ -58,6 +58,13 @@ export class NavigationService {
     });
   }
 
+  pushOpenDictation(dictation: Dictation) {
+    this.getNavigationController().push('DictationViewPage', {
+      dictation: dictation,
+      dictationId: dictation.id
+    });
+  }
+
   editDictation(dictation: Dictation) {
     this.getNavigationController().setRoot('EditDictationPage', {
       dictation: dictation

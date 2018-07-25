@@ -19,7 +19,7 @@
           <ion-col class="col-label">{{ 'Suitable' | translate }}:</ion-col>
           <ion-col>{{ 'SuitableStudent.' + dictation.suitableStudent | translate }}</ion-col>
         </ion-row>
-        <button ion-button outline item-end (click)="navService.openDictation(dictation)">{{ 'ViewDictation' | translate }}</button>
+        <button ion-button outline item-end (click)="navService.pushOpenDictation(dictation)">{{ 'ViewDictation' | translate }}</button>
       </ion-item>
     </ion-list>
     <ion-row>

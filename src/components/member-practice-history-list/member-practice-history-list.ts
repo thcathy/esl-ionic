@@ -29,13 +29,13 @@ export class MemberPracticeHistoryListComponent {
   openHistory(history: PracticeHistory) {
     const historyObj = JSON.parse(history.historyJSON);
     if (this.dictationService.isSentenceDictation(historyObj['dictation'])) {
-      this.navCtrl.setRoot('ArticleDictationCompletePage', {
+      this.navCtrl.push('ArticleDictationCompletePage', {
         'dictation': historyObj['dictation'],
         'histories': historyObj['histories'],
         'historyStored': true
       });
     } else {
-      this.navCtrl.setRoot(PracticeCompletePage, {
+      this.navCtrl.push(PracticeCompletePage, {
         'dictation': historyObj['dictation'],
         'histories': historyObj['histories'],
         'mark': historyObj['mark'],

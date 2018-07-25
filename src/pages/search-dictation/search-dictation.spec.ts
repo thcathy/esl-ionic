@@ -130,7 +130,16 @@ describe('SearchDictationPage', () => {
     expect(component.showHistory.length).toBe(2);
     expect(component.showHistory[0]).toBe('apple');
     expect(component.showHistory[1]).toBe('await');
-  })
+  });
+
+  it('do not store duplicate search history', () => {
+    component.keyword.setValue(`new search`);
+    component.search();
+    component.search();
+
+    expect(component.history.length).toBe(1);
+    expect(component.history[0]).toBe('new search');
+  });
 
 });
 
