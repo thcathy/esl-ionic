@@ -1,5 +1,6 @@
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
+import {LoadingController} from "ionic-angular";
 
 export class PlatformMock {
   public ready(): Promise<string> {
@@ -114,6 +115,8 @@ export class DeepLinkerMock {
 
 }
 
-export const GoogleAnalyticsSpy = () => { return jasmine.createSpyObj('GoogleAnalytics', ['trackView']); };
+export const GoogleAnalyticsSpy = () => { return jasmine.createSpyObj('GoogleAnalytics', ['trackView']) };
 
-export const NavgationServiceSpy = () => { return jasmine.createSpyObj('NavigationService', ['goTo']); };
+export const NavgationServiceSpy = () => { return jasmine.createSpyObj('NavigationService', ['goTo']) };
+
+export const StorageSpy = () => { return jasmine.createSpyObj('Storage', ['get','set']) };
