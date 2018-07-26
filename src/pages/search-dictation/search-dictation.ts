@@ -28,7 +28,8 @@ export class SearchDictationPage {
   suitableStudentOptions = SuitableStudentOptions;
   dateOptions = this.createDateOptions();
   history: String[] = [];
-  showHistory: String[] = [];
+  filteredHistory: String[] = [];
+  showHistory = false;
 
   constructor(
     public navCtrl: NavController,
@@ -133,18 +134,20 @@ export class SearchDictationPage {
   filterHistory(event: any) {
     const input = this.keyword.value;
     if (ValidationUtils.isBlankString(input))
-      this.showHistory = [];
+      this.filteredHistory = [];
     else
-      this.showHistory = this.history.filter(value => value.startsWith(input) && value != input);
+      this.filteredHistory = this.history.filter(value => value.startsWith(input) && value != input);
+    this.showHistory = true;
   }
 
   setKeyword(h: String) {
     this.keyword.setValue(h);
-    this.showHistory = [];
+    this.showHistory = false;
   }
 
-  clearShowHistory() {
-    this.showHistory = [];
+  stopShowHistory() {
+    this.showHistory = false;
   }
+
 }
 

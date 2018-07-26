@@ -127,9 +127,9 @@ describe('SearchDictationPage', () => {
     component.keyword.setValue('a');
     component.filterHistory(null);
 
-    expect(component.showHistory.length).toBe(2);
-    expect(component.showHistory[0]).toBe('apple');
-    expect(component.showHistory[1]).toBe('await');
+    expect(component.filteredHistory.length).toBe(2);
+    expect(component.filteredHistory[0]).toBe('apple');
+    expect(component.filteredHistory[1]).toBe('await');
   });
 
   it('do not store duplicate search history', () => {

@@ -12,9 +12,9 @@
     <ion-card class="input-form">
       <ion-card-content>
         <form [formGroup]="inputForm" novalidate>
-          <ion-searchbar (ionInput)="filterHistory($event)" formControlName="keyword" placeholder="{{'ID or part of title / description' | translate}}" (ionBlur)="clearShowHistory()"></ion-searchbar>
-          <ion-list class="autocomplete" *ngIf="showHistory">
-            <ion-item *ngFor="let h of showHistory" (click)="setKeyword(h)">{{h}} <fa-icon item-end [icon]="['fas', 'history']"></fa-icon></ion-item>
+          <ion-searchbar (ionInput)="filterHistory($event)" formControlName="keyword" placeholder="{{'ID or part of title / description' | translate}}" (ionBlur)="stopShowHistory()"></ion-searchbar>
+          <ion-list class="autocomplete" *ngIf="filteredHistory && showHistory">
+            <ion-item *ngFor="let h of filteredHistory" (touchstart)="setKeyword(h)" (mousedown)="setKeyword(h)">{{h}} <fa-icon item-end [icon]="['fas', 'history']"></fa-icon></ion-item>
           </ion-list>
           <div *ngIf="keyword.invalid && (keyword.dirty || keyword.touched)" class="error-text">
             <div *ngIf="keyword.errors.minlength">{{'CharactersTooShort'|translate:{length: '3'} }}</div>
