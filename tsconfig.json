@@ -1,33 +1,16 @@
 {
-  "atom": {
-    "rewriteTsconfig": false
-  },
   "compileOnSave": false,
   "compilerOptions": {
-    "allowSyntheticDefaultImports": true,
+    "outDir": "./dist/out-tsc",
+    "sourceMap": true,
     "declaration": false,
+    "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "noUnusedParameters": false,
-    "noUnusedLocals": false,
-    "strict": false,
-    "module": "es2015",
-    "moduleResolution": "node",
-    "sourceMap": true,
     "target": "es5",
     "lib": [
-      "dom",
-      "es2015"
-    ],
-    "baseUrl": "./src",
-    "paths": {
-      "@environment": ["config/environment.prod"]
-    }
-  },
-  "include": [
-    "src/**/*.ts"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+      "es2017",
+      "dom"
+    ]
+  }
 }
