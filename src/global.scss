@@ -10,3 +10,178 @@
 @import "~@ionic/angular/css/text-transformation.css";
 @import "~@ionic/angular/css/flex-utils.css";
 
+.invisible {
+  visibility: hidden !important;
+}
+
+.hidden-xs-up {
+  display: none !important;
+}
+
+@media (max-width: 575px) {
+  .hidden-xs-down {
+    display: none !important;
+  }
+}
+
+@media (min-width: 576px) {
+  .hidden-sm-up {
+    display: none !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .hidden-sm-down {
+    display: none !important;
+  }
+}
+
+@media (min-width: 768px) {
+  .hidden-md-up {
+    display: none !important;
+  }
+}
+
+@media (max-width: 991px) {
+  .hidden-md-down {
+    display: none !important;
+  }
+}
+
+@media (min-width: 992px) {
+  .hidden-lg-up {
+    display: none !important;
+  }
+}
+
+@media (max-width: 1199px) {
+  .hidden-lg-down {
+    display: none !important;
+  }
+}
+
+@media (min-width: 1200px) {
+  .hidden-xl-up {
+    display: none !important;
+  }
+}
+
+.hidden-xl-down {
+  display: none !important;
+}
+
+.toolbar-background {
+  background-color: var(--ion-color-primary);
+}
+
+.bar-button {
+  color: #fff;
+}
+
+.navbar-logo {
+  margin-top: 8px;
+  max-height: 36px;
+}
+
+.toolbar-title {
+  color: white;
+}
+
+.menu-content {
+  ion-list {
+    background-color: white;
+  }
+}
+
+ion-content {
+  background-image: url('./assets/img/main_bg.jpg');
+  background-position: left 100px;
+  background-color: #46c6fc !important;
+  background-repeat: no-repeat;
+}
+
+.card {
+  margin: 0px;
+  width: 100%;
+
+  ion-card-header {
+    color: white;
+    background-color: #4CAF50;
+  }
+
+  ion-card-content {
+    padding: 0px;
+    background-color: transparent;
+  }
+
+  ion-item {
+    border-bottom: .55px solid #c8c7cc;
+  }
+
+  ion-label {
+    margin: 4px 8px 4px 8px;
+  }
+
+  [item-end] {
+    margin: 0px;
+  }
+}
+
+.gold {
+  color: #ffcc3c;
+}
+
+.silver {
+  color: #cdd0d7;
+}
+
+.bronze {
+  color: #cd7f32;
+}
+
+.table-heading {
+  color: #60646B;
+  font-weight: bold;
+}
+
+.submitBtn {
+  margin-top: 12px;
+
+  .button-inner {
+    height: 2rem;
+    font-size: 1.6rem;
+  }
+}
+
+.error-text {
+  color: var(--ion-color-danger);
+}
+
+.input-form {
+  .label {
+    font-size: 1.4rem !important;
+    color: #555555 !important;
+  }
+
+  ion-label {
+    margin: inherit;
+  }
+
+  ion-item {
+    margin-left: 16px;
+    padding-left: 0px;
+    padding-top: 8px;
+  }
+}
+
+.green {
+  color: #4CAF50;
+}
+
+.dark-green {
+  color: #007d6f;
+}
+
+.red {
+  color: #f53d3d;
+}

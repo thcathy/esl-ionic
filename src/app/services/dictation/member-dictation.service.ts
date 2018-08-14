@@ -17,7 +17,7 @@ export interface EditDictationRequest {
   article: string;
 }
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class MemberDictationService {
 
   constructor (private http: HttpClient) {

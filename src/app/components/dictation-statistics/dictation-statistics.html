@@ -1,0 +1,22 @@
+<ion-card class="card" *ngIf="stat" style="margin-top: 12px;">
+  <ion-card-header>
+    <fa-icon [icon]="['fas', 'edit']"></fa-icon> {{ stat.type | translate }}
+  </ion-card-header>
+  <ion-card-content>
+    <ion-list>
+      <ion-item *ngFor="let dictation of stat.dictations; let i = index">
+        <ion-badge item-start style="background-color: #4CAF50; margin: 0px;">{{ i+1 }}</ion-badge>
+        <ion-row>
+          <ion-col>{{ dictation.title | slice:0:17 }}{{ dictation.title.length > 17 ? '...' : '' }}</ion-col>
+          <ion-col text-right>{{displayService?.displayName(dictation.creator) | slice:0:17}}{{displayService?.displayName(dictation.creator).length > 17 ? '...' : '' }}</ion-col>
+        </ion-row>
+        <ion-row class="sub-row">
+          <ion-col style="min-width: 110px;"><fa-icon [icon]="['fas', 'list-ol']"></fa-icon> {{ displayService.totalQuestion(dictation) }}</ion-col>
+          <ion-col><fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon> {{ dictation.totalAttempt }}</ion-col>
+          <ion-col><fa-icon [icon]="['far', 'thumbs-up']"></fa-icon> {{dictation.totalRecommended}}</ion-col>
+        </ion-row>
+        <button ion-button outline item-end (click)="navService.pushOpenDictation(dictation)">{{ 'ViewDictation' | translate }}</button>
+      </ion-item>
+    </ion-list>
+  </ion-card-content>
+</ion-card>

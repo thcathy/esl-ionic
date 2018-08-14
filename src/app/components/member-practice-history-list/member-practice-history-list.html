@@ -1,0 +1,23 @@
+<ion-card class="card list" style="margin-top: 12px;" *ngIf="histories">
+  <ion-card-header>
+    <fa-icon [icon]="['fas', 'edit']"></fa-icon> {{ 'LastTimesPractice' | translate: { times: histories.length} }}
+  </ion-card-header>
+  <ion-card-content>
+    <ion-list>
+      <ion-item *ngFor="let h of histories; let i = index">
+        <ion-row>
+          <ion-col>{{getDictationTitle(h.historyJSON)}}</ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>{{ h.createdDate | date: 'yyyy-MM-dd' }}</ion-col>
+          <ion-col>
+            <span class="dark-green"><fa-icon [icon]="['fas', 'check']"></fa-icon> {{h.correct}} ({{h.correct / (h.correct + h.wrong) * 100 | number:'1.0-0'}}%)</span>
+            /
+            <span class="red"><fa-icon [icon]="['fas', 'times']"></fa-icon> {{h.wrong}} ({{h.wrong / (h.correct + h.wrong) * 100 | number:'1.0-0'}}%)</span>
+          </ion-col>
+        </ion-row>
+        <button ion-button outline item-end (click)="openHistory(h)">{{ 'Detail' | translate }}</button>
+      </ion-item>
+    </ion-list>
+  </ion-card-content>
+</ion-card>

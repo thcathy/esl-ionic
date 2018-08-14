@@ -1,7 +1,8 @@
-import {Member} from "../src/entity/member";
-import {Name} from "../src/entity/name";
-import {Dictation} from "../src/entity/dictation";
-import {SentenceHistory} from "../src/entity/sentence-history";
+import {Member} from "../app/entity/member";
+import {Dictation} from "../app/entity/dictation";
+import {Name} from "../app/entity/name";
+import {SentenceHistory} from "../app/entity/sentence-history";
+
 
 export const member1 = new Member(
   1,

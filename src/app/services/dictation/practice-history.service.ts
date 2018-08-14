@@ -8,7 +8,7 @@ import {PracticeHistory} from "../../entity/practice-models";
 import {environment} from "../../../environments/environment";
 import {Observable} from "rxjs/internal/Observable";
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class PracticeHistoryService {
 
   constructor (private http: HttpClient) {}

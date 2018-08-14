@@ -30,7 +30,7 @@ export interface CreateDictationHistoryRequest {
   historyJSON?: string;
 }
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class DictationService {
 
   constructor (private http: HttpClient) {

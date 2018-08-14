@@ -16,7 +16,7 @@ export interface UpdateMemberRequest {
   school?: string;
 }
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class MemberService {
 
   constructor (private http: HttpClient) {

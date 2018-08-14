@@ -9,7 +9,7 @@ import {MemberScore} from "../../entity/member-score";
 import {environment} from "../../../environments/environment";
 import {Observable} from "rxjs/internal/Observable";
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class RankingService extends Service {
 
   constructor (private http: HttpClient) {

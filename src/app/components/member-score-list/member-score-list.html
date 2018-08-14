@@ -1,0 +1,18 @@
+
+<ion-card class="card" style="margin-top: 12px;">
+  <ion-card-header>
+    <fa-icon [icon]="['fas', 'trophy']"></fa-icon> {{ 'My Scores' | translate }}
+  </ion-card-header>
+  <ion-card-content>
+    <ion-list>
+      <ion-item *ngIf="allTimesScore">
+        {{ 'Full' | translate }}
+        <span float-right><fa-icon [icon]="['fas', 'star']" style="color: gold"></fa-icon> {{allTimesScore.score}}</span>
+      </ion-item>
+      <ion-item *ngFor="let score of scores; let i = index">
+        {{ score.yearMonthAsDate | date: 'yyyy/MM' }}
+        <span float-right><fa-icon [icon]="['fas', 'star']" style="color: gold"></fa-icon> {{score.score}}</span>
+      </ion-item>
+    </ion-list>
+  </ion-card-content>
+</ion-card>

@@ -4,7 +4,9 @@ import {SentenceHistory} from "../../entity/sentence-history";
 import {environment} from "../../../environments/environment";
 import {ValidationUtils} from "../../utils/validation-utils";
 
-@Injectable()
+@Injectable(
+  { providedIn: 'root' }
+)
 export class ArticleDictationService {
 
   public maxSentenceLength = environment.maxSentenceLength;

@@ -21,7 +21,7 @@ export const auth0CordovaConfig = {
   audience: 'https://thcathy.auth0.com/userinfo'
 };
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class AuthService {
   userProfile: any;
   idTokenKey = 'id_token';

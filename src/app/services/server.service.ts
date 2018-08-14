@@ -1,18 +1,18 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import {Observable} from 'rxjs/Observable';
 
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
-import { ENV } from '@environment';
+import {environment} from "../../environments/environment";
+import {Observable} from "rxjs/internal/Observable";
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class ServerService {
 
   constructor (private http: HttpClient) {
   }
 
-  private healthUrl = ENV.apiHost + '/health';
+  private healthUrl = environment.apiHost + '/health';
 
   healthCheck(): Observable<String> {
     console.log(`Calling health check`);

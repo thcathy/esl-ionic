@@ -1,0 +1,31 @@
+{
+  "MostPracticed": "Most Attempted Dictations",
+  "NewCreated":"Latest Created Dictations",
+  "MostRecommended":"Most Recommended Dictations",
+  "LatestPracticed":"Last Dictation Practiced",
+  "SuitableAge": {
+    "Any": "Any"
+  },
+  "SuitableStudent": {
+    "Any": "Any",
+    "Kindergarten": "Kindergarten (3-5)",
+    "JuniorPrimary": "Junior Primary (6-8)",
+    "SeniorPrimary": "Senior Primary (9-11)",
+    "JuniorSecondary": "Junior Secondary (12-14)",
+    "SeniorSecondary": "Senior Secondary (15-17)"
+  },
+  "Menu_Quick": "Quick",
+  "Menu_Create": "Create",
+  "Menu_Search": "Find",
+  "Input and Start": "Input & Start",
+  "Create and Save": "Create & Save",
+  "TotalVocabs": "Vocabs",
+  "ViewDictation": "View",
+  "CompletePracticeHeader": "You got {{mark}} marks in {{totalQuestion}} questions",
+  "UpdatedDictation": "Dictation {{title}} is updated",
+  "DeletedDictation": "Dictation {{title}} is deleted",
+  "CharactersTooShort": " cannot less than {{length}} characters",
+  "CharactersTooLong": " cannot over {{length}} characters",
+  "ContactUsUrl": "https://goo.gl/forms/XtQdla9UKYDlAiRl2",
+  "LastTimesPractice": "Last {{times}} Practice Results"
+}

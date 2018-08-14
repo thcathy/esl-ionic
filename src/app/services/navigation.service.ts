@@ -5,6 +5,7 @@ import 'rxjs/add/operator/catch';
 import {Dictation} from "../entity/dictation";
 import {DictationService} from "./dictation/dictation.service";
 import {App} from "@ionic/angular";
+import {Router} from "@angular/router";
 
 
 export interface NavigationRequest {
@@ -12,62 +13,59 @@ export interface NavigationRequest {
   params: any;
 }
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class NavigationService {
 
   constructor(public app: App,
+              private router: Router,
               public dictationService: DictationService)
   {}
 
-  private getNavigationController() {
-    let navCtrl = this.app.getActiveNavs()[0];
-    console.log(`${navCtrl.id}`);
-    return navCtrl;
-  }
-
   goTo(request: NavigationRequest) {
-    this.getNavigationController().setRoot(request.destination, request.params);
+    this.router.navigate([request.destination], { queryParams: request.params });
   }
 
   startDictation(dictation: Dictation) {
     if (this.dictationService.isSentenceDictation(dictation)) {
-      this.getNavigationController().setRoot('ArticleDictationPage', {
-        'dictation': dictation
-      });
+      this.router.navigate(['/article-dictation'], { queryParams: { dictation: dictation } });
     } else {
-      this.getNavigationController().setRoot('DictationPracticePage', {
-        'dictation': dictation,
-        'dictationId': dictation.id,
-      });
+      this.router.navigate(['/dictation-practice'], {
+        queryParams: {
+          dictation: dictation,
+          dictationId: dictation.id
+        }});
     }
   }
 
   retryDictation(dictation: Dictation) {
     if (this.dictationService.isInstantDictation(dictation))
-      this.getNavigationController().setRoot('InstantDictationPage');
+      this.router.navigate(['/instant-dictation']);
     else
       this.startDictation(dictation);
   }
 
 
   openDictation(dictation: Dictation, toastMessage: string = null) {
-    this.getNavigationController().setRoot('DictationViewPage', {
-      dictation: dictation,
-      dictationId: dictation.id,
-      toastMessage: toastMessage,
-    });
+    this.router.navigate(['/dictation-view'], {
+      queryParams: {
+        dictation: dictation,
+        dictationId: dictation.id,
+        toastMessage: toastMessage,
+      }});
   }
 
   pushOpenDictation(dictation: Dictation) {
-    this.getNavigationController().push('DictationViewPage', {
-      dictation: dictation,
-      dictationId: dictation.id
-    });
+    this.router.navigate(['/dictation-view'], {
+      queryParams: {
+        dictation: dictation,
+        dictationId: dictation.id
+      }});
   }
 
   editDictation(dictation: Dictation) {
-    this.getNavigationController().setRoot('EditDictationPage', {
-      dictation: dictation
-    });
+    this.router.navigate(['/edit-dictation'], {
+      queryParams: {
+        dictation: dictation
+      }});
   }
 }

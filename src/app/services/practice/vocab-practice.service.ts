@@ -10,7 +10,7 @@ import {Observable} from "rxjs/internal/Observable";
 
 
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class VocabPracticeService extends Service {
 
   constructor (private http: HttpClient) {

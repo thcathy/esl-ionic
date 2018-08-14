@@ -90,4 +90,5 @@
         <variable name="ANDROID_HOST" value="thcathy.auth0.com" />
         <variable name="ANDROID_PATHPREFIX" value="/cordova/com.esl.ionic/callback" />
     </plugin>
+    <engine name="browser" spec="~5.0.3" />
 </widget>

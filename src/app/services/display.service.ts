@@ -9,7 +9,7 @@ import {TranslateService} from "@ngx-translate/core";
 import {ArticleDictationService} from "./dictation/article-dictation.service";
 import {App} from "@ionic/angular";
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class DisplayService {
 
   constructor(public app: App,

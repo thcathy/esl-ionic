@@ -6,13 +6,13 @@ import {AppService} from "./app.service";
 import {TextToSpeech} from "@ionic-native/text-to-speech";
 
 declare var responsiveVoice: any;
+declare var textToSpeech: TextToSpeech;
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class SpeechService {
 
   constructor(
     public appService: AppService,
-    public tts: TextToSpeech
   ) {}
 
   speak(text: string, rate = 0.7) {
@@ -20,10 +20,10 @@ export class SpeechService {
     console.log(`speak ${text} in speed ${rate}`);
     if (this.appService.isApp()) {
       if (this.appService.isIOS()) rate = rate * 2;
-      this.tts.speak({
-        text: text,
-        locale: 'en-US',
-        rate: rate
+      textToSpeech.speak({
+          text: text,
+          locale: 'en-US',
+          rate: rate
       })
         .then(() => console.log(`Speak by tts: ${text}`))
         .catch((reason: any) => console.log(reason));
@@ -36,7 +36,7 @@ export class SpeechService {
 
   stop() {
     if (this.appService.isApp()) {
-      this.tts.stop().then(() => console.log(`stopped tss`));
+      textToSpeech.stop().then(() => console.log(`stopped tss`));
     } else {
       responsiveVoice.cancel();
     }
