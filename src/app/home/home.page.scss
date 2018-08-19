@@ -1,1 +1,40 @@
+.header {
+  background-color: #4CAF50;
+  color: white;
+  margin: 0px;
+  width: 100%;
 
+  ion-card-header {
+    color: white;
+    font-size: 3rem;
+    text-align: center;
+    padding: 8px;
+    background-color: #488aff;
+  }
+
+  ion-card-content {
+    font-size: 2.2rem;
+    text-align: center;
+    padding: 8px;
+    background-color: #4CAF50;
+  }
+}
+
+.card-button {
+  ion-card-content {
+    background-color: #488aff;
+    font-size: 2rem;
+    color: white;
+  }
+
+}
+
+.appImage {
+  height: 50px; padding: 4px;
+}
+
+.ffsButton {
+  width: 100%;
+  margin-top: 16px;
+  font-size: 1.4rem;
+}
