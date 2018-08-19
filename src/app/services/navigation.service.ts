@@ -1,7 +1,5 @@
 import {Injectable} from '@angular/core';
 
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
 import {Dictation} from "../entity/dictation";
 import {DictationService} from "./dictation/dictation.service";
 import {App} from "@ionic/angular";

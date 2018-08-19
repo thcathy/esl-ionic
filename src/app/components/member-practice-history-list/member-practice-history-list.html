@@ -16,7 +16,7 @@
             <span class="red"><fa-icon [icon]="['fas', 'times']"></fa-icon> {{h.wrong}} ({{h.wrong / (h.correct + h.wrong) * 100 | number:'1.0-0'}}%)</span>
           </ion-col>
         </ion-row>
-        <button ion-button outline item-end (click)="openHistory(h)">{{ 'Detail' | translate }}</button>
+        <ion-button fill="outline" slot="end" (click)="openHistory(h)">{{ 'Detail' | translate }}</ion-button>
       </ion-item>
     </ion-list>
   </ion-card-content>

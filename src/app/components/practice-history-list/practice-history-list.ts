@@ -1,5 +1,4 @@
 import {Component, Input} from '@angular/core';
-import {VocabPracticeHistory} from "../../interfaces/vocab-practice-history";
 import {
   trigger,
   state,
@@ -7,6 +6,7 @@ import {
   animate,
   transition
 } from '@angular/animations';
+import {VocabPracticeHistory} from "../../entity/vocab-practice-history";
 
 @Component({
   selector: 'practice-history-list',

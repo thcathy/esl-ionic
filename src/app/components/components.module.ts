@@ -1,5 +1,4 @@
 import { NgModule } from '@angular/core';
-import { IonicModule } from 'ionic-angular';
 import { MemberScoreRankingComponent } from './member-score-ranking/member-score-ranking';
 import { DictationStatisticsComponent } from './dictation-statistics/dictation-statistics';
 import {TranslateModule} from "@ngx-translate/core";
@@ -15,6 +14,8 @@ import { SentenceHistoriesComponent } from './sentence-histories/sentence-histor
 import { MemberScoreListComponent } from './member-score-list/member-score-list';
 import {MemberPracticeHistoryListComponent} from "./member-practice-history-list/member-practice-history-list";
 import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
+import {IonicModule} from "@ionic/angular";
+import {CommonModule} from "@angular/common";
 
 @NgModule({
 	declarations: [MemberScoreRankingComponent,
@@ -35,6 +36,7 @@ import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
     TranslateModule,
     PipesModule,
     FontAwesomeModule,
+    CommonModule,
   ],
 	exports: [MemberScoreRankingComponent,
     DictationStatisticsComponent,

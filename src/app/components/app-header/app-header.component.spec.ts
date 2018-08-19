@@ -1,7 +1,7 @@
 import {ComponentFixture, ComponentFixtureAutoDetect, TestBed} from "@angular/core/testing";
 import {AppHeaderComponent} from "./app-header";
-import {IonicModule} from "ionic-angular";
 import {TranslateModule} from "@ngx-translate/core";
+import {IonicModule} from "@ionic/angular";
 
 describe('AppHeaderComponent', () => {
   let fixture: ComponentFixture<AppHeaderComponent>;

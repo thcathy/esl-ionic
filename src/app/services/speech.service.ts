@@ -1,7 +1,5 @@
 import {Injectable} from '@angular/core';
 
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
 import {AppService} from "./app.service";
 import {TextToSpeech} from "@ionic-native/text-to-speech";
 

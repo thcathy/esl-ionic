@@ -1,7 +1,7 @@
 import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {Dictation} from "../../entity/dictation";
-import {NavigationService} from "../../providers/navigation.service";
-import {DisplayService} from "../../providers/display.service";
+import {NavigationService} from "../../services/navigation.service";
+import {DisplayService} from "../../services/display.service";
 
 @Component({
   selector: 'dictation-list',

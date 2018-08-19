@@ -15,7 +15,7 @@
           <ion-col><fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon> {{ dictation.totalAttempt }}</ion-col>
           <ion-col><fa-icon [icon]="['far', 'thumbs-up']"></fa-icon> {{dictation.totalRecommended}}</ion-col>
         </ion-row>
-        <button ion-button outline item-end (click)="navService.pushOpenDictation(dictation)">{{ 'ViewDictation' | translate }}</button>
+        <ion-button fill="outline" slot="end" (click)="navService.pushOpenDictation(dictation)">{{ 'ViewDictation' | translate }}</ion-button>
       </ion-item>
     </ion-list>
   </ion-card-content>

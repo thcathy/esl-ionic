@@ -1,10 +1,9 @@
 import { Component, Input } from '@angular/core';
 import {DictationStatistics} from "../../entity/dictation-statistics";
 import {Dictation} from "../../entity/dictation";
-import {NavController} from "ionic-angular";
-import {DictationViewPage} from "../../pages/dictation-view/dictation-view";
-import {NavigationService} from "../../providers/navigation.service";
-import {DisplayService} from "../../providers/display.service";
+import {NavigationService} from "../../services/navigation.service";
+import {DisplayService} from "../../services/display.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'dictation-statistics',
@@ -14,16 +13,13 @@ export class DictationStatisticsComponent {
   @Input() stat: DictationStatistics;
 
   constructor(
-    public navCtrl: NavController,
+    public router: Router,
     public navService: NavigationService,
     public displayService: DisplayService,
     ) {
   }
 
   openDictation(dictation: Dictation) {
-    this.navCtrl.setRoot(DictationViewPage, {
-      'dictation': dictation,
-      'dictationId': dictation.id
-    });
+    this.navService.pushOpenDictation(dictation);
   }
 }

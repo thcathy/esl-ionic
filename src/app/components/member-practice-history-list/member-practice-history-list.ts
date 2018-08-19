@@ -1,10 +1,9 @@
 import {Component, Input} from '@angular/core';
-import {NavigationService} from "../../providers/navigation.service";
 import {PracticeHistory} from "../../entity/practice-models";
 import {ValidationUtils} from "../../utils/validation-utils";
-import {NavController} from "ionic-angular";
-import {DictationService} from "../../providers/dictation/dictation.service";
-import {PracticeCompletePage} from "../../pages/practice-complete/practice-complete";
+import {NavigationService} from "../../services/navigation.service";
+import {DictationService} from "../../services/dictation/dictation.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'member-practice-history-list',
@@ -14,8 +13,8 @@ export class MemberPracticeHistoryListComponent {
   @Input() histories: PracticeHistory[];
 
   constructor(
+    public router: Router,
     public navService: NavigationService,
-    public navCtrl: NavController,
     public dictationService: DictationService,
   ) {}
 
@@ -29,18 +28,20 @@ export class MemberPracticeHistoryListComponent {
   openHistory(history: PracticeHistory) {
     const historyObj = JSON.parse(history.historyJSON);
     if (this.dictationService.isSentenceDictation(historyObj['dictation'])) {
-      this.navCtrl.push('ArticleDictationCompletePage', {
-        'dictation': historyObj['dictation'],
-        'histories': historyObj['histories'],
-        'historyStored': true
-      });
+      this.router.navigate(['/article-dictation-complete'], {
+        queryParams: {
+          dictation: historyObj['dictation'],
+          histories: historyObj['histories'],
+          historyStored: true,
+        }});
     } else {
-      this.navCtrl.push(PracticeCompletePage, {
-        'dictation': historyObj['dictation'],
-        'histories': historyObj['histories'],
-        'mark': historyObj['mark'],
-        'historyStored': true
-      });
+      this.router.navigate(['/practice-complete-page'], {
+        queryParams: {
+          dictation: historyObj['dictation'],
+          histories: historyObj['histories'],
+          mark: historyObj['mark'],
+          historyStored: true,
+        }});
     }
 
   }

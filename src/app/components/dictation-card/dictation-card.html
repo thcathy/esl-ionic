@@ -5,7 +5,7 @@
   <ion-card-content style="font-size: 1.6rem">
     <ion-grid>
       <ion-row>
-        <ion-col col-12 col-sm-12 col-md-12 col-lg-6>
+        <ion-col size="12" size-sm="12" size-md="12" size-lg="6">
           <table width="95%">
             <tr>
               <td width="125" class="table-heading">{{ 'ID' | translate }}</td>
@@ -45,11 +45,11 @@
             </tr>
           </table>
         </ion-col>
-        <ion-col col-12 col-sm-12 col-md-12 col-lg-6 *ngIf="showContent && !dictationService.isSentenceDictation(dictation)">
+        <ion-col size="12" size-sm="12" size-md="12" size-lg="6" *ngIf="showContent && !dictationService.isSentenceDictation(dictation)">
           <div style="padding-bottom: 4px;" class="table-heading">{{'Vocabulary'|translate}} ({{dictation.vocabs.length}}):</div>
           <span *ngFor="let vocab of dictation.vocabs"><ion-badge style="background-color: #4CAF50; margin-right: 4px;">{{ vocab.word }}</ion-badge></span>
         </ion-col>
-        <ion-col col-12 col-sm-12 col-md-12 col-lg-6 *ngIf="showContent && dictationService.isSentenceDictation(dictation)">
+        <ion-col size="12" size-sm="12" size-md="12" size-lg="6" *ngIf="showContent && dictationService.isSentenceDictation(dictation)">
           <div style="padding-bottom: 4px;" class="table-heading">{{'Article'|translate}}:</div>
           <p>{{dictation.article}}</p>
         </ion-col>
@@ -57,14 +57,14 @@
     </ion-grid>
     <ion-row>
       <ion-col>
-        <button *ngIf="start" ion-button (click)="navService.startDictation(dictation)"><fa-icon [icon]="['fas', 'play']"></fa-icon>&nbsp;{{'Start'|translate}}</button>
-        <button *ngIf="retry" ion-button (click)="navService.startDictation(dictation)"><fa-icon [icon]="['fas', 'redo']"></fa-icon>&nbsp;{{'Retry'|translate}}</button>
+        <ion-button *ngIf="start" (click)="navService.startDictation(dictation)"><fa-icon [icon]="['fas', 'play']"></fa-icon>&nbsp;{{'Start'|translate}}</ion-button>
+        <ion-button *ngIf="retry" (click)="navService.startDictation(dictation)"><fa-icon [icon]="['fas', 'redo']"></fa-icon>&nbsp;{{'Retry'|translate}}</ion-button>
       </ion-col>
     </ion-row>
     <ion-row>
       <ion-col>
-        <button *ngIf="edit" color="secondary" ion-button (click)="navService.editDictation(dictation)"><fa-icon [icon]="['fas', 'edit']"></fa-icon>&nbsp;{{'Edit'|translate}}</button>
-        <button *ngIf="edit" color="danger" ion-button (click)="checkDeleteDictation()"><fa-icon [icon]="['fas', 'trash']"></fa-icon>&nbsp;{{'Delete'|translate}}</button>
+        <ion-button *ngIf="edit" color="secondary" (click)="navService.editDictation(dictation)"><fa-icon [icon]="['fas', 'edit']"></fa-icon>&nbsp;{{'Edit'|translate}}</ion-button>
+        <ion-button *ngIf="edit" color="danger" (click)="confirmDeleteDictation()"><fa-icon [icon]="['fas', 'trash']"></fa-icon>&nbsp;{{'Delete'|translate}}</ion-button>
       </ion-col>
     </ion-row>
   </ion-card-content>

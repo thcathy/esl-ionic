@@ -1,14 +1,10 @@
 <ion-card *ngIf="images" class="card">
   <ion-row *ngIf="images?.length > 1">
     <ion-col>
-      <button ion-button clear small (click)="previousImage()" class="button">
-        <fa-icon [icon]="['fas', 'angle-left']"></fa-icon>
-      </button>
+      <ion-button fill="clear" size="small" (click)="previousImage()" class="button"><fa-icon [icon]="['fas', 'angle-left']"></fa-icon></ion-button>
     </ion-col>
     <ion-col>
-      <button ion-button float-right clear small (click)="nextImage()" class="button">
-        <fa-icon [icon]="['fas', 'angle-right']"></fa-icon>
-      </button>
+      <ion-button fill="clear" float-right size="small" (click)="nextImage()" class="button"><fa-icon [icon]="['fas', 'angle-right']"></fa-icon></ion-button>
     </ion-col>
   </ion-row>
   <img [src]="images[index] | safeHtml" class="image" />

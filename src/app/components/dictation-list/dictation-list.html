@@ -24,14 +24,16 @@
     </ion-list>
     <ion-row>
       <ion-col>
-        <button ion-button clear (click)="newer()" *ngIf="page > 0"><fa-icon [icon]="['fas', 'angle-left']"></fa-icon> {{ 'Newer' | translate }}</button>
+        <ion-button fill="clear" *ngIf="page > 0" color="secondary" (click)="newer()"><fa-icon [icon]="['fas', 'angle-left']"></fa-icon> {{ 'Newer' | translate }}</ion-button>
       </ion-col>
       <ion-col text-right>
-        <button ion-button clear (click)="older()" *ngIf="showOlder">{{ 'Older' | translate }} <fa-icon [icon]="['fas', 'angle-right']"></fa-icon></button>
+        <ion-button fill="clear" *ngIf="showOlder" color="secondary" (click)="older()">{{ 'Older' | translate }} <fa-icon [icon]="['fas', 'angle-right']"></fa-icon></ion-button>
       </ion-col>
     </ion-row>
     <ion-row style="border-top: .55px solid #c8c7cc;">
-      <ion-col text-right><button ion-button clear (click)="navService.editDictation()" *ngIf="showCreateButton"><fa-icon [icon]="['fas', 'edit']"></fa-icon> {{ 'Create Dictation' | translate }}</button></ion-col>
+      <ion-col text-right>
+        <ion-button fill="clear" *ngIf="showCreateButton" (click)="navService.editDictation()"><fa-icon [icon]="['fas', 'edit']"></fa-icon> {{ 'Create Dictation' | translate }}</ion-button>
+      </ion-col>
     </ion-row>
   </ion-card-content>
 </ion-card>

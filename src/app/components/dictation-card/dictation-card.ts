@@ -1,12 +1,12 @@
 import {Component, Input} from '@angular/core';
 import {Dictation} from "../../entity/dictation";
-import {AlertController, NavController, ToastController} from "ionic-angular";
-import {NavigationService} from "../../providers/navigation.service";
 import {animate, state, style, transition, trigger} from "@angular/animations";
-import {DictationService} from "../../providers/dictation/dictation.service";
 import {TranslateService} from "@ngx-translate/core";
-import {MemberDictationService} from "../../providers/dictation/member-dictation.service";
-import {MemberHomePage} from "../../pages/member-home/member-home";
+import {AlertController, ToastController} from "@ionic/angular";
+import {NavigationService} from "../../services/navigation.service";
+import {DictationService} from "../../services/dictation/dictation.service";
+import {MemberDictationService} from "../../services/dictation/member-dictation.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'dictation-card',
@@ -34,13 +34,13 @@ export class DictationCardComponent {
   @Input() showContent: boolean = true;
   recommendState: string = 'normal';
 
-  constructor(public navCtrl: NavController,
+  constructor(public router: Router,
               public navService: NavigationService,
               public dictationService: DictationService,
               public memberDictationService: MemberDictationService,
               public translate: TranslateService,
-              public alertCtrl: AlertController,
-              public toastCtrl: ToastController,)
+              public alertController: AlertController,
+              public toastController: ToastController,)
   {}
 
   highlightRecommend() {
@@ -51,9 +51,9 @@ export class DictationCardComponent {
     this.recommendState = 'normal';
   }
 
-  checkDeleteDictation() {
-    let alert = this.alertCtrl.create({
-      title: `${this.translate.instant('Confirm')}!`,
+  async confirmDeleteDictation() {
+    const alert = await this.alertController.create({
+      header: `${this.translate.instant('Confirm')}!`,
       message: `${this.translate.instant('Delete this dictation')}?`,
       buttons: [
         {
@@ -64,17 +64,14 @@ export class DictationCardComponent {
           text: this.translate.instant('OK'),
           handler: this.deleteDictation
         }
-        ]
+      ]
     });
-    alert.present();
+
+    await alert.present();
   }
 
   openSearchByIdPopup() {
-    let alert = this.alertCtrl.create({
-      title: `${this.translate.instant('You can use the ID number to search this dictation')}`,
-      buttons: [this.translate.instant('OK')]
-    });
-    alert.present();
+    this.presentAlert(`${this.translate.instant('You can use the ID number to search this dictation')}`, null);
   }
 
   deleteDictation = () => {
@@ -84,22 +81,30 @@ export class DictationCardComponent {
 
   afterDelete = (d) => {
     console.info(`deleted dictation id: ${d.id}`);
-    let toast = this.toastCtrl.create({
-      message: this.translate.instant('DeletedDictation', {title: d.title}),
+    this.presentToast(this.translate.instant('DeletedDictation', {title: d.title}));
+    this.router.navigate(['/member-home']);
+  }
+
+  async presentToast(message: string) {
+    const toast = await this.toastController.create({
+      message: message,
       duration: 3000,
       position: 'top'
     });
     toast.present();
-    this.navCtrl.setRoot(MemberHomePage);
   }
 
   failDelete = (err) => {
     console.warn(`Cannot delete dictation: ${err}`);
-    let alert = this.alertCtrl.create({
-      title: `${this.translate.instant('Error')}!`,
-      message: this.translate.instant('Fail to delete dictation'),
+    this.presentAlert(`${this.translate.instant('Error')}!`, this.translate.instant('Fail to delete dictation'));
+  }
+
+  async presentAlert(header: string, message: string) {
+    const alert = await this.alertController.create({
+      header: header,
+      message: message,
       buttons: [this.translate.instant('OK')]
     });
-    alert.present();
+    await alert.present();
   }
 }
