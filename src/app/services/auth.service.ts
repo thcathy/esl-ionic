@@ -42,9 +42,7 @@ export class AuthService {
 
   auth0Cordova = new auth0.WebAuth(auth0CordovaConfig);
 
-
-  constructor(protected app: App,
-              public zone: NgZone,
+  constructor(public zone: NgZone,
               protected appService: AppService,
               public storage: Storage,
               public translate: TranslateService,

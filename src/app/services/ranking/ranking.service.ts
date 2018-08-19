@@ -2,8 +2,6 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Service} from "../root.service";
 
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
 import {MemberScoreRanking} from "../../entity/member-score-ranking";
 import {MemberScore} from "../../entity/member-score";
 import {environment} from "../../../environments/environment";

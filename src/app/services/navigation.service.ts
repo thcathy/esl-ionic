@@ -2,7 +2,6 @@ import {Injectable} from '@angular/core';
 
 import {Dictation} from "../entity/dictation";
 import {DictationService} from "./dictation/dictation.service";
-import {App} from "@ionic/angular";
 import {Router} from "@angular/router";
 
 
@@ -14,8 +13,7 @@ export interface NavigationRequest {
 @Injectable({ providedIn: 'root' })
 export class NavigationService {
 
-  constructor(public app: App,
-              private router: Router,
+  constructor(private router: Router,
               public dictationService: DictationService)
   {}
 

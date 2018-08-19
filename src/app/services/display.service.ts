@@ -5,13 +5,11 @@ import {Dictation} from "../entity/dictation";
 import {DictationService} from "./dictation/dictation.service";
 import {TranslateService} from "@ngx-translate/core";
 import {ArticleDictationService} from "./dictation/article-dictation.service";
-import {App} from "@ionic/angular";
 
 @Injectable({ providedIn: 'root' })
 export class DisplayService {
 
-  constructor(public app: App,
-              public dictationService: DictationService,
+  constructor(public dictationService: DictationService,
               public articleDictationService: ArticleDictationService,
               public translate: TranslateService) {
   }

@@ -1,12 +1,71 @@
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
     <ion-title>
-      Ionic Blank
+      <img src="assets/img/logo_new.png" class="navbar-logo" />
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content padding>
-  The world is your oyster.
-  <p>If you get lost, the <a target="_blank" href="https://ionicframework.com/docs">docs</a> will be your guide.</p>
+<ion-content>
+  <div style="padding: 16px;">
+    <ion-card class="header">
+      <ion-card-header>
+        <fa-icon [icon]="['fas', 'leaf']"></fa-icon> FunFunSpell
+      </ion-card-header>
+      <ion-card-content>{{ 'Online Dictation' | translate }}</ion-card-content>
+      <ion-grid>
+        <ion-row>
+          <ion-col col-6 col-sm-6 col-md-4 col-lg-3>
+            <ion-card class="card-button">
+              <ion-card-content>
+                <div><fa-icon [icon]="['fas', 'rocket']" size="4x"></fa-icon></div>
+                <div>{{ 'Input and Start' | translate }}</div>
+                <div><button ion-button outline (click)="openInstantDictation()">{{ 'Menu_Quick' | translate }}</button></div>
+
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+          <ion-col col-6 col-sm-6 col-md-4 col-lg-3 class="hidden-md-down">
+            <ion-card class="card-button">
+              <ion-card-content>
+                <div><fa-icon [icon]="['fas', 'headphones']" size="4x"></fa-icon></div>
+                <div>{{ 'Create and Save' | translate }}</div>
+                <div><button ion-button outline (click)="openCreateDictationPage()">{{ 'Menu_Create' | translate }}</button></div>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+          <ion-col col-6 col-sm-6 col-md-4 col-lg-3>
+            <ion-card class="card-button">
+              <ion-card-content>
+                <div><fa-icon [icon]="['fas', 'search']" size="4x"></fa-icon></div>
+                <div>{{ 'Find & Start' | translate }}</div>
+                <div><button ion-button outline (click)="openSearchDictationPage()">{{ 'Search' | translate }}</button></div>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card>
+
+    <member-score-ranking [ranking]="memberScoreRanking"></member-score-ranking>
+
+    <dictation-statistics [stat]="dictationStat"></dictation-statistics>
+
+    <ion-button class="ffsButton" (click)="appService.openFunFunSpell()"><fa-icon [icon]="['fas', 'external-link-alt']"></fa-icon>&nbsp;{{'More Exercises at'|translate}} funfunspell.com</ion-button>
+
+    <!--<div padding-top>
+      <a href="https://itunes.apple.com/app/apple-store/id1289059131?mt=8" style=" text-decoration: none;">
+        <img class="appImage" src="https://linkmaker.itunes.apple.com/assets/shared/badges/en-us/appstore-lrg.svg"/>
+      </a>
+      <a
+        href="https://play.google.com/store/apps/details?id=com.funfunspell&amp;pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1">
+        <img class="appImage" src="assets/img/en_badge_web_generic.png"/>
+      </a>
+    </div>-->
+  </div>
+
+  <footer></footer>
 </ion-content>
