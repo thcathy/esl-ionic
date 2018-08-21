@@ -7,14 +7,16 @@
     <ion-list>
       <ion-item *ngFor="let score of ranking.scores; let i = index">
         <ion-badge item-start style="background-color: #4CAF50;">{{ ranking.firstPosition + i }}</ion-badge>
-        <span *ngIf="ranking.firstPosition + i <= 3">
-          <fa-icon [icon]="['fas', 'trophy']"
-                   [class.gold]="ranking.firstPosition + i == 1"
-                   [class.silver]="ranking.firstPosition + i == 2"
-                   [class.bronze]="ranking.firstPosition + i == 3"
-          ></fa-icon>
-          </span>
-        {{ displayName(score.member) }}
+        <ion-label>
+          <span *ngIf="ranking.firstPosition + i <= 3">
+            <fa-icon [icon]="['fas', 'trophy']"
+                     [class.gold]="ranking.firstPosition + i == 1"
+                     [class.silver]="ranking.firstPosition + i == 2"
+                     [class.bronze]="ranking.firstPosition + i == 3"
+            ></fa-icon>
+            </span>
+          {{ displayName(score.member) }}
+        </ion-label>
         <span float-right><fa-icon [icon]="['fas', 'star']" style="color: gold"></fa-icon> {{score.score}}</span>
       </ion-item>
     </ion-list>

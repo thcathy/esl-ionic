@@ -10,8 +10,8 @@
     </ion-header>
 
     <ion-content>
-      <ion-menu-toggle auto-hide="false">
         <ion-list>
+          <ion-menu-toggle auto-hide="false">
           <ion-item-divider><ion-label>Fun Fun Spell</ion-label></ion-item-divider>
           <button ion-item menuClose *ngFor="let p of appPages" (click)="openPage(p)" [style.color]="isActive(p)">
             <i [ngClass]="p.iconClass" item-start></i> {{p.title | translate}}
@@ -41,11 +41,11 @@
 
           <button ion-item menuClose (click)="openContactUs()"><fa-icon [icon]="['fas', 'external-link-alt']" item-start></fa-icon>{{'Contact Us'|translate}}</button>
           <button ion-item menuClose (click)="appService.openFunFunSpell()"><fa-icon [icon]="['fas', 'external-link-alt']" item-start></fa-icon>{{'More Exercises at'|translate}}<br/>funfunspell.com</button>
+          </ion-menu-toggle>
         </ion-list>
-      </ion-menu-toggle>
     </ion-content>
 
   </ion-menu>
 
-  <ion-router-outlet></ion-router-outlet>
+  <ion-router-outlet main></ion-router-outlet>
 </ion-app>
