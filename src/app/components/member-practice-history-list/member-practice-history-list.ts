@@ -7,7 +7,8 @@ import {Router} from "@angular/router";
 
 @Component({
   selector: 'member-practice-history-list',
-  templateUrl: 'member-practice-history-list.html'
+  templateUrl: 'member-practice-history-list.html',
+  styleUrls: ['member-practice-history-list.scss'],
 })
 export class MemberPracticeHistoryListComponent {
   @Input() histories: PracticeHistory[];

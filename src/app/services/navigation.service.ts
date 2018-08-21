@@ -64,4 +64,8 @@ export class NavigationService {
         dictation: dictation
       }});
   }
+
+  openAccountPage() {
+    this.router.navigate(['/account-page']);
+  }
 }

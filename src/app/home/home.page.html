@@ -27,12 +27,12 @@
               </ion-card-content>
             </ion-card>
           </ion-col>
-          <ion-col size="6" size-sm="6" size-md="4" size-lg="3" class="hidden-md-down">
+          <ion-col size="6" size-sm="6" size-md="4" size-lg="3" class="hidden-sm-down">
             <ion-card class="card-button">
               <ion-card-content>
                 <div><fa-icon [icon]="['fas', 'headphones']" size="4x"></fa-icon></div>
                 <div>{{ 'Create and Save' | translate }}</div>
-                <div><ion-button fill="outline" (click)="openCreateDictationPage()">{{ 'Menu_Create' | translate }}</ion-button></div>
+                <div><ion-button fill="outline" color="light" (click)="openCreateDictationPage()">{{ 'Menu_Create' | translate }}</ion-button></div>
               </ion-card-content>
             </ion-card>
           </ion-col>
@@ -41,7 +41,7 @@
               <ion-card-content>
                 <div><fa-icon [icon]="['fas', 'search']" size="4x"></fa-icon></div>
                 <div>{{ 'Find & Start' | translate }}</div>
-                <div><ion-button fill="outline" (click)="openSearchDictationPage()">{{ 'Search' | translate }}</ion-button></div>
+                <div><ion-button fill="outline" color="light" (click)="openSearchDictationPage()">{{ 'Search' | translate }}</ion-button></div>
               </ion-card-content>
             </ion-card>
           </ion-col>

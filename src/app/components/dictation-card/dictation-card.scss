@@ -1,6 +1,6 @@
 dictation-card {
   .info-button {
-    color: color($colors, primary);
+    color: var(--ion-color-primary);
     padding-left: 8px;
   }
 

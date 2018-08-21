@@ -3,7 +3,8 @@ import {MemberScore} from "../../entity/member-score";
 
 @Component({
   selector: 'member-score-list',
-  templateUrl: 'member-score-list.html'
+  templateUrl: 'member-score-list.html',
+  styleUrls: ['member-score-list.scss'],
 })
 export class MemberScoreListComponent {
   @Input() allTimesScore: MemberScore;

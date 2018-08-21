@@ -5,7 +5,8 @@ import {DisplayService} from "../../services/display.service";
 
 @Component({
   selector: 'dictation-list',
-  templateUrl: 'dictation-list.html'
+  templateUrl: 'dictation-list.html',
+  styleUrls: ['dictation-list.scss'],
 })
 export class DictationListComponent implements OnChanges {
   private dictationPerPage: number = 5;

@@ -6,8 +6,10 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 import {NavigationEnd, Router} from "@angular/router";
 import {AuthService} from "./services/auth.service";
 import {TranslateService} from "@ngx-translate/core";
+import { Storage } from '@ionic/storage';
 
 import Auth0Cordova from '@auth0/cordova';
+import {NavigationService} from "./services/navigation.service";
 
 @Component({
   selector: 'app-root',
@@ -18,13 +20,14 @@ export class AppComponent {
   languageKey = 'language';
 
   constructor(
-    private platform: Platform,
-    private splashScreen: SplashScreen,
-    private statusBar: StatusBar,
-    private router: Router,
-    private authService: AuthService,
-    private translate: TranslateService,
-    private storage: Storage,
+    public platform: Platform,
+    public splashScreen: SplashScreen,
+    public statusBar: StatusBar,
+    public router: Router,
+    public authService: AuthService,
+    public translate: TranslateService,
+    public navigationService: NavigationService,
+    public storage: Storage,
   ) {
     this.authService.handleAuthentication();
     this.initializeApp();

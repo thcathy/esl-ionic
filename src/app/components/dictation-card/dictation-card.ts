@@ -11,6 +11,7 @@ import {Router} from "@angular/router";
 @Component({
   selector: 'dictation-card',
   templateUrl: 'dictation-card.html',
+  styleUrls: ['dictation-card.scss'],
   animations: [
     trigger('recommend', [
       state('highlight', style({backgroundColor: 'transparent'})),

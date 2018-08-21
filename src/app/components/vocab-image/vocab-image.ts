@@ -2,7 +2,8 @@ import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 
 @Component({
   selector: 'vocab-image',
-  templateUrl: 'vocab-image.html'
+  templateUrl: 'vocab-image.html',
+  styleUrls: ['vocab-image.scss'],
 })
 export class VocabImageComponent implements OnChanges {
   @Input() images: String[];

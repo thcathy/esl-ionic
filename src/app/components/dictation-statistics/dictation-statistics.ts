@@ -7,7 +7,8 @@ import {Router} from "@angular/router";
 
 @Component({
   selector: 'dictation-statistics',
-  templateUrl: 'dictation-statistics.html'
+  templateUrl: 'dictation-statistics.html',
+  styleUrls: ['dictation-statistics.scss'],
 })
 export class DictationStatisticsComponent {
   @Input() stat: DictationStatistics;

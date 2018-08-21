@@ -4,7 +4,8 @@ import {SpeechService} from "../../services/speech.service";
 
 @Component({
   selector: 'sentence-histories',
-  templateUrl: 'sentence-histories.html'
+  templateUrl: 'sentence-histories.html',
+  styleUrls: ['sentence-histories.scss'],
 })
 export class SentenceHistoriesComponent {
   @Input() histories: SentenceHistory[];

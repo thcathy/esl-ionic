@@ -5,6 +5,7 @@ import {VocabPracticeHistory} from "../../entity/vocab-practice-history";
 @Component({
   selector: 'score',
   templateUrl: 'score.html',
+  styleUrls: ['score.scss'],
   animations: [
     trigger('change', [
       state('highlight', style({backgroundColor: 'transparent'})),

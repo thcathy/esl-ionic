@@ -11,6 +11,7 @@ import {VocabPracticeHistory} from "../../entity/vocab-practice-history";
 @Component({
   selector: 'practice-history-list',
   templateUrl: 'practice-history-list.html',
+  styleUrls: ['practice-history-list.scss'],
   animations: [
     trigger('flyIn', [
       state('in', style({backgroundColor: '#ffffff'})),
