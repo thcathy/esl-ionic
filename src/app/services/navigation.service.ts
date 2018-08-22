@@ -4,7 +4,6 @@ import {Dictation} from "../entity/dictation";
 import {DictationService} from "./dictation/dictation.service";
 import {Router} from "@angular/router";
 
-
 export interface NavigationRequest {
   destination: any;
   params: any;
@@ -16,6 +15,16 @@ export class NavigationService {
   constructor(private router: Router,
               public dictationService: DictationService)
   {}
+
+  openHomePage() { this.navigate('/home') }
+  openAccountPage() { this.navigate('/account-page') }
+  openInstantDictation() { this.navigate('instant-dictation') }
+  openSearchDictation() { this.navigate('/search-dictation') }
+  openMemberHome() { this.navigate('/member-home') }
+
+  navigate(path: string) {
+    this.router.navigate([path]);
+  }
 
   goTo(request: NavigationRequest) {
     this.router.navigate([request.destination], { queryParams: request.params });
@@ -35,7 +44,7 @@ export class NavigationService {
 
   retryDictation(dictation: Dictation) {
     if (this.dictationService.isInstantDictation(dictation))
-      this.router.navigate(['/instant-dictation']);
+      this.openInstantDictation();
     else
       this.startDictation(dictation);
   }
@@ -58,14 +67,14 @@ export class NavigationService {
       }});
   }
 
-  editDictation(dictation: Dictation) {
+  editDictation(dictation: Dictation = null) {
     this.router.navigate(['/edit-dictation'], {
       queryParams: {
         dictation: dictation
       }});
   }
 
-  openAccountPage() {
-    this.router.navigate(['/account-page']);
+  openFunFunSpell() {
+    window.open('https://www.funfunspell.com/', '_system');
   }
 }

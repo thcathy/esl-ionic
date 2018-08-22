@@ -9,6 +9,7 @@ import {AlertController} from "@ionic/angular";
 import {TranslateService} from "@ngx-translate/core";
 import {Router} from "@angular/router";
 import {InAppBrowser} from "@ionic-native/in-app-browser";
+import {NavigationService} from "../services/navigation.service";
 
 declare var iab: InAppBrowser;
 
@@ -28,6 +29,7 @@ export class HomePage implements OnInit {
               public serverService: ServerService,
               public alertController: AlertController,
               public translate: TranslateService,
+              public navigationService: NavigationService,
   ) {
   }
 
@@ -49,22 +51,5 @@ export class HomePage implements OnInit {
       buttons: [this.translate.instant('OK')]
     });
     alert.present();
-  }
-
-  openInstantDictation() {
-    this.router.navigate(['/instant-dictation']);
-  }
-
-  goFFSdotcom() {
-    const browser = iab.create('https://www.funfunspell.com/', '_system');
-    browser.show();
-  }
-
-  openCreateDictationPage() {
-    this.router.navigate(['/edit-dictation']);
-  }
-
-  openSearchDictationPage() {
-    this.router.navigate(['/search-dictation']);
   }
 }

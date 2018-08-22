@@ -5,7 +5,6 @@ import {TranslateModule} from "@ngx-translate/core";
 import { VocabImageComponent } from './vocab-image/vocab-image';
 import { PracticeHistoryListComponent } from './practice-history-list/practice-history-list';
 import { ScoreComponent } from './score/score';
-import { AppHeaderComponent } from './app-header/app-header';
 import { DictationCardComponent } from './dictation-card/dictation-card';
 import { FooterComponent } from './footer/footer';
 import { DictationListComponent } from './dictation-list/dictation-list';
@@ -23,7 +22,6 @@ import {CommonModule} from "@angular/common";
     VocabImageComponent,
     PracticeHistoryListComponent,
     ScoreComponent,
-    AppHeaderComponent,
     DictationCardComponent,
     FooterComponent,
     DictationListComponent,
@@ -43,7 +41,6 @@ import {CommonModule} from "@angular/common";
     VocabImageComponent,
     PracticeHistoryListComponent,
     ScoreComponent,
-    AppHeaderComponent,
     DictationCardComponent,
     FooterComponent,
     DictationListComponent,

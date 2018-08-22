@@ -10,6 +10,7 @@ import { Storage } from '@ionic/storage';
 
 import Auth0Cordova from '@auth0/cordova';
 import {NavigationService} from "./services/navigation.service";
+import {AppService} from "./services/app.service";
 
 @Component({
   selector: 'app-root',
@@ -28,6 +29,7 @@ export class AppComponent {
     public translate: TranslateService,
     public navigationService: NavigationService,
     public storage: Storage,
+    public appService: AppService,
   ) {
     this.authService.handleAuthentication();
     this.initializeApp();

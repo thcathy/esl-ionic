@@ -23,7 +23,7 @@
               <ion-card-content>
                 <div><fa-icon [icon]="['fas', 'rocket']" size="4x"></fa-icon></div>
                 <div>{{ 'Input and Start' | translate }}</div>
-                <div><ion-button fill="outline" color="light" (click)="openInstantDictation()">{{ 'Menu_Quick' | translate }}</ion-button></div>
+                <div><ion-button fill="outline" color="light" (click)="navigationService.openInstantDictation()">{{ 'Menu_Quick' | translate }}</ion-button></div>
               </ion-card-content>
             </ion-card>
           </ion-col>
@@ -32,7 +32,7 @@
               <ion-card-content>
                 <div><fa-icon [icon]="['fas', 'headphones']" size="4x"></fa-icon></div>
                 <div>{{ 'Create and Save' | translate }}</div>
-                <div><ion-button fill="outline" color="light" (click)="openCreateDictationPage()">{{ 'Menu_Create' | translate }}</ion-button></div>
+                <div><ion-button fill="outline" color="light" (click)="navigationService.editDictation()">{{ 'Menu_Create' | translate }}</ion-button></div>
               </ion-card-content>
             </ion-card>
           </ion-col>
@@ -41,7 +41,7 @@
               <ion-card-content>
                 <div><fa-icon [icon]="['fas', 'search']" size="4x"></fa-icon></div>
                 <div>{{ 'Find & Start' | translate }}</div>
-                <div><ion-button fill="outline" color="light" (click)="openSearchDictationPage()">{{ 'Search' | translate }}</ion-button></div>
+                <div><ion-button fill="outline" color="light" (click)="navigationService.openSearchDictation()">{{ 'Search' | translate }}</ion-button></div>
               </ion-card-content>
             </ion-card>
           </ion-col>
@@ -53,7 +53,7 @@
 
     <dictation-statistics [stat]="dictationStat"></dictation-statistics>
 
-    <ion-button class="ffsButton" (click)="appService.openFunFunSpell()"><fa-icon [icon]="['fas', 'external-link-alt']"></fa-icon>&nbsp;{{'More Exercises at'|translate}} funfunspell.com</ion-button>
+    <ion-button class="ffsButton" (click)="navigationService.openFunFunSpell()"><fa-icon [icon]="['fas', 'external-link-alt']"></fa-icon>&nbsp;{{'More Exercises at'|translate}} funfunspell.com</ion-button>
 
     <!--<div padding-top>
       <a href="https://itunes.apple.com/app/apple-store/id1289059131?mt=8" style=" text-decoration: none;">

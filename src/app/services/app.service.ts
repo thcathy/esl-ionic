@@ -19,9 +19,4 @@ export class AppService {
   isIOS(): boolean {
     return this.platform.is('ios');
   }
-
-  openFunFunSpell() {
-    window.open('https://www.funfunspell.com/', '_system');
-  }
-
 }

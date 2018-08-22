@@ -1,5 +1,5 @@
 <ion-app>
-  <ion-menu>
+  <ion-menu class="menu">
     <ion-header>
       <ion-toolbar>
         <ion-title>
@@ -12,35 +12,51 @@
     <ion-content>
         <ion-list>
           <ion-menu-toggle auto-hide="false">
-          <ion-item-divider><ion-label>Fun Fun Spell</ion-label></ion-item-divider>
-          <button ion-item menuClose *ngFor="let p of appPages" (click)="openPage(p)" [style.color]="isActive(p)">
-            <i [ngClass]="p.iconClass" item-start></i> {{p.title | translate}}
-          </button>
-          <button ion-item menuClose *ngFor="let p of loggedInPages" (click)="openLoggedInPage(p)" [style.color]="isActive(p)">
-            <i [ngClass]="p.iconClass" item-start></i> {{p.title | translate}}
-          </button>
+            <ion-item-divider><ion-label>Fun Fun Spell</ion-label></ion-item-divider>
+            <ion-item (click)="navigationService.openHomePage()">
+              <ion-label><fa-icon [icon]="['fas', 'home']"></fa-icon>&nbsp; {{ 'Home' | translate }}</ion-label>
+            </ion-item>
+            <ion-item (click)="navigationService.openInstantDictation()">
+              <ion-label><fa-icon [icon]="['fas', 'rocket']"></fa-icon>&nbsp; {{ 'Quick Dictation' | translate }}</ion-label>
+            </ion-item>
+            <ion-item (click)="navigationService.openSearchDictation()">
+              <ion-label><fa-icon [icon]="['fas', 'search']"></fa-icon>&nbsp; {{ 'Search Dictation' | translate }}</ion-label>
+            </ion-item>
+            <ion-item *ngIf="authService.isAuthenticated()" (click)="navigationService.openMemberHome()">
+              <ion-label><fa-icon [icon]="['fas', 'list']"></fa-icon>&nbsp; {{ 'My Dictation' | translate }}</ion-label>
+            </ion-item>
+            <ion-item *ngIf="authService.isAuthenticated()" (click)="navigationService.editDictation()">
+              <ion-label><fa-icon [icon]="['fas', 'edit']"></fa-icon>&nbsp; {{ 'Create Dictation' | translate }}</ion-label>
+            </ion-item>
 
-          <ion-item-divider><ion-label>{{ 'Account' | translate }}</ion-label></ion-item-divider>
-          <ion-item *ngIf="!authService.isAuthenticated()" (click)="authService.login()">
-            <ion-label><fa-icon [icon]="['fas', 'sign-in-alt']" item-start></fa-icon> {{ 'Login' | translate }}</ion-label>
-          </ion-item>
-          <ion-item *ngIf="!authService.isAuthenticated()" (click)="authService.signUp()">
-            <fa-icon [icon]="['fas', 'user-plus']" item-start></fa-icon> {{ 'Sign Up' | translate }}
-          </ion-item>
-          <ion-item *ngIf="authService.isAuthenticated()" (click)="navigationService.openAccountPage()">
-            <fa-icon [icon]="['fas', 'user']" item-start></fa-icon> {{ 'My Account' | translate }}
-          </ion-item>
-          <ion-item *ngIf="authService.isAuthenticated()" (click)="authService.logout()">
-            <fa-icon [icon]="['fas', 'sign-out-alt']" item-start></fa-icon> {{ 'Logout' | translate }}
-          </ion-item>
+            <ion-item-divider><ion-label>{{ 'Account' | translate }}</ion-label></ion-item-divider>
+            <ion-item *ngIf="!authService.isAuthenticated()" (click)="authService.login()">
+              <ion-label><fa-icon [icon]="['fas', 'sign-in-alt']" item-start></fa-icon>&nbsp; {{ 'Login' | translate }}</ion-label>
+            </ion-item>
+            <ion-item *ngIf="!authService.isAuthenticated()" (click)="authService.signUp()">
+              <fa-icon [icon]="['fas', 'user-plus']" item-start></fa-icon>&nbsp; {{ 'Sign Up' | translate }}
+            </ion-item>
+            <ion-item *ngIf="authService.isAuthenticated()" (click)="navigationService.openAccountPage()">
+              <fa-icon [icon]="['fas', 'user']" item-start></fa-icon>&nbsp; {{ 'My Account' | translate }}
+            </ion-item>
+            <ion-item *ngIf="authService.isAuthenticated()" (click)="authService.logout()">
+              <fa-icon [icon]="['fas', 'sign-out-alt']" item-start></fa-icon>&nbsp; {{ 'Logout' | translate }}
+            </ion-item>
 
-          <ion-item-divider><ion-label>{{ 'Language' | translate }}</ion-label></ion-item-divider>
-          <ion-item (click)="changeLanguage('en')"><ion-label>Eng</ion-label></ion-item>
-          <ion-item (click)="changeLanguage('zh-Hant')"><ion-label>繁體</ion-label></ion-item>
-          <ion-item (click)="changeLanguage('zh-Hans')"><ion-label>简体</ion-label></ion-item>
+            <ion-item-divider><ion-label>{{ 'Language' | translate }}</ion-label></ion-item-divider>
+            <ion-item (click)="changeLanguage('en')"><ion-label>Eng</ion-label></ion-item>
+            <ion-item (click)="changeLanguage('zh-Hant')"><ion-label>繁體</ion-label></ion-item>
+            <ion-item (click)="changeLanguage('zh-Hans')"><ion-label>简体</ion-label></ion-item>
 
-          <button ion-item menuClose (click)="openContactUs()"><fa-icon [icon]="['fas', 'external-link-alt']" item-start></fa-icon>{{'Contact Us'|translate}}</button>
-          <button ion-item menuClose (click)="appService.openFunFunSpell()"><fa-icon [icon]="['fas', 'external-link-alt']" item-start></fa-icon>{{'More Exercises at'|translate}}<br/>funfunspell.com</button>
+            <ion-item-divider></ion-item-divider>
+            <ion-item (click)="openContactUs()">
+              <ion-label>{{'Contact Us'|translate}}</ion-label>
+              <fa-icon [icon]="['fas', 'external-link-alt']" float-end></fa-icon>
+            </ion-item>
+            <ion-item (click)="navigationService.openFunFunSpell()">
+              <ion-label>{{'More Exercises at'|translate}}<br/>funfunspell.com</ion-label>
+              <fa-icon [icon]="['fas', 'external-link-alt']" float-end></fa-icon>
+            </ion-item>
           </ion-menu-toggle>
         </ion-list>
     </ion-content>

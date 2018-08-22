@@ -157,6 +157,12 @@ ion-content {
   color: var(--ion-color-danger);
 }
 
+.menu {
+  ion-item {
+    cursor: pointer;
+  }
+}
+
 .input-form {
   .label {
     font-size: 1.4rem !important;
