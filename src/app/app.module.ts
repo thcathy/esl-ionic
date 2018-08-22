@@ -21,7 +21,6 @@ import {TranslateHttpLoader} from "@ngx-translate/http-loader";
 import {library} from "@fortawesome/fontawesome-svg-core";
 import { fas } from '@fortawesome/free-solid-svg-icons';
 import { far } from '@fortawesome/free-regular-svg-icons';
-import {InAppBrowser} from "@ionic-native/in-app-browser";
 import {NavigationService} from "./services/navigation.service";
 import {RankingService} from "./services/ranking/ranking.service";
 import {DictationService} from "./services/dictation/dictation.service";
@@ -34,7 +33,6 @@ import {DisplayService} from "./services/display.service";
 import {ServerService} from "./services/server.service";
 import {PracticeHistoryService} from "./services/dictation/practice-history.service";
 import {ArticleDictationService} from "./services/dictation/article-dictation.service";
-import {TextToSpeech} from "@ionic-native/text-to-speech";
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {

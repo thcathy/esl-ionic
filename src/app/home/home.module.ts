@@ -8,15 +8,11 @@ import {CommonModule} from "@angular/common";
 import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
 import {TranslateModule} from "@ngx-translate/core";
 import {ComponentsModule} from "../components/components.module";
+import {SharedModule} from "../shared.module";
 
 @NgModule({
   imports: [
-    FormsModule,
-    IonicModule,
-    CommonModule,
-    FontAwesomeModule,
-    TranslateModule,
-    ComponentsModule,
+    SharedModule,
     RouterModule.forChild([
       {
         path: '',
