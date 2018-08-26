@@ -33,6 +33,7 @@ export class InstantDictationPage implements OnInit {
 
   ngOnInit() {
     this.getFromLocalStorage();
+    this.createForm();
   }
 
   createForm() {

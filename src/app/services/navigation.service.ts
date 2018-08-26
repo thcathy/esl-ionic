@@ -3,6 +3,8 @@ import {Injectable} from '@angular/core';
 import {Dictation} from "../entity/dictation";
 import {DictationService} from "./dictation/dictation.service";
 import {Router} from "@angular/router";
+import {Storage} from "@ionic/storage";
+import {VocabPracticeHistory} from "../entity/vocab-practice-history";
 
 export interface NavigationRequest {
   destination: any;
@@ -11,9 +13,14 @@ export interface NavigationRequest {
 
 @Injectable({ providedIn: 'root' })
 export class NavigationService {
+  public static storageKeys = {
+    DictationPracticePage_dictation: 'DictationPracticePage.dictation',
+    DictationPracticePage_dictationId: 'DictationPracticePage.dictationId'
+  };
 
   constructor(private router: Router,
-              public dictationService: DictationService)
+              private storage: Storage,
+              private dictationService: DictationService)
   {}
 
   openHomePage() { this.navigate('/home') }
@@ -30,15 +37,12 @@ export class NavigationService {
     this.router.navigate([request.destination], { queryParams: request.params });
   }
 
-  startDictation(dictation: Dictation) {
+  async startDictation(dictation: Dictation) {
     if (this.dictationService.isSentenceDictation(dictation)) {
       this.router.navigate(['/article-dictation'], { queryParams: { dictation: dictation } });
     } else {
-      this.router.navigate(['/dictation-practice'], {
-        queryParams: {
-          dictation: dictation,
-          dictationId: dictation.id
-        }});
+      await this.storage.set(NavigationService.storageKeys.DictationPracticePage_dictation, dictation);
+      await this.router.navigate(['/dictation-practice']);
     }
   }
 
@@ -72,6 +76,10 @@ export class NavigationService {
       queryParams: {
         dictation: dictation
       }});
+  }
+
+  async practiceComplete(dictation: Dictation, mark: number, histories: VocabPracticeHistory[]) {
+    return await this.router.navigate(['/practice-complete']);
   }
 
   openFunFunSpell() {

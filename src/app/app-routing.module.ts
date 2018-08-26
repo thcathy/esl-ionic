@@ -5,6 +5,8 @@ const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'home', loadChildren: './home/home.module#HomePageModule' },
   { path: 'instant-dictation', loadChildren: './pages/instant-dictation/instant-dictation.module#InstantDictationPageModule' },
+  { path: 'dictation-practice', loadChildren: './pages/dictation-practice/dictation-practice.module#DictationPracticePageModule' },
+  { path: 'practice-complete', loadChildren: './pages/practice-complete/practice-complete.module#PracticeCompletePageModule' },
 ];
 
 @NgModule({

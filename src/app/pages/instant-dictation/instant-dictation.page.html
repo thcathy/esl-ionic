@@ -5,6 +5,75 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content padding>
+<ion-content>
+  <div style="padding: 16px;">
 
+    <ion-card class="card" style="background-color: white;">
+      <ion-segment color="primary" [(ngModel)]="type">
+        <ion-segment-button value="byword"><fa-icon [icon]="['fas', 'th']"></fa-icon>&nbsp;{{'By Word'|translate}}</ion-segment-button>
+        <ion-segment-button value="bysentence"><fa-icon [icon]="['fas', 'list']"></fa-icon>&nbsp;{{'By Sentence'|translate}}</ion-segment-button>
+      </ion-segment>
+
+      <ion-card-content>
+        <div [ngSwitch]="type">
+          <div *ngSwitchCase="'byword'">
+            <h3>{{'Input vocabulary'|translate}}:</h3>
+            <h4>{{'example'|translate}}: "apple", "bus stop", "ice-cream"</h4>
+
+            <form class="input-form" [formGroup]="byWordInputForm" novalidate (keydown.enter)="$event.preventDefault()">
+              <ion-grid formArrayName="vocabs">
+                <ion-row>
+                  <ion-col size="6" size-sm="6" size-md="4" size-lg="3"
+                           *ngFor="let vocab of vocabs.controls; let i = index;" [formGroupName]="i">
+                    <ion-item class="vocabInput">
+                      <ion-input id="vocab{{i}}" formControlName="word" maxlength="30" placeholder="{{i+1}}"
+                                 color="{{ vocab.invalid && (vocab.dirty || vocab.touched) ? 'danger' : 'primary' }}"
+                                 (keyup.enter) ="keytab($event, i)">
+                      </ion-input>
+                    </ion-item>
+                    <div class="error-text" *ngIf="vocab.invalid && (vocab.dirty || vocab.touched)">{{'Cannot contain invalid character(s)'|translate}}</div>
+                  </ion-col>
+                </ion-row>
+              </ion-grid>
+              <ion-item>
+                <ion-label><fa-icon [icon]="['far', 'images']"></fa-icon> {{'Show Image'|translate}}</ion-label>
+                <ion-toggle formControlName="showImage"></ion-toggle>
+              </ion-item>
+            </form>
+            <ion-row no-padding>
+              <ion-col>
+                <ion-button fill="outline" (click)="clearVocabs()"><fa-icon [icon]="['fas', 'times']"></fa-icon>&nbsp;{{'Clear inputs'|translate}}</ion-button>
+              </ion-col>
+              <ion-col text-right>
+                <ion-button (click)="startByWord()">
+                  <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>&nbsp;{{'Start'|translate}}
+                </ion-button>
+              </ion-col>
+            </ion-row>
+          </div>
+
+          <div *ngSwitchCase="'bysentence'">
+            <h3>{{'Input an passage'|translate}}:</h3>
+            <form class="articleInput" [formGroup]="bySentenceInputForm" novalidate>
+              <ion-item>
+                <ion-textarea class="textarea" formControlName="article" rows="10"></ion-textarea>
+              </ion-item>
+            </form>
+            <ion-row no-padding>
+              <ion-col>
+                <ion-button fill="outline" (click)="clearArticle()"><fa-icon [icon]="['fas', 'times']"></fa-icon>&nbsp;{{'Clear inputs'|translate}}</ion-button>
+              </ion-col>
+              <ion-col text-right>
+                <ion-button (click)="startBySentence()" [disabled]="bySentenceInputForm.invalid">
+                  <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>&nbsp;{{'Start'|translate}}
+                </ion-button>
+              </ion-col>
+            </ion-row>
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <footer></footer>
 </ion-content>

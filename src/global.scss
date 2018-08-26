@@ -103,6 +103,7 @@ ion-content {
 .card {
   margin: 0px;
   width: 100%;
+  background-color: #ffffff;
 
   ion-card-header {
     color: white;
@@ -164,20 +165,16 @@ ion-content {
 }
 
 .input-form {
-  .label {
-    font-size: 1.4rem !important;
-    color: #555555 !important;
-  }
 
   ion-label {
     margin: inherit;
+    color: var(--ion-color-dark) !important;
   }
 
-  ion-item {
-    margin-left: 16px;
-    padding-left: 0px;
-    padding-top: 8px;
+  ion-input {
+    color: var(--ion-color-dark) !important;
   }
+
 }
 
 .green {

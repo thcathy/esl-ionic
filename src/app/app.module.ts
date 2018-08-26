@@ -33,6 +33,7 @@ import {DisplayService} from "./services/display.service";
 import {ServerService} from "./services/server.service";
 import {PracticeHistoryService} from "./services/dictation/practice-history.service";
 import {ArticleDictationService} from "./services/dictation/article-dictation.service";
+import {IonicComponentService} from "./services/ionic-component.service";
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -69,7 +70,7 @@ library.add(fas, far);
     DisplayService,
     ServerService,
     ArticleDictationService,
-    PracticeHistoryService,
+    PracticeHistoryService, IonicComponentService,
   ],
   bootstrap: [AppComponent]
 })

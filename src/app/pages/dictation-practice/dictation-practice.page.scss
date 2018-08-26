@@ -1,0 +1,26 @@
+.phonicsBtn {
+  width: 150px;
+  background-color: #e91e63;
+  color: #ffffff;
+  border-radius: 25px;
+  --margin-top: 0px;
+  --margin-bottom: 0px;
+}
+
+.speakBtn {
+  width: 150px;
+  background-color: #69BB7B;
+  color: #ffffff;
+  border-radius: 25px;
+  --margin-top: 0px;
+  --margin-bottom: 0px;
+}
+
+.answerInput {
+  font-size: 1.4rem;
+
+  ion-input {
+    --padding-top: 0px;
+    --padding-bottom: 0px;
+  }
+}

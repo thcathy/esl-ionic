@@ -10,10 +10,6 @@ textarea.text-input {
   }
 }
 
-.label {
-  color: #007d6f !important;
-}
-
 .articleInput {
   ion-item {
     padding-left: 8px;
@@ -22,19 +18,23 @@ textarea.text-input {
   .textarea {
     border: 1px solid #dddddd;
     margin: 8px 0px 8px 0px;
-    font-size: 1.4rem;
+    font-size: 1.2rem;
   }
 
 }
 
+ion-button {
+  margin: 5px;
+}
+
 h3 {
-  font-size: 2rem !important;
+  font-size: 1.4rem !important;
   color: #007d6f !important;
   padding: 8px 8px 0px 8px;
 }
 
 h4 {
-  font-size: 1.8rem !important;
+  font-size: 1.2rem !important;
   color: #aaaaaa !important;
   padding: 0px 8px 0px 8px;
 }
