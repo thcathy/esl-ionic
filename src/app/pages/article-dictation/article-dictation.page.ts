@@ -3,6 +3,8 @@ import {Dictation} from "../../entity/dictation";
 import {SentenceHistory} from "../../entity/sentence-history";
 import {ArticleDictationService} from "../../services/dictation/article-dictation.service";
 import {SpeechService} from "../../services/speech.service";
+import {NavigationService} from "../../services/navigation.service";
+import {Storage} from "@ionic/storage";
 
 @Component({
   selector: 'app-article-dictation',
@@ -23,10 +25,16 @@ export class ArticleDictationPage implements OnInit {
   constructor(
     public articleDictationService: ArticleDictationService,
     public speechService: SpeechService,
+    public storage: Storage,
+    public navigationService: NavigationService,
   ) { }
 
   ngOnInit() {
-    this.dictation = navParams.get('dictation');
+    this.init();
+  }
+
+  async init() {
+    this.dictation = await this.storage.get(NavigationService.storageKeys.dictation);
     this.sentences = this.articleDictationService.divideToSentences(this.dictation.article);
     console.log(`divided into ${this.sentences.length} sentences`);
     this.speak();
@@ -56,17 +64,16 @@ export class ArticleDictationPage implements OnInit {
     this.answer = "";
 
     if (this.currentSentence >= this.sentences.length) {
-      this.navCtrl.setRoot(ArticleDictationCompletePage, {
-        'dictation': this.dictation,
-        'histories': this.histories.reverse()
-      });
+      this.navigationService.articleDictationComplete(this.dictation, this.histories.reverse());
     } else {
       this.speak();
     }
   }
 
   focusAnswer() {
-    if (this.answerInput) this.answerInput.setFocus();
+    if (this.answerInput) {
+      this.answerInput.nativeElement.shadowRoot.querySelector('input').focus();
+    }
   }
 
 }

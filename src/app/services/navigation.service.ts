@@ -5,6 +5,7 @@ import {DictationService} from "./dictation/dictation.service";
 import {Router} from "@angular/router";
 import {Storage} from "@ionic/storage";
 import {VocabPracticeHistory} from "../entity/vocab-practice-history";
+import {SentenceHistory} from "../entity/sentence-history";
 
 export interface NavigationRequest {
   destination: any;
@@ -92,5 +93,11 @@ export class NavigationService {
 
   openFunFunSpell() {
     window.open('https://www.funfunspell.com/', '_system');
+  }
+
+  async articleDictationComplete(dictation: Dictation, histories: SentenceHistory[]) {
+    await this.storage.set(NavigationService.storageKeys.dictation, dictation);
+    await this.storage.set(NavigationService.storageKeys.histories, histories);
+    return await this.router.navigate(['/article-dictation-complete']);
   }
 }
