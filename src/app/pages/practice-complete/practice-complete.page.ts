@@ -4,8 +4,10 @@ import {Dictation} from "../../entity/dictation";
 import {NavigationService} from "../../services/navigation.service";
 import {DictationService} from "../../services/dictation/dictation.service";
 import {TranslateService} from "@ngx-translate/core";
-import {LoadingController, ToastController} from "@ionic/angular";
+import {ToastController} from "@ionic/angular";
 import {IonicComponentService} from "../../services/ionic-component.service";
+import {Storage} from "@ionic/storage";
+import {ActivatedRoute} from "@angular/router";
 
 @Component({
   selector: 'app-practice-complete',
@@ -23,24 +25,30 @@ export class PracticeCompletePage implements OnInit {
   loader: any;
 
   constructor(
+    public route: ActivatedRoute,
     public navService: NavigationService,
     public dictationService: DictationService,
     public translate: TranslateService,
     public translateService: TranslateService,
     public toastController: ToastController,
     public ionicComponentService: IonicComponentService,
+    public storage: Storage,
   ) { }
 
   ngOnInit() {
-    this.getNavParams();
+    this.init();
+  }
+
+  async init() {
+    await this.getNavParams();
     this.createHistory();
   }
 
-  getNavParams() {
-    this.dictation = this.storage.get(NavigationService.storageKeys.DictationPracticePage_dictation);
-    this.mark = this.navParams.get('mark');
-    this.histories = this.navParams.get('histories');
-    this.historyStored = this.navParams.get('historyStored');
+  async getNavParams() {
+    this.dictation = await this.storage.get(NavigationService.storageKeys.dictation);
+    this.histories = await this.storage.get(NavigationService.storageKeys.histories);
+    this.mark = +this.route.snapshot.queryParamMap.get('mark');
+    this.historyStored = this.route.snapshot.queryParamMap.get('historyStored') === 'true';
   }
 
   createHistory() {
@@ -80,13 +88,13 @@ export class PracticeCompletePage implements OnInit {
   }
 
   openDictation(d: Dictation) {
-    if (this.loader) this.loader.dismissAll();
+    if (this.loader) this.loader.dismiss();
     this.navService.retryDictation(d);
   }
 
   async showCannotGetDictation(error) {
     console.warn(`Cannot get dictation: ${JSON.stringify(error)}`);
-    this.loader.dismissAll();
+    this.loader.dismiss();
     const toast = await this.toastController.create({
       message: this.translateService.instant('Dictation not found'),
       duration: 3000,

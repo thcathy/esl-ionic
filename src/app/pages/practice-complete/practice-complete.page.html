@@ -1,9 +1,31 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>practice-complete</ion-title>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start"><ion-menu-button></ion-menu-button></ion-buttons>
+    <ion-title>{{'Finished Practice' | translate}}</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content padding>
+<ion-content>
+  <div class="inner-content">
+    <ion-card class="card">
+      <ion-card-header style="font-size: 1.2rem;">{{ 'CompletePracticeHeader' | translate:{mark:mark, totalQuestion: histories.length} }}</ion-card-header>
+      <ion-row no-padding>
+        <ion-col>
+          <ion-button (click)="getDictationThenOpen()"><fa-icon [icon]="['fas', 'redo']"></fa-icon>&nbsp;{{'Retry'|translate}}</ion-button>
+        </ion-col>
+        <ion-col text-right>
+          <ion-button *ngIf="dictation.id > 0" slot="end" color="secondary" (click)="recommend()" [disabled]="recommended">
+            <fa-icon [icon]="['fas', 'thumbs-up']"></fa-icon>&nbsp;{{ recommendBtnText() }}
+          </ion-button>
+          <ion-button *ngIf="dictation.id <= 0" slot="end" color="secondary" (click)="navService.editDictation(dictation)">
+            <fa-icon [icon]="['fas', 'save']"></fa-icon>&nbsp;{{'Save'|translate}}
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-card>
 
+    <dictation-card #dictationCard [dictation]="dictation" [showContent]="false"></dictation-card>
+    <practice-history-list [histories]="histories" [mark]="mark" ></practice-history-list>
+  </div>
+  <footer></footer>
 </ion-content>

@@ -87,6 +87,10 @@
   color: white;
 }
 
+.inner-content {
+  padding: 16px;
+}
+
 .menu-content {
   ion-list {
     background-color: white;
@@ -138,11 +142,6 @@ ion-content {
 
 .bronze {
   color: #cd7f32;
-}
-
-.table-heading {
-  color: #60646B;
-  font-weight: bold;
 }
 
 .submitBtn {

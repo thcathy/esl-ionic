@@ -12,6 +12,8 @@ import Auth0Cordova from '@auth0/cordova';
 import {NavigationService} from "./services/navigation.service";
 import {AppService} from "./services/app.service";
 
+declare let ga: Function;
+
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html'

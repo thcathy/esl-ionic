@@ -53,8 +53,8 @@ export class DictationPracticePage implements OnInit, AfterViewInit {
 
   async initDictation() {
     this.loading = await this.ionicComponentService.showLoading();
-    this.dictation = await this.storage.get(NavigationService.storageKeys.DictationPracticePage_dictation);
-    this.dictationId = await this.storage.get(NavigationService.storageKeys.DictationPracticePage_dictationId);
+    this.dictation = await this.storage.get(NavigationService.storageKeys.dictation);
+    this.dictationId = await this.storage.get(NavigationService.storageKeys.dictationId);
     if (this.dictation == null && this.dictationId > 0)
       this.dictationService.getById(this.dictationId)
         .toPromise().then(d => this.dictation = d);

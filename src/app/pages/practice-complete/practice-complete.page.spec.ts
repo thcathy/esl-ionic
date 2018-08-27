@@ -1,16 +1,55 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, ComponentFixtureAutoDetect, fakeAsync, TestBed} from '@angular/core/testing';
 
 import { PracticeCompletePage } from './practice-complete.page';
+import {dictation1} from "../../../test-config/test-data";
+import {RouterTestingModule} from "@angular/router/testing";
+import {HttpClientTestingModule} from "@angular/common/http/testing";
+import {DictationService} from "../../services/dictation/dictation.service";
+import {
+  LoadingControllerSpy,
+  NavgationServiceSpy,
+  StorageSpy,
+  ToastControllerSpy
+} from "../../../test-config/mocks-ionic";
+import {LoadingController, ToastController} from "@ionic/angular";
+import {NavigationService} from "../../services/navigation.service";
+import {TranslateModule} from "@ngx-translate/core";
+import {Storage} from "@ionic/storage";
 
 describe('PracticeCompletePage', () => {
   let component: PracticeCompletePage;
   let fixture: ComponentFixture<PracticeCompletePage>;
+  let dictationServiceSpy;
 
   beforeEach(async(() => {
+    dictationServiceSpy = jasmine.createSpyObj('DictationService', ['createVocabDictationHistory', 'isInstantDictation']);
+    const navParamSpy = jasmine.createSpyObj('NavParams', ['get']);
+    var params = {
+      'historyStored': true,
+      'dictation': dictation1,
+      'histories': [],
+      'mark': 10
+    }
+    navParamSpy.get.and.callFake((myParam) => {return params[myParam];});
+    dictationServiceSpy.isInstantDictation.and.returnValue(false);
+
     TestBed.configureTestingModule({
       declarations: [ PracticeCompletePage ],
+      imports: [
+        RouterTestingModule.withRoutes([]),
+        HttpClientTestingModule,
+        TranslateModule.forRoot(),
+      ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
+      providers: [
+        { provide: ComponentFixtureAutoDetect, useValue: true },
+        { provide: DictationService, useValue: dictationServiceSpy},
+        { provide: ToastController, useValue: ToastControllerSpy()},
+        { provide: NavigationService, useValue: NavgationServiceSpy()},
+        { provide: LoadingController, useValue: LoadingControllerSpy()},
+        { provide: Storage, useValue: StorageSpy()},
+      ]
     })
     .compileComponents();
   }));
@@ -24,4 +63,9 @@ describe('PracticeCompletePage', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should not call create history if history stored is true', fakeAsync(() => {
+    fixture.detectChanges();
+    expect(dictationServiceSpy.createVocabDictationHistory.calls.count()).toEqual(0);
+  }));
 });

@@ -14,8 +14,9 @@ export interface NavigationRequest {
 @Injectable({ providedIn: 'root' })
 export class NavigationService {
   public static storageKeys = {
-    DictationPracticePage_dictation: 'DictationPracticePage.dictation',
-    DictationPracticePage_dictationId: 'DictationPracticePage.dictationId'
+    dictation: 'dictation',
+    dictationId: 'dictationId',
+    histories: 'histories',
   };
 
   constructor(private router: Router,
@@ -41,7 +42,7 @@ export class NavigationService {
     if (this.dictationService.isSentenceDictation(dictation)) {
       this.router.navigate(['/article-dictation'], { queryParams: { dictation: dictation } });
     } else {
-      await this.storage.set(NavigationService.storageKeys.DictationPracticePage_dictation, dictation);
+      await this.storage.set(NavigationService.storageKeys.dictation, dictation);
       await this.router.navigate(['/dictation-practice']);
     }
   }
@@ -78,8 +79,15 @@ export class NavigationService {
       }});
   }
 
-  async practiceComplete(dictation: Dictation, mark: number, histories: VocabPracticeHistory[]) {
-    return await this.router.navigate(['/practice-complete']);
+  async practiceComplete(dictation: Dictation, mark: number, histories: VocabPracticeHistory[], historyStored: boolean = false) {
+    await this.storage.set(NavigationService.storageKeys.dictation, dictation);
+    await this.storage.set(NavigationService.storageKeys.histories, histories);
+    return await this.router.navigate(['/practice-complete'],{
+      queryParams: {
+        mark: mark,
+        historyStored: historyStored,
+      }
+    });
   }
 
   openFunFunSpell() {

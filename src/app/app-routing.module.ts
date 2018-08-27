@@ -7,6 +7,7 @@ const routes: Routes = [
   { path: 'instant-dictation', loadChildren: './pages/instant-dictation/instant-dictation.module#InstantDictationPageModule' },
   { path: 'dictation-practice', loadChildren: './pages/dictation-practice/dictation-practice.module#DictationPracticePageModule' },
   { path: 'practice-complete', loadChildren: './pages/practice-complete/practice-complete.module#PracticeCompletePageModule' },
+  { path: 'article-dictation', loadChildren: './pages/article-dictation/article-dictation.module#ArticleDictationPageModule' },
 ];
 
 @NgModule({

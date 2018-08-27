@@ -1,13 +1,13 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { PracticeCompletePage } from './practice-complete.page';
+import { ArticleDictationPage } from './article-dictation.page';
 import {SharedModule} from "../../shared.module";
 
 const routes: Routes = [
   {
     path: '',
-    component: PracticeCompletePage
+    component: ArticleDictationPage
   }
 ];
 
@@ -16,6 +16,6 @@ const routes: Routes = [
     SharedModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [PracticeCompletePage]
+  declarations: [ArticleDictationPage]
 })
-export class PracticeCompletePageModule {}
+export class ArticleDictationPageModule {}

@@ -2,29 +2,29 @@
   <ion-card-header>
     <fa-icon [icon]="['fas', 'edit']"></fa-icon> {{ 'Dictation' | translate }} - {{ dictation.title }}
   </ion-card-header>
-  <ion-card-content style="font-size: 1.6rem">
+  <ion-card-content>
     <ion-grid>
       <ion-row>
         <ion-col size="12" size-sm="12" size-md="12" size-lg="6">
           <table width="95%">
-            <tr>
-              <td width="125" class="table-heading">{{ 'ID' | translate }}</td>
+            <tr *ngIf="dictation.id > 0">
+              <td width="125">{{ 'ID' | translate }}</td>
               <td><strong>{{dictation.id}}</strong> <fa-icon class="info-button" (click)="openSearchByIdPopup()" [icon]="['fas', 'info-circle']"></fa-icon></td>
             </tr>
             <tr>
-              <td width="125" class="table-heading">{{ 'Title' | translate }}</td>
+              <td width="125">{{ 'Title' | translate }}</td>
               <td><strong>{{dictation.title}}</strong></td>
             </tr>
             <tr>
-              <td class="table-heading">{{ 'Description' | translate }}</td>
+              <td>{{ 'Description' | translate }}</td>
               <td>{{ dictation.description }}</td>
             </tr>
             <tr>
-              <td class="table-heading">{{ 'Suitable' | translate }}</td>
+              <td>{{ 'Suitable' | translate }}</td>
               <td>{{ 'SuitableStudent.' + dictation.suitableStudent | translate }}</td>
             </tr>
             <tr *ngIf="!dictationService.isSentenceDictation(dictation)">
-              <td class="table-heading">{{ 'Show Image' | translate }}</td>
+              <td>{{ 'Show Image' | translate }}</td>
               <td>
                 <fa-icon [icon]="['fas', 'check']" *ngIf="dictation.showImage"></fa-icon>
                 <fa-icon [icon]="['fas', 'times']" *ngIf="!dictation.showImage"></fa-icon>
@@ -32,25 +32,25 @@
             </tr>
             <tr [@recommend]="recommendState"
                 (@recommend.done)="recommendAnimationDone($event)">
-              <td class="table-heading">{{ 'Recommend' | translate }}</td>
+              <td>{{ 'Recommend' | translate }}</td>
               <td><fa-icon [icon]="['far', 'thumbs-up']"></fa-icon> {{ dictation.totalRecommended }}</td>
             </tr>
-            <tr>
-              <td class="table-heading">{{ 'Last Updated' | translate }}</td>
+            <tr *ngIf="dictation.lastModifyDate">
+              <td>{{ 'Last Updated' | translate }}</td>
               <td>{{ dictation.lastModifyDate | date: 'yyyy-MM-dd' }}</td>
             </tr>
-            <tr>
-              <td class="table-heading">{{ 'Finished' | translate }}</td>
+            <tr *ngIf="dictation.totalAttempt">
+              <td>{{ 'Finished' | translate }}</td>
               <td>{{dictation.totalAttempt}}</td>
             </tr>
           </table>
         </ion-col>
         <ion-col size="12" size-sm="12" size-md="12" size-lg="6" *ngIf="showContent && !dictationService.isSentenceDictation(dictation)">
-          <div style="padding-bottom: 4px;" class="table-heading">{{'Vocabulary'|translate}} ({{dictation.vocabs.length}}):</div>
+          <div style="padding-bottom: 4px;" >{{'Vocabulary'|translate}} ({{dictation.vocabs.length}}):</div>
           <span *ngFor="let vocab of dictation.vocabs"><ion-badge style="background-color: #4CAF50; margin-right: 4px;">{{ vocab.word }}</ion-badge></span>
         </ion-col>
         <ion-col size="12" size-sm="12" size-md="12" size-lg="6" *ngIf="showContent && dictationService.isSentenceDictation(dictation)">
-          <div style="padding-bottom: 4px;" class="table-heading">{{'Article'|translate}}:</div>
+          <div style="padding-bottom: 4px;" >{{'Article'|translate}}:</div>
           <p>{{dictation.article}}</p>
         </ion-col>
       </ion-row>
