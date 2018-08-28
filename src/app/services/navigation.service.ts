@@ -40,10 +40,10 @@ export class NavigationService {
   }
 
   async startDictation(dictation: Dictation) {
+    await this.storage.set(NavigationService.storageKeys.dictation, dictation);
     if (this.dictationService.isSentenceDictation(dictation)) {
-      this.router.navigate(['/article-dictation'], { queryParams: { dictation: dictation } });
+      await this.router.navigate(['/article-dictation']);
     } else {
-      await this.storage.set(NavigationService.storageKeys.dictation, dictation);
       await this.router.navigate(['/dictation-practice']);
     }
   }

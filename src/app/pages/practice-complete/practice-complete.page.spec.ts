@@ -16,6 +16,8 @@ import {LoadingController, ToastController} from "@ionic/angular";
 import {NavigationService} from "../../services/navigation.service";
 import {TranslateModule} from "@ngx-translate/core";
 import {Storage} from "@ionic/storage";
+import {Observable} from "rxjs/Observable";
+import "rxjs-compat/add/observable/of";
 
 describe('PracticeCompletePage', () => {
   let component: PracticeCompletePage;
@@ -24,15 +26,15 @@ describe('PracticeCompletePage', () => {
 
   beforeEach(async(() => {
     dictationServiceSpy = jasmine.createSpyObj('DictationService', ['createVocabDictationHistory', 'isInstantDictation']);
-    const navParamSpy = jasmine.createSpyObj('NavParams', ['get']);
-    var params = {
-      'historyStored': true,
+    dictationServiceSpy.isInstantDictation.and.returnValue(false);
+    dictationServiceSpy.createVocabDictationHistory.and.returnValue(Observable.of(dictation1));
+
+    const params = {
       'dictation': dictation1,
       'histories': [],
-      'mark': 10
-    }
-    navParamSpy.get.and.callFake((myParam) => {return params[myParam];});
-    dictationServiceSpy.isInstantDictation.and.returnValue(false);
+    };
+    let storageSpy = StorageSpy();
+    storageSpy.get.and.callFake((param) => {return params[param]});
 
     TestBed.configureTestingModule({
       declarations: [ PracticeCompletePage ],
@@ -48,7 +50,7 @@ describe('PracticeCompletePage', () => {
         { provide: ToastController, useValue: ToastControllerSpy()},
         { provide: NavigationService, useValue: NavgationServiceSpy()},
         { provide: LoadingController, useValue: LoadingControllerSpy()},
-        { provide: Storage, useValue: StorageSpy()},
+        { provide: Storage, useValue: storageSpy},
       ]
     })
     .compileComponents();

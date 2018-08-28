@@ -14,10 +14,10 @@
           <ion-button (click)="getDictationThenOpen()"><fa-icon [icon]="['fas', 'redo']"></fa-icon>&nbsp;{{'Retry'|translate}}</ion-button>
         </ion-col>
         <ion-col text-right>
-          <ion-button *ngIf="dictation.id > 0" slot="end" color="secondary" (click)="recommend()" [disabled]="recommended">
+          <ion-button *ngIf="dictation && dictation.id > 0" slot="end" color="secondary" (click)="recommend()" [disabled]="recommended">
             <fa-icon [icon]="['fas', 'thumbs-up']"></fa-icon>&nbsp;{{ recommendBtnText() }}
           </ion-button>
-          <ion-button *ngIf="dictation.id <= 0" slot="end" color="secondary" (click)="navService.editDictation(dictation)">
+          <ion-button *ngIf="dictation && dictation.id <= 0" slot="end" color="secondary" (click)="navService.editDictation(dictation)">
             <fa-icon [icon]="['fas', 'save']"></fa-icon>&nbsp;{{'Save'|translate}}
           </ion-button>
         </ion-col>

@@ -30,6 +30,9 @@ export class ArticleDictationPage implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.currentSentence = 0;
+    this.mark = 0;
+    this.answer = '';
     this.init();
   }
 

@@ -25,11 +25,17 @@
             </ion-col>
           </ion-row>
           <ion-row>
-            <ion-item class="answerInput">
-              <ion-label position="floating">{{'Answer'|translate}}</ion-label>
-              <ion-input #answerElement [(ngModel)]="answer" type="text" maxlength="255" (keyup.enter)="submitAnswer()"></ion-input>
-            </ion-item>
-            <ion-button expand="full" class="submitBtn" (click)="submitAnswer()">{{'Submit'|translate}}</ion-button>
+            <ion-col>
+              <ion-item class="answerInput">
+                <ion-label position="floating">{{'Answer'|translate}}</ion-label>
+                <ion-input #answerElement [(ngModel)]="answer" type="text" maxlength="255" (keyup.enter)="submitAnswer()"></ion-input>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-button expand="full" class="submitBtn" (click)="submitAnswer()">{{'Submit'|translate}}</ion-button>
+            </ion-col>
           </ion-row>
         </ion-grid>
       </ion-card-content>

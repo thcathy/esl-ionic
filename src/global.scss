@@ -164,7 +164,6 @@ ion-content {
 }
 
 .input-form {
-
   ion-label {
     margin: inherit;
     color: var(--ion-color-dark) !important;
@@ -173,7 +172,15 @@ ion-content {
   ion-input {
     color: var(--ion-color-dark) !important;
   }
+}
 
+.answerInput {
+  font-size: 1.4rem;
+
+  ion-input {
+    --padding-top: 0px;
+    --padding-bottom: 0px;
+  }
 }
 
 .green {
