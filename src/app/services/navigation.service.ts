@@ -27,7 +27,7 @@ export class NavigationService {
 
   openHomePage() { this.navigate('/home') }
   openAccountPage() { this.navigate('/account-page') }
-  openInstantDictation() { this.navigate('instant-dictation') }
+  openInstantDictation() { this.navigate('/instant-dictation') }
   openSearchDictation() { this.navigate('/search-dictation') }
   openMemberHome() { this.navigate('/member-home') }
 
@@ -48,29 +48,24 @@ export class NavigationService {
     }
   }
 
-  retryDictation(dictation: Dictation) {
+  async retryDictation(dictation: Dictation) {
     if (this.dictationService.isInstantDictation(dictation))
       this.openInstantDictation();
     else
-      this.startDictation(dictation);
+      await this.startDictation(dictation);
   }
 
-
-  openDictation(dictation: Dictation, toastMessage: string = null) {
+  async openDictation(dictation: Dictation, toastMessage: string = null) {
+    await this.storage.set(NavigationService.storageKeys.dictation, dictation);
     this.router.navigate(['/dictation-view'], {
       queryParams: {
-        dictation: dictation,
         dictationId: dictation.id,
         toastMessage: toastMessage,
       }});
   }
 
   pushOpenDictation(dictation: Dictation) {
-    this.router.navigate(['/dictation-view'], {
-      queryParams: {
-        dictation: dictation,
-        dictationId: dictation.id
-      }});
+    this.openDictation(dictation);
   }
 
   editDictation(dictation: Dictation = null) {

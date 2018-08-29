@@ -145,7 +145,7 @@ export class DictationPracticePage implements OnInit, AfterViewInit {
 
   async waitForNextQuestion() {
     if (this.questionIndex >= this.vocabPractices.length && this.questionIndex < this.dictation.vocabs.length) {
-      this.ionicComponentService.showLoading();
+      this.ionicComponentService.showLoading().then(l => this.loading = l);
 
       while (this.questionIndex >= this.vocabPractices.length) {
         console.log(`waiting for question api return`);

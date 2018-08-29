@@ -1,0 +1,13 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start"><ion-menu-button></ion-menu-button></ion-buttons>
+    <ion-title>{{'Dictation' | translate}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="inner-content">
+    <dictation-card [dictation]="dictation" start="true" [edit]="dictation?.creator.emailAddress === authService.userProfile?.email"></dictation-card>
+  </div>
+  <footer></footer>
+</ion-content>

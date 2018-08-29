@@ -20,7 +20,7 @@ export class IonicComponentService {
     return loading;
   }
 
-  async showToastMessage(message: string, position: string) {
+  async showToastMessage(message: string, position: string = 'top') {
     const toast = await this.toastController.create({
       message: message,
       duration: 3000,

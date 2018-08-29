@@ -78,18 +78,18 @@ export class ArticleDictationCompletePage implements OnInit {
       return this.translate.instant('Recommend');
   }
 
-  getDictationThenOpen() {
+  async getDictationThenOpen() {
     if (this.dictationService.isInstantDictation(this.dictation)) {
       this.openDictation(this.dictation);
     } else {
-      this.loader = this.ionicComponentService.showLoading();
+      this.loader = await this.ionicComponentService.showLoading();
       this.dictationService.getById(this.dictation.id)
         .subscribe(d => this.openDictation(d),  e => this.showCannotGetDictation(e))
     }
   }
 
   openDictation(d: Dictation) {
-    if (this.loader) this.loader.dismissAll();
+    if (this.loader) this.loader.dismiss();
     this.navService.retryDictation(d);
   }
 
