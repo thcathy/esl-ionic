@@ -10,6 +10,11 @@
 @import "~@ionic/angular/css/text-transformation.css";
 @import "~@ionic/angular/css/flex-utils.css";
 
+/** Ionic CSS Variables **/
+:root {
+  /** secondary **/ --ion-color-secondary: #4CAF50; --ion-color-secondary-rgb: 76,175,80; --ion-color-secondary-contrast: #ffffff; --ion-color-secondary-contrast-rgb: 0,0,0; --ion-color-secondary-shade: #439a46; --ion-color-secondary-tint: #5eb762;
+}
+
 .invisible {
   visibility: hidden !important;
 }
@@ -175,7 +180,7 @@ ion-content {
 }
 
 .answerInput {
-  font-size: 1.4rem;
+  font-size: 1.2rem;
 
   ion-input {
     --padding-top: 0px;

@@ -1,13 +1,14 @@
 import {Injectable} from '@angular/core';
 
 import {TranslateService} from "@ngx-translate/core";
-import {LoadingController} from "@ionic/angular";
+import {LoadingController, ToastController} from "@ionic/angular";
 
 @Injectable({ providedIn: 'root' })
 export class IonicComponentService {
 
   constructor(public loadingController: LoadingController,
-              public translate: TranslateService
+              public translate: TranslateService,
+              public toastController: ToastController,
   ) { }
 
   async showLoading() {
@@ -17,5 +18,14 @@ export class IonicComponentService {
     });
     loading.present();
     return loading;
+  }
+
+  async showToastMessage(message: string, position: string) {
+    const toast = await this.toastController.create({
+      message: message,
+      duration: 3000,
+      position: position
+    });
+    toast.present();
   }
 }

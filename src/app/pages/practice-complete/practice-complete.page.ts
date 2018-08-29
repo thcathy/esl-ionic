@@ -4,7 +4,6 @@ import {Dictation} from "../../entity/dictation";
 import {NavigationService} from "../../services/navigation.service";
 import {DictationService} from "../../services/dictation/dictation.service";
 import {TranslateService} from "@ngx-translate/core";
-import {ToastController} from "@ionic/angular";
 import {IonicComponentService} from "../../services/ionic-component.service";
 import {Storage} from "@ionic/storage";
 import {ActivatedRoute} from "@angular/router";
@@ -30,7 +29,6 @@ export class PracticeCompletePage implements OnInit {
     public dictationService: DictationService,
     public translate: TranslateService,
     public translateService: TranslateService,
-    public toastController: ToastController,
     public ionicComponentService: IonicComponentService,
     public storage: Storage,
   ) { }
@@ -92,15 +90,10 @@ export class PracticeCompletePage implements OnInit {
     this.navService.retryDictation(d);
   }
 
-  async showCannotGetDictation(error) {
+  showCannotGetDictation(error) {
     console.warn(`Cannot get dictation: ${JSON.stringify(error)}`);
     this.loader.dismiss();
-    const toast = await this.toastController.create({
-      message: this.translateService.instant('Dictation not found'),
-      duration: 3000,
-      position: 'top'
-    });
-    toast.present();
+    this.ionicComponentService.showToastMessage(this.translateService.instant('Dictation not found'), 'top');
   }
 
 }

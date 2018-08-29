@@ -95,9 +95,13 @@ export class NavigationService {
     window.open('https://www.funfunspell.com/', '_system');
   }
 
-  async articleDictationComplete(dictation: Dictation, histories: SentenceHistory[]) {
+  async articleDictationComplete(dictation: Dictation, histories: SentenceHistory[], historyStored: boolean = false) {
     await this.storage.set(NavigationService.storageKeys.dictation, dictation);
     await this.storage.set(NavigationService.storageKeys.histories, histories);
-    return await this.router.navigate(['/article-dictation-complete']);
+    return await this.router.navigate(['/article-dictation-complete'], {
+      queryParams: {
+        historyStored: historyStored,
+      }
+    });
   }
 }

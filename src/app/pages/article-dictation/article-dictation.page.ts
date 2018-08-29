@@ -27,7 +27,8 @@ export class ArticleDictationPage implements OnInit {
     public speechService: SpeechService,
     public storage: Storage,
     public navigationService: NavigationService,
-  ) { }
+  ) {
+  }
 
   ngOnInit() {
     this.currentSentence = 0;

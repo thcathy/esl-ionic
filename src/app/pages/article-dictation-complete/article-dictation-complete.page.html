@@ -1,9 +1,35 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>article-dictation-complete</ion-title>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start"><ion-menu-button></ion-menu-button></ion-buttons>
+    <ion-title>{{'Finished Practice' | translate}}</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content padding>
+<ion-content>
+  <div class="inner-content">
+    <ion-card class="card">
+      <ion-card-header style="font-size: 1.2rem;">{{ 'Completed dictation' | translate }}</ion-card-header>
+      <ion-row no-padding>
+        <ion-col>
+          <ion-button (click)="getDictationThenOpen()"><fa-icon [icon]="['fas', 'redo']"></fa-icon>&nbsp;{{'Retry'|translate}}</ion-button>
+        </ion-col>
+        <ion-col text-right>
+          <ion-button *ngIf="dictation && dictation.id > 0" color="secondary" class="save-button" (click)="recommend()" [disabled]="recommended">
+            <fa-icon [icon]="['fas', 'thumbs-up']"></fa-icon>&nbsp;{{ recommendBtnText() }}
+          </ion-button>
+          <ion-button *ngIf="dictation && dictation.id <= 0" color="secondary" class="save-button" (click)="navService.editDictation(dictation)">
+            <fa-icon [icon]="['fas', 'save']"></fa-icon>&nbsp;{{'Save'|translate}}
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-card>
+    <dictation-card #dictationCard [dictation]="dictation" [showContent]="false"></dictation-card>
+    <ion-card class="card" style="margin-top: 8px;">
+      <h3><fa-icon [icon]="['fas', 'check']"></fa-icon> {{totalCorrect}} ({{totalCorrect / (totalCorrect + totalWrong) * 100 | number:'1.0-0'}}%)
+        / <span class="red"><fa-icon [icon]="['fas', 'times']"></fa-icon> {{totalWrong}} ({{totalWrong / (totalCorrect + totalWrong) * 100 | number:'1.0-0'}}%)</span></h3>
+      <sentence-histories [histories]="histories"></sentence-histories>
+    </ion-card>
 
+  </div>
+  <footer></footer>
 </ion-content>
