@@ -105,7 +105,11 @@ export const GoogleAnalyticsSpy = () => jasmine.createSpyObj('GoogleAnalytics', 
 
 export const NavgationServiceSpy = () => jasmine.createSpyObj('NavigationService', ['goTo']);
 
-export const StorageSpy = () => jasmine.createSpyObj('Storage', ['get', 'set']);
+export const StorageSpy = () => {
+  const storageSpy = jasmine.createSpyObj('Storage', ['get', 'set']);
+  storageSpy.get.and.callFake((param) => {return Promise.resolve()});
+  return storageSpy;
+}
 
 export const NGXLoggerSpy = () => jasmine.createSpyObj('NGXLogger', ['info', 'warn', 'error']);
 
@@ -124,3 +128,9 @@ export const AuthServiceSpy = () => jasmine.createSpyObj('AuthService', ['requir
 export const PopoverControllerSpy = () => jasmine.createSpyObj('PopoverController', ['create']);
 
 export const ToastControllerSpy = () => jasmine.createSpyObj('ToastController', ['create']);
+
+export const StatusBarSpy = () => jasmine.createSpyObj('StatusBar', ['styleDefault']);
+
+export const SplashScreenSpy = () => jasmine.createSpyObj('SplashScreen', ['hide']);
+
+export const PlatformSpy = () => jasmine.createSpyObj('Platform', { ready: Promise.resolve() });
