@@ -23,10 +23,6 @@ export class AccountPage implements OnInit {
 
   ngOnInit() {
     this.createForm();
-    this.memberService.getProfile().subscribe((m) => {
-      this.member = m;
-      this.setFormValue(m);
-    });
   }
 
   get firstName() { return this.inputForm.get('firstName'); }
@@ -35,6 +31,14 @@ export class AccountPage implements OnInit {
   get address() { return this.inputForm.get('address'); }
   get phoneNumber() { return this.inputForm.get('phoneNumber'); }
   get school() { return this.inputForm.get('school'); }
+
+  ionViewDidEnter() {
+    this.memberService.getProfile().subscribe((m) => {
+      console.log(`member: ${JSON.stringify(m)}`);
+      this.member = m;
+      this.setFormValue(m);
+    });
+  }
 
   setFormValue(member: Member) {
     this.firstName.setValue(member.name.firstName);

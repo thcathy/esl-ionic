@@ -7,44 +7,47 @@
 
 <ion-content>
   <div class="inner-content">
-    <ion-card class="input-form">
+    <ion-card class="card">
+      <ion-card-header>
+        <fa-icon icon="address-card"></fa-icon>&nbsp;{{'Personal Information'|translate}}
+      </ion-card-header>
       <ion-card-content>
-        <form [formGroup]="inputForm" novalidate>
+        <form class="input-form" [formGroup]="inputForm" novalidate>
           <ion-item>
-            <ion-label stacked>{{'User Id'|translate}}</ion-label>
+            <ion-label>{{'User Id'|translate}}</ion-label>
             <ion-input id="userIdInput" type="text" value="{{member?.userId}}" disabled="true"></ion-input>
           </ion-item>
           <ion-item>
-            <ion-label stacked>{{'Email'|translate}}</ion-label>
+            <ion-label>{{'Email'|translate}}</ion-label>
             <ion-input type="text" value="{{member?.emailAddress}}" disabled="true"></ion-input>
           </ion-item>
           <ion-item>
-            <ion-label stacked>{{'First Name'|translate}}</ion-label>
+            <ion-label>{{'First Name'|translate}}</ion-label>
             <ion-input type="text" formControlName="firstName"></ion-input>
           </ion-item>
           <div *ngIf="firstName.invalid && (firstName.dirty || firstName.touched)" class="error-text">
             <div *ngIf="firstName.errors.maxlength">{{'First Name' | translate}}{{'CharactersTooLong'|translate:{length: '50'} }}</div>
           </div>
           <ion-item>
-            <ion-label stacked>{{'Last Name'|translate}}</ion-label>
+            <ion-label>{{'Last Name'|translate}}</ion-label>
             <ion-input type="text" formControlName="lastName"></ion-input>
           </ion-item>
           <div *ngIf="lastName.invalid && (lastName.dirty || lastName.touched)" class="error-text">
             <div *ngIf="lastName.errors.maxlength">{{'Last Name'|translate}}{{'CharactersTooLong'|translate:{length: '50'} }}</div>
           </div>
-          <ion-item>
-            <ion-label stacked>{{'Date of birth'|translate}}</ion-label>
+          <ion-item text-left>
+            <ion-label>{{'Date of birth'|translate}}</ion-label>
             <ion-datetime displayFormat="YYYY-MM-DD" max="2015" formControlName="birthday"></ion-datetime>
           </ion-item>
           <ion-item>
-            <ion-label stacked>{{'Address'|translate}}</ion-label>
+            <ion-label>{{'Address'|translate}}</ion-label>
             <ion-input type="text" formControlName="address"></ion-input>
           </ion-item>
           <div *ngIf="address.invalid && (address.dirty || address.touched)" class="error-text">
             <div *ngIf="address.errors.maxlength">{{'Address'|translate}}{{'CharactersTooLong'|translate:{length: '200'} }}</div>
           </div>
           <ion-item>
-            <ion-label stacked>{{'Phone'|translate}}</ion-label>
+            <ion-label>{{'Phone'|translate}}</ion-label>
             <ion-input type="text" formControlName="phoneNumber"></ion-input>
           </ion-item>
           <div *ngIf="phoneNumber.invalid && (phoneNumber.dirty || phoneNumber.touched)" class="error-text">

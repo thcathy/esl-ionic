@@ -27,13 +27,21 @@ export class ArticleDictationPage implements OnInit {
     public speechService: SpeechService,
     public storage: Storage,
     public navigationService: NavigationService,
-  ) {
-  }
+  ) {}
 
-  ngOnInit() {
+  ngOnInit() {}
+
+  clearVariables() {
     this.currentSentence = 0;
     this.mark = 0;
     this.answer = '';
+    this.sentences = [];
+    this.histories = [];
+    this.dictation = null;
+  }
+
+  ionViewDidEnter() {
+    this.clearVariables();
     this.init();
   }
 
@@ -76,7 +84,7 @@ export class ArticleDictationPage implements OnInit {
 
   focusAnswer() {
     if (this.answerInput) {
-      this.answerInput.nativeElement.shadowRoot.querySelector('input').focus();
+      this.answerInput.focus();
     }
   }
 

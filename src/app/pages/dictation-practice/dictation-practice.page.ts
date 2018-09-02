@@ -10,14 +10,14 @@ import {SpeechService} from "../../services/speech.service";
 import {IonicComponentService} from "../../services/ionic-component.service";
 import {Storage} from "@ionic/storage";
 import {NavigationService} from "../../services/navigation.service";
-import {AfterViewInit} from "@angular/core/src/metadata/lifecycle_hooks";
+import {ActivatedRoute} from "@angular/router";
 
 @Component({
   selector: 'app-dictation-practice',
   templateUrl: './dictation-practice.page.html',
   styleUrls: ['./dictation-practice.page.scss'],
 })
-export class DictationPracticePage implements OnInit, AfterViewInit {
+export class DictationPracticePage implements OnInit {
 
   dictation: Dictation;
   dictationId: number;
@@ -31,6 +31,7 @@ export class DictationPracticePage implements OnInit, AfterViewInit {
   @ViewChild('answerElement') answerInput;
 
   constructor(
+    public route: ActivatedRoute,
     public loadingController: LoadingController,
     public vocabPracticeService: VocabPracticeService,
     public dictationService: DictationService,
@@ -42,13 +43,26 @@ export class DictationPracticePage implements OnInit, AfterViewInit {
   ) { }
 
   ngOnInit() {
+  }
+
+  ionViewDidEnter() {
+    this.clearVaribles();
     this.initDictation();
   }
 
   ngAfterViewInit() {
     // trigger audio for this page
-    var audio = new Audio('');
-    audio.play();
+    //var audio = new Audio('');
+    //audio.play();
+  }
+
+  clearVaribles() {
+    this.histories = [];
+    this.dictation = null;
+    this.dictationId = null;
+    this.vocabPractices = [];
+    this.questionIndex = 0;
+    this.mark = 0;
   }
 
   async initDictation() {
@@ -87,7 +101,7 @@ export class DictationPracticePage implements OnInit, AfterViewInit {
 
   focusAnswer() {
     if (this.answerInput) {
-      this.answerInput.nativeElement.shadowRoot.querySelector('input').focus();
+      this.answerInput.focus();
     }
   }
 
@@ -97,10 +111,6 @@ export class DictationPracticePage implements OnInit, AfterViewInit {
     } else {
       this.phonics = this.currentQuestion().ipa;
     }
-  }
-
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad DictationPracticePage');
   }
 
   currentQuestion() {

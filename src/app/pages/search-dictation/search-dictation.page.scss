@@ -1,0 +1,32 @@
+.autocomplete {
+  width: calc(100% - 48px);
+  position: absolute;
+  z-index: 999;
+  background: #f1f1f1;
+
+  ion-item {
+    background: inherit;
+    img {
+      width: auto;
+      margin: auto;
+      display: block;
+    }
+  }
+
+  .item-block {
+    min-height: 1rem;
+  }
+
+  fa-icon {
+    color: #777777;
+  }
+
+  ion-item:hover {
+    cursor: pointer;
+    background: #dddddd;
+  }
+}
+
+ion-button {
+  margin: 16px;
+}

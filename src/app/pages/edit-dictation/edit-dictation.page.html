@@ -1,0 +1,79 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start"><ion-menu-button></ion-menu-button></ion-buttons>
+    <ion-title>{{'Create Dictation' | translate}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="inner-content">
+    <ion-card class="card">
+      <ion-card-content>
+        <form class="input-form" [formGroup]="inputForm" novalidate>
+          <ion-item>
+            <ion-label stacked>{{'Title'|translate}} *</ion-label>
+            <ion-input type="text" formControlName="title" placeholder="Dictation {{now | date:'yyyy-MM-dd'}}"></ion-input>
+          </ion-item>
+          <div *ngIf="title.invalid && (title.dirty || title.touched)" class="error-text">
+            <div *ngIf="title.errors.required">{{'Title is required'|translate}}</div>
+            <div *ngIf="title.errors.minlength">{{'Title must be at least 5 characters long'|translate}}</div>
+            <div *ngIf="title.errors.maxlength">{{'Title cannot over 50 characters long'|translate}}</div>
+          </div>
+          <ion-item>
+            <ion-label stacked>{{'Description'|translate}}</ion-label>
+            <ion-input type="text" formControlName="description"></ion-input>
+          </ion-item>
+          <div *ngIf="description.invalid && (description.dirty || description.touched)" class="error-text">
+            <div *ngIf="description.errors.maxlength">{{'Description cannot over 100 characters long'|translate}}</div>
+          </div>
+          <ion-item *ngIf="type.value=='word'">
+            <ion-label><fa-icon [icon]="['far', 'images']"></fa-icon> {{'Show Image'|translate}}</ion-label>
+            <ion-toggle style="padding-right: 30px;" formControlName="showImage"></ion-toggle>
+          </ion-item>
+          <ion-item>
+            <ion-label style="margin: inherit;">{{'Suitable'|translate}} ({{'Age'|translate}})</ion-label>
+            <ion-select style="padding-right: 30px;" formControlName="suitableStudent" interface="popover">
+              <ion-select-option *ngFor="let state of suitableStudentOptions" [value]="state">{{'SuitableStudent.' + state|translate}}</ion-select-option>
+            </ion-select>
+          </ion-item>
+          <ion-radio-group [formControl]="inputForm.controls['type']">
+          <ion-row class="radio">
+            <ion-col>
+              <ion-item>
+                <ion-label>{{'Single Word'|translate}}</ion-label>
+                <ion-radio value="word"></ion-radio>
+              </ion-item>
+            </ion-col>
+            <ion-col>
+              <ion-item>
+                <ion-label>{{'Sentence'|translate}}</ion-label>
+                <ion-radio value="sentence"></ion-radio>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+          </ion-radio-group>
+          <ion-item *ngIf="inputForm.controls['type'].value == 'word'" class="questionsInput">
+            <ion-label position="stacked">{{'Vocabulary'|translate}} * ({{'separate by space or comma'|translate}})</ion-label>
+            <ion-textarea placeholder="apple bus-stop cat" formControlName="vocabulary" rows="10"></ion-textarea>
+          </ion-item>
+          <ion-item *ngIf="inputForm.controls['type'].value == 'sentence'" class="questionsInput">
+            <ion-label position="stacked">{{'Input an passage'|translate}} *:</ion-label>
+            <ion-textarea formControlName="article" rows="10"></ion-textarea>
+          </ion-item>
+          <div *ngIf="vocabulary.invalid && (vocabulary.dirty || vocabulary.touched)" class="error-text">
+            <div *ngIf="vocabulary.errors.maxVocabulary">{{'Cannot over 50 vocabulary'|translate}}</div>
+            <div *ngIf="vocabulary.errors.pattern">{{'Cannot contain invalid character(s)'|translate}}</div>
+          </div>
+
+          <ion-button float-right (click)="saveDictation()" style="margin: 16px;" [disabled]="inputForm.invalid">
+            <fa-icon icon="save"></fa-icon>&nbsp;{{'Save'|translate}}
+          </ion-button>
+
+        </form>
+      </ion-card-content>
+    </ion-card>
+
+  </div>
+
+  <footer></footer>
+</ion-content>

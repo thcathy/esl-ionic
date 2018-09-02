@@ -6,20 +6,21 @@
     <div text-center *ngIf="dictations?.length == 0" style="padding: 16px;">{{ 'No dictation' | translate}}</div>
     <ion-list>
       <ion-item *ngFor="let dictation of viewDictations; let i = index">
-        <ion-row>
-          <ion-col class="heading">{{dictation.title}}</ion-col>
-          <ion-col text-right>{{ dictation.createdDate | date: 'yyyy-MM-dd' }}</ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col style="min-width: 110px;"><fa-icon [icon]="['fas', 'list-ol']"></fa-icon> {{ displayService.totalQuestion(dictation) }}</ion-col>
-          <ion-col><fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon> {{ dictation.totalAttempt }}</ion-col>
-          <ion-col><fa-icon [icon]="['far', 'thumbs-up']"></fa-icon> {{dictation.totalRecommended}}</ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col class="col-label">{{ 'Suitable' | translate }}:</ion-col>
-          <ion-col>{{ 'SuitableStudent.' + dictation.suitableStudent | translate }}</ion-col>
-        </ion-row>
-        <button ion-button outline item-end (click)="navService.pushOpenDictation(dictation)">{{ 'ViewDictation' | translate }}</button>
+        <ion-label>
+          <ion-row>
+            <ion-col class="heading">{{dictation.title}}</ion-col>
+            <ion-col text-right>{{ dictation.createdDate | date: 'yyyy-MM-dd' }}</ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col style="min-width: 110px;"><fa-icon [icon]="['fas', 'list-ol']"></fa-icon> {{ displayService.totalQuestion(dictation) }}</ion-col>
+            <ion-col><fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon> {{ dictation.totalAttempt }}</ion-col>
+            <ion-col><fa-icon [icon]="['far', 'thumbs-up']"></fa-icon> {{dictation.totalRecommended}}</ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col class="col-label">{{ 'Suitable' | translate }}: {{ 'SuitableStudent.' + dictation.suitableStudent | translate }}</ion-col>
+          </ion-row>
+        </ion-label>
+        <ion-button fill="outline" slot="end" (click)="navService.pushOpenDictation(dictation)">{{ 'ViewDictation' | translate }}</ion-button>
       </ion-item>
     </ion-list>
     <ion-row>
@@ -32,7 +33,7 @@
     </ion-row>
     <ion-row style="border-top: .55px solid #c8c7cc;">
       <ion-col text-right>
-        <ion-button fill="clear" *ngIf="showCreateButton" (click)="navService.editDictation()"><fa-icon [icon]="['fas', 'edit']"></fa-icon> {{ 'Create Dictation' | translate }}</ion-button>
+        <ion-button fill="clear" *ngIf="showCreateButton" (click)="navService.editDictation()"><fa-icon [icon]="['fas', 'edit']"></fa-icon>&nbsp;{{ 'Create Dictation' | translate }}</ion-button>
       </ion-col>
     </ion-row>
   </ion-card-content>

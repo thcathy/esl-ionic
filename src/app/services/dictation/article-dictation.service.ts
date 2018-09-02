@@ -29,7 +29,6 @@ export class ArticleDictationService {
   splitLongLineBySpace(input: string): string[] {
     if (input.length < this.maxSentenceLength)
       return [input];
-    console.info(`Split long sentence space: ${input}`);
 
     const results: string[] = [];
     while (input.length > this.maxSentenceLength) {
@@ -59,7 +58,6 @@ export class ArticleDictationService {
   splitLongLingByComma(input: string): string[] {
     if (input.length < this.maxSentenceLength)
       return [input];
-    console.log(`Split long sentence by comma: ${input}`);
 
     var results: string[] = [];
     while (input.length > this.maxSentenceLength - 10) {

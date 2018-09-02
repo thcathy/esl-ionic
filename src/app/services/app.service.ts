@@ -9,7 +9,7 @@ export class AppService {
 
   isApp(): boolean {
     console.log(`platforms: ${this.platform.platforms()}, url: ${document.URL}`);
-    if(this.platform.is('core') || this.platform.is('mobileweb') || !this.platform.is('cordova')) {
+    if(this.platform.is('pwa') || !this.platform.is('cordova')) {
       return false;
     } else {
       return true;

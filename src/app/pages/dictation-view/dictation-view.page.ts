@@ -25,6 +25,7 @@ export class DictationViewPage implements OnInit {
   ) { }
 
   ngOnInit() {
+    console.log(`dictation-view ngOnInit`);
     this.init();
   }
 

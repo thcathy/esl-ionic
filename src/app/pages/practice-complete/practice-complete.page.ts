@@ -79,9 +79,9 @@ export class PracticeCompletePage implements OnInit {
     if (this.dictationService.isInstantDictation(this.dictation)) {
       this.openDictation(this.dictation);
     } else {
-      this.ionicComponentService.showLoading().then(l => this.loader = l);
+      //this.ionicComponentService.showLoading().then(l => this.loader = l);
       this.dictationService.getById(this.dictation.id)
-        .subscribe(d => this.openDictation(d),  e => this.showCannotGetDictation(e))
+        .toPromise().then(d => this.openDictation(d)).catch(e => this.showCannotGetDictation(e));
     }
   }
 

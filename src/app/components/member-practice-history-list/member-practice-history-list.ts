@@ -29,20 +29,9 @@ export class MemberPracticeHistoryListComponent {
   openHistory(history: PracticeHistory) {
     const historyObj = JSON.parse(history.historyJSON);
     if (this.dictationService.isSentenceDictation(historyObj['dictation'])) {
-      this.router.navigate(['/article-dictation-complete'], {
-        queryParams: {
-          dictation: historyObj['dictation'],
-          histories: historyObj['histories'],
-          historyStored: true,
-        }});
+      this.navService.articleDictationComplete(historyObj['dictation'], historyObj['histories'], true);
     } else {
-      this.router.navigate(['/practice-complete-page'], {
-        queryParams: {
-          dictation: historyObj['dictation'],
-          histories: historyObj['histories'],
-          mark: historyObj['mark'],
-          historyStored: true,
-        }});
+      this.navService.practiceComplete(historyObj['dictation'], historyObj['mark'], historyObj['histories'], true);
     }
 
   }

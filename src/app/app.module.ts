@@ -12,7 +12,7 @@ import {IonicStorageModule} from "@ionic/storage";
 import {ComponentsModule} from "./components/components.module";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {CommonModule} from "@angular/common";
-import {HttpClient, HttpClientModule} from "@angular/common/http";
+import {HTTP_INTERCEPTORS, HttpClient, HttpClientModule} from "@angular/common/http";
 import {TranslateLoader, TranslateModule} from "@ngx-translate/core";
 import {ReactiveFormsModule} from "@angular/forms";
 import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
@@ -34,6 +34,7 @@ import {ServerService} from "./services/server.service";
 import {PracticeHistoryService} from "./services/dictation/practice-history.service";
 import {ArticleDictationService} from "./services/dictation/article-dictation.service";
 import {IonicComponentService} from "./services/ionic-component.service";
+import {IdTokenInterceptor} from "./interceptor/IdTokenInterceptor";
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -71,6 +72,11 @@ library.add(fas, far);
     ServerService,
     ArticleDictationService,
     PracticeHistoryService, IonicComponentService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: IdTokenInterceptor,
+      multi: true
+    },
   ],
   bootstrap: [AppComponent]
 })

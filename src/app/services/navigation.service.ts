@@ -25,8 +25,8 @@ export class NavigationService {
               private dictationService: DictationService)
   {}
 
-  openHomePage() { this.navigate('/home') }
-  openAccountPage() { this.navigate('/account-page') }
+  openHomePage() { this.navigate('/home') ;}
+  openAccountPage() { this.navigate('/account') }
   openInstantDictation() { this.navigate('/instant-dictation') }
   openSearchDictation() { this.navigate('/search-dictation') }
   openMemberHome() { this.navigate('/member-home') }
@@ -39,40 +39,45 @@ export class NavigationService {
     this.router.navigate([request.destination], { queryParams: request.params });
   }
 
-  async startDictation(dictation: Dictation) {
-    await this.storage.set(NavigationService.storageKeys.dictation, dictation);
-    if (this.dictationService.isSentenceDictation(dictation)) {
-      await this.router.navigate(['/article-dictation']);
-    } else {
-      await this.router.navigate(['/dictation-practice']);
-    }
+  startDictation(dictation: Dictation) {
+    this.storage.set(NavigationService.storageKeys.dictation, dictation).then(() => {
+      if (this.dictationService.isSentenceDictation(dictation)) {
+        this.router.navigate(['/article-dictation']);
+      } else {
+        this.router.navigate(['/dictation-practice'], {
+          queryParams: {
+            dictationId: dictation.id
+          }
+        });
+      }
+    });
   }
 
-  async retryDictation(dictation: Dictation) {
+  retryDictation(dictation: Dictation) {
     if (this.dictationService.isInstantDictation(dictation))
       this.openInstantDictation();
     else
-      await this.startDictation(dictation);
+      this.startDictation(dictation);
   }
 
-  async openDictation(dictation: Dictation, toastMessage: string = null) {
-    await this.storage.set(NavigationService.storageKeys.dictation, dictation);
-    this.router.navigate(['/dictation-view'], {
-      queryParams: {
-        dictationId: dictation.id,
-        toastMessage: toastMessage,
-      }});
+  openDictation(dictation: Dictation, toastMessage: string = null) {
+    this.storage.set(NavigationService.storageKeys.dictation, dictation)
+      .then(() => {
+        this.router.navigate(['/dictation-view'], {
+          queryParams: {
+            dictationId: dictation.id,
+            toastMessage: toastMessage,
+          }});
+      });
   }
 
   pushOpenDictation(dictation: Dictation) {
     this.openDictation(dictation);
   }
 
-  editDictation(dictation: Dictation = null) {
-    this.router.navigate(['/edit-dictation'], {
-      queryParams: {
-        dictation: dictation
-      }});
+  async editDictation(dictation: Dictation = null) {
+    await this.storage.set(NavigationService.storageKeys.dictation, dictation);
+    return await this.router.navigate(['/edit-dictation']);
   }
 
   async practiceComplete(dictation: Dictation, mark: number, histories: VocabPracticeHistory[], historyStored: boolean = false) {
