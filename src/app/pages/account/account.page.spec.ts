@@ -4,21 +4,6 @@ import {async, ComponentFixture, fakeAsync, TestBed} from '@angular/core/testing
 import { AccountPage } from './account.page';
 import {member1} from "../../../test-config/test-data";
 import {Observable} from "rxjs/Observable";
-import {TranslateModule} from "@ngx-translate/core";
-import {HttpClientTestingModule} from "@angular/common/http/testing";
-import {RouterTestingModule} from "@angular/router/testing";
-import {
-  AlertControllerSpy, LoadingControllerSpy,
-  PlatformSpy,
-  SplashScreenSpy,
-  StatusBarSpy,
-  StorageSpy, ToastControllerSpy
-} from "../../../test-config/mocks-ionic";
-import {Storage} from "@ionic/storage";
-import {AlertController, LoadingController, Platform, ToastController} from "@ionic/angular";
-import {SplashScreen} from "@ionic-native/splash-screen/ngx";
-import {StatusBar} from "@ionic-native/status-bar/ngx";
-import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {SharedTestModule} from "../../../test-config/shared-test.module";
 import {MemberService} from "../../services/member/member.service";
 
