@@ -40,7 +40,6 @@ export class ArticleDictationCompletePage implements OnInit {
 
   async init() {
     await this.getInputParameters();
-
     this.calculateCorrect(this.histories);
     if (!this.dictationService.isInstantDictation(this.dictation) && !this.historyStored) {
       this.dictationService.createSentenceDictationHistory(this.dictation, this.totalCorrect, this.totalWrong, this.histories)
@@ -51,7 +50,7 @@ export class ArticleDictationCompletePage implements OnInit {
   async getInputParameters() {
     this.dictation = await this.storage.get(NavigationService.storageKeys.dictation);
     this.histories = await this.storage.get(NavigationService.storageKeys.histories);
-    this.historyStored = this.route.snapshot.queryParamMap.get('historyStored') === 'true';
+    this.historyStored = this.route.snapshot.paramMap.get('historyStored') === 'true';
   }
 
   private calculateCorrect(histories: SentenceHistory[]) {

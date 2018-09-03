@@ -57,6 +57,12 @@ export class SearchDictationPage implements OnInit {
     this.inputForm.get('suitableStudent').setValue('Any');
   }
 
+  ionViewDidLoad() {
+    this.storage.get(this.SEARCH_HISTORY_KEY).then(h => {
+      this.history = h ? h : [];
+    });
+  }
+
   async search() {
     this.results = null;
     const loader = await this.ionicComponentService.showLoading();

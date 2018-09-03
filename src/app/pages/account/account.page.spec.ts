@@ -18,7 +18,9 @@ import {Storage} from "@ionic/storage";
 import {AlertController, LoadingController, Platform, ToastController} from "@ionic/angular";
 import {SplashScreen} from "@ionic-native/splash-screen/ngx";
 import {StatusBar} from "@ionic-native/status-bar/ngx";
-import {ReactiveFormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {SharedTestModule} from "../../../test-config/shared-test.module";
+import {MemberService} from "../../services/member/member.service";
 
 describe('AccountPage', () => {
   let component: AccountPage;
@@ -33,20 +35,11 @@ describe('AccountPage', () => {
     TestBed.configureTestingModule({
       declarations: [ AccountPage ],
       imports: [
-        RouterTestingModule.withRoutes([]),
-        HttpClientTestingModule,
-        TranslateModule.forRoot(),
-        ReactiveFormsModule,
+        SharedTestModule.forRoot(),
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [
-        { provide: StatusBar, useValue: StatusBarSpy() },
-        { provide: SplashScreen, useValue: SplashScreenSpy() },
-        { provide: Platform, useValue: PlatformSpy() },
-        { provide: AlertController, useValue: AlertControllerSpy()},
-        { provide: Storage, useValue: StorageSpy()},
-        { provide: LoadingController, useValue: LoadingControllerSpy()},
-        { provide: ToastController, useValue: ToastControllerSpy()},
+        { provide: MemberService, useValue: memberService},
       ],
     })
     .compileComponents();
@@ -64,9 +57,9 @@ describe('AccountPage', () => {
   });
 
   it('should show user information in html', fakeAsync(() => {
-    component.ngOnInit();
+    component.ionViewDidEnter();
     fixture.detectChanges();
-    let input = pageElement.querySelector('#userIdInput input') as HTMLInputElement;
+    let input = pageElement.querySelector('#userIdInput') as HTMLInputElement;
     expect(input.value).toEqual('tester1');
     expect(getProfileSpy.calls.any()).toBe(true);
   }));

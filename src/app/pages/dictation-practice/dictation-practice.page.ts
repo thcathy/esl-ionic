@@ -25,7 +25,7 @@ export class DictationPracticePage implements OnInit {
   questionIndex: number;
   phonics: string;
   answer: string;
-  mark: number;
+  mark: number = 0;
   histories: VocabPracticeHistory[] = [];
   loading: any;
   @ViewChild('answerElement') answerInput;

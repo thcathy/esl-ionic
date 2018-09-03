@@ -2,6 +2,7 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { EditDictationPage } from './edit-dictation.page';
+import {SharedTestModule} from "../../../test-config/shared-test.module";
 
 describe('EditDictationPage', () => {
   let component: EditDictationPage;
@@ -10,6 +11,9 @@ describe('EditDictationPage', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ EditDictationPage ],
+      imports: [
+        SharedTestModule.forRoot(),
+      ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
     })
     .compileComponents();

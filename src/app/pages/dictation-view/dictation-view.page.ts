@@ -35,11 +35,12 @@ export class DictationViewPage implements OnInit {
     const toastMessage = this.route.snapshot.queryParamMap.get('toastMessage');
 
     if (toastMessage != null) this.ionicComponentService.showToastMessage(toastMessage);
-    if (this.dictation == null && this.dictationId > 0)
+    if (this.dictation == null && this.dictationId > 0) {
       this.dictationService.getById(this.dictationId)
         .toPromise().then(d => this.dictation = d);
+    }
 
-    console.log(`userId: ${this.dictation.creator.emailAddress}, userProfile: ${JSON.stringify(this.authService.userProfile)}`);
+    if (this.dictation != null) console.log(`userId: ${this.dictation.creator.emailAddress}, userProfile: ${JSON.stringify(this.authService.userProfile)}`);
   }
 
 }

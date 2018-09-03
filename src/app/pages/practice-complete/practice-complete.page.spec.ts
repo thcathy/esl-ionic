@@ -18,6 +18,9 @@ import {TranslateModule} from "@ngx-translate/core";
 import {Storage} from "@ionic/storage";
 import {Observable} from "rxjs/Observable";
 import "rxjs-compat/add/observable/of";
+import {SharedTestModule} from "../../../test-config/shared-test.module";
+import {ActivatedRoute, convertToParamMap} from "@angular/router";
+import {NoopAnimationsModule} from "@angular/platform-browser/animations";
 
 describe('PracticeCompletePage', () => {
   let component: PracticeCompletePage;
@@ -27,7 +30,6 @@ describe('PracticeCompletePage', () => {
   beforeEach(async(() => {
     dictationServiceSpy = jasmine.createSpyObj('DictationService', ['createVocabDictationHistory', 'isInstantDictation']);
     dictationServiceSpy.isInstantDictation.and.returnValue(false);
-    dictationServiceSpy.createVocabDictationHistory.and.returnValue(Observable.of(dictation1));
 
     const params = {
       'dictation': dictation1,
@@ -39,18 +41,20 @@ describe('PracticeCompletePage', () => {
     TestBed.configureTestingModule({
       declarations: [ PracticeCompletePage ],
       imports: [
-        RouterTestingModule.withRoutes([]),
-        HttpClientTestingModule,
-        TranslateModule.forRoot(),
+        SharedTestModule.forRoot(),
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [
-        { provide: ComponentFixtureAutoDetect, useValue: true },
         { provide: DictationService, useValue: dictationServiceSpy},
-        { provide: ToastController, useValue: ToastControllerSpy()},
-        { provide: NavigationService, useValue: NavgationServiceSpy()},
-        { provide: LoadingController, useValue: LoadingControllerSpy()},
-        { provide: Storage, useValue: storageSpy},
+        { provide: Storage, useValue: storageSpy },
+        { provide: ActivatedRoute, useValue: {
+            snapshot: {
+              paramMap: convertToParamMap({
+                historyStored: 'true',
+                mark: '10',
+              })
+            }
+          }},
       ]
     })
     .compileComponents();

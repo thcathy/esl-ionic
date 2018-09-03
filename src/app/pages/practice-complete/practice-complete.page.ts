@@ -45,8 +45,8 @@ export class PracticeCompletePage implements OnInit {
   async getNavParams() {
     this.dictation = await this.storage.get(NavigationService.storageKeys.dictation);
     this.histories = await this.storage.get(NavigationService.storageKeys.histories);
-    this.mark = +this.route.snapshot.queryParamMap.get('mark');
-    this.historyStored = this.route.snapshot.queryParamMap.get('historyStored') === 'true';
+    this.mark = +this.route.snapshot.paramMap.get('mark');
+    this.historyStored = this.route.snapshot.paramMap.get('historyStored') === 'true';
   }
 
   createHistory() {
