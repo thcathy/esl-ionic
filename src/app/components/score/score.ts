@@ -37,7 +37,7 @@ export class ScoreComponent {
 
   get mark(): number { return this._mark; }
 
-  changeDone() : void {
+  changeDone($event: any) : void {
     this.state = '';
   }
 

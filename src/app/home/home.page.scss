@@ -21,6 +21,8 @@
 }
 
 .card-button {
+  margin: 0px;
+
   ion-card-content {
     background-color: #488aff;
     font-size: 1.7rem;
@@ -35,5 +37,5 @@
 
 .ffsButton {
   margin-top: 16px;
-  font-size: 1rem;
+  max-font-size: 0.8rem;
 }

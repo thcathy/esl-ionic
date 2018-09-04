@@ -114,6 +114,10 @@ ion-content {
   width: 100%;
   background-color: #ffffff;
 
+  ion-card {
+    margin: 0px;
+  }
+
   ion-card-header {
     color: white;
     background-color: #4CAF50;
@@ -135,6 +139,10 @@ ion-content {
   [item-end] {
     margin: 0px;
   }
+}
+
+ion-menu-button {
+  color: white;
 }
 
 .gold {

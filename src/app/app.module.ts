@@ -35,6 +35,8 @@ import {PracticeHistoryService} from "./services/dictation/practice-history.serv
 import {ArticleDictationService} from "./services/dictation/article-dictation.service";
 import {IonicComponentService} from "./services/ionic-component.service";
 import {IdTokenInterceptor} from "./interceptor/IdTokenInterceptor";
+import {TextToSpeech} from "@ionic-native/text-to-speech/ngx";
+import {InAppBrowser} from "@ionic-native/in-app-browser/ngx";
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -64,13 +66,13 @@ library.add(fas, far);
     StatusBar,
     SplashScreen,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    SplashScreen,
     NavigationService, RankingService,
     DictationService, VocabPracticeService, MemberDictationService, MemberService, SpeechService,
     AuthService,
     DisplayService,
     ServerService,
     ArticleDictationService,
+    TextToSpeech, InAppBrowser,
     PracticeHistoryService, IonicComponentService,
     {
       provide: HTTP_INTERCEPTORS,

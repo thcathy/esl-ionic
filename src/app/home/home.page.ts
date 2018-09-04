@@ -8,10 +8,8 @@ import {ServerService} from "../services/server.service";
 import {AlertController} from "@ionic/angular";
 import {TranslateService} from "@ngx-translate/core";
 import {Router} from "@angular/router";
-import {InAppBrowser} from "@ionic-native/in-app-browser";
 import {NavigationService} from "../services/navigation.service";
 
-declare var iab: InAppBrowser;
 
 @Component({
   selector: 'app-home',
