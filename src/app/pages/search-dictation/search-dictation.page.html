@@ -19,7 +19,7 @@
             <div *ngIf="keyword.errors.maxlength">{{'CharactersTooLong'|translate:{length: '50'} }}</div>
           </div>
           <ion-item *ngIf="moreOptions">
-            <ion-label>{{'Created By'|translate}}</ion-label>
+            <ion-label style="padding-right: 16px;">{{'Created By'|translate}}</ion-label>
             <ion-input type="text" formControlName="creator"></ion-input>
           </ion-item>
           <div *ngIf="creator.invalid && (creator.dirty || creator.touched)" class="error-text">
