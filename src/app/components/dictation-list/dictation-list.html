@@ -12,7 +12,7 @@
             <ion-col text-right>{{ dictation.createdDate | date: 'yyyy-MM-dd' }}</ion-col>
           </ion-row>
           <ion-row>
-            <ion-col style="min-width: 110px;"><fa-icon [icon]="['fas', 'list-ol']"></fa-icon> {{ displayService.totalQuestion(dictation) }}</ion-col>
+            <ion-col style="min-width: 120px;"><fa-icon [icon]="['fas', 'list-ol']"></fa-icon> {{ displayService.totalQuestion(dictation) }}</ion-col>
             <ion-col><fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon> {{ dictation.totalAttempt }}</ion-col>
             <ion-col><fa-icon [icon]="['far', 'thumbs-up']"></fa-icon> {{dictation.totalRecommended}}</ion-col>
           </ion-row>

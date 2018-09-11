@@ -6,6 +6,7 @@ import {Router} from "@angular/router";
 import {Storage} from "@ionic/storage";
 import {VocabPracticeHistory} from "../entity/vocab-practice-history";
 import {SentenceHistory} from "../entity/sentence-history";
+import {Location} from "@angular/common";
 
 export interface NavigationRequest {
   destination: any;
@@ -21,6 +22,7 @@ export class NavigationService {
   };
 
   constructor(private router: Router,
+              private location: Location,
               private storage: Storage,
               private dictationService: DictationService)
   {}
@@ -37,6 +39,10 @@ export class NavigationService {
 
   goTo(request: NavigationRequest) {
     this.router.navigate([request.destination], { queryParams: request.params });
+  }
+
+  goBack() {
+    this.location.back();
   }
 
   startDictation(dictation: Dictation) {
@@ -60,19 +66,20 @@ export class NavigationService {
       this.startDictation(dictation);
   }
 
-  openDictation(dictation: Dictation, toastMessage: string = null) {
+  openDictation(dictation: Dictation, toastMessage: string = null, showBackButton: boolean = false) {
     this.storage.set(NavigationService.storageKeys.dictation, dictation)
       .then(() => {
         this.router.navigate(['/dictation-view'], {
           queryParams: {
             dictationId: dictation.id,
             toastMessage: toastMessage,
+            showBackButton: showBackButton,
           }});
       });
   }
 
-  pushOpenDictation(dictation: Dictation) {
-    this.openDictation(dictation);
+  pushOpenDictation(dictation: Dictation, toastMessage: string = null) {
+    this.openDictation(dictation, toastMessage, true);
   }
 
   async editDictation(dictation: Dictation = null) {

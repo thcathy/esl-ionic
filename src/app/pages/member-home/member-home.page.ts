@@ -2,9 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {Dictation} from "../../entity/dictation";
 import {MemberScore} from "../../entity/member-score";
 import {PracticeHistory} from "../../entity/practice-models";
-import {LoadingController} from "@ionic/angular";
 import {MemberDictationService} from "../../services/dictation/member-dictation.service";
-import {TranslateService} from "@ngx-translate/core";
 import {PracticeHistoryService} from "../../services/dictation/practice-history.service";
 import {RankingService} from "../../services/ranking/ranking.service";
 import {IonicComponentService} from "../../services/ionic-component.service";
@@ -21,15 +19,18 @@ export class MemberHomePage implements OnInit {
   practiceHistories: PracticeHistory[];
 
   constructor(
-    public loadingCtrl: LoadingController,
     public memberDictationService: MemberDictationService,
-    public translateService: TranslateService,
     public practiceHistoryService: PracticeHistoryService,
     public rankingService: RankingService,
     public ionicComponentService: IonicComponentService,
   ) { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.createdDictations = [];
+    this.allTimesScore = null;
+    this.latestScore = [];
+    this.practiceHistories = [];
+  }
 
   ionViewDidEnter() {
     this.init();

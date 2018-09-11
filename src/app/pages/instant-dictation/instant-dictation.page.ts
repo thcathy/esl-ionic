@@ -143,7 +143,7 @@ export class InstantDictationPage implements OnInit {
   keytab(_event, i: number){
     i++;
     if (i >= this.maxVocab) i = 0;
-    let element2 = document.getElementById('vocab' + i).firstElementChild as HTMLInputElement;
+    let element2 = document.getElementById('vocab' + i);
 
     if (element2 != null)
       element2.focus();

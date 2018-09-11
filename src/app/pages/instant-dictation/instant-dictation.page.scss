@@ -11,14 +11,9 @@ textarea.text-input {
 }
 
 .articleInput {
-  ion-item {
-    padding-left: 8px;
-  }
-
   .textarea {
-    border: 1px solid #dddddd;
-    margin: 8px 0px 8px 0px;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
+    margin: 8px;
   }
 
 }
@@ -37,5 +32,9 @@ h4 {
   font-size: 1.2rem !important;
   color: #aaaaaa !important;
   padding: 0px 8px 0px 8px;
+}
+
+.segment {
+  padding: 4px;
 }
 

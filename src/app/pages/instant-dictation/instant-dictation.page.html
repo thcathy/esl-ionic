@@ -9,7 +9,7 @@
   <div style="padding: 16px;">
 
     <ion-card class="card" style="background-color: white;">
-      <ion-segment color="primary" [(ngModel)]="type">
+      <ion-segment class="segment" color="primary" [(ngModel)]="type">
         <ion-segment-button value="byword"><fa-icon [icon]="['fas', 'th']"></fa-icon>&nbsp;{{'By Word'|translate}}</ion-segment-button>
         <ion-segment-button value="bysentence"><fa-icon [icon]="['fas', 'list']"></fa-icon>&nbsp;{{'By Sentence'|translate}}</ion-segment-button>
       </ion-segment>
@@ -53,22 +53,20 @@
           </div>
 
           <div *ngSwitchCase="'bysentence'">
-            <h3>{{'Input an passage'|translate}}:</h3>
             <form class="articleInput" [formGroup]="bySentenceInputForm" novalidate>
-              <ion-item>
-                <ion-textarea class="textarea" formControlName="article" rows="10"></ion-textarea>
-              </ion-item>
+              <h3>{{'Input an passage'|translate}}:</h3>
+              <ion-textarea class="textarea" formControlName="article" rows="10"></ion-textarea>
+              <ion-row no-padding>
+                <ion-col>
+                  <ion-button fill="outline" (click)="clearArticle()"><fa-icon [icon]="['fas', 'times']"></fa-icon>&nbsp;{{'Clear inputs'|translate}}</ion-button>
+                </ion-col>
+                <ion-col text-right>
+                  <ion-button (click)="startBySentence()" [disabled]="bySentenceInputForm.invalid">
+                    <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>&nbsp;{{'Start'|translate}}
+                  </ion-button>
+                </ion-col>
+              </ion-row>
             </form>
-            <ion-row no-padding>
-              <ion-col>
-                <ion-button fill="outline" (click)="clearArticle()"><fa-icon [icon]="['fas', 'times']"></fa-icon>&nbsp;{{'Clear inputs'|translate}}</ion-button>
-              </ion-col>
-              <ion-col text-right>
-                <ion-button (click)="startBySentence()" [disabled]="bySentenceInputForm.invalid">
-                  <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>&nbsp;{{'Start'|translate}}
-                </ion-button>
-              </ion-col>
-            </ion-row>
           </div>
         </div>
       </ion-card-content>

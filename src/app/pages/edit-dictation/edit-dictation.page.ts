@@ -122,13 +122,14 @@ export class EditDictationPage implements OnInit {
   }
 
   viewDictation(dictation: Dictation) {
+    if (this.loader) this.loader.dismiss();
     this.translate.get('UpdatedDictation', {title: dictation.title}).subscribe((msg: string) => {
       this.navService.openDictation(dictation, msg);
     });
   }
 
   showError(_err: string) {
-    this.loader.dismiss();
+    if (this.loader) this.loader.dismiss();
     this.ionicComponentService.showAlert(this.translate.instant('Fail to create or update dictation'));
   }
 

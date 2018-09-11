@@ -50,7 +50,7 @@ export class ArticleDictationCompletePage implements OnInit {
   async getInputParameters() {
     this.dictation = await this.storage.get(NavigationService.storageKeys.dictation);
     this.histories = await this.storage.get(NavigationService.storageKeys.histories);
-    this.historyStored = this.route.snapshot.paramMap.get('historyStored') === 'true';
+    this.historyStored = this.route.snapshot.queryParamMap.get('historyStored') === 'true';
   }
 
   private calculateCorrect(histories: SentenceHistory[]) {

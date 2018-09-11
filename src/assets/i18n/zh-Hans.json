@@ -74,7 +74,7 @@
   "Invalid input": "无效输入",
   "Clear inputs": "清除输入",
   "Finished Practice": "完成练习",
-  "CompletePracticeHeader": "你在 {{totalQuestion}} 个问题中得到 {{mark}} 分",
+  "CompletePracticeHeader": "你在 {{totalQuestion}} 个题目中得到 {{mark}} 分",
   "Fail to create or update dictation": "未能建立或更新听写练习",
   "OK": "确定",
   "Connection Error": "连接错误",

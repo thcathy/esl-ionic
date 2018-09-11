@@ -3,10 +3,9 @@ import {Injectable} from '@angular/core';
 import {AppService} from "./app.service";
 import {TextToSpeech} from "@ionic-native/text-to-speech/ngx";
 
-declare var responsiveVoice: any;
-
 @Injectable({ providedIn: 'root' })
 export class SpeechService {
+  synth: any;
 
   constructor(
     public appService: AppService,
@@ -26,9 +25,11 @@ export class SpeechService {
         .then(() => console.log(`Speak by tts: ${text}`))
         .catch((reason: any) => console.log(reason));
     } else {
-      console.log(`speak by responsive voice: ${text}`);
-      responsiveVoice.cancel();
-      responsiveVoice.speak(text, "UK English Female", {rate: rate});
+      this.synth = window.speechSynthesis;
+      var utterance1 = new SpeechSynthesisUtterance(text);
+      utterance1.rate = rate;
+      this.synth.speak(utterance1);
+      console.log(`speak by web api: ${text}`);
     }
   }
 
@@ -36,7 +37,7 @@ export class SpeechService {
     if (this.appService.isApp()) {
       this.textToSpeech.stop().then(() => console.log(`stopped tss`));
     } else {
-      responsiveVoice.cancel();
+      this.synth.stop();
     }
   }
 }

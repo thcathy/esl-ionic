@@ -63,6 +63,7 @@ export class DictationPracticePage implements OnInit {
     this.vocabPractices = [];
     this.questionIndex = 0;
     this.mark = 0;
+    this.answer = '';
   }
 
   async initDictation() {

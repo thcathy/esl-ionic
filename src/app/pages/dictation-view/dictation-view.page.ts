@@ -15,6 +15,7 @@ import {ActivatedRoute} from "@angular/router";
 export class DictationViewPage implements OnInit {
   dictation: Dictation;
   dictationId: number;
+  showBackButton: boolean = false;
 
   constructor(
     public route: ActivatedRoute,
@@ -22,6 +23,7 @@ export class DictationViewPage implements OnInit {
     public authService: AuthService,
     public ionicComponentService: IonicComponentService,
     public storage: Storage,
+    public navigationService: NavigationService,
   ) { }
 
   ngOnInit() {
@@ -32,6 +34,7 @@ export class DictationViewPage implements OnInit {
   async init() {
     this.dictation = await this.storage.get(NavigationService.storageKeys.dictation);
     this.dictationId = await +this.route.snapshot.queryParamMap.get('dictationId');
+    this.showBackButton = this.route.snapshot.queryParamMap.get('showBackButton') === 'true';
     const toastMessage = this.route.snapshot.queryParamMap.get('toastMessage');
 
     if (toastMessage != null) this.ionicComponentService.showToastMessage(toastMessage);
