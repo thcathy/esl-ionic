@@ -15,7 +15,7 @@ export class IonicComponentService {
   async showLoading() {
     const loading = await this.loadingController.create({
       message: this.translate.instant('Please wait') + '...',
-      duration: 3000
+      duration: 5000
     });
     loading.present();
     return loading;
