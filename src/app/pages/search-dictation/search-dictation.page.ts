@@ -49,7 +49,7 @@ export class SearchDictationPage implements OnInit {
 
   createForm() {
     this.inputForm = this.formBuilder.group({
-      'keyword': new FormControl('', [Validators.minLength(3), Validators.maxLength(50)]),
+      'keyword': new FormControl('', [Validators.pattern("[\w]{3,}|[0-9]{1,}"), Validators.maxLength(50)]),
       'minDate': this.dateOptions[0],
       'creator': new FormControl('', [Validators.minLength(3), Validators.maxLength(50)]),
       'suitableStudent': 'Any',

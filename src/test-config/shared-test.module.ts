@@ -8,7 +8,6 @@ import {
   Platform,
   ToastController
 } from "@ionic/angular";
-import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
 import {TranslateModule} from "@ngx-translate/core";
 import {RouterTestingModule} from "@angular/router/testing";
 import {HttpClientTestingModule} from "@angular/common/http/testing";
@@ -20,10 +19,11 @@ import {
   PlatformSpy,
   SplashScreenSpy,
   StatusBarSpy,
-  StorageSpy, ToastControllerSpy
+  StorageSpy, TextToSpeechSpy, ToastControllerSpy
 } from "./mocks-ionic";
 import {ComponentsModule} from "../app/components/components.module";
 import {NoopAnimationsModule} from "@angular/platform-browser/animations";
+import {TextToSpeech} from "@ionic-native/text-to-speech/ngx";
 
 @NgModule({
   imports:      [
@@ -53,6 +53,7 @@ export class SharedTestModule {
         { provide: AlertController, useValue: AlertControllerSpy()},
         { provide: LoadingController, useValue: LoadingControllerSpy()},
         { provide: ToastController, useValue: ToastControllerSpy()},
+        { provide: TextToSpeech, useValue: TextToSpeechSpy()},
         NavController,
       ]
     };

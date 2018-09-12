@@ -5,6 +5,7 @@ import { SearchDictationPage } from './search-dictation.page';
 import {SharedTestModule} from "../../../test-config/shared-test.module";
 import {StorageSpy} from "../../../test-config/mocks-ionic";
 import {Storage} from "@ionic/storage";
+import {ActivatedRoute, convertToParamMap} from "@angular/router";
 
 describe('SearchDictationPage', () => {
   let component: SearchDictationPage;
@@ -41,7 +42,9 @@ describe('SearchDictationPage', () => {
 
   it('form is validated', () => {
     component.keyword.setValue('ab');
-    expect(component.keyword.errors.minlength).toBeDefined();
+    expect(component.keyword.errors.pattern).toBeDefined();
+    component.keyword.setValue('1');
+    expect(component.keyword.errors).toBeNull();
     component.keyword.setValue('123456789012345678901234567890123456789012345678901');
     expect(component.keyword.errors.maxlength).toBeDefined();
 

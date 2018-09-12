@@ -134,3 +134,5 @@ export const StatusBarSpy = () => jasmine.createSpyObj('StatusBar', ['styleDefau
 export const SplashScreenSpy = () => jasmine.createSpyObj('SplashScreen', ['hide']);
 
 export const PlatformSpy = () => jasmine.createSpyObj('Platform', { ready: Promise.resolve() });
+
+export const TextToSpeechSpy = () => jasmine.createSpyObj('TextToSpeech', ['speak']);

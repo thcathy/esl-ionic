@@ -49,7 +49,7 @@ describe('PracticeCompletePage', () => {
         { provide: Storage, useValue: storageSpy },
         { provide: ActivatedRoute, useValue: {
             snapshot: {
-              paramMap: convertToParamMap({
+              queryParamMap: convertToParamMap({
                 historyStored: 'true',
                 mark: '10',
               })

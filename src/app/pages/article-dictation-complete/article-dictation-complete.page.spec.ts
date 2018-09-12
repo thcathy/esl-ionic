@@ -8,7 +8,6 @@ import {StorageSpy} from "../../../test-config/mocks-ionic";
 import {Storage} from "@ionic/storage";
 import {DictationService} from "../../services/dictation/dictation.service";
 import {ActivatedRoute, convertToParamMap} from "@angular/router";
-import {NoopAnimationsModule} from "@angular/platform-browser/animations";
 
 describe('ArticleDictationCompletePage', () => {
   let component: ArticleDictationCompletePage;
@@ -37,7 +36,7 @@ describe('ArticleDictationCompletePage', () => {
         { provide: Storage, useValue: storageSpy },
         { provide: ActivatedRoute, useValue: {
             snapshot: {
-              paramMap: convertToParamMap({
+              queryParamMap: convertToParamMap({
                 historyStored: 'true'
               })
             }
