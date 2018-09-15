@@ -37,6 +37,7 @@ import {IonicComponentService} from "./services/ionic-component.service";
 import {IdTokenInterceptor} from "./interceptor/IdTokenInterceptor";
 import {TextToSpeech} from "@ionic-native/text-to-speech/ngx";
 import {InAppBrowser} from "@ionic-native/in-app-browser/ngx";
+import {MemberHomePageModule} from "./pages/member-home/member-home.module";
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -61,6 +62,7 @@ library.add(fas, far);
         deps: [HttpClient]
       }
     }),
+    MemberHomePageModule,
   ],
   providers: [
     StatusBar,

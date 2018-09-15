@@ -26,8 +26,9 @@ export class DictationViewPage implements OnInit {
     public navigationService: NavigationService,
   ) { }
 
-  ngOnInit() {
-    console.log(`dictation-view ngOnInit`);
+  ngOnInit() {}
+
+  ionViewDidEnter() {
     this.showBackButton = false;
     this.init();
   }

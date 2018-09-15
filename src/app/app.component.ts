@@ -51,7 +51,6 @@ export class AppComponent {
 
       (<any>window).handleOpenURL = (url) => {
         console.log(`url: ${url}`);
-        debugger;
         Auth0Cordova.onRedirectUri(url);
       };
     });

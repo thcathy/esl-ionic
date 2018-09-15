@@ -6,6 +6,7 @@ import {MemberDictationService} from "../../services/dictation/member-dictation.
 import {PracticeHistoryService} from "../../services/dictation/practice-history.service";
 import {RankingService} from "../../services/ranking/ranking.service";
 import {IonicComponentService} from "../../services/ionic-component.service";
+import {ActivatedRoute} from "@angular/router";
 
 @Component({
   selector: 'app-member-home',
@@ -19,6 +20,7 @@ export class MemberHomePage implements OnInit {
   practiceHistories: PracticeHistory[];
 
   constructor(
+    public route: ActivatedRoute,
     public memberDictationService: MemberDictationService,
     public practiceHistoryService: PracticeHistoryService,
     public rankingService: RankingService,
@@ -36,14 +38,12 @@ export class MemberHomePage implements OnInit {
     this.init();
   }
 
-  async init() {
-    let loader = await this.ionicComponentService.showLoading();
-    this.rankingService.allTimesAndLast6Score().subscribe((s) => this.setScores(s));
-    this.practiceHistoryService.getAll().subscribe((s) => this.practiceHistories = s);
-    this.memberDictationService.getAllDictation().subscribe(dictations => {
-      loader.dismiss();
-      this.createdDictations = dictations;
-    });
+  init() {
+    //this.rankingService.allTimesAndLast6Score().subscribe(s => this.setScores(s));
+    this.practiceHistoryService.getAll().subscribe(s => this.practiceHistories = s);
+    //this.memberDictationService.getAllDictation().subscribe(dictations => {
+    //  this.createdDictations = dictations;
+    //});
   }
 
   private setScores(scores: MemberScore[]) {

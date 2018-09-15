@@ -189,10 +189,16 @@ export class AuthService {
         this.navigationService.goTo(request);
       } else {
         this.memberService.getProfile().subscribe((_m) => {
-          this.ionicComponentService.showToastMessage(this.translate.instant('Welcome back'));
+          //this.iOSInitWorkaround();
           this.navigationService.openMemberHome();
         });
       }
     });
+  }
+
+  private iOSInitWorkaround() {
+    if (this.appService.isIOS()) {
+      this.ionicComponentService.showAlert(null, this.translate.instant('Welcome back'));
+    }
   }
 }

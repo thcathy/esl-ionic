@@ -36,7 +36,6 @@ export class PracticeCompletePage implements OnInit {
   ngOnInit() {}
 
   ionViewDidEnter() {
-    this.historyStored = false;
     this.init();
   }
 

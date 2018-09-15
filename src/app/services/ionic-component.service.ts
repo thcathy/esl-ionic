@@ -21,8 +21,9 @@ export class IonicComponentService {
     return loading;
   }
 
-  async showAlert(message: string) {
+  async showAlert(message: string, header: string = null) {
     const alert = await this.alertController.create({
+      header: header,
       message: message,
       buttons: [this.translate.instant('OK')]
     });

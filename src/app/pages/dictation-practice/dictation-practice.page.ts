@@ -42,8 +42,7 @@ export class DictationPracticePage implements OnInit {
     public storage: Storage,
   ) { }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   ionViewDidEnter() {
     this.clearVaribles();

@@ -45,7 +45,7 @@ export class EditDictationPage implements OnInit {
     this.dictation = await this.storage.get(NavigationService.storageKeys.dictation);
     if (!this.authService.isAuthenticated()) {
       this.authService.login({
-        destination: 'EditDictationPage',
+        destination: '/edit-dictation',
         params: {dictation: this.dictation}
       });
       return;

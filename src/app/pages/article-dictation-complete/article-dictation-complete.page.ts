@@ -37,7 +37,6 @@ export class ArticleDictationCompletePage implements OnInit {
   ngOnInit() {}
 
   ionViewDidEnter() {
-    this.historyStored = false;
     this.init();
   }
 

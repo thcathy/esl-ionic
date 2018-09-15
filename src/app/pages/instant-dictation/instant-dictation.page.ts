@@ -32,9 +32,11 @@ export class InstantDictationPage implements OnInit {
   ) { }
 
   ngOnInit() {
-    console.log(`instant-dictation ngOnInit`);
-    this.getFromLocalStorage();
     this.createForm();
+  }
+
+  ionViewDidEnter() {
+    this.getFromLocalStorage();
   }
 
   createForm() {

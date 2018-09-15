@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 
 import {Dictation} from "../entity/dictation";
 import {DictationService} from "./dictation/dictation.service";
-import {Router} from "@angular/router";
+import {convertToParamMap, Router} from "@angular/router";
 import {Storage} from "@ionic/storage";
 import {VocabPracticeHistory} from "../entity/vocab-practice-history";
 import {SentenceHistory} from "../entity/sentence-history";
@@ -42,7 +42,7 @@ export class NavigationService {
   }
 
   goTo(request: NavigationRequest) {
-    this.router.navigate([request.destination], { queryParams: request.params });
+    this.router.navigate([request.destination], { queryParams: convertToParamMap(request.params) });
   }
 
   goBack() {
