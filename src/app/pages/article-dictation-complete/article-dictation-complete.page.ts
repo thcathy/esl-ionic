@@ -27,14 +27,17 @@ export class ArticleDictationCompletePage implements OnInit {
   constructor(
     public route: ActivatedRoute,
     public dictationService: DictationService,
-    public navService: NavigationService,
+    public navigationService: NavigationService,
     public translate: TranslateService,
     public translateService: TranslateService,
     public ionicComponentService: IonicComponentService,
     public storage: Storage,
   ) { }
 
-  ngOnInit() {
+  ngOnInit() {}
+
+  ionViewDidEnter() {
+    this.historyStored = false;
     this.init();
   }
 
@@ -50,7 +53,7 @@ export class ArticleDictationCompletePage implements OnInit {
   async getInputParameters() {
     this.dictation = await this.storage.get(NavigationService.storageKeys.dictation);
     this.histories = await this.storage.get(NavigationService.storageKeys.histories);
-    this.historyStored = this.route.snapshot.queryParamMap.get('historyStored') === 'true';
+    this.historyStored = await this.storage.get(NavigationService.storageKeys.historyStored);
   }
 
   private calculateCorrect(histories: SentenceHistory[]) {
@@ -89,7 +92,7 @@ export class ArticleDictationCompletePage implements OnInit {
 
   openDictation(d: Dictation) {
     if (this.loader) this.loader.dismiss();
-    this.navService.retryDictation(d);
+    this.navigationService.retryDictation(d);
   }
 
   showCannotGetDictation(error) {

@@ -1,11 +1,7 @@
-.speakBtn {
-  background-color: #69BB7B;
-  color: #ffffff;
-  border-radius: 25px;
+.speakButton {
   --margin-top: 0px;
   --margin-bottom: 0px;
-}
-
-.rateBtn {
-  height: 3rem;
+  --background: #69BB7B;
+  --background-activated: #59AB6B;
+  --color: #ffffff;
 }

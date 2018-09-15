@@ -19,6 +19,10 @@ export class NavigationService {
     dictation: 'dictation',
     dictationId: 'dictationId',
     histories: 'histories',
+    historyStored: 'historyStored',
+    mark: 'mark',
+    toastMessage: 'toastMessage',
+    showBackButton: 'showBackButton',
   };
 
   constructor(private router: Router,
@@ -45,16 +49,13 @@ export class NavigationService {
     this.location.back();
   }
 
-  startDictation(dictation: Dictation) {
+  async startDictation(dictation: Dictation) {
+    await this.storage.set(NavigationService.storageKeys.dictationId, dictation.id);
     this.storage.set(NavigationService.storageKeys.dictation, dictation).then(() => {
       if (this.dictationService.isSentenceDictation(dictation)) {
         this.router.navigate(['/article-dictation']);
       } else {
-        this.router.navigate(['/dictation-practice'], {
-          queryParams: {
-            dictationId: dictation.id
-          }
-        });
+        this.router.navigate(['/dictation-practice']);
       }
     });
   }
@@ -66,16 +67,12 @@ export class NavigationService {
       this.startDictation(dictation);
   }
 
-  openDictation(dictation: Dictation, toastMessage: string = null, showBackButton: boolean = false) {
+  async openDictation(dictation: Dictation, toastMessage: string = null, showBackButton: boolean = false) {
+    await this.storage.set(NavigationService.storageKeys.dictationId, dictation.id);
+    await this.storage.set(NavigationService.storageKeys.toastMessage, toastMessage);
+    await this.storage.set(NavigationService.storageKeys.showBackButton, showBackButton);
     this.storage.set(NavigationService.storageKeys.dictation, dictation)
-      .then(() => {
-        this.router.navigate(['/dictation-view'], {
-          queryParams: {
-            dictationId: dictation.id,
-            toastMessage: toastMessage,
-            showBackButton: showBackButton,
-          }});
-      });
+      .then(() => this.router.navigate(['/dictation-view']));
   }
 
   pushOpenDictation(dictation: Dictation, toastMessage: string = null) {
@@ -90,12 +87,9 @@ export class NavigationService {
   async practiceComplete(dictation: Dictation, mark: number, histories: VocabPracticeHistory[], historyStored: boolean = false) {
     await this.storage.set(NavigationService.storageKeys.dictation, dictation);
     await this.storage.set(NavigationService.storageKeys.histories, histories);
-    return await this.router.navigate(['/practice-complete'],{
-      queryParams: {
-        mark: mark,
-        historyStored: historyStored,
-      }
-    });
+    await this.storage.set(NavigationService.storageKeys.mark, mark);
+    await this.storage.set(NavigationService.storageKeys.historyStored, historyStored);
+    return await this.router.navigate(['/practice-complete']);
   }
 
   openFunFunSpell() {
@@ -105,10 +99,7 @@ export class NavigationService {
   async articleDictationComplete(dictation: Dictation, histories: SentenceHistory[], historyStored: boolean = false) {
     await this.storage.set(NavigationService.storageKeys.dictation, dictation);
     await this.storage.set(NavigationService.storageKeys.histories, histories);
-    return await this.router.navigate(['/article-dictation-complete'], {
-      queryParams: {
-        historyStored: historyStored,
-      }
-    });
+    await this.storage.set(NavigationService.storageKeys.historyStored, historyStored);
+    return await this.router.navigate(['/article-dictation-complete']);
   }
 }

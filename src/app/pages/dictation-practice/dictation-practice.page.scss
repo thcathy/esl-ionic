@@ -1,18 +1,18 @@
-.phonicsBtn {
-  width: 150px;
-  background-color: #e91e63;
-  color: #ffffff;
-  border-radius: 25px;
+.phonicsButton {
+  --width: 150px;
   --margin-top: 0px;
   --margin-bottom: 0px;
+  --background: #e91e63;
+  --background-activated: #d90e53;
+  --color: #ffffff;
 }
 
-.speakBtn {
-  width: 150px;
-  background-color: #69BB7B;
-  color: #ffffff;
-  border-radius: 25px;
+.speakButton {
+  --width: 150px;
   --margin-top: 0px;
   --margin-bottom: 0px;
+  --background: #69BB7B;
+  --background-activated: #59AB6B;
+  --color: #ffffff;
 }
 

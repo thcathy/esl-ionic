@@ -43,6 +43,8 @@ describe('SearchDictationPage', () => {
   it('form is validated', () => {
     component.keyword.setValue('ab');
     expect(component.keyword.errors.pattern).toBeDefined();
+    component.keyword.setValue('abc');
+    expect(component.keyword.errors).toBeNull();
     component.keyword.setValue('1');
     expect(component.keyword.errors).toBeNull();
     component.keyword.setValue('123456789012345678901234567890123456789012345678901');

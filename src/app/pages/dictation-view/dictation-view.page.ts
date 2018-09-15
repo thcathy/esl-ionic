@@ -28,14 +28,15 @@ export class DictationViewPage implements OnInit {
 
   ngOnInit() {
     console.log(`dictation-view ngOnInit`);
+    this.showBackButton = false;
     this.init();
   }
 
   async init() {
     this.dictation = await this.storage.get(NavigationService.storageKeys.dictation);
-    this.dictationId = await +this.route.snapshot.queryParamMap.get('dictationId');
-    this.showBackButton = this.route.snapshot.queryParamMap.get('showBackButton') === 'true';
-    const toastMessage = this.route.snapshot.queryParamMap.get('toastMessage');
+    this.dictationId = await this.storage.get(NavigationService.storageKeys.dictationId);
+    this.showBackButton = await this.storage.get(NavigationService.storageKeys.showBackButton);
+    const toastMessage = await this.storage.get(NavigationService.storageKeys.toastMessage);
 
     if (toastMessage != null) this.ionicComponentService.showToastMessage(toastMessage);
     if (this.dictation == null && this.dictationId > 0) {

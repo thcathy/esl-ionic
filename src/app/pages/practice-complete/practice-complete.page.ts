@@ -25,15 +25,18 @@ export class PracticeCompletePage implements OnInit {
 
   constructor(
     public route: ActivatedRoute,
-    public navService: NavigationService,
     public dictationService: DictationService,
     public translate: TranslateService,
     public translateService: TranslateService,
     public ionicComponentService: IonicComponentService,
     public storage: Storage,
+    public navigationService: NavigationService,
   ) { }
 
-  ngOnInit() {
+  ngOnInit() {}
+
+  ionViewDidEnter() {
+    this.historyStored = false;
     this.init();
   }
 
@@ -45,8 +48,8 @@ export class PracticeCompletePage implements OnInit {
   async getNavParams() {
     this.dictation = await this.storage.get(NavigationService.storageKeys.dictation);
     this.histories = await this.storage.get(NavigationService.storageKeys.histories);
-    this.mark = +this.route.snapshot.queryParamMap.get('mark');
-    this.historyStored = this.route.snapshot.queryParamMap.get('historyStored') === 'true';
+    this.mark = await this.storage.get(NavigationService.storageKeys.mark);
+    this.historyStored = await this.storage.get(NavigationService.storageKeys.historyStored);
   }
 
   createHistory() {
@@ -87,7 +90,7 @@ export class PracticeCompletePage implements OnInit {
 
   openDictation(d: Dictation) {
     if (this.loader) this.loader.dismiss();
-    this.navService.retryDictation(d);
+    this.navigationService.retryDictation(d);
   }
 
   showCannotGetDictation(error) {

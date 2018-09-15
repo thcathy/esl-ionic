@@ -8,7 +8,8 @@ import * as auth0 from 'auth0-js';
 import {MemberService} from "./member/member.service";
 import {NavigationRequest, NavigationService} from "./navigation.service";
 import {Router} from "@angular/router";
-import {App} from "@ionic/angular";
+import {App, ToastController} from "@ionic/angular";
+import {IonicComponentService} from "./ionic-component.service";
 
 export const auth0CordovaConfig = {
   // needed for auth0
@@ -48,6 +49,8 @@ export class AuthService {
               public translate: TranslateService,
               public memberService: MemberService,
               public navigationService: NavigationService,
+              public ionicComponentService: IonicComponentService,
+              public toastController: ToastController,
               private router: Router) {
     try {
       this.userProfile = JSON.parse(localStorage.getItem('profile'));
@@ -167,8 +170,7 @@ export class AuthService {
       auth0WebAuth.client.userInfo(this.accessToken, (err, profile) => {
         if (err) {
           console.error(`${JSON.stringify(err)}`);
-          this.router.navigate(['/home']);
-          throw err;
+          this.router.navigateByUrl('/home');
         }
 
         this.zone.run(() => {
@@ -187,7 +189,8 @@ export class AuthService {
         this.navigationService.goTo(request);
       } else {
         this.memberService.getProfile().subscribe((_m) => {
-          this.router.navigate(['/member-home']);
+          this.ionicComponentService.showToastMessage(this.translate.instant('Welcome back'));
+          this.navigationService.openMemberHome();
         });
       }
     });

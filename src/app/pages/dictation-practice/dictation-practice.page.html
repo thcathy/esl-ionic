@@ -19,17 +19,19 @@
             <ion-col size="12" size-sm="12" size-md="6">
               <ion-row>
                 <ion-col text-center>
-                  <ion-button fill="clear" class="speakBtn" (click)="speak()"><fa-icon [icon]="['fas', 'headphones']"></fa-icon>&nbsp;{{'Listen'|translate}}</ion-button>
+                  <ion-button shape="round" class="speakButton" (click)="speak()"><fa-icon [icon]="['fas', 'headphones']"></fa-icon>&nbsp;{{'Listen'|translate}}</ion-button>
                 </ion-col>
                 <ion-col text-center>
-                  <ion-button fill="clear" class="phonicsBtn" (click)="showPhonics()">{{phonics|translate}}</ion-button>
+                  <ion-button shape="round" class="phonicsButton" (click)="showPhonics()">{{phonics|translate}}</ion-button>
                 </ion-col>
               </ion-row>
               <ion-item class="answerInput">
                 <ion-label position="floating">{{'Answer'|translate}}</ion-label>
                 <ion-input #answerElement [(ngModel)]="answer" type="text" maxlength="30" (keyup.enter)="submitAnswer()"></ion-input>
               </ion-item>
-              <ion-button expand="full" class="submitBtn" (click)="submitAnswer()">{{'Submit'|translate}}</ion-button>
+              <div text-right>
+                <ion-button class="submitBtn" (click)="submitAnswer()"><fa-icon icon="check"></fa-icon>&nbsp;{{'Submit'|translate}}</ion-button>
+              </div>
 
             </ion-col>
             <ion-col size="12" size-sm="12" size-md="6">
