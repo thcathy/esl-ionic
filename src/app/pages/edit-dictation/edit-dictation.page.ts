@@ -21,6 +21,7 @@ export class EditDictationPage implements OnInit {
   dictation: Dictation;
   isEdit: boolean;
   suitableStudentOptions = SuitableStudentOptions;
+  inited: boolean = false;
 
   constructor(
     public formBuilder: FormBuilder,
@@ -43,6 +44,10 @@ export class EditDictationPage implements OnInit {
 
   async init() {
     this.dictation = await this.storage.get(NavigationService.storageKeys.dictation);
+    this.isEdit = this.dictation != null;
+    this.setupForm(this.dictation);
+
+    console.log(`${JSON.stringify(this.dictation)}`);
     if (!this.authService.isAuthenticated()) {
       this.authService.login({
         destination: '/edit-dictation',
@@ -50,8 +55,6 @@ export class EditDictationPage implements OnInit {
       });
       return;
     }
-    this.isEdit = this.dictation != null;
-    this.setupForm(this.dictation);
   }
 
   createForm() {

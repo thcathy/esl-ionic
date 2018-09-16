@@ -11,7 +11,7 @@
 <ion-content>
   <div class="inner-content">
     <ion-card class="card">
-      <ion-card-header style="font-size: 1.2rem;">{{ 'CompletePracticeHeader' | translate:{mark:mark, totalQuestion: histories.length} }}</ion-card-header>
+      <ion-card-header style="font-size: 1.2rem;" *ngIf="histories">{{ 'CompletePracticeHeader' | translate:{mark:mark, totalQuestion: histories.length} }}</ion-card-header>
       <ion-row no-padding>
         <ion-col>
           <ion-button (click)="getDictationThenOpen()"><fa-icon [icon]="['fas', 'redo']"></fa-icon>&nbsp;{{'Retry'|translate}}</ion-button>

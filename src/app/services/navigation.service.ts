@@ -42,7 +42,7 @@ export class NavigationService {
   }
 
   goTo(request: NavigationRequest) {
-    this.router.navigate([request.destination], { queryParams: convertToParamMap(request.params) });
+    this.router.navigate([request.destination]);
   }
 
   goBack() {

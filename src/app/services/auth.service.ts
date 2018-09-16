@@ -49,8 +49,6 @@ export class AuthService {
               public translate: TranslateService,
               public memberService: MemberService,
               public navigationService: NavigationService,
-              public ionicComponentService: IonicComponentService,
-              public toastController: ToastController,
               private router: Router) {
     try {
       this.userProfile = JSON.parse(localStorage.getItem('profile'));
@@ -150,9 +148,9 @@ export class AuthService {
     let result = "en";
     if (locale != null) {
       if (locale.indexOf("zh-Hans") > -1)
-        result = "zh-tw";
-      else if (locale.indexOf("zh-Hant") > -1)
         result = "zh";
+      else if (locale.indexOf("zh-Hant") > -1)
+        result = "zh-tw";
     }
     console.log(`set auth0 lang based on ${locale} to ${result}`);
     return result;
@@ -176,8 +174,8 @@ export class AuthService {
         this.zone.run(() => {
           localStorage.setItem('profile', JSON.stringify(profile));
           this.userProfile = profile;
+          this.redirectAfterLogin();
         });
-        this.redirectAfterLogin();
       });
     }
   }
@@ -186,19 +184,13 @@ export class AuthService {
     this.storage.get(this.navigationRequestKey).then((request) => {
       if (request != null) {
         this.storage.set(this.navigationRequestKey, null);
-        this.navigationService.goTo(request);
+        this.router.navigateByUrl(request.destination);
       } else {
         this.memberService.getProfile().subscribe((_m) => {
-          //this.iOSInitWorkaround();
-          this.navigationService.openMemberHome();
+          this.router.navigateByUrl('/member-home');
         });
       }
     });
   }
 
-  private iOSInitWorkaround() {
-    if (this.appService.isIOS()) {
-      this.ionicComponentService.showAlert(null, this.translate.instant('Welcome back'));
-    }
-  }
 }
