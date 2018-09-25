@@ -10,7 +10,7 @@
     <ion-card class="card">
       <ion-card-content>
         <form class="input-form" [formGroup]="inputForm" novalidate>
-          <ion-searchbar (ionInput)="filterHistory($event)" formControlName="keyword" placeholder="{{'ID or part of title / description' | translate}}" (ionBlur)="stopShowHistory()"></ion-searchbar>
+          <ion-searchbar (ionInput)="filterHistory($event)" formControlName="keyword" placeholder="{{'ID or part of title / description' | translate}}" (ionBlur)="stopShowHistory()" (keydown.enter)="search()"></ion-searchbar>
           <ion-list class="autocomplete" *ngIf="filteredHistory && showHistory">
             <ion-item *ngFor="let h of filteredHistory" (touchstart)="setKeyword(h)" (mousedown)="setKeyword(h)">{{h}} <fa-icon item-end [icon]="['fas', 'history']"></fa-icon></ion-item>
           </ion-list>
@@ -30,6 +30,14 @@
             <ion-label style="margin: inherit;">{{'Suitable'|translate}} ({{'Age'|translate}})</ion-label>
             <ion-select style="padding-right: 30px;" formControlName="suitableStudent" interface="popover">
               <ion-select-option *ngFor="let state of suitableStudentOptions" [value]="state">{{'SuitableStudent.' + state|translate}}</ion-select-option>
+            </ion-select>
+          </ion-item>
+          <ion-item *ngIf="moreOptions">
+            <ion-label style="margin: inherit;">{{'Type'|translate}}</ion-label>
+            <ion-select style="padding-right: 30px;" formControlName="type" interface="popover">
+              <ion-select-option value="Any">{{'Any'|translate}}</ion-select-option>
+              <ion-select-option value="Vocab">{{'Word'|translate}}</ion-select-option>
+              <ion-select-option value="Article">{{'Sentence'|translate}}</ion-select-option>
             </ion-select>
           </ion-item>
           <ion-item *ngIf="moreOptions">

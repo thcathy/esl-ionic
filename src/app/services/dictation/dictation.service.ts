@@ -17,6 +17,7 @@ export interface SearchDictationRequest {
   maxDate?: Date;
   creator?: string;
   suitableStudent?: string;
+  type?: string;
 }
 
 export interface CreateDictationHistoryRequest {

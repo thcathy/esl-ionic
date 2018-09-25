@@ -46,6 +46,7 @@ export class SearchDictationPage implements OnInit {
   get minDate() { return this.inputForm.get('minDate') }
   get creator() { return this.inputForm.get('creator') }
   get suitableStudent() { return this.inputForm.get('suitableStudent') }
+  get type() { return this.inputForm.get('type') }
 
   createForm() {
     this.inputForm = this.formBuilder.group({
@@ -53,6 +54,7 @@ export class SearchDictationPage implements OnInit {
       'minDate': this.dateOptions[0],
       'creator': new FormControl('', [Validators.minLength(3), Validators.maxLength(50)]),
       'suitableStudent': 'Any',
+      'type': 'Any',
     });
     this.inputForm.get('suitableStudent').setValue('Any');
   }
@@ -72,7 +74,8 @@ export class SearchDictationPage implements OnInit {
       keyword: this.keyword.value,
       minDate: this.minDate.value.date,
       creator: this.creator.value,
-      suitableStudent: this.suitableStudent.value
+      suitableStudent: this.suitableStudent.value,
+      type: this.type.value === 'Any' ? null : this.type.value,
     }).subscribe(r => {
       loader.dismiss();
       this.results = r;
