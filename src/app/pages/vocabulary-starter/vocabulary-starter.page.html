@@ -1,0 +1,46 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start"><ion-menu-button></ion-menu-button></ion-buttons>
+    <ion-title>{{'Vocabulary Practice' | translate}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="inner-content">
+    <ion-card class="card">
+      <ion-card-content style="margin-bottom: 40px;">
+        <form class="input-form" [formGroup]="inputForm" novalidate>
+          <h3><fa-icon icon="sliders-h"></fa-icon> Select Difficulty</h3>
+          <ion-select formControlName="difficulty" interface="popover">
+            <ion-select-option *ngFor="let d of vocabDifficulties" [value]="d">{{'VocabDifficulty.' + d|translate}}</ion-select-option>
+          </ion-select>
+          <ion-button float-right>
+            <fa-icon icon="play"></fa-icon>&nbsp;{{'Start'|translate}}
+          </ion-button>
+        </form>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card class="card">
+      <ion-card-header><fa-icon icon="book"></fa-icon> This exercise has</ion-card-header>
+      <ion-card-content>
+          <ion-list>
+            <ion-item>over <ion-badge color="secondary">4000</ion-badge> most frequently used English words</ion-item>
+            <ion-item>with pronunciation and image</ion-item>
+          </ion-list>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card class="card">
+      <ion-card-header><fa-icon icon="user-lock"></fa-icon> After login, you can</ion-card-header>
+      <ion-card-content>
+        <ion-list>
+          <ion-item>save vocabulary to exercise later</ion-item>
+          <ion-item>know what you learnt</ion-item>
+          <ion-item>earn stars and compete with everyone</ion-item>
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
+  </div>
+  <footer></footer>
+</ion-content>

@@ -36,6 +36,7 @@ export class NavigationService {
   openInstantDictation() { this.navigate('/instant-dictation') }
   openSearchDictation() { this.navigate('/search-dictation') }
   openMemberHome() { this.navigate('/member-home') }
+  openVocabularyStarter() { this.navigate('/vocabulary-starter') }
 
   navigate(path: string) {
     this.router.navigate([path]);

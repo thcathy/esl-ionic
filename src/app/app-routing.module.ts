@@ -15,6 +15,7 @@ const routes: Routes = [
   { path: 'member-home', component: MemberHomePage },
   { path: 'edit-dictation', loadChildren: './pages/edit-dictation/edit-dictation.module#EditDictationPageModule' },
   { path: 'search-dictation', loadChildren: './pages/search-dictation/search-dictation.module#SearchDictationPageModule' },
+  { path: 'vocabulary-starter', loadChildren: './pages/vocabulary-starter/vocabulary-starter.module#VocabularyStarterPageModule' },
 ];
 
 @NgModule({

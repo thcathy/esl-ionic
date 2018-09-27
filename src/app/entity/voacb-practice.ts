@@ -17,3 +17,13 @@ export interface VocabPractice {
   picsFullPathsInString?: string;
   suffledWord?: string;
 }
+
+export enum VocabDifficulty {
+  Beginner = "Beginner",
+  Easy = "Easy",
+  Normal = "Normal",
+  Hard = "Hard",
+  VeryHard = "VeryHard",
+}
+
+export let vocabDifficulties = [VocabDifficulty.Beginner, VocabDifficulty.Easy, VocabDifficulty.Normal, VocabDifficulty.Hard, VocabDifficulty.VeryHard];
