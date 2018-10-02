@@ -7,6 +7,8 @@ import {TranslateService} from "@ngx-translate/core";
 import {IonicComponentService} from "../../services/ionic-component.service";
 import {Storage} from "@ionic/storage";
 import {ActivatedRoute} from "@angular/router";
+import {MemberVocabularyService} from "../../services/practice/member-vocabulary.service";
+import {AuthService} from "../../services/auth.service";
 
 @Component({
   selector: 'app-practice-complete',
@@ -26,11 +28,13 @@ export class PracticeCompletePage implements OnInit {
   constructor(
     public route: ActivatedRoute,
     public dictationService: DictationService,
+    public memberVocabularyService: MemberVocabularyService,
     public translate: TranslateService,
     public translateService: TranslateService,
     public ionicComponentService: IonicComponentService,
     public storage: Storage,
     public navigationService: NavigationService,
+    public authService: AuthService,
   ) { }
 
   ngOnInit() {}
@@ -52,14 +56,25 @@ export class PracticeCompletePage implements OnInit {
   }
 
   createHistory() {
-    if (this.dictationService.isInstantDictation(this.dictation) || this.historyStored) return;
+    debugger;
+    if (this.historyStored || !this.authService.isAuthenticated()) {
+      return;
+    }
 
-    this.dictationService.createVocabDictationHistory(this.dictation, this.mark, this.histories)
-      .subscribe(
-        d => this.dictation = d,
-        e => alert(e),
-        () => this.finished = true
-      );
+    if (this.dictationService.isGeneratedDictation(this.dictation)) {
+      this.memberVocabularyService.saveHistory(this.histories);
+      return;
+    } else if (this.dictationService.isInstantDictation(this.dictation)) {
+      return;
+    } else {
+      this.dictationService.createVocabDictationHistory(this.dictation, this.mark, this.histories)
+        .subscribe(
+          d => this.dictation = d,
+          e => alert(e),
+          () => this.finished = true
+        );
+      return;
+    }
   }
 
   recommend() {

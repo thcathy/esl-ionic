@@ -14,6 +14,23 @@
     "JuniorSecondary": "初中 (12-14)",
     "SeniorSecondary": "高中 (15-17)"
   },
+  "VocabDifficulty": {
+    "Beginner": "初級",
+    "Easy": "簡單",
+    "Normal": "普通",
+    "Hard": "困難",
+    "VeryHard": "非常困難"
+  },
+  "VocabularyPracticeDescription": {
+    "ThisExercise": "這練習提供",
+    "Over": "超過",
+    "MostFrequentlyUsedEnglishWords": "個最常用英文生字",
+    "WithPronunciationAndImage": "提供真人發聲及圖案幫助學習",
+    "AfterLogin": "登入後能夠",
+    "SaveVocabulary": "記下生字 於將來複習",
+    "KnowWhatYouLearn": "知道學到什麼生字",
+    "EarnStars": "得到星星 登上排行榜"
+  },
   "Menu": "目錄",
   "Hi": "妳好",
   "Home": "主頁",
@@ -142,7 +159,8 @@
   "Welcome back": "歡迎回來",
   "Type": "種類",
   "Word": "單字",
-  "": "",
+  "Vocabulary Practice": "生字練習",
+  "Select Difficulty": "選擇難度",
   "": "",
   "": "",
   "": "",

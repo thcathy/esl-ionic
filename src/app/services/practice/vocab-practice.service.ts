@@ -5,6 +5,7 @@ import {Service} from "../root.service";
 import {VocabPractice} from "../../entity/voacb-practice";
 import {environment} from "../../../environments/environment";
 import {Observable} from "rxjs/internal/Observable";
+import {Dictation} from "../../entity/dictation";
 
 
 
@@ -16,6 +17,7 @@ export class VocabPracticeService extends Service {
   }
 
   private getQuestionUrl = environment.apiHost + '/vocab/get/question/';
+  private generatePracticeUrl = environment.apiHost + '/vocab/practice/generate/';
 
   getQuestion(word: string, showImage: boolean): Observable<VocabPractice> {
     let params = new HttpParams();
@@ -26,6 +28,10 @@ export class VocabPracticeService extends Service {
 
   isWordEqual(word: string, input: string): boolean {
     return word.replace(/ /g, '').replace(/-/g, '').toLowerCase() === (input.replace(/ /g, "").replace(/-/g, "").toLowerCase());
+  }
+
+  generatePractice(difficulty: string): Observable<Dictation> {
+    return this.http.get<Dictation>(this.generatePracticeUrl + difficulty);
   }
 
 }

@@ -103,10 +103,7 @@
 }
 
 ion-content {
-  background-image: url('./assets/img/main_bg.jpg');
-  background-position: left 100px;
-  background-color: #46c6fc !important;
-  background-repeat: no-repeat;
+  --background: #46c6fc url('./assets/img/main_bg.jpg') no-repeat left 100px;
 }
 
 .card {
@@ -121,6 +118,7 @@ ion-content {
   ion-card-header {
     color: white;
     background-color: #4CAF50;
+    font-size: 1.1rem;
   }
 
   ion-card-content {

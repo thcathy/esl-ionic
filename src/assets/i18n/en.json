@@ -14,6 +14,23 @@
     "JuniorSecondary": "Junior Secondary (12-14)",
     "SeniorSecondary": "Senior Secondary (15-17)"
   },
+  "VocabDifficulty": {
+    "Beginner": "Beginner",
+    "Easy": "Easy",
+    "Normal": "Normal",
+    "Hard": "Hard",
+    "VeryHard": "Very Hard"
+  },
+  "VocabularyPracticeDescription": {
+    "ThisExercise": "This exercise has",
+    "Over": "over",
+    "MostFrequentlyUsedEnglishWords": "most frequently used English words",
+    "WithPronunciationAndImage": "with pronunciation and image",
+    "AfterLogin": "After login, you can",
+    "SaveVocabulary": "save vocabulary to exercise later",
+    "KnowWhatYouLearn": "know what you learn",
+    "EarnStars": "earn stars and compete with everyone"
+  },
   "Menu_Quick": "Quick",
   "Menu_Create": "Create",
   "Menu_Search": "Find",

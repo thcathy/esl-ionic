@@ -104,6 +104,10 @@ export class DictationService {
     return !ValidationUtils.isBlankString(dictation.article);
   }
 
+  isGeneratedDictation(dictation: Dictation): boolean {
+    return dictation.generated;
+  }
+
   search(request: SearchDictationRequest): Observable<Dictation[]> {
     return this.http.post<Dictation[]>(this.searchDictationUrl, request);
   }

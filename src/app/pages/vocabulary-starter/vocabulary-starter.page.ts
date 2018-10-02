@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import {FormBuilder, FormGroup} from "@angular/forms";
 import {VocabDifficulty, vocabDifficulties} from "../../entity/voacb-practice";
+import {VocabPracticeService} from "../../services/practice/vocab-practice.service";
+import {NavigationService} from "../../services/navigation.service";
 
 @Component({
   selector: 'app-vocabulary-starter',
@@ -13,6 +15,8 @@ export class VocabularyStarterPage implements OnInit {
 
   constructor(
     public formBuilder: FormBuilder,
+    public vocabPracticeService: VocabPracticeService,
+    public navigationService: NavigationService,
   ) { }
 
   ngOnInit() {
@@ -23,8 +27,14 @@ export class VocabularyStarterPage implements OnInit {
 
   createForm() {
     this.inputForm = this.formBuilder.group({
-      'difficulty': VocabDifficulty.Beginner,
+      'difficulty': '',
     });
+    this.inputForm.get('difficulty').setValue(VocabDifficulty.Beginner);
+  }
+
+  start() {
+    this.vocabPracticeService.generatePractice(this.difficulty.value)
+      .subscribe(d => this.navigationService.startDictation(d));
   }
 
 }

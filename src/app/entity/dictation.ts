@@ -22,6 +22,7 @@ export class Dictation {
   totalRecommended?: number;
   id?: number;
   suitableStudent?: string;
+  generated?:boolean;
 }
 
 export const SuitableStudentOptions = ['Any','Kindergarten','JuniorPrimary','SeniorPrimary','JuniorSecondary','SeniorSecondary'];

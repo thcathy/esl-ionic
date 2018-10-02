@@ -2,6 +2,7 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { VocabularyStarterPage } from './vocabulary-starter.page';
+import {SharedTestModule} from "../../../test-config/shared-test.module";
 
 describe('VocabularyStarterPage', () => {
   let component: VocabularyStarterPage;
@@ -11,6 +12,9 @@ describe('VocabularyStarterPage', () => {
     TestBed.configureTestingModule({
       declarations: [ VocabularyStarterPage ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
+      imports: [
+        SharedTestModule.forRoot(),
+      ],
     })
     .compileComponents();
   }));

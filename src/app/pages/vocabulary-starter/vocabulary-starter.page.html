@@ -8,37 +8,38 @@
 <ion-content>
   <div class="inner-content">
     <ion-card class="card">
+      <ion-card-header><fa-icon icon="book"></fa-icon> {{'Vocabulary Practice' | translate}}</ion-card-header>
       <ion-card-content style="margin-bottom: 40px;">
-        <form class="input-form" [formGroup]="inputForm" novalidate>
-          <h3><fa-icon icon="sliders-h"></fa-icon> Select Difficulty</h3>
-          <ion-select formControlName="difficulty" interface="popover">
-            <ion-select-option *ngFor="let d of vocabDifficulties" [value]="d">{{'VocabDifficulty.' + d|translate}}</ion-select-option>
-          </ion-select>
-          <ion-button float-right>
-            <fa-icon icon="play"></fa-icon>&nbsp;{{'Start'|translate}}
-          </ion-button>
-        </form>
-      </ion-card-content>
-    </ion-card>
+        <ion-grid>
+          <ion-row>
+            <ion-col size="12" size-sm="12" size-md="12" size-lg="6">
+              <form class="input-form" [formGroup]="inputForm" novalidate>
+                <h3><fa-icon icon="sliders-h"></fa-icon> {{'Select Difficulty'|translate}}</h3>
+                <ion-select formControlName="difficulty" interface="popover">
+                  <ion-select-option *ngFor="let d of vocabDifficulties" [value]="d">{{'VocabDifficulty.' + d|translate}}</ion-select-option>
+                </ion-select>
+                <ion-button float-right (click)="start()" expand="full">
+                  <fa-icon icon="play"></fa-icon>&nbsp;{{'Start'|translate}}
+                </ion-button>
+              </form>
+            </ion-col>
+            <ion-col size="12" size-sm="12" size-md="12" size-lg="6">
+              <h3><fa-icon icon="pen"></fa-icon> {{'VocabularyPracticeDescription.ThisExercise'|translate}}</h3>
+              <ul>
+                <li>{{'VocabularyPracticeDescription.Over'|translate}} <ion-badge color="secondary">4000</ion-badge> {{'VocabularyPracticeDescription.MostFrequentlyUsedEnglishWords'|translate}}</li>
+                <li>{{'VocabularyPracticeDescription.WithPronunciationAndImage'|translate}}</li>
+              </ul>
+              <h3><fa-icon icon="user-lock"></fa-icon> {{'VocabularyPracticeDescription.AfterLogin'|translate}}</h3>
+              <ul>
+                <li>{{'VocabularyPracticeDescription.SaveVocabulary'|translate}}</li>
+                <li>{{'VocabularyPracticeDescription.KnowWhatYouLearn'|translate}}</li>
+                <li>{{'VocabularyPracticeDescription.EarnStars'|translate}}</li>
+              </ul>
+            </ion-col>
 
-    <ion-card class="card">
-      <ion-card-header><fa-icon icon="book"></fa-icon> This exercise has</ion-card-header>
-      <ion-card-content>
-          <ion-list>
-            <ion-item>over <ion-badge color="secondary">4000</ion-badge> most frequently used English words</ion-item>
-            <ion-item>with pronunciation and image</ion-item>
-          </ion-list>
-      </ion-card-content>
-    </ion-card>
+          </ion-row>
+        </ion-grid>
 
-    <ion-card class="card">
-      <ion-card-header><fa-icon icon="user-lock"></fa-icon> After login, you can</ion-card-header>
-      <ion-card-content>
-        <ion-list>
-          <ion-item>save vocabulary to exercise later</ion-item>
-          <ion-item>know what you learnt</ion-item>
-          <ion-item>earn stars and compete with everyone</ion-item>
-        </ion-list>
       </ion-card-content>
     </ion-card>
   </div>

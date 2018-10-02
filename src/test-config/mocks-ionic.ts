@@ -123,7 +123,7 @@ export const LoadingControllerSpy = () => {
 
 export const AlertControllerSpy = () => jasmine.createSpyObj('AlertController', ['create']);
 
-export const AuthServiceSpy = () => jasmine.createSpyObj('AuthService', ['requireAuthenticated']);
+export const AuthServiceSpy = () => jasmine.createSpyObj('AuthService', ['requireAuthenticated','isAuthenticated']);
 
 export const PopoverControllerSpy = () => jasmine.createSpyObj('PopoverController', ['create']);
 
@@ -136,3 +136,7 @@ export const SplashScreenSpy = () => jasmine.createSpyObj('SplashScreen', ['hide
 export const PlatformSpy = () => jasmine.createSpyObj('Platform', { ready: Promise.resolve() });
 
 export const TextToSpeechSpy = () => jasmine.createSpyObj('TextToSpeech', ['speak']);
+
+export const DictationServiceSpy = () => jasmine.createSpyObj('DictationService', ['createVocabDictationHistory', 'isInstantDictation', 'isGeneratedDictation', 'isSentenceDictation']);
+
+export const MemberVocabularyServiceSpy = () => jasmine.createSpyObj('MemberVocabularyService', ['saveHistory']);
