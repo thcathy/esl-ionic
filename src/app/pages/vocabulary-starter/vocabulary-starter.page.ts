@@ -3,6 +3,10 @@ import {FormBuilder, FormGroup} from "@angular/forms";
 import {VocabDifficulty, vocabDifficulties} from "../../entity/voacb-practice";
 import {VocabPracticeService} from "../../services/practice/vocab-practice.service";
 import {NavigationService} from "../../services/navigation.service";
+import {IonicComponentService} from "../../services/ionic-component.service";
+import {ActivatedRoute} from "@angular/router";
+import {switchMap} from "rxjs-compat/operator/switchMap";
+import {map} from "rxjs/operators";
 
 @Component({
   selector: 'app-vocabulary-starter',
@@ -17,10 +21,16 @@ export class VocabularyStarterPage implements OnInit {
     public formBuilder: FormBuilder,
     public vocabPracticeService: VocabPracticeService,
     public navigationService: NavigationService,
+    public route: ActivatedRoute,
   ) { }
 
   ngOnInit() {
     this.createForm();
+    this.route.paramMap.pipe(
+      map(params => {
+        this.difficulty.setValue(params.get('difficulty'));
+      })
+    );
   }
 
   get difficulty() { return this.inputForm.get('difficulty') }

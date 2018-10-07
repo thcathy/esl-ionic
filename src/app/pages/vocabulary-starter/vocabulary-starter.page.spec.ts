@@ -3,17 +3,26 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { VocabularyStarterPage } from './vocabulary-starter.page';
 import {SharedTestModule} from "../../../test-config/shared-test.module";
+import {ActivatedRoute} from "@angular/router";
+import {Observable} from "rxjs";
 
 describe('VocabularyStarterPage', () => {
   let component: VocabularyStarterPage;
   let fixture: ComponentFixture<VocabularyStarterPage>;
+  let route: ActivatedRoute;
 
   beforeEach(async(() => {
+    route = new ActivatedRoute();
+    route.params = Observable.of();
+
     TestBed.configureTestingModule({
       declarations: [ VocabularyStarterPage ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       imports: [
         SharedTestModule.forRoot(),
+      ],
+      providers: [
+        { provide: ActivatedRoute, useValue: route },
       ],
     })
     .compileComponents();

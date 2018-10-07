@@ -56,7 +56,6 @@ export class PracticeCompletePage implements OnInit {
   }
 
   createHistory() {
-    debugger;
     if (this.historyStored || !this.authService.isAuthenticated()) {
       return;
     }
@@ -93,7 +92,9 @@ export class PracticeCompletePage implements OnInit {
   }
 
   getDictationThenOpen() {
-    if (this.dictationService.isInstantDictation(this.dictation)) {
+    if (this.dictationService.isGeneratedDictation(this.dictation)) {
+      this.navigationService.openVocabularyStarter();
+    } else if (this.dictationService.isInstantDictation(this.dictation)) {
       this.openDictation(this.dictation);
     } else {
       //this.ionicComponentService.showLoading().then(l => this.loader = l);

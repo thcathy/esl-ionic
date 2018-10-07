@@ -6,7 +6,7 @@ import {dictation1} from "../../../test-config/test-data";
 import {DictationService} from "../../services/dictation/dictation.service";
 import {
   AuthServiceSpy,
-  DictationServiceSpy, MemberVocabularyServiceSpy,
+  DictationServiceSpy, MemberVocabularyServiceSpy, NavigationServiceSpy,
   StorageSpy,
 } from "../../../test-config/mocks-ionic";
 import {Storage} from "@ionic/storage";
@@ -14,6 +14,7 @@ import "rxjs-compat/add/observable/of";
 import {SharedTestModule} from "../../../test-config/shared-test.module";
 import {MemberVocabularyService} from "../../services/practice/member-vocabulary.service";
 import {AuthService} from "../../services/auth.service";
+import {NavigationService} from "../../services/navigation.service";
 
 describe('PracticeCompletePage', () => {
   let component: PracticeCompletePage;
@@ -22,6 +23,7 @@ describe('PracticeCompletePage', () => {
   let memberVocabularyServiceSpy = MemberVocabularyServiceSpy();
   let storageSpy = StorageSpy();
   let authServiceSpy = AuthServiceSpy();
+  let navigationServiceSpy = NavigationServiceSpy();
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -35,6 +37,7 @@ describe('PracticeCompletePage', () => {
         { provide: MemberVocabularyService, useValue: memberVocabularyServiceSpy},
         { provide: Storage, useValue: storageSpy },
         { provide: AuthService, useValue: authServiceSpy },
+        { provide: NavigationService, useValue: navigationServiceSpy },
       ]
     })
     .compileComponents();
@@ -97,5 +100,23 @@ describe('PracticeCompletePage', () => {
 
     expect(memberVocabularyServiceSpy.saveHistory.calls.count()).toEqual(1);
     expect(dictationServiceSpy.createVocabDictationHistory.calls.count()).toEqual(0);
+  }));
+
+  it('retry generated dictation will go to vocabulary starter', fakeAsync(()=> {
+    dictationServiceSpy.isInstantDictation.and.returnValue(false);
+    dictationServiceSpy.isGeneratedDictation.and.returnValue(true);
+    const params = {
+      'dictation': dictation1,
+      'histories': [],
+      'historyStored': false,
+    };
+    storageSpy.get.and.callFake((param) => {return params[param]});
+
+    component.ionViewDidEnter();
+    tick();
+    fixture.detectChanges();
+    component.getDictationThenOpen();
+
+    expect(navigationServiceSpy.openVocabularyStarter.calls.count()).toEqual(1);
   }));
 });

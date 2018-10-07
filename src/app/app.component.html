@@ -12,10 +12,11 @@
     <ion-content>
         <ion-list>
           <ion-menu-toggle auto-hide="false">
-            <ion-item-divider><ion-label>Fun Fun Spell</ion-label></ion-item-divider>
             <ion-item (click)="navigationService.openHomePage()">
               <ion-label><fa-icon [icon]="['fas', 'home']"></fa-icon>&nbsp; {{ 'Home' | translate }}</ion-label>
             </ion-item>
+
+            <ion-item-divider><ion-label>{{'Dictation'|translate}}</ion-label></ion-item-divider>
             <ion-item (click)="navigationService.openInstantDictation()">
               <ion-label><fa-icon [icon]="['fas', 'rocket']"></fa-icon>&nbsp; {{ 'Quick Dictation' | translate }}</ion-label>
             </ion-item>
@@ -29,8 +30,9 @@
               <ion-label><fa-icon [icon]="['fas', 'edit']"></fa-icon>&nbsp; {{ 'Create Dictation' | translate }}</ion-label>
             </ion-item>
 
+            <ion-item-divider><ion-label>{{'English Exercise'|translate}}</ion-label></ion-item-divider>
             <ion-item (click)="navigationService.openVocabularyStarter()">
-              <ion-label>{{ 'Vocabulary Practice' | translate }}</ion-label>
+              <ion-label><fa-icon icon="book"></fa-icon>&nbsp; {{ 'Vocabulary Practice' | translate }}</ion-label>
             </ion-item>
 
             <ion-item-divider><ion-label>{{ 'Account' | translate }}</ion-label></ion-item-divider>

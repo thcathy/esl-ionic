@@ -103,7 +103,7 @@ export class DeepLinkerMock {
 
 export const GoogleAnalyticsSpy = () => jasmine.createSpyObj('GoogleAnalytics', ['trackView']);
 
-export const NavgationServiceSpy = () => jasmine.createSpyObj('NavigationService', ['goTo']);
+export const NavigationServiceSpy = () => jasmine.createSpyObj('NavigationService', ['goTo', 'openVocabularyStarter']);
 
 export const StorageSpy = () => {
   const storageSpy = jasmine.createSpyObj('Storage', ['get', 'set']);

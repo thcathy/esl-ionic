@@ -17,13 +17,13 @@
       </ion-card-header>
       <ion-card-content>{{ 'Online Dictation' | translate }}</ion-card-content>
       <ion-grid>
-        <ion-row>
+        <ion-row justify-content-center>
           <ion-col size="6" size-sm="6" size-md="4" size-lg="3">
             <ion-card class="card-button">
               <ion-card-content>
                 <div><fa-icon [icon]="['fas', 'rocket']" size="4x"></fa-icon></div>
                 <div>{{ 'Input and Start' | translate }}</div>
-                <div><ion-button fill="outline" color="light" (click)="navigationService.openInstantDictation()">{{ 'Menu_Quick' | translate }}</ion-button></div>
+                <div><ion-button fill="outline" color="light" (click)="navigationService.openInstantDictation()">{{ 'Menu_Start' | translate }}</ion-button></div>
               </ion-card-content>
             </ion-card>
           </ion-col>
@@ -33,6 +33,15 @@
                 <div><fa-icon [icon]="['fas', 'headphones']" size="4x"></fa-icon></div>
                 <div>{{ 'Create and Save' | translate }}</div>
                 <div><ion-button fill="outline" color="light" (click)="navigationService.editDictation()">{{ 'Menu_Create' | translate }}</ion-button></div>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+          <ion-col size="6" size-sm="6" size-md="4" size-lg="3" class="hidden-sm-down">
+            <ion-card class="card-button">
+              <ion-card-content>
+                <div><fa-icon icon="list" size="4x"></fa-icon></div>
+                <div>{{ 'Show record' | translate }}</div>
+                <div><ion-button fill="outline" color="light" (click)="navigationService.openSearchDictation()">{{ 'My Dictation' | translate }}</ion-button></div>
               </ion-card-content>
             </ion-card>
           </ion-col>
@@ -47,6 +56,22 @@
           </ion-col>
         </ion-row>
       </ion-grid>
+
+      <ion-card-content>{{ 'English Exercise' | translate }}</ion-card-content>
+      <ion-grid>
+        <ion-row justify-content-center>
+          <ion-col size="6" size-sm="6" size-md="4" size-lg="3">
+            <ion-card class="card-button">
+              <ion-card-content>
+                <div><fa-icon icon="book" size="4x"></fa-icon></div>
+                <div>{{ 'Learn Vocabulary' | translate }}</div>
+                <div><ion-button fill="outline" color="light" (click)="navigationService.openVocabularyStarter()">{{ 'Menu_Start' | translate }}</ion-button></div>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+
     </ion-card>
 
     <member-score-ranking [ranking]="memberScoreRanking"></member-score-ranking>
