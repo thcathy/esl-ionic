@@ -23,14 +23,13 @@ export class MemberHomePage implements OnInit {
     public rankingService: RankingService,
   ) { }
 
-  ngOnInit() {
+  ngOnInit() {}
+
+  ionViewDidEnter() {
     this.createdDictations = [];
     this.allTimesScore = null;
     this.latestScore = [];
     this.practiceHistories = [];
-  }
-
-  ionViewDidEnter() {
     this.init();
   }
 

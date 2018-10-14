@@ -18,7 +18,7 @@
                 <ion-select formControlName="difficulty" interface="popover">
                   <ion-select-option *ngFor="let d of vocabDifficulties" [value]="d">{{'VocabDifficulty.' + d|translate}}</ion-select-option>
                 </ion-select>
-                <ion-button float-right (click)="start()" expand="full">
+                <ion-button float-right (click)="start()">
                   <fa-icon icon="play"></fa-icon>&nbsp;{{'Start'|translate}}
                 </ion-button>
               </form>

@@ -18,7 +18,7 @@ import {AuthService} from "../../services/auth.service";
 export class PracticeCompletePage implements OnInit {
   @ViewChild('dictationCard') dictationCard;
   dictation: Dictation;
-  mark: number;
+  mark: number = 0;
   histories: VocabPracticeHistory[] = [];
   recommended: boolean;
   finished: boolean = false;

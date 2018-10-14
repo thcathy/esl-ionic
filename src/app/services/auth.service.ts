@@ -33,7 +33,7 @@ export class AuthService {
   idToken: string;
 
   auth0 = new Auth0.WebAuth({
-    clientID: 'W8nTboR1CzD4nyytnxnnIYn2JhiVU1PL',
+    clientID: 'Q2x3VfMKsuKtmXuBbuwuTw3ARDZ1xpBS',
     domain: 'thcathy.auth0.com',
     responseType: 'token id_token',
     audience: 'https://thcathy.auth0.com/userinfo',
