@@ -80,7 +80,6 @@ export class SearchDictationPage implements OnInit {
       loader.dismiss();
       this.results = r;
     }, _e => loader.dismiss());
-    this.moreOptions = false;
   }
 
   createDateOptions(): DateSearchOption[] {

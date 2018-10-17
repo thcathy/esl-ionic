@@ -105,7 +105,7 @@ export class DictationService {
   }
 
   isGeneratedDictation(dictation: Dictation): boolean {
-    return dictation.generated;
+    return dictation != null && dictation.generated;
   }
 
   search(request: SearchDictationRequest): Observable<Dictation[]> {

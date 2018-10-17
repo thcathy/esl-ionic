@@ -18,6 +18,7 @@ export class NavigationService {
   public static storageKeys = {
     dictation: 'dictation',
     dictationId: 'dictationId',
+    editDictation: 'editDictation',
     histories: 'histories',
     historyStored: 'historyStored',
     mark: 'mark',
@@ -81,7 +82,7 @@ export class NavigationService {
   }
 
   async editDictation(dictation: Dictation = null) {
-    await this.storage.set(NavigationService.storageKeys.dictation, dictation);
+    await this.storage.set(NavigationService.storageKeys.editDictation, dictation);
     return await this.router.navigate(['/edit-dictation']);
   }
 

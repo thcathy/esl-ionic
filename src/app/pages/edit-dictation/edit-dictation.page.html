@@ -9,7 +9,7 @@
   <div class="inner-content">
     <ion-card class="card">
       <ion-card-content>
-        <form class="input-form" [formGroup]="inputForm" novalidate>
+        <form *ngIf="inputForm" class="input-form" [formGroup]="inputForm" novalidate>
           <ion-item>
             <ion-label stacked>{{'Title'|translate}} *</ion-label>
             <ion-input type="text" formControlName="title" placeholder="Dictation {{now | date:'yyyy-MM-dd'}}"></ion-input>

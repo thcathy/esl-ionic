@@ -35,15 +35,16 @@ export class EditDictationPage implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.createForm();
+
   }
 
   ionViewDidEnter() {
+    this.createForm();
     this.init();
   }
 
   async init() {
-    this.dictation = await this.storage.get(NavigationService.storageKeys.dictation);
+    this.dictation = await this.storage.get(NavigationService.storageKeys.editDictation);
     this.isEdit = this.dictation != null;
     this.setupForm(this.dictation);
 
@@ -109,7 +110,7 @@ export class EditDictationPage implements OnInit {
       article: this.type.value == 'sentence' ? this.article.value : '',
       suitableStudent: this.suitableStudent.value
     }).subscribe(
-      dic => this.viewDictation(dic),
+      dic => this.afterSaved(dic),
       err => this.showError(err)
     );
   }
@@ -124,7 +125,10 @@ export class EditDictationPage implements OnInit {
     return true;
   }
 
-  viewDictation(dictation: Dictation) {
+  afterSaved(dictation: Dictation) {
+    this.dictation = null;
+    this.storage.remove(NavigationService.storageKeys.editDictation);
+
     if (this.loader) this.loader.dismiss();
     this.translate.get('UpdatedDictation', {title: dictation.title}).subscribe((msg: string) => {
       this.navService.openDictation(dictation, msg);
