@@ -16,6 +16,10 @@ export class AppService {
     }
   }
 
+  isCordova(): boolean {
+    return this.platform.is('cordova');
+  }
+
   isIOS(): boolean {
     return this.platform.is('ios');
   }

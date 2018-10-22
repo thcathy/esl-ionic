@@ -38,6 +38,7 @@ import {IdTokenInterceptor} from "./interceptor/IdTokenInterceptor";
 import {TextToSpeech} from "@ionic-native/text-to-speech/ngx";
 import {InAppBrowser} from "@ionic-native/in-app-browser/ngx";
 import {MemberHomePageModule} from "./pages/member-home/member-home.module";
+import {GoogleAnalytics} from "@ionic-native/google-analytics";
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -74,7 +75,7 @@ library.add(fas, far);
     DisplayService,
     ServerService,
     ArticleDictationService,
-    TextToSpeech, InAppBrowser,
+    TextToSpeech, InAppBrowser, GoogleAnalytics,
     PracticeHistoryService, IonicComponentService,
     {
       provide: HTTP_INTERCEPTORS,
