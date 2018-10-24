@@ -6,12 +6,9 @@ import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 
 import { AppComponent } from './app.component';
-import {HttpClientTestingModule} from "@angular/common/http/testing";
-import {RouterTestingModule} from "@angular/router/testing";
-import {TranslateModule} from "@ngx-translate/core";
-import {Storage} from "@ionic/storage";
-import {PlatformSpy, SplashScreenSpy, StatusBarSpy, StorageSpy} from "../test-config/mocks-ionic";
+import {GoogleAnalyticsSpy} from "../test-config/mocks-ionic";
 import {SharedTestModule} from "../test-config/shared-test.module";
+import {GoogleAnalytics} from "@ionic-native/google-analytics/ngx";
 
 describe('AppComponent', () => {
 
@@ -21,7 +18,7 @@ describe('AppComponent', () => {
     statusBarSpy = jasmine.createSpyObj('StatusBar', ['styleDefault']);
     splashScreenSpy = jasmine.createSpyObj('SplashScreen', ['hide']);
     platformReadySpy = Promise.resolve();
-    platformSpy = jasmine.createSpyObj('Platform', { ready: platformReadySpy });
+    platformSpy = jasmine.createSpyObj('Platform', { ready: platformReadySpy, is: true });
 
     TestBed.configureTestingModule({
       declarations: [AppComponent],

@@ -42,9 +42,10 @@
     "@ngx-translate/core": "^10.0.2",
     "@ngx-translate/http-loader": "^3.0.1",
     "auth0-js": "^9.7.3",
-    "cordova-android": "7.0.0",
+    "cordova-android": "7.1.1",
     "cordova-browser": "5.0.3",
     "cordova-ios": "4.5.5",
+    "cordova-plugin-compat": "^1.2.0",
     "cordova-plugin-customurlscheme": "^4.3.0",
     "cordova-plugin-device": "^2.0.2",
     "cordova-plugin-inappbrowser": "^3.0.0",
@@ -58,7 +59,8 @@
     "core-js": "^2.5.3",
     "rxjs": "6.3.2",
     "rxjs-compat": "6.2.2",
-    "zone.js": "^0.8.26"
+    "zone.js": "^0.8.26",
+    "cordova-plugin-google-analytics": "~1.8.6"
   },
   "devDependencies": {
     "@angular-devkit/architect": "0.7.0-rc.3",
@@ -107,12 +109,13 @@
       },
       "cordova-plugin-ionic-keyboard": {},
       "cordova-plugin-inappbrowser": {},
-      "cordova-plugin-google-analytics": {}
+      "cordova-plugin-google-analytics": {},
+      "cordova-plugin-compat": {}
     },
     "platforms": [
       "browser",
-      "android",
-      "ios"
+      "ios",
+      "android"
     ]
   }
 }
