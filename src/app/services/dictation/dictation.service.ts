@@ -78,7 +78,6 @@ export class DictationService {
       h.question.picsFullPaths = [];
       h.question.picsFullPathsInString = '';
       h.question.grades = [];
-      h.question.activePronounceLink = '';
       return h;
     });
 

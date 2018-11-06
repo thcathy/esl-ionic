@@ -2,6 +2,7 @@ import {Member} from "../app/entity/member";
 import {Dictation} from "../app/entity/dictation";
 import {Name} from "../app/entity/name";
 import {SentenceHistory} from "../app/entity/sentence-history";
+import {VocabPractice} from "../app/entity/voacb-practice";
 
 
 export const member1 = new Member(
@@ -25,6 +26,50 @@ export const dictation1 = <Dictation>{
 
 export const dictation1Histories = [
   <SentenceHistory>{question: 'sentence to learn', answer: 'sentence to learn', questionSegments: [''], isCorrect: [true]}
-]
+];
+
+export const vocab_apple = <VocabPractice>{
+  id:1,
+  pronouncedLink:"http://dictionary.cambridge.org/media/english/uk_pron/u/uka/ukapp/ukappen014.mp3",
+  pronouncedLinkBackup:"https://s.yimg.com/tn/dict/dreye/live/f/apple.mp3",
+  word:"apple",
+  picFileName:"FRUT_032.jpg",
+  frequency:18.9,
+  rank:3193,
+  grades:[],
+  picsFullPaths:[
+    "data:image/png;base64,*************************************************************",
+    "data:image/png;base64,*************************************************************",
+    "data:image/png;base64,*************************************************************",
+  ],
+  picsFullPathsInString:"data:image/png;base64,*************************************************************",
+  ipa:"ˋæpl",
+  activePronounceLink:"http://dictionary.cambridge.org/media/english/uk_pron/u/uka/ukapp/ukappen014.mp3",
+  ipaunavailable:false,
+  suffledWord:"lapep"
+};
+
+export const vocab_banana = <VocabPractice>{
+  id:104,
+  pronouncedLink:"http://dictionary.cambridge.org/media/english/uk_pron/u/ukb/ukbal/ukballs018.mp3",
+  pronouncedLinkBackup:"https://s.yimg.com/tn/dict/dreye/live/f/banana.mp3",
+  word:"banana",
+  picFileName:"FRUT_113.jpg",
+  frequency:9.49,
+  rank:4828,
+  grades:[],
+  picsFullPaths:[
+    "data:image/png;base64,*************************************************************",
+    "data:image/png;base64,*************************************************************",
+    "data:image/png;base64,*************************************************************",
+  ],
+  picsFullPathsInString:"data:image/png;base64,*************************************************************",
+  ipa:"bəˋnɑ:nə",
+  activePronounceLink:"http://dictionary.cambridge.org/media/english/uk_pron/u/ukb/ukbal/ukballs018.mp3",
+  ipaunavailable:false,
+  suffledWord:"aaanbn"
+};
+
+
 
 

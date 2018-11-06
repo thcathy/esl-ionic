@@ -1,5 +1,5 @@
 import {CreateDictationHistoryRequest, DictationService} from "./dictation.service";
-import {dictation1} from "../../../test-config/test-data";
+import {dictation1, vocab_apple, vocab_banana} from "../../../test-config/test-data";
 import {Dictation} from "../../entity/dictation";
 import {SentenceHistory} from "../../entity/sentence-history";
 import {VocabPracticeHistory} from "../../entity/vocab-practice-history";
@@ -16,8 +16,8 @@ describe('DictationService', () => {
   it('createVocabDictationHistory will call http post with expected parameters', () => {
     const dictation1 = <Dictation>{ id: 1 };
     const vocabHistories1 = [
-      <VocabPracticeHistory>{ question: {picsFullPaths: ['https://abc1.com'], picsFullPathsInString: 'https://abc1.com'} },
-      <VocabPracticeHistory>{ question: {picsFullPaths: ['https://abc2.com'], picsFullPathsInString: 'https://abc2.com'} }
+      <VocabPracticeHistory>{ question: vocab_apple },
+      <VocabPracticeHistory>{ question: vocab_banana }
     ];
 
     service.createVocabDictationHistory(dictation1, 1, vocabHistories1);
@@ -28,6 +28,9 @@ describe('DictationService', () => {
     expect(callArg.wrong).toEqual(1);
     expect(callArg.histories.length).toEqual(2);
     expect(callArg.historyJSON.length).toBeGreaterThan(20);
+    expect(callArg.histories[0].question.picsFullPaths.length).toBeLessThan(1);
+    expect(callArg.histories[0].question.picsFullPathsInString.length).toBeLessThan(1);
+    expect(callArg.histories[0].question.grades.length).toBeLessThan(1);
   });
 
   it('createSentenceDictationHistory will call http post with expected parameters', () => {
