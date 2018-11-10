@@ -7,8 +7,8 @@ import {TranslateService} from "@ngx-translate/core";
 import {IonicComponentService} from "../../services/ionic-component.service";
 import {Storage} from "@ionic/storage";
 import {ActivatedRoute} from "@angular/router";
-import {MemberVocabularyService} from "../../services/practice/member-vocabulary.service";
 import {AuthService} from "../../services/auth.service";
+import {VocabPracticeService} from "../../services/practice/vocab-practice.service";
 
 @Component({
   selector: 'app-practice-complete',
@@ -28,7 +28,7 @@ export class PracticeCompletePage implements OnInit {
   constructor(
     public route: ActivatedRoute,
     public dictationService: DictationService,
-    public memberVocabularyService: MemberVocabularyService,
+    public vocabPracticeService: VocabPracticeService,
     public translate: TranslateService,
     public translateService: TranslateService,
     public ionicComponentService: IonicComponentService,
@@ -61,7 +61,8 @@ export class PracticeCompletePage implements OnInit {
     }
 
     if (this.dictationService.isGeneratedDictation(this.dictation)) {
-      this.memberVocabularyService.saveHistory(this.histories);
+      this.vocabPracticeService.saveHistory(this.histories)
+        .subscribe(result => console.log(`vocabulary practice history saved`));
       return;
     } else if (this.dictationService.isInstantDictation(this.dictation)) {
       return;

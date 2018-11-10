@@ -6,21 +6,21 @@ import {dictation1} from "../../../test-config/test-data";
 import {DictationService} from "../../services/dictation/dictation.service";
 import {
   AuthServiceSpy,
-  DictationServiceSpy, MemberVocabularyServiceSpy, NavigationServiceSpy,
-  StorageSpy,
+  DictationServiceSpy, NavigationServiceSpy,
+  StorageSpy, VocabPracticeServiceSpy,
 } from "../../../test-config/mocks-ionic";
 import {Storage} from "@ionic/storage";
 import "rxjs-compat/add/observable/of";
 import {SharedTestModule} from "../../../test-config/shared-test.module";
-import {MemberVocabularyService} from "../../services/practice/member-vocabulary.service";
 import {AuthService} from "../../services/auth.service";
 import {NavigationService} from "../../services/navigation.service";
+import {VocabPracticeService} from "../../services/practice/vocab-practice.service";
 
 describe('PracticeCompletePage', () => {
   let component: PracticeCompletePage;
   let fixture: ComponentFixture<PracticeCompletePage>;
   let dictationServiceSpy = DictationServiceSpy();
-  let memberVocabularyServiceSpy = MemberVocabularyServiceSpy();
+  let vocabPracticeServiceSpy = VocabPracticeServiceSpy();
   let storageSpy = StorageSpy();
   let authServiceSpy = AuthServiceSpy();
   let navigationServiceSpy = NavigationServiceSpy();
@@ -34,7 +34,7 @@ describe('PracticeCompletePage', () => {
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [
         { provide: DictationService, useValue: dictationServiceSpy},
-        { provide: MemberVocabularyService, useValue: memberVocabularyServiceSpy},
+        { provide: VocabPracticeService, useValue: vocabPracticeServiceSpy},
         { provide: Storage, useValue: storageSpy },
         { provide: AuthService, useValue: authServiceSpy },
         { provide: NavigationService, useValue: navigationServiceSpy },
@@ -79,7 +79,7 @@ describe('PracticeCompletePage', () => {
     component.ionViewDidEnter();
     tick();
     fixture.detectChanges();
-    expect(memberVocabularyServiceSpy.saveHistory.calls.count()).toEqual(0);
+    expect(vocabPracticeServiceSpy.saveHistory.calls.count()).toEqual(0);
     expect(dictationServiceSpy.createVocabDictationHistory.calls.count()).toEqual(0);
   }));
 
@@ -98,7 +98,7 @@ describe('PracticeCompletePage', () => {
     tick();
     fixture.detectChanges();
 
-    expect(memberVocabularyServiceSpy.saveHistory.calls.count()).toEqual(1);
+    expect(vocabPracticeServiceSpy.saveHistory.calls.count()).toEqual(1);
     expect(dictationServiceSpy.createVocabDictationHistory.calls.count()).toEqual(0);
   }));
 

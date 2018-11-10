@@ -6,6 +6,8 @@ import {VocabPractice} from "../../entity/voacb-practice";
 import {environment} from "../../../environments/environment";
 import {Observable} from "rxjs/internal/Observable";
 import {Dictation} from "../../entity/dictation";
+import {VocabPracticeHistory} from "../../entity/vocab-practice-history";
+import {MemberVocabulary} from "../../entity/member-vocabulary";
 
 
 
@@ -18,6 +20,7 @@ export class VocabPracticeService extends Service {
 
   private getQuestionUrl = environment.apiHost + '/vocab/get/question/';
   private generatePracticeUrl = environment.apiHost + '/vocab/practice/generate/';
+  private saveHistoryUrl = environment.apiHost + '/member/vocab/practice/history/save';
 
   getQuestion(word: string, showImage: boolean): Observable<VocabPractice> {
     let params = new HttpParams();
@@ -32,6 +35,21 @@ export class VocabPracticeService extends Service {
 
   generatePractice(difficulty: string): Observable<Dictation> {
     return this.http.get<Dictation>(this.generatePracticeUrl + difficulty);
+  }
+
+  saveHistory(histories: VocabPracticeHistory[]) {
+    return this.http.post<MemberVocabulary[]>(this.saveHistoryUrl, this.trimHistories(histories));
+  }
+
+  trimHistories(histories: VocabPracticeHistory[]) {
+    return histories.map((h) => {
+      const trimmedQuestion = Object.assign({}, h.question);
+      trimmedQuestion.picsFullPaths = [];
+      trimmedQuestion.picsFullPathsInString = '';
+      trimmedQuestion.grades = [];
+      h.question = trimmedQuestion;
+      return h;
+    });
   }
 
 }

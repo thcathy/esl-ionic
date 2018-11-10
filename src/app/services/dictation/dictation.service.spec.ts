@@ -3,6 +3,7 @@ import {dictation1, vocab_apple, vocab_banana} from "../../../test-config/test-d
 import {Dictation} from "../../entity/dictation";
 import {SentenceHistory} from "../../entity/sentence-history";
 import {VocabPracticeHistory} from "../../entity/vocab-practice-history";
+import {VocabPracticeService} from "../practice/vocab-practice.service";
 
 describe('DictationService', () => {
   let service: DictationService;
@@ -10,7 +11,7 @@ describe('DictationService', () => {
 
   beforeEach(() => {
     httpClientSpy = jasmine.createSpyObj('HttpClient', ['post']);
-    service = new DictationService(httpClientSpy);
+    service = new DictationService(httpClientSpy, new VocabPracticeService(httpClientSpy));
   });
 
   it('createVocabDictationHistory will call http post with expected parameters', () => {

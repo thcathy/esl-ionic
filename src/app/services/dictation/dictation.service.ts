@@ -8,6 +8,7 @@ import {SentenceHistory} from "../../entity/sentence-history";
 import {environment} from "../../../environments/environment";
 import {VocabPracticeHistory} from "../../entity/vocab-practice-history";
 import {Observable} from "rxjs/internal/Observable";
+import {VocabPracticeService} from "../practice/vocab-practice.service";
 
 export interface SearchDictationRequest {
   keyword?: string;
@@ -32,7 +33,10 @@ export interface CreateDictationHistoryRequest {
 @Injectable({ providedIn: 'root' })
 export class DictationService {
 
-  constructor (private http: HttpClient) {
+  constructor (
+    private http: HttpClient,
+    private vocabPracticeService: VocabPracticeService,
+  ) {
   }
 
   private randomStatUrl = environment.apiHost + '/dictation/random-stat';
@@ -74,12 +78,7 @@ export class DictationService {
   }
 
   createVocabDictationHistory(dictation: Dictation, mark: number, histories: Array<VocabPracticeHistory>): Observable<Dictation>  {
-    let sizeTrimmedHistories = histories.map((h) => {
-      h.question.picsFullPaths = [];
-      h.question.picsFullPathsInString = '';
-      h.question.grades = [];
-      return h;
-    });
+    let sizeTrimmedHistories = this.vocabPracticeService.trimHistories(histories);
 
     return this.createHistory({
       dictationId: dictation.id,

@@ -141,4 +141,4 @@ export const TextToSpeechSpy = () => jasmine.createSpyObj('TextToSpeech', ['spea
 
 export const DictationServiceSpy = () => jasmine.createSpyObj('DictationService', ['createVocabDictationHistory', 'isInstantDictation', 'isGeneratedDictation', 'isSentenceDictation']);
 
-export const MemberVocabularyServiceSpy = () => jasmine.createSpyObj('MemberVocabularyService', ['saveHistory']);
+export const VocabPracticeServiceSpy = () => jasmine.createSpyObj('VocabPraticeService', ['saveHistory']);
