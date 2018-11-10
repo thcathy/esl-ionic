@@ -1,3 +1,4 @@
+import {Observable} from "rxjs";
 
 
 export class PlatformMock {
@@ -141,4 +142,6 @@ export const TextToSpeechSpy = () => jasmine.createSpyObj('TextToSpeech', ['spea
 
 export const DictationServiceSpy = () => jasmine.createSpyObj('DictationService', ['createVocabDictationHistory', 'isInstantDictation', 'isGeneratedDictation', 'isSentenceDictation']);
 
-export const VocabPracticeServiceSpy = () => jasmine.createSpyObj('VocabPraticeService', ['saveHistory']);
+export const VocabPracticeServiceSpy = () => jasmine.createSpyObj('VocabPraticeService',
+{ saveHistory: Observable.of("") }
+);
