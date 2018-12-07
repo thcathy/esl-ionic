@@ -16,7 +16,6 @@ import {SplashScreen} from "@ionic-native/splash-screen/ngx";
 import {Storage} from "@ionic/storage";
 import {
   AlertControllerSpy, GoogleAnalyticsSpy, LoadingControllerSpy,
-  PlatformSpy,
   SplashScreenSpy,
   StatusBarSpy,
   StorageSpy, TextToSpeechSpy, ToastControllerSpy
@@ -50,7 +49,7 @@ export class SharedTestModule {
       providers: [
         { provide: StatusBar, useValue: StatusBarSpy() },
         { provide: SplashScreen, useValue: SplashScreenSpy() },
-        { provide: Platform, useValue: PlatformSpy() },
+        //{ provide: Platform, useValue: PlatformSpy() },
         { provide: Storage, useValue: StorageSpy() },
         { provide: AlertController, useValue: AlertControllerSpy()},
         { provide: LoadingController, useValue: LoadingControllerSpy()},
@@ -59,6 +58,7 @@ export class SharedTestModule {
         { provide: GoogleAnalytics, useValue: GoogleAnalyticsSpy()},
         AppService,
         NavController,
+        Platform,
       ]
     };
   }
