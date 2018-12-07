@@ -101,7 +101,7 @@ export class DictationPracticePage implements OnInit {
 
   focusAnswer() {
     if (this.answerInput) {
-      this.answerInput.focus();
+      this.answerInput.setFocus();
     }
   }
 

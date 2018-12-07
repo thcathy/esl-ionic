@@ -52,7 +52,7 @@
             </ion-row>
           </div>
 
-          <div *ngSwitchCase="'bysentence'">
+          <div *ngSwitchCase="'bysentence'" style="padding-left: 8px; padding-right: 8px;">
             <form class="articleInput" [formGroup]="bySentenceInputForm" novalidate>
               <h3>{{'Input an passage'|translate}}:</h3>
               <ion-textarea class="textarea" formControlName="article" rows="10"></ion-textarea>
