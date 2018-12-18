@@ -11,5 +11,5 @@ export interface MemberVocabulary {
 
 export interface MemberVocabularyId {
   member: Member;
-  word: String;
+  word: string;
 }

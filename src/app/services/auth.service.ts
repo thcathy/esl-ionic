@@ -8,8 +8,6 @@ import * as auth0 from 'auth0-js';
 import {MemberService} from "./member/member.service";
 import {NavigationRequest, NavigationService} from "./navigation.service";
 import {Router} from "@angular/router";
-import {App, ToastController} from "@ionic/angular";
-import {IonicComponentService} from "./ionic-component.service";
 
 export const auth0CordovaConfig = {
   // needed for auth0

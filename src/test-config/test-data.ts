@@ -3,6 +3,7 @@ import {Dictation} from "../app/entity/dictation";
 import {Name} from "../app/entity/name";
 import {SentenceHistory} from "../app/entity/sentence-history";
 import {VocabPractice} from "../app/entity/voacb-practice";
+import {MemberVocabulary} from "../app/entity/member-vocabulary";
 
 
 export const member1 = new Member(
@@ -70,6 +71,22 @@ export const vocab_banana = <VocabPractice>{
   suffledWord:"aaanbn"
 };
 
+export const memberVocabularyMember1Apple = <MemberVocabulary>{
+  id: {
+    word: 'apple',
+    member: member1,
+  },
+  correct: 10,
+  wrong: 0
+};
 
+export const memberVocabularyMember1Banana = <MemberVocabulary>{
+  id: {
+    word: 'banana',
+    member: member1,
+  },
+  correct: 2,
+  wrong: 3,
+};
 
 

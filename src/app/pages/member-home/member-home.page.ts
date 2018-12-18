@@ -5,6 +5,8 @@ import {PracticeHistory} from "../../entity/practice-models";
 import {MemberDictationService} from "../../services/dictation/member-dictation.service";
 import {PracticeHistoryService} from "../../services/dictation/practice-history.service";
 import {RankingService} from "../../services/ranking/ranking.service";
+import {ManageVocabHistoryService} from "../../services/member/manage-vocab-history.service";
+import {MemberVocabulary} from "../../entity/member-vocabulary";
 
 @Component({
   selector: 'app-member-home',
@@ -16,14 +18,24 @@ export class MemberHomePage implements OnInit {
   allTimesScore: MemberScore;
   latestScore: MemberScore[];
   practiceHistories: PracticeHistory[];
+  selectedSegment: String;
+  learntVocabularies: Map<string, MemberVocabulary> = new Map<string, MemberVocabulary>();
+  alwaysWrongVocabularies: Map<string, MemberVocabulary> = new Map<string, MemberVocabulary>();
 
   constructor(
     public memberDictationService: MemberDictationService,
     public practiceHistoryService: PracticeHistoryService,
     public rankingService: RankingService,
+    public manageVocabHistoryService: ManageVocabHistoryService,
   ) { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.selectedSegment = 'dictation';
+    this.manageVocabHistoryService.loadFromServer().then(_p => {
+      this.learntVocabularies = this.manageVocabHistoryService.learntVocabularies;
+      this.alwaysWrongVocabularies = this.manageVocabHistoryService.alwaysWrongVocabularies;
+    });
+  }
 
   ionViewDidEnter() {
     this.createdDictations = [];
@@ -46,6 +58,10 @@ export class MemberHomePage implements OnInit {
     this.allTimesScore = scores.find(s => s.scoreYearMonth > 999999);
     this.latestScore = scores.filter(s => s.scoreYearMonth < 999999)
       .sort( (a,b) => a.scoreYearMonth - b.scoreYearMonth);
+  }
+
+  segmentChanged(ev: any) {
+    this.selectedSegment = ev.detail.value;
   }
 
 }

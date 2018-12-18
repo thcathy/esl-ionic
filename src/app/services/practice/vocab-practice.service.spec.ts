@@ -1,11 +1,8 @@
 import {VocabPracticeService} from "./vocab-practice.service";
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {TestBed} from "@angular/core/testing";
-import {Dictation} from "../../entity/dictation";
 import {VocabPracticeHistory} from "../../entity/vocab-practice-history";
 import {vocab_apple, vocab_banana} from "../../../test-config/test-data";
-import {CreateDictationHistoryRequest} from "../dictation/dictation.service";
-import {MemberService} from "../member/member.service";
 import {HttpClient} from "@angular/common/http";
 
 describe('VocabPracticeService', () => {

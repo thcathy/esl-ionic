@@ -32,8 +32,9 @@ import {AppService} from "../app/services/app.service";
     HttpClientTestingModule,
     TranslateModule.forRoot(),
     CommonModule,
-    FormsModule, ReactiveFormsModule, IonicModule, NoopAnimationsModule,
+    FormsModule, ReactiveFormsModule, NoopAnimationsModule,
     ComponentsModule,
+    IonicModule.forRoot(),
   ],
   declarations: [ ],
   exports:      [
