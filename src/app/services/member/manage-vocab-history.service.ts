@@ -23,7 +23,9 @@ export class ManageVocabHistoryService extends Service {
     private storage: Storage,
   ) {
     super();
-    this.storage.get(this.MEMBER_VOCABULARIES_KEY).then(list => this.classifyVocabulary(list));
+    this.storage.get(this.MEMBER_VOCABULARIES_KEY).then(list => {
+      if (list != null) this.classifyVocabulary(list)
+    });
   }
 
   classifyVocabulary(vocabularies: MemberVocabulary[]) {
