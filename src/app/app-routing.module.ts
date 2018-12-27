@@ -12,7 +12,7 @@ const routes: Routes = [
   { path: 'article-dictation-complete', loadChildren: './pages/article-dictation-complete/article-dictation-complete.module#ArticleDictationCompletePageModule' },
   { path: 'dictation-view', loadChildren: './pages/dictation-view/dictation-view.module#DictationViewPageModule' },
   { path: 'account', loadChildren: './pages/account/account.module#AccountPageModule' },
-  { path: 'member-home', component: MemberHomePage },
+  { path: 'member-home/:segment', component: MemberHomePage },
   { path: 'edit-dictation', loadChildren: './pages/edit-dictation/edit-dictation.module#EditDictationPageModule' },
   { path: 'search-dictation', loadChildren: './pages/search-dictation/search-dictation.module#SearchDictationPageModule' },
   { path: 'vocabulary-starter', loadChildren: './pages/vocabulary-starter/vocabulary-starter.module#VocabularyStarterPageModule' },

@@ -1,0 +1,31 @@
+<ion-card class="card vocab-history-list" style="margin-top: 12px;" *ngIf="vocabs">
+  <ion-card-header>
+    <fa-icon icon="{{icon}}"></fa-icon> {{ title | translate }} ({{'Total'|translate}}: {{vocabs.size}})
+  </ion-card-header>
+  <ion-card-content>
+    <div text-center *ngIf="vocabs?.size == 0" style="padding-top: 16px;">{{ 'No record' | translate}}</div>
+    <ion-list>
+      <ion-item *ngFor="let vocab of viewVocabs; let i = index">
+        <ion-label>
+          <ion-row>
+            <ion-col class="heading">{{vocab.id.word}}</ion-col>
+            <ion-col text-right>
+              <span class="dark-green"><fa-icon [icon]="['fas', 'check']"></fa-icon> {{vocab.correct}}</span>
+              /
+              <span class="red"><fa-icon [icon]="['fas', 'times']"></fa-icon> {{vocab.wrong}}</span>
+              ({{vocab.correct / (vocab.correct + vocab.wrong) * 100 | number:'1.0-0'}}%)
+            </ion-col>
+          </ion-row>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+    <ion-row>
+      <ion-col>
+        <ion-button fill="clear" *ngIf="page > 0" color="secondary" (click)="newer()"><fa-icon [icon]="['fas', 'angle-left']"></fa-icon> {{ 'Newer' | translate }}</ion-button>
+      </ion-col>
+      <ion-col text-right>
+        <ion-button fill="clear" *ngIf="showOlder" color="secondary" (click)="older()">{{ 'Older' | translate }} <fa-icon [icon]="['fas', 'angle-right']"></fa-icon></ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-card-content>
+</ion-card>

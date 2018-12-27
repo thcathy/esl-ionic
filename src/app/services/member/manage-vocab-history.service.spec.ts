@@ -34,10 +34,10 @@ describe('ManageVocabHistoryService', () => {
   it('load and classified vocabulary from local storage when construction', fakeAsync(() => {
     service.loadFromServer();
     tick();
-    expect(service.learntVocabularies.size).toBe(1);
-    expect(service.learntVocabularies.get('apple').id.word).toBe('apple');
-    expect(service.alwaysWrongVocabularies.size).toBe(1);
-    expect(service.alwaysWrongVocabularies.get('banana').id.word).toBe('banana');
+    expect(service.learntVocabs.size).toBe(1);
+    expect(service.learntVocabs.get('apple').id.word).toBe('apple');
+    expect(service.frequentlyWrongVocabs.size).toBe(1);
+    expect(service.frequentlyWrongVocabs.get('banana').id.word).toBe('banana');
   }));
 
 });

@@ -24,6 +24,7 @@ export class NavigationService {
     mark: 'mark',
     toastMessage: 'toastMessage',
     showBackButton: 'showBackButton',
+    memberHomeSegment: 'memberHomeSegment',
   };
 
   constructor(private router: Router,
@@ -36,11 +37,10 @@ export class NavigationService {
   openAccountPage() { this.navigate('/account') }
   openInstantDictation() { this.navigate('/instant-dictation') }
   openSearchDictation() { this.navigate('/search-dictation') }
-  openMemberHome() { this.navigate('/member-home') }
   openVocabularyStarter() { this.navigate('/vocabulary-starter') }
 
-  navigate(path: string) {
-    this.router.navigate([path]);
+  navigate(path: string, queryParams = {}) {
+    this.router.navigate([path], { queryParams: queryParams });
   }
 
   goTo(request: NavigationRequest) {
@@ -60,6 +60,10 @@ export class NavigationService {
         this.router.navigate(['/dictation-practice']);
       }
     });
+  }
+
+  openMemberHome(segment: String = 'dictation') {
+    this.navigate(`/member-home/${segment}`)
   }
 
   retryDictation(dictation: Dictation) {

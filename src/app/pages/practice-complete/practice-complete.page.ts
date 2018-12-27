@@ -26,7 +26,6 @@ export class PracticeCompletePage implements OnInit {
   loader: any;
 
   constructor(
-    public route: ActivatedRoute,
     public dictationService: DictationService,
     public vocabPracticeService: VocabPracticeService,
     public translate: TranslateService,

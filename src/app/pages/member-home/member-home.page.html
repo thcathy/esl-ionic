@@ -4,9 +4,9 @@
     <ion-title>{{'My Dictation' | translate}}</ion-title>
   </ion-toolbar>
   <ion-toolbar color="primary">
-    <ion-segment (ionChange)="segmentChanged($event)">
-      <ion-segment-button value="dictation" [checked]="selectedSegment === 'dictation'">Dictation</ion-segment-button>
-      <ion-segment-button value="vocabulary" [checked]="selectedSegment === 'vocabulary'">Vocabulary</ion-segment-button>
+    <ion-segment #ionSegment (ionChange)="segmentChanged($event)">
+      <ion-segment-button value="dictation" [checked]="selectedSegment === 'dictation'">{{'Dictation' | translate }}</ion-segment-button>
+      <ion-segment-button value="vocabulary" [checked]="selectedSegment === 'vocabulary'">{{'Vocabulary' | translate }}</ion-segment-button>
     </ion-segment>
   </ion-toolbar>
 </ion-header>
@@ -18,8 +18,14 @@
         <member-score-list [allTimesScore]="allTimesScore" [scores]="latestScore"></member-score-list>
         <member-practice-history-list *ngIf="selectedSegment === 'dictation'" [histories]="practiceHistories"></member-practice-history-list>
       </ion-col>
-      <ion-col size="12" size-sm="12" size-md="12" size-lg="6">
-        <dictation-list *ngIf="selectedSegment === 'dictation'" [dictations]="createdDictations" showCreateButton="true" title="My Dictation Created"></dictation-list>
+      <ion-col size="12" size-sm="12" size-md="12" size-lg="6" *ngIf="selectedSegment === 'dictation'">
+        <dictation-list [dictations]="createdDictations" showCreateButton="true" title="My Dictation Created"></dictation-list>
+      </ion-col>
+      <ion-col size="12" size-sm="12" size-md="12" size-lg="6" *ngIf="selectedSegment === 'vocabulary'">
+        <vocab-history-list [vocabs]="learntVocabs" title="Vocabulary Learnt" icon="check-circle"></vocab-history-list>
+      </ion-col>
+      <ion-col size="12" size-sm="12" size-md="12" size-lg="6" *ngIf="selectedSegment === 'vocabulary'">
+        <vocab-history-list [vocabs]="frequentlyWrongVocabs" title="Vocabulary Frequently Wrong" icon="times-circle"></vocab-history-list>
       </ion-col>
     </ion-row>
   </ion-grid>

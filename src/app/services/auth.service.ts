@@ -185,7 +185,7 @@ export class AuthService {
         this.router.navigateByUrl(request.destination);
       } else {
         this.memberService.getProfile().subscribe((_m) => {
-          this.router.navigateByUrl('/member-home');
+          this.navigationService.openMemberHome();
         });
       }
     });

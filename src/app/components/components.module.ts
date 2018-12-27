@@ -15,6 +15,7 @@ import {MemberPracticeHistoryListComponent} from "./member-practice-history-list
 import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
 import {IonicModule} from "@ionic/angular";
 import {CommonModule} from "@angular/common";
+import {VocabHistoryListComponent} from "./vocab-history-list/vocab-history-list";
 
 @NgModule({
 	declarations: [MemberScoreRankingComponent,
@@ -28,6 +29,7 @@ import {CommonModule} from "@angular/common";
     SentenceHistoriesComponent,
     MemberScoreListComponent,
     MemberPracticeHistoryListComponent,
+    VocabHistoryListComponent,
   ],
 	imports: [
 	  IonicModule,
@@ -47,6 +49,7 @@ import {CommonModule} from "@angular/common";
     SentenceHistoriesComponent,
     MemberScoreListComponent,
     MemberPracticeHistoryListComponent,
+    VocabHistoryListComponent,
   ]
 })
 export class ComponentsModule {}

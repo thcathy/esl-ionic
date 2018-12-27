@@ -15,8 +15,8 @@ import {VocabPracticeService} from "../practice/vocab-practice.service";
 export class ManageVocabHistoryService extends Service {
   private MEMBER_VOCABULARIES_KEY = 'ManageVocabHistoryService.MEMBER_VOCABULARIES_KEY';
 
-  learntVocabularies: Map<string, MemberVocabulary> = new Map<string, MemberVocabulary>();
-  alwaysWrongVocabularies: Map<string, MemberVocabulary> = new Map<string, MemberVocabulary>();
+  learntVocabs: Map<string, MemberVocabulary> = new Map<string, MemberVocabulary>();
+  frequentlyWrongVocabs: Map<string, MemberVocabulary> = new Map<string, MemberVocabulary>();
 
   constructor (
     private vocabPracticeService: VocabPracticeService,
@@ -31,10 +31,10 @@ export class ManageVocabHistoryService extends Service {
   classifyVocabulary(vocabularies: MemberVocabulary[]) {
     vocabularies.forEach(vocab => {
       if (this.isLearnt(vocab)) {
-        this.learntVocabularies.set(vocab.id.word, vocab);
+        this.learntVocabs.set(vocab.id.word, vocab);
       }
       if (this.isAlwaysWrong(vocab)) {
-        this.alwaysWrongVocabularies.set(vocab.id.word, vocab);
+        this.frequentlyWrongVocabs.set(vocab.id.word, vocab);
       }
     });
   }

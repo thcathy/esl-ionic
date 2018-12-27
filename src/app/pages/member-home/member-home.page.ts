@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {Dictation} from "../../entity/dictation";
 import {MemberScore} from "../../entity/member-score";
 import {PracticeHistory} from "../../entity/practice-models";
@@ -7,6 +7,8 @@ import {PracticeHistoryService} from "../../services/dictation/practice-history.
 import {RankingService} from "../../services/ranking/ranking.service";
 import {ManageVocabHistoryService} from "../../services/member/manage-vocab-history.service";
 import {MemberVocabulary} from "../../entity/member-vocabulary";
+import {NavigationService} from "../../services/navigation.service";
+import {ActivatedRoute} from "@angular/router";
 
 @Component({
   selector: 'app-member-home',
@@ -19,25 +21,32 @@ export class MemberHomePage implements OnInit {
   latestScore: MemberScore[];
   practiceHistories: PracticeHistory[];
   selectedSegment: String;
-  learntVocabularies: Map<string, MemberVocabulary> = new Map<string, MemberVocabulary>();
-  alwaysWrongVocabularies: Map<string, MemberVocabulary> = new Map<string, MemberVocabulary>();
+  learntVocabs: Map<string, MemberVocabulary> = new Map<string, MemberVocabulary>();
+  frequentlyWrongVocabs: Map<string, MemberVocabulary> = new Map<string, MemberVocabulary>();
+  @ViewChild('ionSegment') ionSegment;
 
   constructor(
     public memberDictationService: MemberDictationService,
     public practiceHistoryService: PracticeHistoryService,
     public rankingService: RankingService,
     public manageVocabHistoryService: ManageVocabHistoryService,
+    public route: ActivatedRoute,
+    public navigationService: NavigationService,
   ) { }
 
   ngOnInit() {
-    this.selectedSegment = 'dictation';
     this.manageVocabHistoryService.loadFromServer().then(_p => {
-      this.learntVocabularies = this.manageVocabHistoryService.learntVocabularies;
-      this.alwaysWrongVocabularies = this.manageVocabHistoryService.alwaysWrongVocabularies;
+      this.learntVocabs = this.manageVocabHistoryService.learntVocabs;
+      this.frequentlyWrongVocabs = this.manageVocabHistoryService.frequentlyWrongVocabs;
     });
   }
 
   ionViewDidEnter() {
+    console.log(`ionViewDidEnter`);
+    this.route.params.subscribe(params => {
+      if (params.segment) this.selectedSegment = params.segment;
+      this.ionSegment.value = this.selectedSegment;
+    });
     this.createdDictations = [];
     this.allTimesScore = null;
     this.latestScore = [];
@@ -45,7 +54,7 @@ export class MemberHomePage implements OnInit {
     this.init();
   }
 
-  init() {
+  async init() {
     this.rankingService.allTimesAndLast6Score().subscribe(s => this.setScores(s));
     this.practiceHistoryService.getAll().subscribe(s => this.practiceHistories = s);
     this.memberDictationService.getAllDictation().subscribe(dictations => {
@@ -61,7 +70,7 @@ export class MemberHomePage implements OnInit {
   }
 
   segmentChanged(ev: any) {
-    this.selectedSegment = ev.detail.value;
+    this.navigationService.openMemberHome(ev.detail.value);
   }
 
 }
