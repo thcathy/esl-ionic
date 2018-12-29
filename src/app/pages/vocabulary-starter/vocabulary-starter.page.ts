@@ -7,6 +7,7 @@ import {IonicComponentService} from "../../services/ionic-component.service";
 import {ActivatedRoute} from "@angular/router";
 import {switchMap} from "rxjs-compat/operator/switchMap";
 import {map} from "rxjs/operators";
+import {AuthService} from "../../services/auth.service";
 
 @Component({
   selector: 'app-vocabulary-starter',
@@ -22,6 +23,7 @@ export class VocabularyStarterPage implements OnInit {
     public vocabPracticeService: VocabPracticeService,
     public navigationService: NavigationService,
     public route: ActivatedRoute,
+    public authService: AuthService,
   ) { }
 
   ngOnInit() {

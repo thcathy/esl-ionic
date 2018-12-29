@@ -13,28 +13,35 @@
         <ion-grid>
           <ion-row>
             <ion-col size="12" size-sm="12" size-md="12" size-lg="6">
-              <form class="input-form" [formGroup]="inputForm" novalidate>
-                <h3><fa-icon icon="sliders-h"></fa-icon> {{'Select Difficulty'|translate}}</h3>
-                <ion-select formControlName="difficulty" interface="popover">
-                  <ion-select-option *ngFor="let d of vocabDifficulties" [value]="d">{{'VocabDifficulty.' + d|translate}}</ion-select-option>
-                </ion-select>
-                <ion-button float-right (click)="start()">
-                  <fa-icon icon="play"></fa-icon>&nbsp;{{'Start'|translate}}
-                </ion-button>
-              </form>
+              <div class="col">
+                <form class="input-form" [formGroup]="inputForm" novalidate>
+                  <h3><fa-icon icon="sliders-h"></fa-icon> {{'Select Difficulty'|translate}}</h3>
+                  <ion-select formControlName="difficulty" interface="popover">
+                    <ion-select-option *ngFor="let d of vocabDifficulties" [value]="d">{{'VocabDifficulty.' + d|translate}}</ion-select-option>
+                  </ion-select>
+                  <ion-button float-right (click)="start()">
+                    <fa-icon icon="play"></fa-icon>&nbsp;{{'Start'|translate}}
+                  </ion-button>
+                </form>
+              </div>
             </ion-col>
             <ion-col size="12" size-sm="12" size-md="12" size-lg="6">
-              <h3><fa-icon icon="pen"></fa-icon> {{'VocabularyPracticeDescription.ThisExercise'|translate}}</h3>
-              <ul>
-                <li>{{'VocabularyPracticeDescription.Over'|translate}} <ion-badge color="secondary">4000</ion-badge> {{'VocabularyPracticeDescription.MostFrequentlyUsedEnglishWords'|translate}}</li>
-                <li>{{'VocabularyPracticeDescription.WithPronunciationAndImage'|translate}}</li>
-              </ul>
-              <h3><fa-icon icon="user-lock"></fa-icon> {{'VocabularyPracticeDescription.AfterLogin'|translate}}</h3>
-              <ul>
-                <li>{{'VocabularyPracticeDescription.RevisitMisspelledWords'|translate}}</li>
-                <li>{{'VocabularyPracticeDescription.KnowWhatYouLearn'|translate}}</li>
-                <li>{{'VocabularyPracticeDescription.EarnStars'|translate}}</li>
-              </ul>
+              <div class="col">
+                <h3><fa-icon icon="pen"></fa-icon> {{'VocabularyPracticeDescription.ThisExercise'|translate}}</h3>
+                <ul>
+                  <li>{{'VocabularyPracticeDescription.Over'|translate}} <ion-badge color="secondary">4000</ion-badge> {{'VocabularyPracticeDescription.MostFrequentlyUsedEnglishWords'|translate}}</li>
+                  <li>{{'VocabularyPracticeDescription.WithPronunciationAndImage'|translate}}</li>
+                </ul>
+                <h3><fa-icon icon="user-lock"></fa-icon> {{'VocabularyPracticeDescription.AfterLogin'|translate}}</h3>
+                <ul>
+                  <li>{{'VocabularyPracticeDescription.RevisitMisspelledWords'|translate}}</li>
+                  <li>{{'VocabularyPracticeDescription.KnowWhatYouLearn'|translate}}</li>
+                  <li>{{'VocabularyPracticeDescription.EarnStars'|translate}}</li>
+                </ul>
+                <ion-button *ngIf="authService.isAuthenticated()" fill="clear" size="small" float-right (click)="navigationService.openMemberHome('vocabulary')">
+                  <fa-icon icon="folder-open"></fa-icon>&nbsp;{{'To My Vocabulary'|translate}}
+                </ion-button>
+              </div>
             </ion-col>
 
           </ion-row>
