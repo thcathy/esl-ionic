@@ -22,10 +22,10 @@
         <dictation-list [dictations]="createdDictations" showCreateButton="true" title="My Dictation Created"></dictation-list>
       </ion-col>
       <ion-col size="12" size-sm="12" size-md="12" size-lg="6" *ngIf="selectedSegment === 'vocabulary'">
-        <vocab-history-list [vocabs]="learntVocabs" title="Vocabulary Learnt" icon="check-circle"></vocab-history-list>
+        <vocab-history-list [vocabs]="learntVocabs" title="Learnt" icon="check-circle"></vocab-history-list>
       </ion-col>
       <ion-col size="12" size-sm="12" size-md="12" size-lg="6" *ngIf="selectedSegment === 'vocabulary'">
-        <vocab-history-list [vocabs]="frequentlyWrongVocabs" title="Vocabulary Frequently Wrong" icon="times-circle"></vocab-history-list>
+        <vocab-history-list [vocabs]="frequentlyWrongVocabs" title="Frequently Wrong" icon="times-circle"></vocab-history-list>
       </ion-col>
     </ion-row>
   </ion-grid>

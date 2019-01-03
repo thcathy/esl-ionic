@@ -145,3 +145,5 @@ export const DictationServiceSpy = () => jasmine.createSpyObj('DictationService'
 export const VocabPracticeServiceSpy = () => jasmine.createSpyObj('VocabPraticeService',
 { saveHistory: Observable.of("") }
 );
+
+export const ManageVocabHistoryServiceSpy = () => jasmine.createSpyObj('ManageVocabHistoryService', ['classifyVocabulary']);

@@ -18,7 +18,7 @@ export class VocabHistoryListComponent implements OnChanges {
 
   viewVocabs: Array<MemberVocabulary>;
   page: number;
-  showOlder: boolean;
+  showNext: boolean;
 
   constructor(
     public navService: NavigationService,
@@ -31,24 +31,24 @@ export class VocabHistoryListComponent implements OnChanges {
     this.page = 0;
     if (this.vocabs != null) {
       this.sliceVocabs();
-      this.showOlder = this.vocabs.size > this.vocabPerPage;
+      this.showNext = this.vocabs.size > this.vocabPerPage;
     }
   }
 
-  older() {
+  next() {
     this.page++;
     this.sliceVocabs();
-    this.showOlder = this.vocabs.size >  this.vocabPerPage * (this.page+1);
+    this.showNext = this.vocabs.size > this.vocabPerPage * (this.page+1);
   }
 
-  newer() {
+  previous() {
     this.page--;
     this.sliceVocabs();
-    this.showOlder=true;
+    this.showNext=true;
   }
 
   sliceVocabs() {
-    const tmp = Array.from(this.vocabs.entries()).map(e => e[1]);
-    this.viewVocabs = tmp.slice(this.page * tmp.length, (this.page+1) * tmp.length);
+    const histories = Array.from(this.vocabs.entries()).map(e => e[1]);
+    this.viewVocabs = histories.slice(this.page * this.vocabPerPage, (this.page+1) * this.vocabPerPage);
   }
 }

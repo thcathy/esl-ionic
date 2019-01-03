@@ -28,7 +28,7 @@ export class ManageVocabHistoryService extends Service {
     });
   }
 
-  classifyVocabulary(vocabularies: MemberVocabulary[]) {
+  public classifyVocabulary(vocabularies: MemberVocabulary[]) {
     vocabularies.forEach(vocab => {
       if (this.isLearnt(vocab)) {
         this.learntVocabs.set(vocab.id.word, vocab);

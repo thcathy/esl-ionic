@@ -93,7 +93,7 @@
     <plugin name="cordova-plugin-inappbrowser" spec="~3.0.0" />
     <allow-navigation href="http://192.168.0.150:8100" />
     <plugin name="cordova-plugin-google-analytics" spec="~1.8.6" />
-    <engine name="browser" spec="5.0.3" />
-    <engine name="ios" spec="4.5.5" />
+    <engine name="browser" spec="^5.0.4" />
     <engine name="android" spec="7.1.1" />
+    <engine name="ios" spec="4.5.5" />
 </widget>

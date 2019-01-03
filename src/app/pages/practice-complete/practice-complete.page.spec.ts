@@ -6,7 +6,7 @@ import {dictation1} from "../../../test-config/test-data";
 import {DictationService} from "../../services/dictation/dictation.service";
 import {
   AuthServiceSpy,
-  DictationServiceSpy, NavigationServiceSpy,
+  DictationServiceSpy, ManageVocabHistoryServiceSpy, NavigationServiceSpy,
   StorageSpy, VocabPracticeServiceSpy,
 } from "../../../test-config/mocks-ionic";
 import {Storage} from "@ionic/storage";
@@ -15,6 +15,7 @@ import {SharedTestModule} from "../../../test-config/shared-test.module";
 import {AuthService} from "../../services/auth.service";
 import {NavigationService} from "../../services/navigation.service";
 import {VocabPracticeService} from "../../services/practice/vocab-practice.service";
+import {ManageVocabHistoryService} from "../../services/member/manage-vocab-history.service";
 
 describe('PracticeCompletePage', () => {
   let component: PracticeCompletePage;
@@ -24,6 +25,7 @@ describe('PracticeCompletePage', () => {
   let storageSpy = StorageSpy();
   let authServiceSpy = AuthServiceSpy();
   let navigationServiceSpy = NavigationServiceSpy();
+  let manageVocabHistoryServiceSpy = ManageVocabHistoryServiceSpy();
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -38,6 +40,7 @@ describe('PracticeCompletePage', () => {
         { provide: Storage, useValue: storageSpy },
         { provide: AuthService, useValue: authServiceSpy },
         { provide: NavigationService, useValue: navigationServiceSpy },
+        { provide: ManageVocabHistoryService, useValue: manageVocabHistoryServiceSpy},
       ]
     })
     .compileComponents();
@@ -80,6 +83,7 @@ describe('PracticeCompletePage', () => {
     tick();
     fixture.detectChanges();
     expect(vocabPracticeServiceSpy.saveHistory.calls.count()).toEqual(0);
+    expect(manageVocabHistoryServiceSpy.classifyVocabulary.calls.count()).toEqual(0);
     expect(dictationServiceSpy.createVocabDictationHistory.calls.count()).toEqual(0);
   }));
 
@@ -99,6 +103,7 @@ describe('PracticeCompletePage', () => {
     fixture.detectChanges();
 
     expect(vocabPracticeServiceSpy.saveHistory.calls.count()).toEqual(1);
+    expect(manageVocabHistoryServiceSpy.classifyVocabulary.calls.count()).toEqual(1);
     expect(dictationServiceSpy.createVocabDictationHistory.calls.count()).toEqual(0);
   }));
 

@@ -21,10 +21,10 @@
     </ion-list>
     <ion-row>
       <ion-col>
-        <ion-button fill="clear" *ngIf="page > 0" color="secondary" (click)="newer()"><fa-icon [icon]="['fas', 'angle-left']"></fa-icon> {{ 'Newer' | translate }}</ion-button>
+        <ion-button fill="clear" *ngIf="page > 0" color="secondary" (click)="previous()"><fa-icon [icon]="['fas', 'angle-left']"></fa-icon> {{ 'Previous' | translate }}</ion-button>
       </ion-col>
       <ion-col text-right>
-        <ion-button fill="clear" *ngIf="showOlder" color="secondary" (click)="older()">{{ 'Older' | translate }} <fa-icon [icon]="['fas', 'angle-right']"></fa-icon></ion-button>
+        <ion-button fill="clear" *ngIf="showNext" color="secondary" (click)="next()">{{ 'Next' | translate }} <fa-icon [icon]="['fas', 'angle-right']"></fa-icon></ion-button>
       </ion-col>
     </ion-row>
   </ion-card-content>

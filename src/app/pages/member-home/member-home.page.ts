@@ -1,4 +1,5 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
+import {Location} from '@angular/common';
 import {Dictation} from "../../entity/dictation";
 import {MemberScore} from "../../entity/member-score";
 import {PracticeHistory} from "../../entity/practice-models";
@@ -32,9 +33,11 @@ export class MemberHomePage implements OnInit {
     public manageVocabHistoryService: ManageVocabHistoryService,
     public route: ActivatedRoute,
     public navigationService: NavigationService,
+    public location: Location
   ) { }
 
   ngOnInit() {
+    console.log(`${this.selectedSegment}`);
     this.manageVocabHistoryService.loadFromServer().then(_p => {
       this.learntVocabs = this.manageVocabHistoryService.learntVocabs;
       this.frequentlyWrongVocabs = this.manageVocabHistoryService.frequentlyWrongVocabs;
@@ -42,7 +45,8 @@ export class MemberHomePage implements OnInit {
   }
 
   ionViewDidEnter() {
-    console.log(`ionViewDidEnter`);
+    console.log(`${this.selectedSegment}`);
+    this.ionSegment.value = this.selectedSegment;
     this.route.params.subscribe(params => {
       if (params.segment) this.selectedSegment = params.segment;
       this.ionSegment.value = this.selectedSegment;
@@ -70,7 +74,8 @@ export class MemberHomePage implements OnInit {
   }
 
   segmentChanged(ev: any) {
-    this.navigationService.openMemberHome(ev.detail.value);
+    this.selectedSegment = ev.detail.value;
+    this.location.go(`/member-home/${ev.detail.value}`);
   }
 
 }
