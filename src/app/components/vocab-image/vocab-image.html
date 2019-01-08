@@ -7,5 +7,5 @@
       <ion-button fill="clear" float-right size="small" (click)="nextImage()" class="button"><fa-icon [icon]="['fas', 'angle-right']"></fa-icon></ion-button>
     </ion-col>
   </ion-row>
-  <img [src]="images[index] | safeHtml" class="image" />
+  <img [@move]="state" (@move.done)="onDone($event)" [src]="imageBase64 | safeHtml" class="image" />
 </ion-card>
