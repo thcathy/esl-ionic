@@ -10,7 +10,9 @@ import {animate, query, state, style, transition, trigger} from "@angular/animat
       state('center', style({ transform: 'translateX(0%)' })),
       state('left', style({ transform: 'translateX(-200%)' })),
       state('right', style({ transform: 'translateX(200%)' })),
-      transition('* <=> *', [
+      state('left-end', style({ transform: 'translateX(-200%)' })),
+      state('right-end', style({ transform: 'translateX(200%)' })),
+      transition('center <=> *', [
         animate(200)
       ])
     ])
@@ -46,6 +48,11 @@ export class VocabImageComponent implements OnChanges {
 
   onDone($event) {
     this.imageBase64 = this.images[this.index];
-    this.state = 'center';
+    if (this.state === 'left')
+      this.state = 'right-end';
+    else if (this.state === 'right')
+      this.state = 'left-end';
+    else if (this.state.endsWith('-end'))
+      this.state = 'center';
   }
 }
