@@ -23,7 +23,7 @@
           <ion-button *ngIf="dictation && dictation.id <= 0 && !dictationService.isGeneratedDictation(dictation)" color="secondary" (click)="navigationService.editDictation(dictation)">
             <fa-icon [icon]="['fas', 'save']"></fa-icon>&nbsp;{{'Save'|translate}}
           </ion-button>
-          <ion-button *ngIf="dictation && dictationService.isGeneratedDictation(dictation)" color="secondary" (click)="navigationService.openMemberHome('vocabulary')">
+          <ion-button *ngIf="showOpenMyVocabulary()" color="secondary" (click)="navigationService.openMemberHome('vocabulary')">
             <fa-icon icon="folder-open"></fa-icon>&nbsp;{{'To My Vocabulary'|translate}}
           </ion-button>
         </ion-col>

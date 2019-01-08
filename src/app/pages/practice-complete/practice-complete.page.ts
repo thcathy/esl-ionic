@@ -119,4 +119,8 @@ export class PracticeCompletePage implements OnInit {
     this.ionicComponentService.showToastMessage(this.translateService.instant('Dictation not found'), 'top');
   }
 
+  showOpenMyVocabulary() {
+    return this.dictation && this.dictationService.isGeneratedDictation(this.dictation) && this.authService.isAuthenticated();
+  }
+
 }
