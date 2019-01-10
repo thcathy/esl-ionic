@@ -94,6 +94,7 @@
 
 .inner-content {
   padding: 16px;
+  min-height: calc(90% - 56px);
 }
 
 .menu-content {
@@ -103,7 +104,7 @@
 }
 
 ion-content {
-  --background: #46c6fc url('./assets/img/main_bg.jpg') no-repeat left 100px;
+  --background: #46c6fc linear-gradient(#cdeffe, #04b1fb);
 }
 
 .card {
