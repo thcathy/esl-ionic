@@ -78,13 +78,13 @@ export class DictationCardComponent {
   deleteDictation = () => {
     this.memberDictationService.deleteDictation(this.dictation.id)
       .subscribe(this.afterDelete, this.failDelete);
-  }
+  };
 
   afterDelete = (d) => {
     console.info(`deleted dictation id: ${d.id}`);
     this.presentToast(this.translate.instant('DeletedDictation', {title: d.title}));
-    this.router.navigate(['/member-home']);
-  }
+    this.navService.openMemberHome('dictation');
+  };
 
   async presentToast(message: string) {
     const toast = await this.toastController.create({
