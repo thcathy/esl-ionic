@@ -21,7 +21,6 @@ export class EditDictationPage implements OnInit {
   dictation: Dictation;
   isEdit: boolean;
   suitableStudentOptions = SuitableStudentOptions;
-  inited: boolean = false;
 
   constructor(
     public formBuilder: FormBuilder,
@@ -63,7 +62,7 @@ export class EditDictationPage implements OnInit {
       'title': new FormControl('', [Validators.required, Validators.minLength(5),  Validators.maxLength(50)]),
       'description': new FormControl('', [Validators.maxLength(100)]),
       'showImage': true,
-      'vocabulary': new FormControl('', [maxVocabularyValidator(50), Validators.pattern("^([a-zA-Z ]+[\\-,]?)+")]),
+      'vocabulary': new FormControl('', [maxVocabularyValidator(50), Validators.pattern("^([a-zA-Z\\s]+[\\-,]?)+")]),
       'article': '',
       'type': 'word',
       'suitableStudent': 'Any',

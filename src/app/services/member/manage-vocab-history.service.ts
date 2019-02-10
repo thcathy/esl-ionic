@@ -10,6 +10,7 @@ import {VocabPracticeHistory} from "../../entity/vocab-practice-history";
 import {MemberVocabulary} from "../../entity/member-vocabulary";
 import {Storage} from "@ionic/storage";
 import {VocabPracticeService} from "../practice/vocab-practice.service";
+import {CollectionUtils} from "../../utils/collection-utils";
 
 @Injectable({ providedIn: 'root' })
 export class ManageVocabHistoryService extends Service {
@@ -51,4 +52,10 @@ export class ManageVocabHistoryService extends Service {
     const list = await this.vocabPracticeService.getAllHistory().toPromise();
     this.classifyVocabulary(list);
   }
+
+  public randomFrequentlyWrongVocabs(length: number): string[] {
+    const words = Array.from(this.frequentlyWrongVocabs.values()).map(v => v.id.word);
+    return CollectionUtils.randomPick(words, length);
+  }
+
 }

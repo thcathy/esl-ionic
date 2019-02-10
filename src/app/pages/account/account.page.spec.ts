@@ -3,9 +3,9 @@ import {async, ComponentFixture, fakeAsync, TestBed} from '@angular/core/testing
 
 import { AccountPage } from './account.page';
 import {member1} from "../../../test-config/test-data";
-import {Observable} from "rxjs/Observable";
 import {SharedTestModule} from "../../../test-config/shared-test.module";
 import {MemberService} from "../../services/member/member.service";
+import {of} from "rxjs";
 
 describe('AccountPage', () => {
   let component: AccountPage;
@@ -15,7 +15,7 @@ describe('AccountPage', () => {
 
   beforeEach(async(() => {
     const memberService = jasmine.createSpyObj('MemberService', ['getProfile']);
-    getProfileSpy = memberService.getProfile.and.returnValue(Observable.of(member1));
+    getProfileSpy = memberService.getProfile.and.returnValue(of(member1));
 
     TestBed.configureTestingModule({
       declarations: [ AccountPage ],

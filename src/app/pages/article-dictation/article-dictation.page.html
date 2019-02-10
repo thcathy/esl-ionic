@@ -28,8 +28,10 @@
             <ion-col>
               <ion-item class="answerInput">
                 <ion-label position="floating">{{'Answer'|translate}}</ion-label>
-                <ion-input #answerElement [(ngModel)]="answer" type="text" maxlength="255" (keyup.enter)="submitAnswer()"></ion-input>
+                <ion-input #answerElement [(ngModel)]="answer" type="text" inputmode="verbatim" maxlength="255" (keyup.enter)="submitAnswer()"
+                           autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></ion-input>
               </ion-item>
+              <div><virtual-keyboard (keyPress)="onKeyPress($event)" (backspace)="onBackspace($event)"></virtual-keyboard></div>
             </ion-col>
           </ion-row>
           <ion-row>

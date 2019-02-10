@@ -58,4 +58,13 @@ describe('VocabPracticeService', () => {
     expect(callArg[0].question.picsFullPathsInString.length).toBeLessThan(1);
     expect(callArg[0].question.grades.length).toBeLessThan(1);
   });
+
+  it('generatePracticeFromWords create a vocabulary practice dictation', () => {
+    let result = service.generatePracticeFromWords(['test']);
+    expect(result.id).toEqual(-1);
+    expect(result.generated).toBeTruthy();
+    expect(result.showImage).toBeTruthy();
+    expect(result.vocabs.length).toEqual(1);
+    expect(result.vocabs[0].word).toEqual('test');
+  });
 });

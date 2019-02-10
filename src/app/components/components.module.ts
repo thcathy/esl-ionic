@@ -16,6 +16,7 @@ import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
 import {IonicModule} from "@ionic/angular";
 import {CommonModule} from "@angular/common";
 import {VocabHistoryListComponent} from "./vocab-history-list/vocab-history-list";
+import {VirtualKeyboardComponent} from "./virtual-keyboard/virtual-keyboard";
 
 @NgModule({
 	declarations: [MemberScoreRankingComponent,
@@ -30,6 +31,7 @@ import {VocabHistoryListComponent} from "./vocab-history-list/vocab-history-list
     MemberScoreListComponent,
     MemberPracticeHistoryListComponent,
     VocabHistoryListComponent,
+    VirtualKeyboardComponent,
   ],
 	imports: [
 	  IonicModule,
@@ -50,6 +52,7 @@ import {VocabHistoryListComponent} from "./vocab-history-list/vocab-history-list
     MemberScoreListComponent,
     MemberPracticeHistoryListComponent,
     VocabHistoryListComponent,
+    VirtualKeyboardComponent,
   ]
 })
 export class ComponentsModule {}

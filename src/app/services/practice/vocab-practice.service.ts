@@ -8,6 +8,7 @@ import {Observable} from "rxjs/internal/Observable";
 import {Dictation} from "../../entity/dictation";
 import {VocabPracticeHistory} from "../../entity/vocab-practice-history";
 import {MemberVocabulary} from "../../entity/member-vocabulary";
+import {Vocab} from "../../entity/vocab";
 
 
 
@@ -36,6 +37,15 @@ export class VocabPracticeService extends Service {
 
   generatePractice(difficulty: string): Observable<Dictation> {
     return this.http.get<Dictation>(this.generatePracticeUrl + difficulty);
+  }
+
+  generatePracticeFromWords(words: string[]): Dictation {
+    return <Dictation>{
+      id: -1,
+      showImage: true,
+      vocabs: words.map(s => <Vocab>{word: s}),
+      generated: true,
+    };
   }
 
   saveHistory(histories: VocabPracticeHistory[]) {

@@ -64,7 +64,6 @@ export class ArticleDictationPage implements OnInit {
 
   speak() {
     this.speechService.speak(this.sentences[this.currentSentence], this.speakingRate);
-    this.focusAnswer();
   }
 
   submitAnswer() {
@@ -82,10 +81,12 @@ export class ArticleDictationPage implements OnInit {
     }
   }
 
-  focusAnswer() {
-    if (this.answerInput) {
-      this.answerInput.setFocus();
-    }
+  onKeyPress(key: string) {
+    this.answer += key;
+  }
+
+  onBackspace(any) {
+    this.answer = this.answer.slice(0, this.answer.length-1);
   }
 
 }

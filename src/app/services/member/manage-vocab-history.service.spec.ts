@@ -31,6 +31,11 @@ describe('ManageVocabHistoryService', () => {
     service = TestBed.get(ManageVocabHistoryService);
   });
 
+  it('test randomFrequentlyWrongVocabs with different input, output length', () => {
+    let result = service.randomFrequentlyWrongVocabs(1);
+    expect(result.length).toBe(0);
+  });
+
   it('load and classified vocabulary from local storage when construction', fakeAsync(() => {
     service.loadFromServer();
     tick();
@@ -39,5 +44,4 @@ describe('ManageVocabHistoryService', () => {
     expect(service.frequentlyWrongVocabs.size).toBe(1);
     expect(service.frequentlyWrongVocabs.get('banana').id.word).toBe('banana');
   }));
-
 });

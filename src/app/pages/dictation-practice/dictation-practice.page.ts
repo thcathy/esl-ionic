@@ -42,7 +42,8 @@ export class DictationPracticePage implements OnInit {
     public storage: Storage,
   ) { }
 
-  ngOnInit() {}
+  ngOnInit() {
+  }
 
   ionViewDidEnter() {
     this.clearVaribles();
@@ -96,13 +97,6 @@ export class DictationPracticePage implements OnInit {
     } else {
       this.speechService.speak(this.vocabPractices[this.questionIndex].word);
     }
-    this.focusAnswer();
-  }
-
-  focusAnswer() {
-    if (this.answerInput) {
-      this.answerInput.setFocus();
-    }
   }
 
   showPhonics() {
@@ -132,6 +126,14 @@ export class DictationPracticePage implements OnInit {
 
   end(): boolean {
     return this.questionIndex >= this.vocabPractices.length;
+  }
+
+  onKeyPress(key: string) {
+    this.answer += key;
+  }
+
+  onBackspace(any) {
+    this.answer = this.answer.slice(0, this.answer.length-1);
   }
 
   private checkAnswer() {
