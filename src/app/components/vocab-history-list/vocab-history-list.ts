@@ -1,4 +1,4 @@
-import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {Dictation} from "../../entity/dictation";
 import {NavigationService} from "../../services/navigation.service";
 import {DisplayService} from "../../services/display.service";
@@ -15,15 +15,13 @@ export class VocabHistoryListComponent implements OnChanges {
   @Input() vocabs: Map<string, MemberVocabulary>;
   @Input() title: string;
   @Input() icon: string;
+  @Output() keyPress = new EventEmitter<string>();
 
   viewVocabs: Array<MemberVocabulary>;
   page: number;
   showNext: boolean;
 
-  constructor(
-    public navService: NavigationService,
-    public displayService: DisplayService,
-  ) {
+  constructor() {
     this.page = 0;
   }
 

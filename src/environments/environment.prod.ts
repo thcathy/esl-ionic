@@ -3,4 +3,5 @@ export const environment = {
   apiHost: 'https://esl-rest.funfunspell.com',
   maxSentenceLength: 40,
   learntVocabularyMinimumCorrect: 5,
+  vocabPracticeQuestions: 10,
 };

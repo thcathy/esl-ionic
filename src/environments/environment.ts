@@ -8,6 +8,7 @@ export const environment = {
   apiHost: 'http://Timmys-MacBook-Pro.local:8380',
   maxSentenceLength: 40,
   learntVocabularyMinimumCorrect: 5,
+  vocabPracticeQuestions: 3,
 };
 
 /*

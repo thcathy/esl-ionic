@@ -53,6 +53,12 @@ export class ManageVocabHistoryService extends Service {
     this.classifyVocabulary(list);
   }
 
+  public generatePracticeFromFrequentlyWrongVocabs(): Dictation {
+    return this.vocabPracticeService.generatePracticeFromWords(
+      this.randomFrequentlyWrongVocabs(environment.vocabPracticeQuestions)
+      );
+  }
+
   public randomFrequentlyWrongVocabs(length: number): string[] {
     const words = Array.from(this.frequentlyWrongVocabs.values()).map(v => v.id.word);
     return CollectionUtils.randomPick(words, length);
