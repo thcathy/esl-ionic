@@ -27,5 +27,10 @@
         <ion-button fill="clear" *ngIf="showNext" color="secondary" (click)="next()">{{ 'Next' | translate }} <fa-icon [icon]="['fas', 'angle-right']"></fa-icon></ion-button>
       </ion-col>
     </ion-row>
+    <ion-row style="border-top: .55px solid #c8c7cc;">
+      <ion-col text-right>
+        <ion-button fill="clear" *ngIf="showReview" (click)="onClick('review')"><fa-icon icon="pencil-alt"></fa-icon>&nbsp;{{ 'Review' | translate }}</ion-button>
+      </ion-col>
+    </ion-row>
   </ion-card-content>
 </ion-card>

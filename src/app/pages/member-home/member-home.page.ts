@@ -78,4 +78,11 @@ export class MemberHomePage implements OnInit {
     this.location.go(`/member-home/${ev.detail.value}`);
   }
 
+  onVocabHistoryList(value: string) {
+    if (value === 'review') {
+      this.navigationService.startDictation(
+        this.manageVocabHistoryService.generatePracticeFromFrequentlyWrongVocabs()
+      );
+    }
+  }
 }

@@ -15,7 +15,8 @@ export class VocabHistoryListComponent implements OnChanges {
   @Input() vocabs: Map<string, MemberVocabulary>;
   @Input() title: string;
   @Input() icon: string;
-  @Output() keyPress = new EventEmitter<string>();
+  @Input() showReview: boolean;
+  @Output() click = new EventEmitter<string>();
 
   viewVocabs: Array<MemberVocabulary>;
   page: number;
@@ -48,5 +49,9 @@ export class VocabHistoryListComponent implements OnChanges {
   sliceVocabs() {
     const histories = Array.from(this.vocabs.entries()).map(e => e[1]);
     this.viewVocabs = histories.slice(this.page * this.vocabPerPage, (this.page+1) * this.vocabPerPage);
+  }
+
+  onClick(key: string) {
+    this.click.emit(key);
   }
 }
