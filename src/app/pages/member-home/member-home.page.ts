@@ -1,15 +1,15 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {Location} from '@angular/common';
-import {Dictation} from "../../entity/dictation";
-import {MemberScore} from "../../entity/member-score";
-import {PracticeHistory} from "../../entity/practice-models";
-import {MemberDictationService} from "../../services/dictation/member-dictation.service";
-import {PracticeHistoryService} from "../../services/dictation/practice-history.service";
-import {RankingService} from "../../services/ranking/ranking.service";
-import {ManageVocabHistoryService} from "../../services/member/manage-vocab-history.service";
-import {MemberVocabulary} from "../../entity/member-vocabulary";
-import {NavigationService} from "../../services/navigation.service";
-import {ActivatedRoute} from "@angular/router";
+import {Dictation} from '../../entity/dictation';
+import {MemberScore} from '../../entity/member-score';
+import {PracticeHistory} from '../../entity/practice-models';
+import {MemberDictationService} from '../../services/dictation/member-dictation.service';
+import {PracticeHistoryService} from '../../services/dictation/practice-history.service';
+import {RankingService} from '../../services/ranking/ranking.service';
+import {ManageVocabHistoryService} from '../../services/member/manage-vocab-history.service';
+import {MemberVocabulary} from '../../entity/member-vocabulary';
+import {NavigationService} from '../../services/navigation.service';
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'app-member-home',
@@ -48,7 +48,7 @@ export class MemberHomePage implements OnInit {
     console.log(`${this.selectedSegment}`);
     this.ionSegment.value = this.selectedSegment;
     this.route.params.subscribe(params => {
-      if (params.segment) this.selectedSegment = params.segment;
+      if (params.segment) { this.selectedSegment = params.segment; }
       this.ionSegment.value = this.selectedSegment;
     });
     this.createdDictations = [];
@@ -70,7 +70,7 @@ export class MemberHomePage implements OnInit {
     console.log(`${scores.length} scores is returned`);
     this.allTimesScore = scores.find(s => s.scoreYearMonth > 999999);
     this.latestScore = scores.filter(s => s.scoreYearMonth < 999999)
-      .sort( (a,b) => a.scoreYearMonth - b.scoreYearMonth);
+      .sort( (a, b) => a.scoreYearMonth - b.scoreYearMonth);
   }
 
   segmentChanged(ev: any) {
