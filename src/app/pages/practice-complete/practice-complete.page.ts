@@ -1,15 +1,14 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {VocabPracticeHistory} from "../../entity/vocab-practice-history";
-import {Dictation} from "../../entity/dictation";
-import {NavigationService} from "../../services/navigation.service";
-import {DictationService} from "../../services/dictation/dictation.service";
-import {TranslateService} from "@ngx-translate/core";
-import {IonicComponentService} from "../../services/ionic-component.service";
-import {Storage} from "@ionic/storage";
-import {ActivatedRoute} from "@angular/router";
-import {AuthService} from "../../services/auth.service";
-import {VocabPracticeService} from "../../services/practice/vocab-practice.service";
-import {ManageVocabHistoryService} from "../../services/member/manage-vocab-history.service";
+import {VocabPracticeHistory} from '../../entity/vocab-practice-history';
+import {Dictation} from '../../entity/dictation';
+import {NavigationService} from '../../services/navigation.service';
+import {DictationService} from '../../services/dictation/dictation.service';
+import {TranslateService} from '@ngx-translate/core';
+import {IonicComponentService} from '../../services/ionic-component.service';
+import {Storage} from '@ionic/storage';
+import {AuthService} from '../../services/auth.service';
+import {VocabPracticeService} from '../../services/practice/vocab-practice.service';
+import {ManageVocabHistoryService} from '../../services/member/manage-vocab-history.service';
 
 @Component({
   selector: 'app-practice-complete',
@@ -19,10 +18,10 @@ import {ManageVocabHistoryService} from "../../services/member/manage-vocab-hist
 export class PracticeCompletePage implements OnInit {
   @ViewChild('dictationCard') dictationCard;
   dictation: Dictation;
-  mark: number = 0;
+  mark = 0;
   histories: VocabPracticeHistory[] = [];
   recommended: boolean;
-  finished: boolean = false;
+  finished = false;
   historyStored: boolean;
   loader: any;
 
@@ -86,14 +85,16 @@ export class PracticeCompletePage implements OnInit {
       this.dictation = d;
       this.recommended = true;
       this.dictationCard.highlightRecommend();
-    })
+    });
   }
 
   recommendBtnText(): string {
-    if (this.recommended)
+    if (this.recommended) {
       return this.translate.instant('Recommended');
-    else
+    }
+    else {
       return this.translate.instant('Recommend');
+    }
   }
 
   getDictationThenOpen() {
@@ -102,14 +103,14 @@ export class PracticeCompletePage implements OnInit {
     } else if (this.dictationService.isInstantDictation(this.dictation)) {
       this.openDictation(this.dictation);
     } else {
-      //this.ionicComponentService.showLoading().then(l => this.loader = l);
+      // this.ionicComponentService.showLoading().then(l => this.loader = l);
       this.dictationService.getById(this.dictation.id)
         .toPromise().then(d => this.openDictation(d)).catch(e => this.showCannotGetDictation(e));
     }
   }
 
   openDictation(d: Dictation) {
-    if (this.loader) this.loader.dismiss();
+    if (this.loader) { this.loader.dismiss(); }
     this.navigationService.retryDictation(d);
   }
 
