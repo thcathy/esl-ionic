@@ -91,8 +91,7 @@ export class PracticeCompletePage implements OnInit {
   recommendBtnText(): string {
     if (this.recommended) {
       return this.translate.instant('Recommended');
-    }
-    else {
+    } else {
       return this.translate.instant('Recommend');
     }
   }
