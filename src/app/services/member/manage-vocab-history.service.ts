@@ -36,6 +36,8 @@ export class ManageVocabHistoryService extends Service {
       }
       if (this.isAlwaysWrong(vocab)) {
         this.frequentlyWrongVocabs.set(vocab.id.word, vocab);
+      } else {
+        this.frequentlyWrongVocabs.delete(vocab.id.word);
       }
     });
   }

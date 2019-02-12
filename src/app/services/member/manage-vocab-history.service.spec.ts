@@ -2,7 +2,11 @@ import {fakeAsync, TestBed, tick} from "@angular/core/testing";
 import {ManageVocabHistoryService} from "./manage-vocab-history.service";
 import {Storage} from "@ionic/storage";
 import {VocabPracticeService} from "../practice/vocab-practice.service";
-import {memberVocabularyMember1Apple, memberVocabularyMember1Banana} from "../../../test-config/test-data";
+import {
+  memberVocabularyMember1Apple,
+  memberVocabularyMember1Banana,
+  memberVocabularyMember1Cat
+} from "../../../test-config/test-data";
 import {Observable} from "rxjs";
 
 describe('ManageVocabHistoryService', () => {
@@ -16,7 +20,7 @@ describe('ManageVocabHistoryService', () => {
     });
 
     vocabPracticeServiceSpy = jasmine.createSpyObj('VocabPracticeService', {
-      getAllHistory: Observable.of([memberVocabularyMember1Apple, memberVocabularyMember1Banana])
+      getAllHistory: Observable.of([memberVocabularyMember1Apple, memberVocabularyMember1Banana, memberVocabularyMember1Cat])
     });
 
     TestBed.configureTestingModule({
@@ -41,7 +45,22 @@ describe('ManageVocabHistoryService', () => {
     tick();
     expect(service.learntVocabs.size).toBe(1);
     expect(service.learntVocabs.get('apple').id.word).toBe('apple');
+    expect(service.frequentlyWrongVocabs.size).toBe(2);
+    expect(service.frequentlyWrongVocabs.get('banana').id.word).toBe('banana');
+  }));
+
+  it('classify vocabulary will update the maps', fakeAsync(() => {
+    service.loadFromServer();
+    tick();
+    let banana = memberVocabularyMember1Banana;
+    banana.correct = 1;
+    let cat = memberVocabularyMember1Cat;
+    cat.correct = 10;
+    service.classifyVocabulary([banana, cat]);
+
+    expect(service.learntVocabs.size).toBe(2);
     expect(service.frequentlyWrongVocabs.size).toBe(1);
     expect(service.frequentlyWrongVocabs.get('banana').id.word).toBe('banana');
+    expect(service.frequentlyWrongVocabs.get('banana').correct).toBe(1);
   }));
 });
