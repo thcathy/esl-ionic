@@ -10,7 +10,7 @@
 
 <ion-content>
   <div class="inner-content">
-    <dictation-card [dictation]="dictation" start="true" [edit]="dictation?.creator.emailAddress === authService.userProfile?.email"></dictation-card>
+    <dictation-card [dictation]="dictation" start="true" [edit]="authService.isAuthenticated() && dictation?.creator.emailAddress === authService.userProfile?.email"></dictation-card>
   </div>
   <footer></footer>
 </ion-content>
