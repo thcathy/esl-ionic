@@ -40,7 +40,7 @@ export class MemberHomePage implements OnInit {
     console.log(`${this.selectedSegment}`);
     this.manageVocabHistoryService.loadFromServer().then(_p => {
       this.learntVocabs = this.manageVocabHistoryService.learntVocabs;
-      this.frequentlyWrongVocabs = this.manageVocabHistoryService.frequentlyWrongVocabs;
+      this.frequentlyWrongVocabs = this.manageVocabHistoryService.answeredBefore;
     });
   }
 
@@ -81,7 +81,7 @@ export class MemberHomePage implements OnInit {
   onVocabHistoryList(value: string) {
     if (value === 'review') {
       this.navigationService.startDictation(
-        this.manageVocabHistoryService.generatePracticeFromFrequentlyWrongVocabs()
+        this.manageVocabHistoryService.generatePracticeFromAnsweredBefore()
       );
     }
   }

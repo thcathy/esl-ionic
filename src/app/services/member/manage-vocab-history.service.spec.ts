@@ -35,8 +35,8 @@ describe('ManageVocabHistoryService', () => {
     service = TestBed.get(ManageVocabHistoryService);
   });
 
-  it('test randomFrequentlyWrongVocabs with different input, output length', () => {
-    let result = service.randomFrequentlyWrongVocabs(1);
+  it('test randomWordsFromBefore with different input, output length', () => {
+    let result = service.randomWordsFromBefore(1);
     expect(result.length).toBe(0);
   });
 
@@ -45,8 +45,8 @@ describe('ManageVocabHistoryService', () => {
     tick();
     expect(service.learntVocabs.size).toBe(1);
     expect(service.learntVocabs.get('apple').id.word).toBe('apple');
-    expect(service.frequentlyWrongVocabs.size).toBe(2);
-    expect(service.frequentlyWrongVocabs.get('banana').id.word).toBe('banana');
+    expect(service.answeredBefore.size).toBe(2);
+    expect(service.answeredBefore.get('banana').id.word).toBe('banana');
   }));
 
   it('classify vocabulary will update the maps', fakeAsync(() => {
@@ -59,8 +59,8 @@ describe('ManageVocabHistoryService', () => {
     service.classifyVocabulary([banana, cat]);
 
     expect(service.learntVocabs.size).toBe(2);
-    expect(service.frequentlyWrongVocabs.size).toBe(1);
-    expect(service.frequentlyWrongVocabs.get('banana').id.word).toBe('banana');
-    expect(service.frequentlyWrongVocabs.get('banana').correct).toBe(1);
+    expect(service.answeredBefore.size).toBe(1);
+    expect(service.answeredBefore.get('banana').id.word).toBe('banana');
+    expect(service.answeredBefore.get('banana').correct).toBe(1);
   }));
 });

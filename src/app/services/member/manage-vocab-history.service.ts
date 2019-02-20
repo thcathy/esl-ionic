@@ -17,7 +17,7 @@ export class ManageVocabHistoryService extends Service {
   private MEMBER_VOCABULARIES_KEY = 'ManageVocabHistoryService.MEMBER_VOCABULARIES_KEY';
 
   learntVocabs: Map<string, MemberVocabulary> = new Map<string, MemberVocabulary>();
-  frequentlyWrongVocabs: Map<string, MemberVocabulary> = new Map<string, MemberVocabulary>();
+  answeredBefore: Map<string, MemberVocabulary> = new Map<string, MemberVocabulary>();
 
   constructor (
     private vocabPracticeService: VocabPracticeService,
@@ -33,17 +33,11 @@ export class ManageVocabHistoryService extends Service {
     vocabularies.forEach(vocab => {
       if (this.isLearnt(vocab)) {
         this.learntVocabs.set(vocab.id.word, vocab);
-      }
-      if (this.isAlwaysWrong(vocab)) {
-        this.frequentlyWrongVocabs.set(vocab.id.word, vocab);
+        this.answeredBefore.delete(vocab.id.word);
       } else {
-        this.frequentlyWrongVocabs.delete(vocab.id.word);
+        this.answeredBefore.set(vocab.id.word, vocab);
       }
     });
-  }
-
-  private isAlwaysWrong(vocab: MemberVocabulary) {
-    return vocab.wrong > vocab.correct;
   }
 
   private isLearnt(vocab: MemberVocabulary) {
@@ -55,20 +49,20 @@ export class ManageVocabHistoryService extends Service {
     this.classifyVocabulary(list);
   }
 
-  public generatePracticeFromFrequentlyWrongVocabs(): Dictation {
+  public generatePracticeFromAnsweredBefore(): Dictation {
     return this.vocabPracticeService.generatePracticeFromWords(
-      this.randomFrequentlyWrongVocabs(environment.vocabPracticeQuestions)
+      this.randomWordsFromBefore(environment.vocabPracticeQuestions)
       );
   }
 
-  public randomFrequentlyWrongVocabs(length: number): string[] {
-    const words = Array.from(this.frequentlyWrongVocabs.values()).map(v => v.id.word);
+  public randomWordsFromBefore(length: number): string[] {
+    const words = Array.from(this.answeredBefore.values()).map(v => v.id.word);
     return CollectionUtils.randomPick(words, length);
   }
 
   public clearCache() {
     this.learntVocabs.clear();
-    this.frequentlyWrongVocabs.clear();
+    this.answeredBefore.clear();
   }
 
 }
