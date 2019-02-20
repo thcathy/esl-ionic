@@ -66,4 +66,9 @@ export class ManageVocabHistoryService extends Service {
     return CollectionUtils.randomPick(words, length);
   }
 
+  public clearCache() {
+    this.learntVocabs.clear();
+    this.frequentlyWrongVocabs.clear();
+  }
+
 }

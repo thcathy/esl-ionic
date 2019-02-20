@@ -28,7 +28,7 @@
         <app-vocab-history-list [vocabs]="frequentlyWrongVocabs"
                             title="Frequently Wrong"
                             icon="times-circle"
-                            showReview="true"
+                            [showReview]="frequentlyWrongVocabs != null && frequentlyWrongVocabs.size > 0"
                             (click)="onVocabHistoryList($event)"
         ></app-vocab-history-list>
       </ion-col>

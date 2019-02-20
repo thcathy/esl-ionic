@@ -8,6 +8,7 @@ import * as auth0 from 'auth0-js';
 import {MemberService} from "./member/member.service";
 import {NavigationRequest, NavigationService} from "./navigation.service";
 import {Router} from "@angular/router";
+import {ManageVocabHistoryService} from "./member/manage-vocab-history.service";
 
 export const auth0CordovaConfig = {
   // needed for auth0
@@ -47,6 +48,7 @@ export class AuthService {
               public translate: TranslateService,
               public memberService: MemberService,
               public navigationService: NavigationService,
+              public manageVocabHistoryService: ManageVocabHistoryService,
               private router: Router) {
     try {
       this.userProfile = JSON.parse(localStorage.getItem('profile'));
@@ -59,6 +61,7 @@ export class AuthService {
 
   public login(redirectRequest?: NavigationRequest): void {
     this.storage.set(this.navigationRequestKey, redirectRequest);
+    this.clearCache();
     if (this.appService.isApp()) {
       console.log('login by cordova');
       this.loginCordova();
@@ -189,6 +192,10 @@ export class AuthService {
         });
       }
     });
+  }
+
+  private clearCache() {
+    this.manageVocabHistoryService.clearCache();
   }
 
 }
