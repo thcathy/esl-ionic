@@ -1,16 +1,16 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpParams} from "@angular/common/http";
-import {Service} from "../root.service";
+import {HttpClient, HttpParams} from '@angular/common/http';
+import {Service} from '../root.service';
 
-import {VocabPractice} from "../../entity/voacb-practice";
-import {environment} from "../../../environments/environment";
-import {Observable} from "rxjs/internal/Observable";
-import {Dictation} from "../../entity/dictation";
-import {VocabPracticeHistory} from "../../entity/vocab-practice-history";
-import {MemberVocabulary} from "../../entity/member-vocabulary";
-import {Storage} from "@ionic/storage";
-import {VocabPracticeService} from "../practice/vocab-practice.service";
-import {CollectionUtils} from "../../utils/collection-utils";
+import {VocabPractice} from '../../entity/voacb-practice';
+import {environment} from '../../../environments/environment';
+import {Observable} from 'rxjs/internal/Observable';
+import {Dictation} from '../../entity/dictation';
+import {VocabPracticeHistory} from '../../entity/vocab-practice-history';
+import {MemberVocabulary} from '../../entity/member-vocabulary';
+import {Storage} from '@ionic/storage';
+import {VocabPracticeService} from '../practice/vocab-practice.service';
+import {CollectionUtils} from '../../utils/collection-utils';
 
 @Injectable({ providedIn: 'root' })
 export class ManageVocabHistoryService extends Service {
@@ -25,7 +25,7 @@ export class ManageVocabHistoryService extends Service {
   ) {
     super();
     this.storage.get(this.MEMBER_VOCABULARIES_KEY).then(list => {
-      if (list != null) this.classifyVocabulary(list)
+      if (list != null) { this.classifyVocabulary(list); }
     });
   }
 

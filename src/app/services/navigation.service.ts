@@ -1,12 +1,12 @@
 import {Injectable} from '@angular/core';
 
-import {Dictation} from "../entity/dictation";
-import {DictationService} from "./dictation/dictation.service";
-import {convertToParamMap, Router} from "@angular/router";
-import {Storage} from "@ionic/storage";
-import {VocabPracticeHistory} from "../entity/vocab-practice-history";
-import {SentenceHistory} from "../entity/sentence-history";
-import {Location} from "@angular/common";
+import {Dictation} from '../entity/dictation';
+import {DictationService} from './dictation/dictation.service';
+import {convertToParamMap, Router} from '@angular/router';
+import {Storage} from '@ionic/storage';
+import {VocabPracticeHistory} from '../entity/vocab-practice-history';
+import {SentenceHistory} from '../entity/sentence-history';
+import {Location} from '@angular/common';
 
 export interface NavigationRequest {
   destination: any;
@@ -30,14 +30,13 @@ export class NavigationService {
   constructor(private router: Router,
               private location: Location,
               private storage: Storage,
-              private dictationService: DictationService)
-  {}
+              private dictationService: DictationService) {}
 
-  openHomePage() { this.navigate('/home') ;}
-  openAccountPage() { this.navigate('/account') }
-  openInstantDictation() { this.navigate('/instant-dictation') }
-  openSearchDictation() { this.navigate('/search-dictation') }
-  openVocabularyStarter() { this.navigate('/vocabulary-starter') }
+  openHomePage() { this.navigate('/home') ; }
+  openAccountPage() { this.navigate('/account'); }
+  openInstantDictation() { this.navigate('/instant-dictation'); }
+  openSearchDictation() { this.navigate('/search-dictation'); }
+  openVocabularyStarter() { this.navigate('/vocabulary-starter'); }
 
   navigate(path: string, queryParams = {}) {
     this.router.navigate([path], { queryParams: queryParams });
@@ -63,14 +62,15 @@ export class NavigationService {
   }
 
   openMemberHome(segment: String = 'dictation') {
-    this.navigate(`/member-home/${segment}`)
+    this.navigate(`/member-home/${segment}`);
   }
 
   retryDictation(dictation: Dictation) {
-    if (this.dictationService.isInstantDictation(dictation))
+    if (this.dictationService.isInstantDictation(dictation)) {
       this.openInstantDictation();
-    else
+    } else {
       this.startDictation(dictation);
+    }
   }
 
   async openDictation(dictation: Dictation, toastMessage: string = null, showBackButton: boolean = false) {

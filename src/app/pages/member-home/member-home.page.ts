@@ -23,7 +23,7 @@ export class MemberHomePage implements OnInit {
   practiceHistories: PracticeHistory[];
   selectedSegment: String;
   learntVocabs: Map<string, MemberVocabulary> = new Map<string, MemberVocabulary>();
-  frequentlyWrongVocabs: Map<string, MemberVocabulary> = new Map<string, MemberVocabulary>();
+  answeredBeforeVocabs: Map<string, MemberVocabulary> = new Map<string, MemberVocabulary>();
   @ViewChild('ionSegment') ionSegment;
 
   constructor(
@@ -40,7 +40,7 @@ export class MemberHomePage implements OnInit {
     console.log(`${this.selectedSegment}`);
     this.manageVocabHistoryService.loadFromServer().then(_p => {
       this.learntVocabs = this.manageVocabHistoryService.learntVocabs;
-      this.frequentlyWrongVocabs = this.manageVocabHistoryService.answeredBefore;
+      this.answeredBeforeVocabs = this.manageVocabHistoryService.answeredBefore;
     });
   }
 

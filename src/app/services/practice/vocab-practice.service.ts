@@ -1,14 +1,14 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpParams} from "@angular/common/http";
-import {Service} from "../root.service";
+import {HttpClient, HttpParams} from '@angular/common/http';
+import {Service} from '../root.service';
 
-import {VocabPractice} from "../../entity/voacb-practice";
-import {environment} from "../../../environments/environment";
-import {Observable} from "rxjs/internal/Observable";
-import {Dictation} from "../../entity/dictation";
-import {VocabPracticeHistory} from "../../entity/vocab-practice-history";
-import {MemberVocabulary} from "../../entity/member-vocabulary";
-import {Vocab} from "../../entity/vocab";
+import {VocabPractice} from '../../entity/voacb-practice';
+import {environment} from '../../../environments/environment';
+import {Observable} from 'rxjs/internal/Observable';
+import {Dictation} from '../../entity/dictation';
+import {VocabPracticeHistory} from '../../entity/vocab-practice-history';
+import {MemberVocabulary} from '../../entity/member-vocabulary';
+import {Vocab} from '../../entity/vocab';
 
 
 
@@ -32,7 +32,7 @@ export class VocabPracticeService extends Service {
   }
 
   isWordEqual(word: string, input: string): boolean {
-    return word.replace(/ /g, '').replace(/-/g, '').toLowerCase() === (input.replace(/ /g, "").replace(/-/g, "").toLowerCase());
+    return word.replace(/ /g, '').replace(/-/g, '').toLowerCase() === (input.replace(/ /g, '').replace(/-/g, '').toLowerCase());
   }
 
   generatePractice(difficulty: string): Observable<Dictation> {

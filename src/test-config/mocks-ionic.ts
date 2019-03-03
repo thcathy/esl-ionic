@@ -1,4 +1,4 @@
-import {Observable} from "rxjs";
+import {Observable} from 'rxjs';
 
 
 export class PlatformMock {
@@ -106,13 +106,14 @@ export const GoogleAnalyticsSpy = () => jasmine.createSpyObj('GoogleAnalytics',
   { trackView: Promise.resolve(), startTrackerWithId: Promise.resolve() }
 );
 
-export const NavigationServiceSpy = () => jasmine.createSpyObj('NavigationService', ['goTo', 'openVocabularyStarter']);
+export const NavigationServiceSpy = () => jasmine.createSpyObj('NavigationService',
+  ['goTo', 'openVocabularyStarter', 'retryDictation', 'openDictation']);
 
 export const StorageSpy = () => {
   const storageSpy = jasmine.createSpyObj('Storage', ['get', 'set']);
-  storageSpy.get.and.callFake((param) => {return Promise.resolve()});
+  storageSpy.get.and.callFake((param) => Promise.resolve());
   return storageSpy;
-}
+};
 
 export const NGXLoggerSpy = () => jasmine.createSpyObj('NGXLogger', ['info', 'warn', 'error']);
 
@@ -126,7 +127,7 @@ export const LoadingControllerSpy = () => {
 
 export const AlertControllerSpy = () => jasmine.createSpyObj('AlertController', ['create']);
 
-export const AuthServiceSpy = () => jasmine.createSpyObj('AuthService', ['requireAuthenticated','isAuthenticated']);
+export const AuthServiceSpy = () => jasmine.createSpyObj('AuthService', ['requireAuthenticated', 'isAuthenticated']);
 
 export const PopoverControllerSpy = () => jasmine.createSpyObj('PopoverController', ['create']);
 
@@ -143,7 +144,7 @@ export const TextToSpeechSpy = () => jasmine.createSpyObj('TextToSpeech', ['spea
 export const DictationServiceSpy = () => jasmine.createSpyObj('DictationService', ['createVocabDictationHistory', 'isInstantDictation', 'isGeneratedDictation', 'isSentenceDictation']);
 
 export const VocabPracticeServiceSpy = () => jasmine.createSpyObj('VocabPraticeService',
-{ saveHistory: Observable.of("") }
+{ saveHistory: Observable.of('') }
 );
 
 export const ManageVocabHistoryServiceSpy = () => jasmine.createSpyObj('ManageVocabHistoryService', ['classifyVocabulary']);

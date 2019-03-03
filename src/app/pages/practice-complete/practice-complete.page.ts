@@ -98,8 +98,8 @@ export class PracticeCompletePage implements OnInit {
 
   getDictationThenOpen() {
     if (this.dictationService.isGeneratedDictation(this.dictation)) {
-      this.navigationService.openVocabularyStarter();
-    } else if (this.dictationService.isInstantDictation(this.dictation)) {
+      this.navigationService.startDictation(this.dictation);
+    } else if (this.dictationService.isGeneratedDictation(this.dictation) || this.dictationService.isInstantDictation(this.dictation)) {
       this.openDictation(this.dictation);
     } else {
       // this.ionicComponentService.showLoading().then(l => this.loader = l);

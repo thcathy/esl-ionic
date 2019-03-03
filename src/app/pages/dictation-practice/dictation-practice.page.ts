@@ -1,16 +1,17 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {Dictation} from "../../entity/dictation";
-import {VocabPractice} from "../../entity/voacb-practice";
-import {VocabPracticeHistory} from "../../entity/vocab-practice-history";
-import {LoadingController} from "@ionic/angular";
-import {DictationService} from "../../services/dictation/dictation.service";
-import {VocabPracticeService} from "../../services/practice/vocab-practice.service";
-import {TranslateService} from "@ngx-translate/core";
-import {SpeechService} from "../../services/speech.service";
-import {IonicComponentService} from "../../services/ionic-component.service";
-import {Storage} from "@ionic/storage";
-import {NavigationService} from "../../services/navigation.service";
-import {ActivatedRoute} from "@angular/router";
+import {Dictation} from '../../entity/dictation';
+import {VocabPractice} from '../../entity/voacb-practice';
+import {VocabPracticeHistory} from '../../entity/vocab-practice-history';
+import {LoadingController} from '@ionic/angular';
+import {DictationService} from '../../services/dictation/dictation.service';
+import {VocabPracticeService} from '../../services/practice/vocab-practice.service';
+import {TranslateService} from '@ngx-translate/core';
+import {SpeechService} from '../../services/speech.service';
+import {IonicComponentService} from '../../services/ionic-component.service';
+import {Storage} from '@ionic/storage';
+import {NavigationService} from '../../services/navigation.service';
+import {ActivatedRoute} from '@angular/router';
+import {MemberVocabulary} from "../../entity/member-vocabulary";
 
 @Component({
   selector: 'app-dictation-practice',
@@ -25,8 +26,9 @@ export class DictationPracticePage implements OnInit {
   questionIndex: number;
   phonics: string;
   answer: string;
-  mark: number = 0;
+  mark = 0;
   histories: VocabPracticeHistory[] = [];
+  audio: Map<string, HTMLAudioElement> = new Map<string, HTMLAudioElement>();
   loading: any;
   @ViewChild('answerElement') answerInput;
 
@@ -50,12 +52,6 @@ export class DictationPracticePage implements OnInit {
     this.initDictation();
   }
 
-  ngAfterViewInit() {
-    // trigger audio for this page
-    //var audio = new Audio('');
-    //audio.play();
-  }
-
   clearVaribles() {
     this.histories = [];
     this.dictation = null;
@@ -70,38 +66,42 @@ export class DictationPracticePage implements OnInit {
     this.loading = await this.ionicComponentService.showLoading();
     this.dictation = await this.storage.get(NavigationService.storageKeys.dictation);
     this.dictationId = await this.storage.get(NavigationService.storageKeys.dictationId);
-    if (this.dictation == null && this.dictationId > 0)
-      this.dictationService.getById(this.dictationId)
-        .toPromise().then(d => this.dictation = d);
+    if (this.dictation == null && this.dictationId > 0) {
+      this.dictation = await this.dictationService.getById(this.dictationId).toPromise();
+    }
 
     this.questionIndex = 0;
     this.mark = 0;
-    this.phonics = "Phonetic";
-    this.dictation.vocabs.forEach((vocab) => {
-      this.vocabPracticeService.getQuestion(vocab.word, this.dictation.showImage)
-        .subscribe((p) => {
-          this.vocabPractices.push(p);
+    this.phonics = 'Phonetic';
+    this.dictation.vocabs
+      .map((vocab) => this.vocabPracticeService.getQuestion(vocab.word, this.dictation.showImage))
+      .map((o) => o.subscribe((p) => {
+        this.gotPractice(p);
+        if (this.vocabPractices.length === 1) {
+          this.loading.dismiss();
+          this.speak();
+        }
+      }));
+  }
 
-          if (this.vocabPractices.length == 1) {
-            this.loading.dismiss();
-            this.speak();
-          }
-        })
-    });
+  gotPractice(p: VocabPractice) {
+    this.vocabPractices.push(p);
+    if (p.activePronounceLink) { this.audio.set(p.word, new Audio(p.activePronounceLink)); }
   }
 
   speak() {
-    if (this.vocabPractices[this.questionIndex].activePronounceLink) {
-      var audio = new Audio(this.vocabPractices[this.questionIndex].activePronounceLink);
-      audio.play();
+    const word = this.currentQuestion().word;
+    if (this.audio.get(word) != null) {
+      this.audio.get(word).play();
+      this.audio.set(word, new Audio(this.currentQuestion().activePronounceLink));
     } else {
-      this.speechService.speak(this.vocabPractices[this.questionIndex].word);
+      this.speechService.speak(word);
     }
   }
 
   showPhonics() {
     if (this.currentQuestion().ipaunavailable) {
-      this.phonics = "N.A.";
+      this.phonics = 'N.A.';
     } else {
       this.phonics = this.currentQuestion().ipa;
     }
@@ -114,6 +114,7 @@ export class DictationPracticePage implements OnInit {
   submitAnswer() {
     this.checkAnswer();
     this.questionIndex++;
+
     this.waitForNextQuestion().then(() => {
       if (this.end()) {
         this.navigationService.practiceComplete(this.dictation, this.mark, this.histories);
@@ -133,25 +134,25 @@ export class DictationPracticePage implements OnInit {
   }
 
   onBackspace(any) {
-    this.answer = this.answer.slice(0, this.answer.length-1);
+    this.answer = this.answer.slice(0, this.answer.length - 1);
   }
 
   private checkAnswer() {
-    let correct = this.vocabPracticeService.isWordEqual(this.currentQuestion().word, this.answer == null ? '' : this.answer);
-    if (correct) this.mark++;
+    const correct = this.vocabPracticeService.isWordEqual(this.currentQuestion().word, this.answer == null ? '' : this.answer);
+    if (correct) { this.mark++; }
 
-    let history = <VocabPracticeHistory>  {
+    const history = <VocabPracticeHistory>  {
       answer: this.answer,
       question: this.currentQuestion(),
       correct: correct,
       state: ''
-    }
+    };
     this.histories.unshift(history);
     history.state = 'in';
   }
 
   private preNextQuestion() {
-    this.phonics = "Phonetic";
+    this.phonics = 'Phonetic';
     this.answer = '';
   }
 
@@ -159,17 +160,16 @@ export class DictationPracticePage implements OnInit {
     if (this.questionIndex >= this.vocabPractices.length && this.questionIndex < this.dictation.vocabs.length) {
       this.ionicComponentService.showLoading().then(l => this.loading = l);
 
-      while (this.questionIndex >= this.vocabPractices.length) {
+      let count = 0;
+      while (count < 100 && this.questionIndex >= this.vocabPractices.length) {
         console.log(`waiting for question api return`);
-        await this.sleep(100);
+        await this.sleep(500);
+        count++;
       }
 
       this.loading.dismiss();
     }
   }
 
-  sleep(ms = 0) {
-    return new Promise(r => setTimeout(r, ms));
-  }
-
+  sleep(ms = 0) { return new Promise(r => setTimeout(r, ms)); }
 }

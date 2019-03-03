@@ -25,10 +25,10 @@
         <app-vocab-history-list [vocabs]="learntVocabs" title="Learnt" icon="check-circle"></app-vocab-history-list>
       </ion-col>
       <ion-col size="12" size-sm="12" size-md="12" size-lg="6" *ngIf="selectedSegment === 'vocabulary'">
-        <app-vocab-history-list [vocabs]="frequentlyWrongVocabs"
-                            title="Frequently Wrong"
+        <app-vocab-history-list [vocabs]="answeredBeforeVocabs"
+                            title="Answered Before"
                             icon="times-circle"
-                            [showReview]="frequentlyWrongVocabs != null && frequentlyWrongVocabs.size > 0"
+                            [showReview]="answeredBeforeVocabs != null && answeredBeforeVocabs.size > 0"
                             (click)="onVocabHistoryList($event)"
         ></app-vocab-history-list>
       </ion-col>

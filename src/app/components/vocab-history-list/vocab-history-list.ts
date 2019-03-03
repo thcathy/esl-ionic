@@ -19,12 +19,21 @@ export class VocabHistoryListComponent implements OnChanges {
   page: number;
   showNext: boolean;
 
+  vocabComparator = (a: [string, MemberVocabulary], b: [string, MemberVocabulary]) => {
+    if (b[1].correct === a[1].correct) {
+      return a[1].wrong - b[1].wrong;
+    } else {
+      return b[1].correct - a[1].correct;
+    }
+  }
+
   constructor() {
     this.page = 0;
   }
 
   ngOnChanges(_changes: SimpleChanges) {
     this.page = 0;
+    this.vocabs = new Map([...this.vocabs.entries()].sort(this.vocabComparator));
     if (this.vocabs != null) {
       this.sliceVocabs();
       this.showNext = this.vocabs.size > this.vocabPerPage;

@@ -1,12 +1,12 @@
 import {Component, Input} from '@angular/core';
-import {Dictation} from "../../entity/dictation";
-import {animate, state, style, transition, trigger} from "@angular/animations";
-import {TranslateService} from "@ngx-translate/core";
-import {AlertController, ToastController} from "@ionic/angular";
-import {NavigationService} from "../../services/navigation.service";
-import {DictationService} from "../../services/dictation/dictation.service";
-import {MemberDictationService} from "../../services/dictation/member-dictation.service";
-import {Router} from "@angular/router";
+import {Dictation} from '../../entity/dictation';
+import {animate, state, style, transition, trigger} from '@angular/animations';
+import {TranslateService} from '@ngx-translate/core';
+import {AlertController, ToastController} from '@ionic/angular';
+import {NavigationService} from '../../services/navigation.service';
+import {DictationService} from '../../services/dictation/dictation.service';
+import {MemberDictationService} from '../../services/dictation/member-dictation.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'dictation-card',
@@ -29,11 +29,11 @@ import {Router} from "@angular/router";
 })
 export class DictationCardComponent {
   @Input() dictation: Dictation;
-  @Input() start: boolean = false;
-  @Input() retry: boolean = false;
-  @Input() edit: boolean = false;
-  @Input() showContent: boolean = true;
-  recommendState: string = 'normal';
+  @Input() start = false;
+  @Input() retry = false;
+  @Input() edit = false;
+  @Input() showContent = true;
+  recommendState = 'normal';
 
   constructor(public router: Router,
               public navService: NavigationService,
@@ -41,14 +41,13 @@ export class DictationCardComponent {
               public memberDictationService: MemberDictationService,
               public translate: TranslateService,
               public alertController: AlertController,
-              public toastController: ToastController,)
-  {}
+              public toastController: ToastController, ) {}
 
   highlightRecommend() {
     this.recommendState = 'highlight';
   }
 
-  recommendAnimationDone() : void {
+  recommendAnimationDone(): void {
     this.recommendState = 'normal';
   }
 
@@ -78,13 +77,13 @@ export class DictationCardComponent {
   deleteDictation = () => {
     this.memberDictationService.deleteDictation(this.dictation.id)
       .subscribe(this.afterDelete, this.failDelete);
-  };
+  }
 
   afterDelete = (d) => {
     console.info(`deleted dictation id: ${d.id}`);
     this.presentToast(this.translate.instant('DeletedDictation', {title: d.title}));
     this.navService.openMemberHome('dictation');
-  };
+  }
 
   async presentToast(message: string) {
     const toast = await this.toastController.create({

@@ -85,8 +85,8 @@ export const memberVocabularyMember1Banana = <MemberVocabulary>{
     word: 'banana',
     member: member1,
   },
-  correct: 2,
-  wrong: 3,
+  correct: 3,
+  wrong: 2,
 };
 
 export const memberVocabularyMember1Cat = <MemberVocabulary>{

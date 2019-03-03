@@ -2,30 +2,30 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import {async, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
 
 import { PracticeCompletePage } from './practice-complete.page';
-import {dictation1} from "../../../test-config/test-data";
-import {DictationService} from "../../services/dictation/dictation.service";
+import {dictation1} from '../../../test-config/test-data';
+import {DictationService} from '../../services/dictation/dictation.service';
 import {
   AuthServiceSpy,
   DictationServiceSpy, ManageVocabHistoryServiceSpy, NavigationServiceSpy,
   StorageSpy, VocabPracticeServiceSpy,
-} from "../../../test-config/mocks-ionic";
-import {Storage} from "@ionic/storage";
-import "rxjs-compat/add/observable/of";
-import {SharedTestModule} from "../../../test-config/shared-test.module";
-import {AuthService} from "../../services/auth.service";
-import {NavigationService} from "../../services/navigation.service";
-import {VocabPracticeService} from "../../services/practice/vocab-practice.service";
-import {ManageVocabHistoryService} from "../../services/member/manage-vocab-history.service";
+} from '../../../test-config/mocks-ionic';
+import {Storage} from '@ionic/storage';
+import 'rxjs-compat/add/observable/of';
+import {SharedTestModule} from '../../../test-config/shared-test.module';
+import {AuthService} from '../../services/auth.service';
+import {NavigationService} from '../../services/navigation.service';
+import {VocabPracticeService} from '../../services/practice/vocab-practice.service';
+import {ManageVocabHistoryService} from '../../services/member/manage-vocab-history.service';
 
 describe('PracticeCompletePage', () => {
   let component: PracticeCompletePage;
   let fixture: ComponentFixture<PracticeCompletePage>;
-  let dictationServiceSpy = DictationServiceSpy();
-  let vocabPracticeServiceSpy = VocabPracticeServiceSpy();
-  let storageSpy = StorageSpy();
-  let authServiceSpy = AuthServiceSpy();
-  let navigationServiceSpy = NavigationServiceSpy();
-  let manageVocabHistoryServiceSpy = ManageVocabHistoryServiceSpy();
+  const dictationServiceSpy = DictationServiceSpy();
+  const vocabPracticeServiceSpy = VocabPracticeServiceSpy();
+  const storageSpy = StorageSpy();
+  const authServiceSpy = AuthServiceSpy();
+  const navigationServiceSpy = NavigationServiceSpy();
+  const manageVocabHistoryServiceSpy = ManageVocabHistoryServiceSpy();
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -60,7 +60,7 @@ describe('PracticeCompletePage', () => {
       'histories': [],
       'historyStored': true,
     };
-    storageSpy.get.and.callFake((param) => {return params[param]});
+    storageSpy.get.and.callFake((param) => params[param]);
     authServiceSpy.isAuthenticated.and.returnValue(true);
 
     component.ionViewDidEnter();
@@ -76,7 +76,7 @@ describe('PracticeCompletePage', () => {
       'histories': [],
       'historyStored': false,
     };
-    storageSpy.get.and.callFake((param) => {return params[param]});
+    storageSpy.get.and.callFake((param) => params[param]);
     authServiceSpy.isAuthenticated.and.returnValue(false);
 
     component.ionViewDidEnter();
@@ -95,7 +95,7 @@ describe('PracticeCompletePage', () => {
       'histories': [],
       'historyStored': false,
     };
-    storageSpy.get.and.callFake((param) => {return params[param]});
+    storageSpy.get.and.callFake((param) => params[param]);
     authServiceSpy.isAuthenticated.and.returnValue(true);
 
     component.ionViewDidEnter();
@@ -107,7 +107,7 @@ describe('PracticeCompletePage', () => {
     expect(dictationServiceSpy.createVocabDictationHistory.calls.count()).toEqual(0);
   }));
 
-  it('retry generated dictation will go to vocabulary starter', fakeAsync(()=> {
+  it('retry generated dictation will go to vocabulary starter', fakeAsync(() => {
     dictationServiceSpy.isInstantDictation.and.returnValue(false);
     dictationServiceSpy.isGeneratedDictation.and.returnValue(true);
     const params = {
@@ -115,13 +115,13 @@ describe('PracticeCompletePage', () => {
       'histories': [],
       'historyStored': false,
     };
-    storageSpy.get.and.callFake((param) => {return params[param]});
+    storageSpy.get.and.callFake((param) => params[param]);
 
     component.ionViewDidEnter();
     tick();
     fixture.detectChanges();
     component.getDictationThenOpen();
 
-    expect(navigationServiceSpy.openVocabularyStarter.calls.count()).toEqual(1);
+    expect(navigationServiceSpy.startDictation.calls.count()).toEqual(1);
   }));
 });
