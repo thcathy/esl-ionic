@@ -28,6 +28,7 @@
         <app-vocab-history-list [vocabs]="answeredBeforeVocabs"
                             title="Answered Before"
                             icon="times-circle"
+                            infoText="Not include learnt"
                             [showReview]="answeredBeforeVocabs != null && answeredBeforeVocabs.size > 0"
                             (click)="onVocabHistoryList($event)"
         ></app-vocab-history-list>

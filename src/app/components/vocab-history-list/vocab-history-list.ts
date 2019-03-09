@@ -1,5 +1,7 @@
 import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {MemberVocabulary} from '../../entity/member-vocabulary';
+import {AlertController} from "@ionic/angular";
+import {TranslateService} from "@ngx-translate/core";
 
 @Component({
   selector: 'app-vocab-history-list',
@@ -13,6 +15,7 @@ export class VocabHistoryListComponent implements OnChanges {
   @Input() title: string;
   @Input() icon: string;
   @Input() showReview: boolean;
+  @Input() infoText: string;
   @Output() click = new EventEmitter<string>();
 
   viewVocabs: Array<MemberVocabulary>;
@@ -27,7 +30,10 @@ export class VocabHistoryListComponent implements OnChanges {
     }
   }
 
-  constructor() {
+  constructor(
+    public translate: TranslateService,
+    public alertController: AlertController,
+  ) {
     this.page = 0;
   }
 
@@ -59,5 +65,18 @@ export class VocabHistoryListComponent implements OnChanges {
 
   onClick(key: string) {
     this.click.emit(key);
+  }
+
+  openInfo() {
+    this.presentAlert(`${this.translate.instant(this.infoText)}`, null);
+  }
+
+  async presentAlert(header: string, message: string) {
+    const alert = await this.alertController.create({
+      header: header,
+      message: message,
+      buttons: [this.translate.instant('OK')]
+    });
+    await alert.present();
   }
 }
