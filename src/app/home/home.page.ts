@@ -1,14 +1,14 @@
 import {Component, OnInit} from '@angular/core';
-import {MemberScoreRanking} from "../entity/member-score-ranking";
-import {DictationStatistics} from "../entity/dictation-statistics";
-import {AppService} from "../services/app.service";
-import {RankingService} from "../services/ranking/ranking.service";
-import {DictationService} from "../services/dictation/dictation.service";
-import {ServerService} from "../services/server.service";
-import {AlertController} from "@ionic/angular";
-import {TranslateService} from "@ngx-translate/core";
-import {Router} from "@angular/router";
-import {NavigationService} from "../services/navigation.service";
+import {MemberScoreRanking} from '../entity/member-score-ranking';
+import {DictationStatistics} from '../entity/dictation-statistics';
+import {AppService} from '../services/app.service';
+import {RankingService} from '../services/ranking/ranking.service';
+import {DictationService} from '../services/dictation/dictation.service';
+import {ServerService} from '../services/server.service';
+import {AlertController} from '@ionic/angular';
+import {TranslateService} from '@ngx-translate/core';
+import {Router} from '@angular/router';
+import {NavigationService} from '../services/navigation.service';
 
 
 @Component({
@@ -31,14 +31,14 @@ export class HomePage implements OnInit {
   ) {
   }
 
-  ngOnInit(){
-    this.serverService.healthCheck().subscribe(_data=>{},_e => {
-      this.showConnectionErrorAlert()
+  ngOnInit() {
+    this.serverService.healthCheck().subscribe(_data => {}, _e => {
+      this.showConnectionErrorAlert();
     });
 
-    this.rankingService.randomTopScore().subscribe(rank => this.memberScoreRanking = rank, _e=>{});
+    this.rankingService.randomTopScore().subscribe(rank => this.memberScoreRanking = rank, _e => {});
     this.dictationService.randomDictationStatistics().subscribe(stat => {
-      this.dictationStat = stat, _e=>{}
+      this.dictationStat = stat, _e => {};
     });
   }
 
