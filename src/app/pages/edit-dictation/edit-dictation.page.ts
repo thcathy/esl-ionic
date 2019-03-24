@@ -105,8 +105,8 @@ export class EditDictationPage implements OnInit {
       title: this.title.value,
       description: this.description.value,
       showImage: this.showImage.value,
-      vocabulary: this.type.value == 'word' ?  this.vocabulary.value.split(/[\s,]+/).filter(v => !ValidationUtils.isBlankString(v)) : [],
-      article: this.type.value == 'sentence' ? this.article.value : '',
+      vocabulary: this.type.value === 'word' ?  this.vocabulary.value.split(/[\s,]+/).filter(v => !ValidationUtils.isBlankString(v)) : [],
+      article: this.type.value === 'sentence' ? this.article.value : '',
       suitableStudent: this.suitableStudent.value
     }).subscribe(
       dic => this.afterSaved(dic),

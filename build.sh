@@ -4,6 +4,10 @@ buildWebProd() {
   ionic cordova build browser --prod
 }
 
+buildFirebase() {
+  ionic build --prod --service-worker
+}
+
 buildios() {
  ionic cordova build ios --prod 
 }

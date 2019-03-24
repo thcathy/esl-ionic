@@ -1,14 +1,15 @@
 import {Injectable, NgZone} from '@angular/core';
 import Auth0Cordova from '@auth0/cordova';
 import Auth0 from 'auth0-js';
-import {AppService} from "./app.service";
-import {Storage} from "@ionic/storage";
-import {TranslateService} from "@ngx-translate/core";
+import {AppService} from './app.service';
+import {Storage} from '@ionic/storage';
+import {TranslateService} from '@ngx-translate/core';
 import * as auth0 from 'auth0-js';
-import {MemberService} from "./member/member.service";
-import {NavigationRequest, NavigationService} from "./navigation.service";
-import {Router} from "@angular/router";
-import {ManageVocabHistoryService} from "./member/manage-vocab-history.service";
+import {MemberService} from './member/member.service';
+import {NavigationRequest, NavigationService} from './navigation.service';
+import {Router} from '@angular/router';
+import {ManageVocabHistoryService} from './member/manage-vocab-history.service';
+import {LoadingController} from '@ionic/angular';
 
 export const auth0CordovaConfig = {
   // needed for auth0
@@ -49,6 +50,7 @@ export class AuthService {
               public memberService: MemberService,
               public navigationService: NavigationService,
               public manageVocabHistoryService: ManageVocabHistoryService,
+              public loadingController: LoadingController,
               private router: Router) {
     try {
       this.userProfile = JSON.parse(localStorage.getItem('profile'));
@@ -146,12 +148,14 @@ export class AuthService {
 
   private getAuth0Language() {
     const locale = this.translate.currentLang;
-    let result = "en";
+    let result = 'en';
     if (locale != null) {
-      if (locale.indexOf("zh-Hans") > -1)
-        result = "zh";
-      else if (locale.indexOf("zh-Hant") > -1)
-        result = "zh-tw";
+      if (locale.indexOf('zh-Hans') > -1) {
+        result = 'zh';
+      }
+      else if (locale.indexOf('zh-Hant') > -1) {
+        result = 'zh-tw';
+           }
     }
     console.log(`set auth0 lang based on ${locale} to ${result}`);
     return result;
@@ -164,6 +168,7 @@ export class AuthService {
     }
 
     if (authResult && authResult.accessToken && authResult.idToken) {
+      this.showLoading();
       this.setSession(authResult);
 
       auth0WebAuth.client.userInfo(this.accessToken, (err, profile) => {
@@ -196,6 +201,15 @@ export class AuthService {
 
   private clearCache() {
     this.manageVocabHistoryService.clearCache();
+  }
+
+  async showLoading() {
+    const loading = await this.loadingController.create({
+      message: this.translate.instant('Loading') + '...',
+      duration: 2000
+    });
+    loading.present();
+    return loading;
   }
 
 }
