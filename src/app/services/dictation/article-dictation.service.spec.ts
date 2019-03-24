@@ -1,5 +1,5 @@
-import {ArticleDictationService} from "./article-dictation.service";
-import {ValidationUtils} from "../../utils/validation-utils";
+import {ArticleDictationService} from './article-dictation.service';
+import {ValidationUtils} from '../../utils/validation-utils';
 
 describe('ArticleDictationService', () => {
   let service: ArticleDictationService;
@@ -27,7 +27,7 @@ describe('ArticleDictationService', () => {
     expect(sentences[9]).toBe('and family at this terrible time.".');
   });
 
-  it("separate sentence which is too long by comma",() => {
+  it('separate sentence which is too long by comma', () => {
     const article = `A zoo-keeper who died after a tiger entered an enclosure at a wildlife park in Cambridgeshire has been named as 33-year-old Rosa King.
     The death happened at Hamerton Zoo Park, near Huntingdon, at about 11:15 BST on Monday.
       Friend Garry Chisholm, a wildlife photographer in his spare time, said she was the "focal point" and "shining light" of the wildlife park.
@@ -45,7 +45,7 @@ describe('ArticleDictationService', () => {
     expect(sentences[5]).toBe('Monday.');
   });
 
-  it("No sentence is empty", () => {
+  it('No sentence is empty', () => {
     const article = `Alerts are a great way to offer the user the ability to choose a specific action or list of actions. They also can provide the user with important information, or require them to make a decision (or multiple decisions).
 
 From a UI perspective, Alerts can be thought of as`;
@@ -56,7 +56,7 @@ From a UI perspective, Alerts can be thought of as`;
     expect(allIsNotEmpty).toBe(true);
   });
 
-  it("checkAnswer in different cases",() => {
+  it('checkAnswer in different cases', () => {
     const question = `Jane Bailey described Miss Tweddle-Taylor, 51, as a "well-loved member of staff" and "wonderful friend and colleague".`;
     const testcases = [
       {
@@ -87,12 +87,12 @@ From a UI perspective, Alerts can be thought of as`;
 
     testcases.forEach((t) => {
       const history = service.checkAnswer(question, t.answer);
-      expect(compare(t.result,history.isCorrect)).toBe(true);
+      expect(compare(t.result, history.isCorrect)).toBe(true);
     });
   });
 
 });
 
 function compare(arr1: boolean[], arr2: boolean[]) {
-  return JSON.stringify(arr1)==JSON.stringify(arr2);
+  return JSON.stringify(arr1) == JSON.stringify(arr2);
 }

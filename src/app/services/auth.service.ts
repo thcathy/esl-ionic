@@ -10,6 +10,7 @@ import {NavigationRequest, NavigationService} from './navigation.service';
 import {Router} from '@angular/router';
 import {ManageVocabHistoryService} from './member/manage-vocab-history.service';
 import {LoadingController} from '@ionic/angular';
+import {NGXLogger} from 'ngx-logger';
 
 export const auth0CordovaConfig = {
   // needed for auth0
@@ -51,7 +52,9 @@ export class AuthService {
               public navigationService: NavigationService,
               public manageVocabHistoryService: ManageVocabHistoryService,
               public loadingController: LoadingController,
-              private router: Router) {
+              private router: Router,
+              private log: NGXLogger,
+  ) {
     try {
       this.userProfile = JSON.parse(localStorage.getItem('profile'));
       this.idToken = localStorage.getItem(this.idTokenKey);
@@ -65,10 +68,10 @@ export class AuthService {
     this.storage.set(this.navigationRequestKey, redirectRequest);
     this.clearCache();
     if (this.appService.isApp()) {
-      console.log('login by cordova');
+      this.log.info('login by cordova');
       this.loginCordova();
     } else {
-      console.log('login by auth0 web page');
+      this.log.info('login by auth0 web page');
       this.auth0.authorize({
         languageBaseUrl: this.getAuth0Language()
       });
@@ -79,7 +82,7 @@ export class AuthService {
     if (this.appService.isApp()) {
       this.loginCordova(true);
     } else {
-      console.log('sign up by auth0 web page');
+      this.log.info('sign up by auth0 web page');
       this.auth0.authorize({
         initialScreen: 'signUp',
         languageBaseUrl: this.getAuth0Language()
@@ -88,7 +91,7 @@ export class AuthService {
   }
 
   public handleAuthentication(): void {
-    console.log('handleAuthentication');
+    this.log.info('handleAuthentication');
     this.auth0.parseHash((err, authResult) => this.handleAuthResult(this.auth0Cordova, authResult, err));
   }
 
@@ -104,10 +107,10 @@ export class AuthService {
   }
 
   private setSession(authResult): void {
-    console.log('login session: update session');
+    this.log.info('login session: update session');
     // Set the time that the access token will expire at
     const expiresAt = JSON.stringify((authResult.expiresIn * 1000) + new Date().getTime());
-    console.info(`expiresAt: ${expiresAt}`);
+    this.log.info(`expiresAt: ${expiresAt}`);
 
     this.accessToken = authResult.accessToken;
     localStorage.setItem(this.accessTokenKey, authResult.accessToken);
@@ -138,7 +141,7 @@ export class AuthService {
 
   public requireAuthenticated(): boolean {
     if (!this.isAuthenticated()) {
-      console.log(`require login, redirect to login page`);
+      this.log.info(`require login, redirect to login page`);
       alert(`Please login!`);
       this.login();
       return false;
@@ -152,19 +155,17 @@ export class AuthService {
     if (locale != null) {
       if (locale.indexOf('zh-Hans') > -1) {
         result = 'zh';
-      }
-      else if (locale.indexOf('zh-Hant') > -1) {
+      } else if (locale.indexOf('zh-Hant') > -1) {
         result = 'zh-tw';
-           }
+      }
     }
-    console.log(`set auth0 lang based on ${locale} to ${result}`);
+    this.log.info(`set auth0 lang based on ${locale} to ${result}`);
     return result;
   }
 
   private handleAuthResult(auth0WebAuth: any, authResult: any, err: any) {
-    console.log(`authResult: ${JSON.stringify(authResult)}`);
     if (err) {
-      console.log(err);
+      this.log.error(err);
     }
 
     if (authResult && authResult.accessToken && authResult.idToken) {

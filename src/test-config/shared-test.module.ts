@@ -7,24 +7,25 @@ import {
   LoadingController, NavController,
   Platform,
   ToastController
-} from "@ionic/angular";
-import {TranslateModule} from "@ngx-translate/core";
-import {RouterTestingModule} from "@angular/router/testing";
-import {HttpClientTestingModule} from "@angular/common/http/testing";
-import {StatusBar} from "@ionic-native/status-bar/ngx";
-import {SplashScreen} from "@ionic-native/splash-screen/ngx";
-import {Storage} from "@ionic/storage";
+} from '@ionic/angular';
+import {TranslateModule} from '@ngx-translate/core';
+import {RouterTestingModule} from '@angular/router/testing';
+import {HttpClientTestingModule} from '@angular/common/http/testing';
+import {StatusBar} from '@ionic-native/status-bar/ngx';
+import {SplashScreen} from '@ionic-native/splash-screen/ngx';
+import {Storage} from '@ionic/storage';
 import {
   AlertControllerSpy, GoogleAnalyticsSpy, LoadingControllerSpy,
   SplashScreenSpy,
   StatusBarSpy,
   StorageSpy, TextToSpeechSpy, ToastControllerSpy
-} from "./mocks-ionic";
-import {ComponentsModule} from "../app/components/components.module";
-import {NoopAnimationsModule} from "@angular/platform-browser/animations";
-import {TextToSpeech} from "@ionic-native/text-to-speech/ngx";
-import {GoogleAnalytics} from "@ionic-native/google-analytics/ngx";
-import {AppService} from "../app/services/app.service";
+} from './mocks-ionic';
+import {ComponentsModule} from '../app/components/components.module';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {TextToSpeech} from '@ionic-native/text-to-speech/ngx';
+import {GoogleAnalytics} from '@ionic-native/google-analytics/ngx';
+import {AppService} from '../app/services/app.service';
+import {LoggerTestingModule} from 'ngx-logger';
 
 @NgModule({
   imports:      [
@@ -35,6 +36,7 @@ import {AppService} from "../app/services/app.service";
     FormsModule, ReactiveFormsModule, NoopAnimationsModule,
     ComponentsModule,
     IonicModule.forRoot(),
+    LoggerTestingModule,
   ],
   declarations: [ ],
   exports:      [
@@ -50,7 +52,6 @@ export class SharedTestModule {
       providers: [
         { provide: StatusBar, useValue: StatusBarSpy() },
         { provide: SplashScreen, useValue: SplashScreenSpy() },
-        //{ provide: Platform, useValue: PlatformSpy() },
         { provide: Storage, useValue: StorageSpy() },
         { provide: AlertController, useValue: AlertControllerSpy()},
         { provide: LoadingController, useValue: LoadingControllerSpy()},

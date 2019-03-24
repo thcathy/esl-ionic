@@ -1,10 +1,11 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {Dictation} from "../../entity/dictation";
-import {SentenceHistory} from "../../entity/sentence-history";
-import {ArticleDictationService} from "../../services/dictation/article-dictation.service";
-import {SpeechService} from "../../services/speech.service";
-import {NavigationService} from "../../services/navigation.service";
-import {Storage} from "@ionic/storage";
+import {Dictation} from '../../entity/dictation';
+import {SentenceHistory} from '../../entity/sentence-history';
+import {ArticleDictationService} from '../../services/dictation/article-dictation.service';
+import {SpeechService} from '../../services/speech.service';
+import {NavigationService} from '../../services/navigation.service';
+import {Storage} from '@ionic/storage';
+import {NGXLogger} from 'ngx-logger';
 
 @Component({
   selector: 'app-article-dictation',
@@ -14,10 +15,10 @@ import {Storage} from "@ionic/storage";
 export class ArticleDictationPage implements OnInit {
   dictation: Dictation;
   sentences: string[];
-  speakingRate: number = 0.7;
-  currentSentence: number = 0;
-  mark: number = 0;
-  answer: string = "";
+  speakingRate = 0.7;
+  currentSentence = 0;
+  mark = 0;
+  answer = '';
   histories: SentenceHistory[] = [];
   @ViewChild('answerElement') answerInput;
 
@@ -27,6 +28,7 @@ export class ArticleDictationPage implements OnInit {
     public speechService: SpeechService,
     public storage: Storage,
     public navigationService: NavigationService,
+    private log: NGXLogger,
   ) {}
 
   ngOnInit() {}
@@ -48,18 +50,18 @@ export class ArticleDictationPage implements OnInit {
   async init() {
     this.dictation = await this.storage.get(NavigationService.storageKeys.dictation);
     this.sentences = this.articleDictationService.divideToSentences(this.dictation.article);
-    console.log(`divided into ${this.sentences.length} sentences`);
+    this.log.debug(`divided into ${this.sentences.length} sentences`);
     this.speak();
   }
 
   slower() {
     this.speakingRate = this.speakingRate - 0.1;
-    if (this.speakingRate < 0.01) this.speakingRate = 0.1;
+    if (this.speakingRate < 0.01) { this.speakingRate = 0.1; }
   }
 
   faster() {
     this.speakingRate = this.speakingRate + 0.1;
-    if (this.speakingRate > 0.99) this.speakingRate = 1.0;
+    if (this.speakingRate > 0.99) { this.speakingRate = 1.0; }
   }
 
   speak() {
@@ -72,7 +74,7 @@ export class ArticleDictationPage implements OnInit {
     );
 
     this.currentSentence++;
-    this.answer = "";
+    this.answer = '';
 
     if (this.currentSentence >= this.sentences.length) {
       this.navigationService.articleDictationComplete(this.dictation, this.histories.reverse());
@@ -86,7 +88,7 @@ export class ArticleDictationPage implements OnInit {
   }
 
   onBackspace(any) {
-    this.answer = this.answer.slice(0, this.answer.length-1);
+    this.answer = this.answer.slice(0, this.answer.length - 1);
   }
 
 }

@@ -1,15 +1,18 @@
 import { Injectable } from '@angular/core';
-import {Platform} from "@ionic/angular";
+import {Platform} from '@ionic/angular';
+import {NGXLogger} from 'ngx-logger';
 
 @Injectable({ providedIn: 'root' })
 export class AppService {
 
-  constructor(public platform: Platform
+  constructor(
+    public platform: Platform,
+    private log: NGXLogger,
   ) { }
 
   isApp(): boolean {
-    console.log(`platforms: ${this.platform.platforms()}, url: ${document.URL}`);
-    if(this.platform.is('pwa') || !this.platform.is('cordova')) {
+    this.log.debug(`platforms: ${this.platform.platforms()}, url: ${document.URL}`);
+    if (this.platform.is('pwa') || !this.platform.is('cordova')) {
       return false;
     } else {
       return true;

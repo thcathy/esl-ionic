@@ -9,6 +9,7 @@ import {Storage} from '@ionic/storage';
 import {AuthService} from '../../services/auth.service';
 import {VocabPracticeService} from '../../services/practice/vocab-practice.service';
 import {ManageVocabHistoryService} from '../../services/member/manage-vocab-history.service';
+import {NGXLogger} from 'ngx-logger';
 
 @Component({
   selector: 'app-practice-complete',
@@ -35,6 +36,7 @@ export class PracticeCompletePage implements OnInit {
     public navigationService: NavigationService,
     public authService: AuthService,
     public manageVocabHistoryService: ManageVocabHistoryService,
+    private log: NGXLogger,
   ) { }
 
   ngOnInit() {}
@@ -63,7 +65,7 @@ export class PracticeCompletePage implements OnInit {
     if (this.dictationService.isGeneratedDictation(this.dictation)) {
       this.vocabPracticeService.saveHistory(this.histories)
         .subscribe(results => {
-          console.log(`update vocab history cache: size: ${results.length}`);
+          this.log.info(`update vocab history cache: size: ${results.length}`);
           this.manageVocabHistoryService.classifyVocabulary(results);
         });
       return;

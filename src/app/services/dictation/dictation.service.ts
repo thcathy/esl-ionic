@@ -1,14 +1,14 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
+import {HttpClient} from '@angular/common/http';
 
-import {DictationStatistics} from "../../entity/dictation-statistics";
-import {Dictation} from "../../entity/dictation";
-import {ValidationUtils} from "../../utils/validation-utils";
-import {SentenceHistory} from "../../entity/sentence-history";
-import {environment} from "../../../environments/environment";
-import {VocabPracticeHistory} from "../../entity/vocab-practice-history";
-import {Observable} from "rxjs/internal/Observable";
-import {VocabPracticeService} from "../practice/vocab-practice.service";
+import {DictationStatistics} from '../../entity/dictation-statistics';
+import {Dictation} from '../../entity/dictation';
+import {ValidationUtils} from '../../utils/validation-utils';
+import {SentenceHistory} from '../../entity/sentence-history';
+import {environment} from '../../../environments/environment';
+import {VocabPracticeHistory} from '../../entity/vocab-practice-history';
+import {Observable} from 'rxjs/internal/Observable';
+import {VocabPracticeService} from '../practice/vocab-practice.service';
 
 export interface SearchDictationRequest {
   keyword?: string;
@@ -54,7 +54,6 @@ export class DictationService {
   }
 
   recommend(id: number): Observable<Dictation> {
-    console.log(`recommend dictation ${id} by url ${this.recommendUrl}`);
     return this.http.get<Dictation>(this.recommendUrl + id);
   }
 
@@ -67,7 +66,7 @@ export class DictationService {
       dictationId: dictation.id,
       mark: correct / 10,
       correct: correct,
-      wrong:wrong,
+      wrong: wrong,
       historyJSON: JSON.stringify({
         dictation: dictation,
         correct: correct,
@@ -78,7 +77,7 @@ export class DictationService {
   }
 
   createVocabDictationHistory(dictation: Dictation, mark: number, histories: Array<VocabPracticeHistory>): Observable<Dictation>  {
-    let sizeTrimmedHistories = this.vocabPracticeService.trimHistories(histories);
+    const sizeTrimmedHistories = this.vocabPracticeService.trimHistories(histories);
 
     return this.createHistory({
       dictationId: dictation.id,

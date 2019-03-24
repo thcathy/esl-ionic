@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
-import {NavigationService} from "../../services/navigation.service";
-import {AlertController} from "@ionic/angular";
+import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {NavigationService} from '../../services/navigation.service';
+import {AlertController} from '@ionic/angular';
 import {Storage} from '@ionic/storage';
-import {TranslateService} from "@ngx-translate/core";
-import {DictationService} from "../../services/dictation/dictation.service";
-import {Dictation} from "../../entity/dictation";
-import {Vocab} from "../../entity/vocab";
-import {ValidationUtils} from "../../utils/validation-utils";
+import {TranslateService} from '@ngx-translate/core';
+import {DictationService} from '../../services/dictation/dictation.service';
+import {Dictation} from '../../entity/dictation';
+import {Vocab} from '../../entity/vocab';
+import {ValidationUtils} from '../../utils/validation-utils';
 
 @Component({
   selector: 'app-instant-dictation',
@@ -17,10 +17,10 @@ import {ValidationUtils} from "../../utils/validation-utils";
 export class InstantDictationPage implements OnInit {
   private INSTANT_DICTATION_KEY = 'INSTANT_DICTATION_KEY';
 
-  maxVocab: number = 20;
+  maxVocab = 20;
   byWordInputForm: FormGroup;
   bySentenceInputForm: FormGroup;
-  type: string = 'byword';
+  type = 'byword';
 
   constructor(
     public formBuilder: FormBuilder,
@@ -47,12 +47,12 @@ export class InstantDictationPage implements OnInit {
 
     for (let i = 0; i < this.maxVocab; i++) {
       this.vocabs.push(this.formBuilder.group({
-        'word': new FormControl('',[Validators.pattern("([a-zA-Z \\-']+)?")])
+        'word': new FormControl('', [Validators.pattern('([a-zA-Z \\-\']+)?')])
       }));
     }
 
     this.bySentenceInputForm = this.formBuilder.group({
-      article: new FormControl('',[Validators.required])
+      article: new FormControl('', [Validators.required])
     });
   }
 
@@ -62,8 +62,7 @@ export class InstantDictationPage implements OnInit {
 
   getFromLocalStorage() {
     this.storage.get(this.INSTANT_DICTATION_KEY).then((dictation: Dictation) => {
-      console.log(`dictation: ${JSON.stringify(dictation)}`);
-      if (dictation==null) return;
+      if (dictation == null) { return; }
 
       if (this.dictationService.isSentenceDictation(dictation)) {
         this.type = 'bysentence';
@@ -81,7 +80,7 @@ export class InstantDictationPage implements OnInit {
 
   clearVocabs() {
     this.vocabs.controls.forEach(x => {
-      x.patchValue({word: ''})
+      x.patchValue({word: ''});
     });
   }
 
@@ -90,7 +89,7 @@ export class InstantDictationPage implements OnInit {
   }
 
   startByWord() {
-    let d = this.prepareVocabDictation();
+    const d = this.prepareVocabDictation();
     if (d.vocabs.length < 1) {
       this.showNoVocabAlert();
       return;
@@ -109,7 +108,7 @@ export class InstantDictationPage implements OnInit {
   }
 
   startBySentence() {
-    let d = this.prepareArticleDictation();
+    const d = this.prepareArticleDictation();
     this.storage.set(this.INSTANT_DICTATION_KEY, d);
     this.navService.startDictation(d);
   }
@@ -142,13 +141,14 @@ export class InstantDictationPage implements OnInit {
 
   }
 
-  keytab(_event, i: number){
+  keytab(_event, i: number) {
     i++;
-    if (i >= this.maxVocab) i = 0;
-    let element2 = document.getElementById('vocab' + i);
+    if (i >= this.maxVocab) { i = 0; }
+    const element2 = document.getElementById('vocab' + i);
 
-    if (element2 != null)
+    if (element2 != null) {
       element2.focus();
+    }
   }
 
 }

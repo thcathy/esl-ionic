@@ -12,6 +12,7 @@ import {Storage} from '@ionic/storage';
 import {NavigationService} from '../../services/navigation.service';
 import {ActivatedRoute} from '@angular/router';
 import {MemberVocabulary} from "../../entity/member-vocabulary";
+import {NGXLogger} from 'ngx-logger';
 
 @Component({
   selector: 'app-dictation-practice',
@@ -42,6 +43,7 @@ export class DictationPracticePage implements OnInit {
     public navigationService: NavigationService,
     public ionicComponentService: IonicComponentService,
     public storage: Storage,
+    private log: NGXLogger,
   ) { }
 
   ngOnInit() {
@@ -162,7 +164,7 @@ export class DictationPracticePage implements OnInit {
 
       let count = 0;
       while (count < 100 && this.questionIndex >= this.vocabPractices.length) {
-        console.log(`waiting for question api return`);
+        this.log.debug(`waiting for question api return`);
         await this.sleep(500);
         count++;
       }

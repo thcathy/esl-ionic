@@ -10,6 +10,7 @@ import {ManageVocabHistoryService} from '../../services/member/manage-vocab-hist
 import {MemberVocabulary} from '../../entity/member-vocabulary';
 import {NavigationService} from '../../services/navigation.service';
 import {ActivatedRoute} from '@angular/router';
+import {NGXLogger} from 'ngx-logger';
 
 @Component({
   selector: 'app-member-home',
@@ -33,11 +34,12 @@ export class MemberHomePage implements OnInit {
     public manageVocabHistoryService: ManageVocabHistoryService,
     public route: ActivatedRoute,
     public navigationService: NavigationService,
-    public location: Location
+    public location: Location,
+    private log: NGXLogger,
   ) { }
 
   ngOnInit() {
-    console.log(`${this.selectedSegment}`);
+    this.log.info(`${this.selectedSegment}`);
     this.manageVocabHistoryService.loadFromServer().then(_p => {
       this.learntVocabs = this.manageVocabHistoryService.learntVocabs;
       this.answeredBeforeVocabs = this.manageVocabHistoryService.answeredBefore;
@@ -45,7 +47,7 @@ export class MemberHomePage implements OnInit {
   }
 
   ionViewDidEnter() {
-    console.log(`${this.selectedSegment}`);
+    this.log.info(`${this.selectedSegment}`);
     this.ionSegment.value = this.selectedSegment;
     this.route.params.subscribe(params => {
       if (params.segment) { this.selectedSegment = params.segment; }
@@ -67,7 +69,7 @@ export class MemberHomePage implements OnInit {
   }
 
   private setScores(scores: MemberScore[]) {
-    console.log(`${scores.length} scores is returned`);
+    this.log.info(`${scores.length} scores is returned`);
     this.allTimesScore = scores.find(s => s.scoreYearMonth > 999999);
     this.latestScore = scores.filter(s => s.scoreYearMonth < 999999)
       .sort( (a, b) => a.scoreYearMonth - b.scoreYearMonth);

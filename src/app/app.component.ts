@@ -12,6 +12,7 @@ import { Storage } from '@ionic/storage';
 import Auth0Cordova from '@auth0/cordova';
 import {NavigationService} from './services/navigation.service';
 import {AppService} from './services/app.service';
+import {NGXLogger} from 'ngx-logger';
 
 declare let ga: Function;
 
@@ -34,6 +35,7 @@ export class AppComponent {
     public storage: Storage,
     public appService: AppService,
     public googleAnalytics: GoogleAnalytics,
+    private log: NGXLogger,
   ) {
     this.authService.handleAuthentication();
     this.initializeApp();
@@ -47,7 +49,7 @@ export class AppComponent {
       this.setupGoogleAnalytics();
 
       (<any>window).handleOpenURL = (url) => {
-        console.log(`url: ${url}`);
+        this.log.info(`url: ${url}`);
         Auth0Cordova.onRedirectUri(url);
       };
     });
@@ -88,15 +90,15 @@ export class AppComponent {
     } else {
       this.googleAnalytics.startTrackerWithId('UA-114755687-1')
         .then(() => {
-          console.log('Google analytics is ready now');
+          this.log.info('Google analytics is ready now');
           this.router.events.subscribe(event => {
             if (event instanceof NavigationEnd) {
-              console.log(`google analytics track view ${event.urlAfterRedirects}`);
+              this.log.info(`google analytics track view ${event.urlAfterRedirects}`);
               this.googleAnalytics.trackView(event.urlAfterRedirects);
             }
           });
         })
-        .catch(e => console.log('Error starting GoogleAnalytics', e));
+        .catch(e => this.log.error('Error starting GoogleAnalytics', e));
     }
   }
 }

@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import {TranslateService} from "@ngx-translate/core";
-import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
-import {MemberService, UpdateMemberRequest} from "../../services/member/member.service";
-import {Member} from "../../entity/member";
-import {IonicComponentService} from "../../services/ionic-component.service";
+import {TranslateService} from '@ngx-translate/core';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {MemberService, UpdateMemberRequest} from '../../services/member/member.service';
+import {Member} from '../../entity/member';
+import {IonicComponentService} from '../../services/ionic-component.service';
+import {NGXLogger} from 'ngx-logger';
 
 @Component({
   selector: 'app-account',
@@ -19,6 +20,7 @@ export class AccountPage implements OnInit {
     public formBuilder: FormBuilder,
     public translate: TranslateService,
     public ionicComponentService: IonicComponentService,
+    private log: NGXLogger,
   ) { }
 
   ngOnInit() {
@@ -34,7 +36,7 @@ export class AccountPage implements OnInit {
 
   ionViewDidEnter() {
     this.memberService.getProfile().subscribe((m) => {
-      console.log(`member: ${JSON.stringify(m)}`);
+      this.log.debug(`member: ${JSON.stringify(m)}`);
       this.member = m;
       this.setFormValue(m);
     });
@@ -55,7 +57,7 @@ export class AccountPage implements OnInit {
       'lastName': new FormControl('', [Validators.maxLength(50)]),
       'birthday': '',
       'address': new FormControl('', [Validators.maxLength(200)]),
-      'phoneNumber': new FormControl('', [Validators.maxLength(20), Validators.pattern("^[0-9]*$")]),
+      'phoneNumber': new FormControl('', [Validators.maxLength(20), Validators.pattern('^[0-9]*$')]),
       'school': new FormControl('', [Validators.maxLength(100)]),
     });
   }
@@ -71,7 +73,7 @@ export class AccountPage implements OnInit {
     }).subscribe(
       _m => this.ionicComponentService.showToastMessage(this.translate.instant('Personal information updated')),
       _e => this.ionicComponentService.showToastMessage(this.translate.instant('Error when update personal information'))
-    )
+    );
   }
 
 }

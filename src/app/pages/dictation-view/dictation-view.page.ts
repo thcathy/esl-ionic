@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import {Dictation} from "../../entity/dictation";
-import {AuthService} from "../../services/auth.service";
-import {DictationService} from "../../services/dictation/dictation.service";
-import {Storage} from "@ionic/storage";
-import {IonicComponentService} from "../../services/ionic-component.service";
-import {NavigationService} from "../../services/navigation.service";
-import {ActivatedRoute} from "@angular/router";
+import {Dictation} from '../../entity/dictation';
+import {AuthService} from '../../services/auth.service';
+import {DictationService} from '../../services/dictation/dictation.service';
+import {Storage} from '@ionic/storage';
+import {IonicComponentService} from '../../services/ionic-component.service';
+import {NavigationService} from '../../services/navigation.service';
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'app-dictation-view',
@@ -15,7 +15,7 @@ import {ActivatedRoute} from "@angular/router";
 export class DictationViewPage implements OnInit {
   dictation: Dictation;
   dictationId: number;
-  showBackButton: boolean = false;
+  showBackButton = false;
 
   constructor(
     public route: ActivatedRoute,
@@ -39,13 +39,11 @@ export class DictationViewPage implements OnInit {
     this.showBackButton = await this.storage.get(NavigationService.storageKeys.showBackButton);
     const toastMessage = await this.storage.get(NavigationService.storageKeys.toastMessage);
 
-    if (toastMessage != null) this.ionicComponentService.showToastMessage(toastMessage);
+    if (toastMessage != null) { this.ionicComponentService.showToastMessage(toastMessage); }
     if (this.dictation == null && this.dictationId > 0) {
       this.dictationService.getById(this.dictationId)
         .toPromise().then(d => this.dictation = d);
     }
-
-    if (this.dictation != null) console.log(`userId: ${this.dictation.creator.emailAddress}, userProfile: ${JSON.stringify(this.authService.userProfile)}`);
   }
 
 }

@@ -47,7 +47,6 @@ export class EditDictationPage implements OnInit {
     this.isEdit = this.dictation != null;
     this.setupForm(this.dictation);
 
-    console.log(`${JSON.stringify(this.dictation)}`);
     if (!this.authService.isAuthenticated()) {
       this.authService.login({
         destination: '/edit-dictation',
