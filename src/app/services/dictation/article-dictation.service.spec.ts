@@ -1,11 +1,13 @@
 import {ArticleDictationService} from './article-dictation.service';
 import {ValidationUtils} from '../../utils/validation-utils';
+import {NGXLogger} from 'ngx-logger';
+import {NGXLoggerSpy} from '../../../test-config/mocks-ionic';
 
 describe('ArticleDictationService', () => {
   let service: ArticleDictationService;
 
   beforeEach(() => {
-    service = new ArticleDictationService();
+    service = new ArticleDictationService(NGXLoggerSpy());
     service.maxSentenceLength = 40;
   });
 

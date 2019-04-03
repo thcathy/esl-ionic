@@ -41,7 +41,6 @@ import {TextToSpeech} from '@ionic-native/text-to-speech/ngx';
 import {InAppBrowser} from '@ionic-native/in-app-browser/ngx';
 import {MemberHomePageModule} from './pages/member-home/member-home.module';
 import {GoogleAnalytics} from '@ionic-native/google-analytics/ngx';
-import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 
 // AoT requires an exported function for factories
@@ -69,7 +68,6 @@ library.add(fas, far);
     }),
     LoggerModule.forRoot(environment.logging),
     MemberHomePageModule,
-    ServiceWorkerModule.register('/ngsw-worker.js', { enabled: environment.production }),
   ],
   providers: [
     StatusBar,

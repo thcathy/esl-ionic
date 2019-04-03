@@ -2,7 +2,7 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ArticleDictationPage } from './article-dictation.page';
-import {SharedTestModule} from "../../../test-config/shared-test.module";
+import {SharedTestModule} from '../../../test-config/shared-test.module';
 
 describe('ArticleDictationPage', () => {
   let component: ArticleDictationPage;

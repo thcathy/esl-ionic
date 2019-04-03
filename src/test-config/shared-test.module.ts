@@ -31,12 +31,12 @@ import {LoggerTestingModule} from 'ngx-logger';
   imports:      [
     RouterTestingModule.withRoutes([]),
     HttpClientTestingModule,
+    LoggerTestingModule,
     TranslateModule.forRoot(),
     CommonModule,
     FormsModule, ReactiveFormsModule, NoopAnimationsModule,
     ComponentsModule,
     IonicModule.forRoot(),
-    LoggerTestingModule,
   ],
   declarations: [ ],
   exports:      [

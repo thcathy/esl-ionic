@@ -115,7 +115,7 @@ export const StorageSpy = () => {
   return storageSpy;
 };
 
-export const NGXLoggerSpy = () => jasmine.createSpyObj('NGXLogger', ['info', 'warn', 'error']);
+export const NGXLoggerSpy = () => jasmine.createSpyObj('NGXLogger', ['info', 'warn', 'error', 'debug']);
 
 export const LoadingSpy = () => jasmine.createSpyObj('Loading', ['dismiss', 'present']);
 
@@ -141,7 +141,9 @@ export const PlatformSpy = () => jasmine.createSpyObj('Platform', { ready: Promi
 
 export const TextToSpeechSpy = () => jasmine.createSpyObj('TextToSpeech', ['speak']);
 
-export const DictationServiceSpy = () => jasmine.createSpyObj('DictationService', ['createVocabDictationHistory', 'isInstantDictation', 'isGeneratedDictation', 'isSentenceDictation']);
+export const DictationServiceSpy = () => jasmine.createSpyObj('DictationService',
+  ['createVocabDictationHistory', 'isInstantDictation', 'isGeneratedDictation', 'isSentenceDictation']
+);
 
 export const VocabPracticeServiceSpy = () => jasmine.createSpyObj('VocabPraticeService',
 { saveHistory: Observable.of('') }
