@@ -1,9 +1,10 @@
 import { NgModule } from '@angular/core';
-import {SafeHtmlPipe} from "./safe-html/safe-html";
+import {SafeHtmlPipe} from './safe-html/safe-html';
+import { DictationQuestionsPipe } from './dictation/dictation-questions.pipe';
 
 @NgModule({
-	declarations: [SafeHtmlPipe],
-	imports: [],
-	exports: [SafeHtmlPipe]
+  declarations: [SafeHtmlPipe, DictationQuestionsPipe],
+  imports: [],
+  exports: [SafeHtmlPipe, DictationQuestionsPipe]
 })
 export class PipesModule {}

@@ -8,3 +8,7 @@ This is the funfunspell dictation app
 ## Major Dependency
 * [Ionic framework](https://ionicframework.com/): application framework
 * [Font Awesome](https://fontawesome.com/): Vector icons
+
+## Testing Tools Sponsor
+![browserstack](Browserstack-logo.png)
+* [Browserstack](https://www.browserstack.com/): App and Browser Testing Made Easy
