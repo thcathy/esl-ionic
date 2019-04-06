@@ -31,7 +31,6 @@ import {VocabPracticeService} from './services/practice/vocab-practice.service';
 import {MemberService} from './services/member/member.service';
 import {SpeechService} from './services/speech.service';
 import {AuthService} from './services/auth.service';
-import {DisplayService} from './services/display.service';
 import {ServerService} from './services/server.service';
 import {PracticeHistoryService} from './services/dictation/practice-history.service';
 import {ArticleDictationService} from './services/dictation/article-dictation.service';
@@ -76,7 +75,6 @@ library.add(fas, far);
     NavigationService, RankingService,
     DictationService, VocabPracticeService, MemberDictationService, MemberService, SpeechService,
     AuthService,
-    DisplayService,
     ServerService,
     ArticleDictationService,
     TextToSpeech, InAppBrowser, GoogleAnalytics,
