@@ -71,7 +71,7 @@ export const vocab_banana = <VocabPractice>{
   suffledWord:"aaanbn"
 };
 
-export const memberVocabularyMember1Apple = <MemberVocabulary>{
+export const memberVocabularyMember1Apple = () => <MemberVocabulary>{
   id: {
     word: 'apple',
     member: member1,
@@ -80,7 +80,7 @@ export const memberVocabularyMember1Apple = <MemberVocabulary>{
   wrong: 0
 };
 
-export const memberVocabularyMember1Banana = <MemberVocabulary>{
+export const memberVocabularyMember1Banana = () => <MemberVocabulary>{
   id: {
     word: 'banana',
     member: member1,
@@ -89,7 +89,7 @@ export const memberVocabularyMember1Banana = <MemberVocabulary>{
   wrong: 2,
 };
 
-export const memberVocabularyMember1Cat = <MemberVocabulary>{
+export const memberVocabularyMember1Cat = () => <MemberVocabulary>{
   id: {
     word: 'cat',
     member: member1,

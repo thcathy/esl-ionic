@@ -5,13 +5,13 @@ import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 
 import { AppComponent } from './app.component';
-import {SharedTestModule} from "../test-config/shared-test.module";
+import {SharedTestModule} from '../test-config/shared-test.module';
 
 describe('AppComponent', () => {
 
-  let statusBarSpy, splashScreenSpy, platformReadySpy, platformSpy;
+  let statusBarSpy, splashScreenSpy, platformReadySpy;
 
-  beforeEach(async () => {
+  beforeEach(async(() => {
     statusBarSpy = jasmine.createSpyObj('StatusBar', ['styleDefault']);
     splashScreenSpy = jasmine.createSpyObj('SplashScreen', ['hide']);
     platformReadySpy = Promise.resolve();
@@ -27,7 +27,7 @@ describe('AppComponent', () => {
         { provide: SplashScreen, useValue: splashScreenSpy },
       ],
     }).compileComponents();
-  });
+  }));
 
   it('should create the app', async () => {
     const fixture = TestBed.createComponent(AppComponent);

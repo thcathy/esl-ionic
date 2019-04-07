@@ -1,26 +1,27 @@
-import {fakeAsync, TestBed, tick} from "@angular/core/testing";
-import {ManageVocabHistoryService} from "./manage-vocab-history.service";
-import {Storage} from "@ionic/storage";
-import {VocabPracticeService} from "../practice/vocab-practice.service";
+import {async, fakeAsync, TestBed, tick} from '@angular/core/testing';
+import {ManageVocabHistoryService} from './manage-vocab-history.service';
+import {Storage} from '@ionic/storage';
+import {VocabPracticeService} from '../practice/vocab-practice.service';
 import {
   memberVocabularyMember1Apple,
   memberVocabularyMember1Banana,
   memberVocabularyMember1Cat
-} from "../../../test-config/test-data";
-import {Observable} from "rxjs";
+} from '../../../test-config/test-data';
+import {Observable} from 'rxjs';
+import 'rxjs-compat/add/observable/of';
 
 describe('ManageVocabHistoryService', () => {
   let service: ManageVocabHistoryService;
   let storageSpy: Storage;
   let vocabPracticeServiceSpy: VocabPracticeService;
 
-  beforeEach(() => {
+  beforeEach(async(() => {
     storageSpy = jasmine.createSpyObj('Storage', {
       get: Promise.resolve()
     });
 
     vocabPracticeServiceSpy = jasmine.createSpyObj('VocabPracticeService', {
-      getAllHistory: Observable.of([memberVocabularyMember1Apple, memberVocabularyMember1Banana, memberVocabularyMember1Cat])
+      getAllHistory: Observable.of([memberVocabularyMember1Apple(), memberVocabularyMember1Banana(), memberVocabularyMember1Cat()])
     });
 
     TestBed.configureTestingModule({
@@ -33,10 +34,10 @@ describe('ManageVocabHistoryService', () => {
     });
 
     service = TestBed.get(ManageVocabHistoryService);
-  });
+  }));
 
   it('test randomWordsFromBefore with different input, output length', () => {
-    let result = service.randomWordsFromBefore(1);
+    const result = service.randomWordsFromBefore(1);
     expect(result.length).toBe(0);
   });
 
@@ -52,9 +53,9 @@ describe('ManageVocabHistoryService', () => {
   it('classify vocabulary will update the maps', fakeAsync(() => {
     service.loadFromServer();
     tick();
-    let banana = memberVocabularyMember1Banana;
+    const banana = memberVocabularyMember1Banana();
     banana.correct = 1;
-    let cat = memberVocabularyMember1Cat;
+    const cat = memberVocabularyMember1Cat();
     cat.correct = 10;
     service.classifyVocabulary([banana, cat]);
 

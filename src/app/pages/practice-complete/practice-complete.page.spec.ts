@@ -20,14 +20,16 @@ import {ManageVocabHistoryService} from '../../services/member/manage-vocab-hist
 describe('PracticeCompletePage', () => {
   let component: PracticeCompletePage;
   let fixture: ComponentFixture<PracticeCompletePage>;
-  const dictationServiceSpy = DictationServiceSpy();
-  const vocabPracticeServiceSpy = VocabPracticeServiceSpy();
-  const storageSpy = StorageSpy();
-  const authServiceSpy = AuthServiceSpy();
-  const navigationServiceSpy = NavigationServiceSpy();
-  const manageVocabHistoryServiceSpy = ManageVocabHistoryServiceSpy();
+  let dictationServiceSpy, vocabPracticeServiceSpy, storageSpy, authServiceSpy, navigationServiceSpy, manageVocabHistoryServiceSpy;
 
   beforeEach(async(() => {
+    vocabPracticeServiceSpy = VocabPracticeServiceSpy();
+    dictationServiceSpy = DictationServiceSpy();
+    storageSpy = StorageSpy();
+    authServiceSpy = AuthServiceSpy();
+    navigationServiceSpy = NavigationServiceSpy();
+    manageVocabHistoryServiceSpy = ManageVocabHistoryServiceSpy();
+
     TestBed.configureTestingModule({
       declarations: [ PracticeCompletePage ],
       imports: [
@@ -68,7 +70,7 @@ describe('PracticeCompletePage', () => {
     expect(dictationServiceSpy.createVocabDictationHistory.calls.count()).toEqual(0);
   }));
 
-  it('should not call create history if not login', fakeAsync(() => {
+  it('should not call save history if not login', fakeAsync(() => {
     dictationServiceSpy.isInstantDictation.and.returnValue(false);
     dictationServiceSpy.isGeneratedDictation.and.returnValue(true);
     const params = {
