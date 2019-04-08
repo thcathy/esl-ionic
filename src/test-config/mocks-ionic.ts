@@ -150,3 +150,5 @@ export const VocabPracticeServiceSpy = () => jasmine.createSpyObj('VocabPraticeS
 );
 
 export const ManageVocabHistoryServiceSpy = () => jasmine.createSpyObj('ManageVocabHistoryService', ['classifyVocabulary']);
+
+export const AppServiceSpy = () => jasmine.createSpyObj('AppService', ['isApp']);

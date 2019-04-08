@@ -10,13 +10,14 @@ import {AlertController, Platform} from '@ionic/angular';
 import {SplashScreen} from '@ionic-native/splash-screen/ngx';
 import {StatusBar} from '@ionic-native/status-bar/ngx';
 import {
-  AlertControllerSpy,
+  AlertControllerSpy, AppServiceSpy,
   PlatformSpy,
   SplashScreenSpy,
   StatusBarSpy,
   StorageSpy
 } from '../../test-config/mocks-ionic';
 import {SharedTestModule} from '../../test-config/shared-test.module';
+import {AppService} from '../services/app.service';
 
 describe('HomePage', () => {
   let component: HomePage;
@@ -35,6 +36,7 @@ describe('HomePage', () => {
         { provide: Platform, useValue: PlatformSpy() },
         { provide: AlertController, useValue: AlertControllerSpy()},
         { provide: Storage, useValue: StorageSpy()},
+        { provide: AppService, useValue: AppServiceSpy()}
       ],
     })
       .compileComponents();
