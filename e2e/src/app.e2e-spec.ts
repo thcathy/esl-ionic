@@ -11,4 +11,8 @@ describe('new App', () => {
     page.navigateTo();
     expect(page.getParagraphText()).toContain('The world is your oyster.');
   });
+
+  it('should have menu', () => {
+    expect()
+  });
 });

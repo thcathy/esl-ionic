@@ -1,7 +1,6 @@
 import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
-import {Dictation} from "../../entity/dictation";
-import {NavigationService} from "../../services/navigation.service";
-import {DisplayService} from "../../services/display.service";
+import {Dictation} from '../../entity/dictation';
+import {NavigationService} from '../../services/navigation.service';
 
 @Component({
   selector: 'dictation-list',
@@ -9,7 +8,7 @@ import {DisplayService} from "../../services/display.service";
   styleUrls: ['dictation-list.scss'],
 })
 export class DictationListComponent implements OnChanges {
-  private dictationPerPage: number = 5;
+  private dictationPerPage = 5;
 
   @Input() dictations: Array<Dictation>;
   @Input() showCreateButton: boolean;
@@ -21,7 +20,6 @@ export class DictationListComponent implements OnChanges {
 
   constructor(
     public navService: NavigationService,
-    public displayService: DisplayService,
   ) {
     this.page = 0;
     this.showCreateButton = false;
@@ -38,16 +36,16 @@ export class DictationListComponent implements OnChanges {
   older() {
     this.page++;
     this.sliceDictations();
-    this.showOlder = this.dictations.length >  this.dictationPerPage * (this.page+1);
+    this.showOlder = this.dictations.length >  this.dictationPerPage * (this.page + 1);
   }
 
   newer() {
     this.page--;
     this.sliceDictations();
-    this.showOlder=true;
+    this.showOlder = true;
   }
 
   sliceDictations() {
-    this.viewDictations = this.dictations.slice(this.page * this.dictationPerPage, (this.page+1) * this.dictationPerPage);
+    this.viewDictations = this.dictations.slice(this.page * this.dictationPerPage, (this.page + 1) * this.dictationPerPage);
   }
 }

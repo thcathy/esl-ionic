@@ -31,7 +31,6 @@ import {VocabPracticeService} from './services/practice/vocab-practice.service';
 import {MemberService} from './services/member/member.service';
 import {SpeechService} from './services/speech.service';
 import {AuthService} from './services/auth.service';
-import {DisplayService} from './services/display.service';
 import {ServerService} from './services/server.service';
 import {PracticeHistoryService} from './services/dictation/practice-history.service';
 import {ArticleDictationService} from './services/dictation/article-dictation.service';
@@ -41,7 +40,6 @@ import {TextToSpeech} from '@ionic-native/text-to-speech/ngx';
 import {InAppBrowser} from '@ionic-native/in-app-browser/ngx';
 import {MemberHomePageModule} from './pages/member-home/member-home.module';
 import {GoogleAnalytics} from '@ionic-native/google-analytics/ngx';
-import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 
 // AoT requires an exported function for factories
@@ -69,7 +67,6 @@ library.add(fas, far);
     }),
     LoggerModule.forRoot(environment.logging),
     MemberHomePageModule,
-    ServiceWorkerModule.register('/ngsw-worker.js', { enabled: environment.production }),
   ],
   providers: [
     StatusBar,
@@ -78,7 +75,6 @@ library.add(fas, far);
     NavigationService, RankingService,
     DictationService, VocabPracticeService, MemberDictationService, MemberService, SpeechService,
     AuthService,
-    DisplayService,
     ServerService,
     ArticleDictationService,
     TextToSpeech, InAppBrowser, GoogleAnalytics,

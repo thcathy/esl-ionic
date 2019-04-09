@@ -1,9 +1,8 @@
 import { Component, Input } from '@angular/core';
-import {DictationStatistics} from "../../entity/dictation-statistics";
-import {Dictation} from "../../entity/dictation";
-import {NavigationService} from "../../services/navigation.service";
-import {DisplayService} from "../../services/display.service";
-import {Router} from "@angular/router";
+import {DictationStatistics} from '../../entity/dictation-statistics';
+import {Dictation} from '../../entity/dictation';
+import {NavigationService} from '../../services/navigation.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'dictation-statistics',
@@ -16,7 +15,6 @@ export class DictationStatisticsComponent {
   constructor(
     public router: Router,
     public navService: NavigationService,
-    public displayService: DisplayService,
     ) {
   }
 

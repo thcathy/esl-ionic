@@ -15,7 +15,7 @@ import {StatusBar} from '@ionic-native/status-bar/ngx';
 import {SplashScreen} from '@ionic-native/splash-screen/ngx';
 import {Storage} from '@ionic/storage';
 import {
-  AlertControllerSpy, GoogleAnalyticsSpy, LoadingControllerSpy,
+  AlertControllerSpy, GoogleAnalyticsSpy, LoadingControllerSpy, NGXLoggerSpy,
   SplashScreenSpy,
   StatusBarSpy,
   StorageSpy, TextToSpeechSpy, ToastControllerSpy
@@ -25,7 +25,7 @@ import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {TextToSpeech} from '@ionic-native/text-to-speech/ngx';
 import {GoogleAnalytics} from '@ionic-native/google-analytics/ngx';
 import {AppService} from '../app/services/app.service';
-import {LoggerTestingModule} from 'ngx-logger';
+import {NGXLogger} from 'ngx-logger';
 
 @NgModule({
   imports:      [
@@ -36,7 +36,6 @@ import {LoggerTestingModule} from 'ngx-logger';
     FormsModule, ReactiveFormsModule, NoopAnimationsModule,
     ComponentsModule,
     IonicModule.forRoot(),
-    LoggerTestingModule,
   ],
   declarations: [ ],
   exports:      [
@@ -58,6 +57,7 @@ export class SharedTestModule {
         { provide: ToastController, useValue: ToastControllerSpy()},
         { provide: TextToSpeech, useValue: TextToSpeechSpy()},
         { provide: GoogleAnalytics, useValue: GoogleAnalyticsSpy()},
+        { provide: NGXLogger, useValue: NGXLoggerSpy()},
         AppService,
         NavController,
         Platform,
