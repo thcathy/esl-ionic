@@ -1,4 +1,5 @@
 import { AppPage } from './app.po';
+import {by, element} from 'protractor';
 
 describe('new App', () => {
   let page: AppPage;
@@ -7,12 +8,12 @@ describe('new App', () => {
     page = new AppPage();
   });
 
-  it('should display welcome message', () => {
-    page.navigateTo();
-    expect(page.getParagraphText()).toContain('The world is your oyster.');
-  });
-
   it('should have menu', () => {
-    expect()
+    page.navigateTo();
+    expect(element(by.tagName('ion-menu-button')).isPresent()).toBeTruthy();
+    expect(element(by.tagName('ion-menu')).isDisplayed()).toBeFalsy();
+
+    element(by.tagName('ion-menu-button')).click();
+    expect(element(by.tagName('ion-menu')).isDisplayed()).toBeTruthy();
   });
 });

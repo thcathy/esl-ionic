@@ -25,6 +25,8 @@ jobs:
             path: ./junit
         - store_artifacts:
             path: ./junit
+        - run:
+            command: npm run e2e-ci
 workflows:
   version: 2
   commit-workflow:
