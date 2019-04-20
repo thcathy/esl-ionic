@@ -23,7 +23,7 @@
               <ion-card-content>
                 <div><fa-icon [icon]="['fas', 'rocket']" size="4x"></fa-icon></div>
                 <div>{{ 'Input and Start' | translate }}</div>
-                <div><ion-button fill="outline" color="light" (click)="navigationService.openInstantDictation()">{{ 'Menu_Start' | translate }}</ion-button></div>
+                <div><ion-button id="instant-dictation-button" fill="outline" color="light" (click)="navigationService.openInstantDictation()">{{ 'Menu_Start' | translate }}</ion-button></div>
               </ion-card-content>
             </ion-card>
           </ion-col>

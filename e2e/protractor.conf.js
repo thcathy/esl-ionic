@@ -5,14 +5,15 @@ const { SpecReporter } = require('jasmine-spec-reporter');
 
 exports.config = {
   allScriptsTimeout: 11000,
-  specs: [
-    './src/**/*.e2e-spec.ts'
-  ],
+  suites: {
+    app: './src/**/*.e2e-spec.ts',
+    dictation: ['./src/dictation/*.e2e-spec.ts']
+  },
   capabilities: {
     'browserName': 'chrome'
   },
   directConnect: true,
-  baseUrl: 'http://localhost:4200/',
+  baseUrl: 'https://uat.funfunspell.com/',
   framework: 'jasmine',
   jasmineNodeOpts: {
     showColors: true,

@@ -1,19 +1,28 @@
-import { AppPage } from './app.po';
-import {by, element} from 'protractor';
+import {browser} from 'protractor';
+import {AppPageObject} from './page-object/app.po';
+import {MenuPageObject} from './page-object/menu.po';
 
 describe('new App', () => {
-  let page: AppPage;
+  let page: AppPageObject;
+  let menu: MenuPageObject;
 
   beforeEach(() => {
-    page = new AppPage();
+    page = new AppPageObject();
+    menu = new MenuPageObject();
   });
 
   it('should have menu', () => {
-    page.navigateTo();
-    expect(element(by.tagName('ion-menu-button')).isPresent()).toBeTruthy();
-    expect(element(by.tagName('ion-menu')).isDisplayed()).toBeFalsy();
+    page.get();
+    expect(menu.menuButton.isPresent()).toBeTruthy();
+    expect(menu.menu.isDisplayed()).toBeFalsy();
 
-    element(by.tagName('ion-menu-button')).click();
-    expect(element(by.tagName('ion-menu')).isDisplayed()).toBeTruthy();
+    menu.get();
+    expect(menu.menu.isDisplayed()).toBeTruthy();
+  });
+
+  it('click home page button launch instant-dictation page', () => {
+    page.get();
+    page.instantDictationButton.click();
+    expect(browser.getCurrentUrl()).toMatch('/instant-dictation$');
   });
 });
