@@ -25,12 +25,17 @@ jobs:
           path: ./junit
       - store_artifacts:
           path: ./junit
-
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - code
   deploy:
     working_directory: ~/code
     docker:
       - image: circleci/node:10-browsers
     steps:
+      - attach_workspace:
+            at: ~/
       - run:
           command: npm install ionic
       - run:
