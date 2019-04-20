@@ -32,9 +32,9 @@ jobs:
       - image: circleci/node:10-browsers
     steps:
       - run:
-          command: npm install -g ionic
+          command: npm install ionic
       - run:
-          command: ionic build --prod --service-worker
+          command: ./node_modules/.bin/ionic build --prod --service-worker
       - run:
           command: npm install --save-dev firebase-tools
       - run:
