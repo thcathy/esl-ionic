@@ -25,15 +25,20 @@ jobs:
           path: ./junit
       - store_artifacts:
           path: ./junit
+
+  deploy:
+    working_directory: ~/code
+    docker:
+      - image: circleci/node:10-browsers
+    steps:
       - run:
           command: npm install -g ionic
       - run:
           command: ionic build --prod --service-worker
-  deploy:
-    - run:
-        command: npm install --save-dev firebase-tools
-    - run:
-        command: ./node_modules/.bin/firebase deploy --token=$FIREBASE_DEPLOY_TOKEN
+      - run:
+          command: npm install --save-dev firebase-tools
+      - run:
+          command: ./node_modules/.bin/firebase deploy --token=$FIREBASE_DEPLOY_TOKEN
 workflows:
   version: 2
   commit-workflow:
