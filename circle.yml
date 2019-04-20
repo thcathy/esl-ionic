@@ -43,7 +43,7 @@ jobs:
       - run:
           command: npm install --save-dev firebase-tools
       - run:
-          command: ./node_modules/.bin/firebase deploy --token=$FIREBASE_DEPLOY_TOKEN
+          command: ./node_modules/.bin/firebase deploy --token=$FIREBASE_DEPLOY_TOKEN --project $FIREBASE_PROJECT_ID
 workflows:
   version: 2
   commit-workflow:
