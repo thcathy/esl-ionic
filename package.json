@@ -1,8 +1,8 @@
 {
   "name": "FunFunSpell",
-  "version": "3.0.0",
-  "author": "Ionic Framework",
-  "homepage": "http://ionicframework.com/",
+  "version": "5.0.0",
+  "author": "thcathy",
+  "homepage": "https://www.funfunspell.com",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -13,6 +13,7 @@
     "lint": "ng lint",
     "e2e": "ng e2e --configuration=test",
     "e2e-ci": "ng e2e --configuration=test --protractor-config=e2e/protractor-ci.conf.js",
+    "uat": "protractor e2e/protractor.conf.js",
     "postinstall": "node patch.js"
   },
   "private": true,
