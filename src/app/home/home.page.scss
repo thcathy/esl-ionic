@@ -34,7 +34,10 @@
 }
 
 .appImage {
-  height: 50px; padding: 4px;
+  max-width: 135px;
+  align-items: center;
+  margin: auto;
+  display: block;
 }
 
 .ffsButton {
