@@ -3,8 +3,8 @@
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
-    <ion-title>
-      <ion-img src="assets/img/logo_new.png" class="navbar-logo"></ion-img>
+    <ion-title class="ion-text-center">
+      <ion-img src="assets/img/logo_new.png" class="navbar-logo" alt="logo"></ion-img>
     </ion-title>
   </ion-toolbar>
 </ion-header>
@@ -81,13 +81,13 @@
     <ion-row *ngIf="!appService.isApp()" text-center padding-top>
       <ion-col size="1" size-md="2" size-lg="3"></ion-col>
       <ion-col size="5" size-md="4" size-lg="3">
-        <a href="https://itunes.apple.com/us/app/funfunspell-Dictation/id1364341686?mt=8" target="_blank" style=" text-decoration: none;">
-          <img class="appImage" src="https://linkmaker.itunes.apple.com/assets/shared/badges/en-us/appstore-lrg.svg"/>
+        <a href="https://itunes.apple.com/us/app/funfunspell-Dictation/id1364341686?mt=8" target="_blank" rel="noopener" style=" text-decoration: none;" aria-label="Get app from Appstore">
+          <img class="appImage" src="https://linkmaker.itunes.apple.com/assets/shared/badges/en-us/appstore-lrg.svg" alt="appstore" />
         </a>
       </ion-col>
       <ion-col size="5" size-md="4" size-lg="3" text-center>
-        <a href="https://play.google.com/store/apps/details?id=com.esl.ionic" target="_blank">
-          <ion-img class="appImage" src="assets/img/google-play-badge.png"></ion-img>
+        <a href="https://play.google.com/store/apps/details?id=com.esl.ionic" target="_blank" rel="noopener" aria-label="Get app from google play store">
+          <ion-img class="appImage" src="assets/img/google-play-badge.png" alt="google play"></ion-img>
         </a>
       </ion-col>
       <ion-col size="1" size-md="2" size-lg="3"></ion-col>
