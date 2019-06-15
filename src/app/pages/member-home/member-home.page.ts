@@ -72,7 +72,7 @@ export class MemberHomePage implements OnInit {
     this.log.info(`${scores.length} scores is returned`);
     this.allTimesScore = scores.find(s => s.scoreYearMonth > 999999);
     this.latestScore = scores.filter(s => s.scoreYearMonth < 999999)
-      .sort( (a, b) => a.scoreYearMonth - b.scoreYearMonth);
+      .sort( (a, b) => b.scoreYearMonth - a.scoreYearMonth);
   }
 
   segmentChanged(ev: any) {
