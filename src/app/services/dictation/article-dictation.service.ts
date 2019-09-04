@@ -17,7 +17,7 @@ export class ArticleDictationService {
   ) {
   }
 
-  divideToSentences(article: string): string[] {
+  divideToSentences(article: string, maxWordsInSentence: number = 5): string[] {
     if (article == null || article.length < 1) { return []; }
 
     return article.split('\n')
@@ -25,11 +25,11 @@ export class ArticleDictationService {
       .map((s) => s.trim())
       .map((s) => this.splitLongLineByFullstop(s)).reduce((a, b) => a.concat(b), [])
       .map((s) => this.splitLongLingByComma(s)).reduce((a, b) => a.concat(b), [])
-      .map((s) => this.splitLongLineBySpace(s)).reduce((a, b) => a.concat(b), [])
+      .map((s) => this.splitLongLineBySpace(s, maxWordsInSentence)).reduce((a, b) => a.concat(b), [])
       .filter((s) => !ValidationUtils.isBlankString(s));
   }
 
-  splitLongLineBySpace(input: string): string[] {
+  splitLongLineBySpace(input: string, maxWordsInSentence: number): string[] {
     if (input.length < this.maxSentenceLength) {
       return [input];
     }
