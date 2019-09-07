@@ -1,5 +1,5 @@
-import {Member} from "./member";
-import {Vocab} from "./vocab";
+import {Member} from './member';
+import {Vocab} from './vocab';
 
 export class Dictation {
   title?: string;
@@ -22,8 +22,11 @@ export class Dictation {
   totalRecommended?: number;
   id?: number;
   suitableStudent?: string;
-  generated?:boolean;
+  generated?: boolean;
+  sentenceLength?: string;
 }
 
-export const SuitableStudentOptions = ['Any','Kindergarten','JuniorPrimary','SeniorPrimary','JuniorSecondary','SeniorSecondary'];
+export const SuitableStudentOptions = ['Any', 'Kindergarten', 'JuniorPrimary', 'SeniorPrimary', 'JuniorSecondary', 'SeniorSecondary'];
+
+export const SentenceLengthOptions = ['Short', 'Normal', 'Long', 'VeryLong'];
 

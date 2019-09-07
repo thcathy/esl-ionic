@@ -14,6 +14,12 @@
     "JuniorSecondary": "Junior Secondary (12-14)",
     "SeniorSecondary": "Senior Secondary (15-17)"
   },
+  "SentenceLength": {
+    "Short": "Short",
+    "Normal": "Normal",
+    "Long": "Long",
+    "VeryLong": "Very Long"
+  },
   "VocabDifficulty": {
     "Beginner": "Beginner",
     "Easy": "Easy",

@@ -4,6 +4,7 @@ import {SentenceHistory} from '../../entity/sentence-history';
 import {environment} from '../../../environments/environment';
 import {ValidationUtils} from '../../utils/validation-utils';
 import {NGXLogger} from 'ngx-logger';
+import {SentenceLengthOptions} from '../../entity/dictation';
 
 @Injectable(
   { providedIn: 'root' }
@@ -17,6 +18,18 @@ export class ArticleDictationService {
   ) {
   }
 
+  sentenceLengthOptionsToValue(option: string): number {
+    if (option === 'Short') {
+      return 3;
+    } else if (option === 'Long') {
+      return 7;
+    } else if (option === 'VeryLong') {
+      return 10;
+    } else {
+      return 5;
+    }
+  }
+
   divideToSentences(article: string, maxWordsInSentence: number = 5): string[] {
     if (article == null || article.length < 1) { return []; }
 
@@ -24,27 +37,33 @@ export class ArticleDictationService {
       .map((s) => s.split('\t').join(''))
       .map((s) => s.trim())
       .map((s) => this.splitLongLineByFullstop(s)).reduce((a, b) => a.concat(b), [])
-      .map((s) => this.splitLongLingByComma(s)).reduce((a, b) => a.concat(b), [])
       .map((s) => this.splitLongLineBySpace(s, maxWordsInSentence)).reduce((a, b) => a.concat(b), [])
       .filter((s) => !ValidationUtils.isBlankString(s));
   }
 
   splitLongLineBySpace(input: string, maxWordsInSentence: number): string[] {
-    if (input.length < this.maxSentenceLength) {
+    const whitespace = ' ';
+    const strings = input.split(whitespace);
+
+    if (strings.length <= maxWordsInSentence) {
       return [input];
     }
 
     const results: string[] = [];
-    while (input.length > this.maxSentenceLength) {
-      const spacePos = input.indexOf(' ', this.maxSentenceLength);
-      if (spacePos < 0) {
-        break;
-      }
-
-      results.push(input.substring(0, spacePos).trim());
-      input = input.substring(spacePos);
+    let endIndex = maxWordsInSentence;
+    while (endIndex + maxWordsInSentence <= strings.length) {
+      results.push(strings.slice(endIndex - maxWordsInSentence, endIndex).join(whitespace));
+      endIndex += maxWordsInSentence;
     }
-    if (input.length > 0) { results.push(input.trim()); }
+    if (endIndex === strings.length) {
+      results.push(strings.slice(endIndex - maxWordsInSentence, endIndex).join(whitespace));
+    } else {
+      // evenly split the last two sentences
+      const startIndex = endIndex - maxWordsInSentence;
+      endIndex = startIndex + Math.ceil((strings.length - startIndex) / 2);
+      results.push(strings.slice(startIndex, endIndex).join(whitespace));
+      results.push(strings.slice(endIndex, strings.length).join(whitespace));
+    }
 
     return results;
   }
@@ -53,32 +72,12 @@ export class ArticleDictationService {
   splitLongLineByFullstop(input: string): string[] {
     if (input.length < this.maxSentenceLength) {
       return [input];
-    }
-    else {
+    } else {
       return input.split('. ')
               .map((s) => s.endsWith('.') ? s : s + '.')
               .filter((s) => s.match('.*[a-zA-Z]+.*'))
               .map((s) => s.trim());
     }
-  }
-
-  splitLongLingByComma(input: string): string[] {
-    if (input.length < this.maxSentenceLength) {
-      return [input];
-    }
-
-    let results: string[] = [];
-    while (input.length > this.maxSentenceLength - 10) {
-      const commaPos = input.indexOf(',', this.maxSentenceLength - 10);
-      if (commaPos < 0) {
-        results.push(input);
-        break;
-      }
-      results.push(input.substring(0, commaPos));
-      input = input.substring(commaPos);
-    }
-
-    return results;
   }
 
   checkAnswer(question: string, answer: string): SentenceHistory {
@@ -102,8 +101,7 @@ export class ArticleDictationService {
 
       if (ValidationUtils.isBlankString(questionAlphabet)) {
         correct = true;
-      }
-      else {
+      } else {
         for (let i = answerPosition; i < answerSegments.length; i++) {
           const subAnswerAlphabet = ValidationUtils.alphabetOnly(answerSegments[i]);
           if (ValidationUtils.wordEqual(questionAlphabet, subAnswerAlphabet)) {

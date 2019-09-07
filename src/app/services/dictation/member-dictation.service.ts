@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
+import {HttpClient} from '@angular/common/http';
 
-import {Dictation} from "../../entity/dictation";
-import {environment} from "../../../environments/environment";
-import {Observable} from "rxjs/internal/Observable";
+import {Dictation} from '../../entity/dictation';
+import {environment} from '../../../environments/environment';
+import {Observable} from 'rxjs/internal/Observable';
 
 export interface EditDictationRequest {
   dictationId?: number;
@@ -13,6 +13,7 @@ export interface EditDictationRequest {
   vocabulary: string[];
   suitableStudent: string;
   article: string;
+  sentenceLength: string;
 }
 
 @Injectable({ providedIn: 'root' })

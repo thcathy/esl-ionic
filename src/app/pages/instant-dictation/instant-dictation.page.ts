@@ -5,7 +5,7 @@ import {AlertController} from '@ionic/angular';
 import {Storage} from '@ionic/storage';
 import {TranslateService} from '@ngx-translate/core';
 import {DictationService} from '../../services/dictation/dictation.service';
-import {Dictation} from '../../entity/dictation';
+import {Dictation, SentenceLengthOptions} from '../../entity/dictation';
 import {Vocab} from '../../entity/vocab';
 import {ValidationUtils} from '../../utils/validation-utils';
 
@@ -21,6 +21,7 @@ export class InstantDictationPage implements OnInit {
   byWordInputForm: FormGroup;
   bySentenceInputForm: FormGroup;
   type = 'byword';
+  sentenceLengthOptions = SentenceLengthOptions;
 
   constructor(
     public formBuilder: FormBuilder,
@@ -52,7 +53,8 @@ export class InstantDictationPage implements OnInit {
     }
 
     this.bySentenceInputForm = this.formBuilder.group({
-      article: new FormControl('', [Validators.required])
+      article: new FormControl('', [Validators.required]),
+      sentenceLength: 'Normal',
     });
   }
 
@@ -67,6 +69,7 @@ export class InstantDictationPage implements OnInit {
       if (this.dictationService.isSentenceDictation(dictation)) {
         this.type = 'bysentence';
         this.bySentenceInputForm.get('article').setValue(dictation.article);
+        this.bySentenceInputForm.get('sentenceLength').setValue(dictation.sentenceLength);
       } else {
         this.byWordInputForm.get('showImage').setValue(dictation.showImage);
         if (dictation.vocabs != null) {
@@ -120,8 +123,8 @@ export class InstantDictationPage implements OnInit {
       totalRecommended: 0,
       title: new Date().toDateString(),
       suitableStudent: 'Any',
+      sentenceLength: this.bySentenceInputForm.get('sentenceLength').value,
     };
-
   }
 
   prepareVocabDictation(): Dictation {

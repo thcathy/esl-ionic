@@ -14,6 +14,12 @@
     "JuniorSecondary": "初中 (12-14)",
     "SeniorSecondary": "高中 (15-17)"
   },
+  "SentenceLength": {
+    "Short": "短",
+    "Normal": "正常",
+    "Long": "长",
+    "VeryLong": "非常长"
+  },
   "VocabDifficulty": {
     "Beginner": "初级",
     "Easy": "简单",
@@ -176,6 +182,7 @@
   "My Records": "我的记录",
   "Review": "复习",
   "Not include learnt": "不包括已经懂得",
+  "Each Sentence Length": "每次句子长度",
   "": "",
   "": "",
   "": "",

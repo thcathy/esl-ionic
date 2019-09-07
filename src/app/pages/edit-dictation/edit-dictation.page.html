@@ -26,10 +26,6 @@
           <div *ngIf="description.invalid && (description.dirty || description.touched)" class="error-text">
             <div *ngIf="description.errors.maxlength">{{'Description cannot over 100 characters long'|translate}}</div>
           </div>
-          <ion-item *ngIf="type.value=='word'">
-            <ion-label><fa-icon [icon]="['far', 'images']"></fa-icon> {{'Show Image'|translate}}</ion-label>
-            <ion-toggle style="padding-right: 30px;" formControlName="showImage"></ion-toggle>
-          </ion-item>
           <ion-item>
             <ion-label style="margin: inherit;">{{'Suitable'|translate}} ({{'Age'|translate}})</ion-label>
             <ion-select style="padding-right: 30px;" formControlName="suitableStudent" interface="popover">
@@ -52,6 +48,16 @@
             </ion-col>
           </ion-row>
           </ion-radio-group>
+          <ion-item *ngIf="type.value=='word'">
+            <ion-label><fa-icon [icon]="['far', 'images']"></fa-icon> {{'Show Image'|translate}}</ion-label>
+            <ion-toggle style="padding-right: 30px;" formControlName="showImage"></ion-toggle>
+          </ion-item>
+          <ion-item *ngIf="type.value=='sentence'">
+            <ion-label style="margin: inherit;">{{'Each Sentence Length'|translate}}</ion-label>
+            <ion-select style="padding-right: 30px;" formControlName="sentenceLength" interface="popover">
+              <ion-select-option *ngFor="let state of sentenceLengthOptions" [value]="state">{{'SentenceLength.' + state|translate}}</ion-select-option>
+            </ion-select>
+          </ion-item>
           <ion-item *ngIf="inputForm.controls['type'].value == 'word'" class="questionsInput">
             <ion-label position="stacked">{{'Vocabulary'|translate}} * ({{'separate by space or comma'|translate}})</ion-label>
             <ion-textarea placeholder="apple bus-stop cat" formControlName="vocabulary" rows="10"></ion-textarea>

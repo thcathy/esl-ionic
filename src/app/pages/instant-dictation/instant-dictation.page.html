@@ -56,7 +56,13 @@
             <form class="articleInput" [formGroup]="bySentenceInputForm" novalidate>
               <h3>{{'Input an passage'|translate}}:</h3>
               <ion-textarea class="textarea" formControlName="article" rows="10"></ion-textarea>
-              <ion-row no-padding>
+              <ion-item>
+                <ion-label style="margin: inherit;">{{'Each Sentence Length'|translate}}</ion-label>
+                <ion-select style="padding-right: 30px;" formControlName="sentenceLength" interface="popover">
+                  <ion-select-option *ngFor="let state of sentenceLengthOptions" [value]="state">{{'SentenceLength.' + state|translate}}</ion-select-option>
+                </ion-select>
+              </ion-item>
+              <ion-row style="padding-top: 1rem">
                 <ion-col>
                   <ion-button fill="outline" (click)="clearArticle()"><fa-icon [icon]="['fas', 'times']"></fa-icon>&nbsp;{{'Clear inputs'|translate}}</ion-button>
                 </ion-col>

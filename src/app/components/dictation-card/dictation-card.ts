@@ -47,7 +47,7 @@ export class DictationCardComponent {
     this.recommendState = 'highlight';
   }
 
-  recommendAnimationDone(): void {
+  recommendAnimationDone($event): void {
     this.recommendState = 'normal';
   }
 

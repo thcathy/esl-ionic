@@ -49,7 +49,10 @@ export class ArticleDictationPage implements OnInit {
 
   async init() {
     this.dictation = await this.storage.get(NavigationService.storageKeys.dictation);
-    this.sentences = this.articleDictationService.divideToSentences(this.dictation.article);
+    this.sentences = this.articleDictationService.divideToSentences(
+      this.dictation.article,
+      this.articleDictationService.sentenceLengthOptionsToValue(this.dictation.sentenceLength)
+    );
     this.log.debug(`divided into ${this.sentences.length} sentences`);
     this.speak();
   }

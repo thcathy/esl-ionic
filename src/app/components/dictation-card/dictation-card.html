@@ -30,6 +30,10 @@
                 <fa-icon [icon]="['fas', 'times']" *ngIf="!dictation.showImage"></fa-icon>
               </td>
             </tr>
+            <tr *ngIf="dictationService.isSentenceDictation(dictation)">
+              <td>{{ 'Each Sentence Length' | translate }}</td>
+              <td>{{ 'SentenceLength.' + dictation.sentenceLength | translate }}</td>
+            </tr>
             <tr [@recommend]="recommendState"
                 (@recommend.done)="recommendAnimationDone($event)">
               <td>{{ 'Recommend' | translate }}</td>
