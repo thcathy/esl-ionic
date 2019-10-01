@@ -12,6 +12,7 @@ import {ManageVocabHistoryService} from './member/manage-vocab-history.service';
 import {LoadingController} from '@ionic/angular';
 import {NGXLogger} from 'ngx-logger';
 
+export const tokenTimeoutSecond = 35000;
 export const auth0CordovaConfig = {
   // needed for auth0
   clientID: 'Q2x3VfMKsuKtmXuBbuwuTw3ARDZ1xpBS',
@@ -108,9 +109,8 @@ export class AuthService {
 
   private setSession(authResult): void {
     this.log.info('login session: update session');
-    // Set the time that the access token will expire at
-    const expiresAt = JSON.stringify((authResult.expiresIn * 1000) + new Date().getTime());
-    this.log.info(`expiresAt: ${expiresAt}`);
+    const expiresAt = JSON.stringify(tokenTimeoutSecond * 1000 + new Date().getTime());
+    this.log.info(`token expiresAt: ${expiresAt}`);
 
     this.accessToken = authResult.accessToken;
     localStorage.setItem(this.accessTokenKey, authResult.accessToken);
