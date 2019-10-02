@@ -17,7 +17,7 @@ import {NGXLogger} from 'ngx-logger';
   styleUrls: ['./practice-complete.page.scss'],
 })
 export class PracticeCompletePage implements OnInit {
-  @ViewChild('dictationCard') dictationCard;
+  @ViewChild('dictationCard', { static: false }) dictationCard;
   dictation: Dictation;
   mark = 0;
   histories: VocabPracticeHistory[] = [];

@@ -14,7 +14,7 @@ import {IonicComponentService} from "../../services/ionic-component.service";
   styleUrls: ['./article-dictation-complete.page.scss'],
 })
 export class ArticleDictationCompletePage implements OnInit {
-  @ViewChild('dictationCard') dictationCard;
+  @ViewChild('dictationCard', { static: true }) dictationCard;
 
   dictation: Dictation;
   histories: SentenceHistory[];

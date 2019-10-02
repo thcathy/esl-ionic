@@ -25,7 +25,7 @@ export class MemberHomePage implements OnInit {
   selectedSegment: String;
   learntVocabs: Map<string, MemberVocabulary> = new Map<string, MemberVocabulary>();
   answeredBeforeVocabs: Map<string, MemberVocabulary> = new Map<string, MemberVocabulary>();
-  @ViewChild('ionSegment') ionSegment;
+  @ViewChild('ionSegment', { static: true }) ionSegment;
 
   constructor(
     public memberDictationService: MemberDictationService,
