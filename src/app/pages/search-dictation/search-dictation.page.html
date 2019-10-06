@@ -47,11 +47,11 @@
             </ion-select>
           </ion-item>
 
-          <ion-button fill="outline" float-left (click)="moreOptions = !moreOptions">
+          <ion-button fill="outline" class="ion-float-left" (click)="moreOptions = !moreOptions">
             {{'More Options'|translate}}
           </ion-button>
 
-          <ion-button float-right (click)="search()" [disabled]="inputForm.invalid">
+          <ion-button class="ion-float-right" (click)="search()" [disabled]="inputForm.invalid">
             <fa-icon icon="search"></fa-icon>&nbsp;{{'Search'|translate}}
           </ion-button>
 

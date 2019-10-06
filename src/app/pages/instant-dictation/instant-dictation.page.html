@@ -40,11 +40,11 @@
                 <ion-toggle formControlName="showImage"></ion-toggle>
               </ion-item>
             </form>
-            <ion-row no-padding>
+            <ion-row class="ion-no-padding">
               <ion-col>
                 <ion-button fill="outline" (click)="clearVocabs()"><fa-icon [icon]="['fas', 'times']"></fa-icon>&nbsp;{{'Clear inputs'|translate}}</ion-button>
               </ion-col>
-              <ion-col text-right>
+              <ion-col class="ion-text-right">
                 <ion-button id="start-by-word-button" (click)="startByWord()">
                   <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>&nbsp;{{'Start'|translate}}
                 </ion-button>
@@ -66,7 +66,7 @@
                 <ion-col>
                   <ion-button fill="outline" (click)="clearArticle()"><fa-icon [icon]="['fas', 'times']"></fa-icon>&nbsp;{{'Clear inputs'|translate}}</ion-button>
                 </ion-col>
-                <ion-col text-right>
+                <ion-col class="ion-text-right">
                   <ion-button (click)="startBySentence()" [disabled]="bySentenceInputForm.invalid">
                     <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>&nbsp;{{'Start'|translate}}
                   </ion-button>

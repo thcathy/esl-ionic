@@ -60,11 +60,11 @@
             <ion-item-divider></ion-item-divider>
             <ion-item (click)="openContactUs()">
               <ion-label>{{'Contact Us'|translate}}</ion-label>
-              <fa-icon [icon]="['fas', 'external-link-alt']" float-end></fa-icon>
+              <fa-icon class="ion-float-end" [icon]="['fas', 'external-link-alt']"></fa-icon>
             </ion-item>
             <ion-item *ngIf="platform.is('cordova')" (click)="navigationService.openFunFunSpell()">
               <ion-label>{{'More Exercises at'|translate}}<br/>funfunspell.com</ion-label>
-              <fa-icon [icon]="['fas', 'external-link-alt']" float-end></fa-icon>
+              <fa-icon class="ion-float-end" [icon]="['fas', 'external-link-alt']"></fa-icon>
             </ion-item>
           </ion-menu-toggle>
         </ion-list>

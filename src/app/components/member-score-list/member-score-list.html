@@ -7,11 +7,11 @@
     <ion-list>
       <ion-item *ngIf="allTimesScore">
         <ion-label>{{ 'Full' | translate }}</ion-label>
-        <span float-right><fa-icon [icon]="['fas', 'star']" style="color: gold"></fa-icon> {{allTimesScore.score}}</span>
+        <span class="ion-float-right"><fa-icon [icon]="['fas', 'star']" style="color: gold"></fa-icon> {{allTimesScore.score}}</span>
       </ion-item>
       <ion-item *ngFor="let score of scores; let i = index">
         <ion-label>{{ score.yearMonthAsDate | date: 'yyyy/MM' }}</ion-label>
-        <span float-right><fa-icon [icon]="['fas', 'star']" style="color: gold"></fa-icon> {{score.score}}</span>
+        <span class="ion-float-right"><fa-icon [icon]="['fas', 'star']" style="color: gold"></fa-icon> {{score.score}}</span>
       </ion-item>
     </ion-list>
   </ion-card-content>

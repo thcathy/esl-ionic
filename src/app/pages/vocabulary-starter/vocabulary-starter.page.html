@@ -19,7 +19,7 @@
                   <ion-select formControlName="difficulty" interface="popover">
                     <ion-select-option *ngFor="let d of vocabDifficulties" [value]="d">{{'VocabDifficulty.' + d|translate}}</ion-select-option>
                   </ion-select>
-                  <ion-button float-right (click)="start()">
+                  <ion-button class="ion-float-right" (click)="start()">
                     <fa-icon icon="play"></fa-icon>&nbsp;{{'Start'|translate}}
                   </ion-button>
                 </form>
@@ -38,7 +38,7 @@
                   <li>{{'VocabularyPracticeDescription.KnowWhatYouLearn'|translate}}</li>
                   <li>{{'VocabularyPracticeDescription.EarnStars'|translate}}</li>
                 </ul>
-                <ion-button *ngIf="authService.isAuthenticated()" fill="clear" size="small" float-right (click)="navigationService.openMemberHome('vocabulary')">
+                <ion-button *ngIf="authService.isAuthenticated()" fill="clear" size="small" class="ion-float-right" (click)="navigationService.openMemberHome('vocabulary')">
                   <fa-icon icon="folder-open"></fa-icon>&nbsp;{{'To My Vocabulary'|translate}}
                 </ion-button>
               </div>

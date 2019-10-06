@@ -1,7 +1,7 @@
 <ion-card class="card" *ngIf="histories" style="margin-top: 8px;">
   <ion-card-header>
     <fa-icon [icon]="['fas', 'history']"></fa-icon> {{'Records'|translate}}
-    <score float-right [mark]="mark" [total]="histories.length"></score>
+    <score class="ion-float-right" [mark]="mark" [total]="histories.length"></score>
   </ion-card-header>
   <ion-card-content>
     <ion-list>
@@ -12,7 +12,7 @@
             <ion-col>{{ history.question.word }}</ion-col>
             <ion-col [class.green]="history.correct" [class.red]="!history.correct">{{ history.answer }}</ion-col>
             <ion-col class="hidden-md-down">[{{ history.question.ipaunavailable ? 'N.A.' : history.question.ipa }}]</ion-col>
-            <ion-col text-right><fa-icon [icon]="['fas', 'check']" *ngIf="history.correct" class="green"></fa-icon><fa-icon [icon]="['fas', 'times']" *ngIf="!history.correct" class="red"></fa-icon></ion-col>
+            <ion-col class="ion-text-right"><fa-icon [icon]="['fas', 'check']" *ngIf="history.correct" class="green"></fa-icon><fa-icon [icon]="['fas', 'times']" *ngIf="!history.correct" class="red"></fa-icon></ion-col>
           </ion-row>
         </ion-label>
       </ion-item>

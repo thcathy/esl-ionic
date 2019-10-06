@@ -4,7 +4,7 @@
       <ion-button fill="clear" size="small" (click)="previousImage()" class="button"><fa-icon [icon]="['fas', 'angle-left']"></fa-icon></ion-button>
     </ion-col>
     <ion-col>
-      <ion-button fill="clear" float-right size="small" (click)="nextImage()" class="button"><fa-icon [icon]="['fas', 'angle-right']"></fa-icon></ion-button>
+      <ion-button fill="clear" class="button ion-float-right" size="small" (click)="nextImage()"><fa-icon [icon]="['fas', 'angle-right']"></fa-icon></ion-button>
     </ion-col>
   </ion-row>
   <img [@move]="state" (@move.done)="onDone($event)" [src]="imageBase64 | safeHtml" class="image" />

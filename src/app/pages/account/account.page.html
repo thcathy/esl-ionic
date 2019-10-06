@@ -35,7 +35,7 @@
           <div *ngIf="lastName.invalid && (lastName.dirty || lastName.touched)" class="error-text">
             <div *ngIf="lastName.errors.maxlength">{{'Last Name'|translate}}{{'CharactersTooLong'|translate:{length: '50'} }}</div>
           </div>
-          <ion-item text-left>
+          <ion-item class="ion-text-left">
             <ion-label>{{'Date of birth'|translate}}</ion-label>
             <ion-datetime displayFormat="YYYY-MM-DD" max="2015" formControlName="birthday"></ion-datetime>
           </ion-item>
@@ -62,7 +62,7 @@
             <div *ngIf="school.errors.maxlength">{{'School'|translate}}{{'CharactersTooLong'|translate:{length: '100'} }}</div>
           </div>
 
-          <ion-button float-right (click)="save()" style="margin: 16px;" [disabled]="inputForm.invalid">
+          <ion-button class="ion-float-right" (click)="save()" style="margin: 16px;" [disabled]="inputForm.invalid">
             <fa-icon [icon]="['fas', 'save']"></fa-icon>&nbsp;{{'Save'|translate}}
           </ion-button>
 

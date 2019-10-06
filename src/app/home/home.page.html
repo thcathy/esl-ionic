@@ -17,7 +17,7 @@
       </ion-card-header>
       <ion-card-content>{{ 'Online Dictation' | translate }}</ion-card-content>
       <ion-grid>
-        <ion-row justify-content-center>
+        <ion-row class="ion-justify-content-center">
           <ion-col size="6" size-sm="6" size-md="4" size-lg="3">
             <ion-card class="card-button">
               <ion-card-content>
@@ -59,7 +59,7 @@
 
       <ion-card-content>{{ 'English Exercise' | translate }}</ion-card-content>
       <ion-grid>
-        <ion-row justify-content-center>
+        <ion-row class="ion-justify-content-center">
           <ion-col size="6" size-sm="6" size-md="4" size-lg="3">
             <ion-card class="card-button">
               <ion-card-content>
@@ -78,26 +78,20 @@
 
     <dictation-statistics [stat]="dictationStat"></dictation-statistics>
 
-    <ion-row *ngIf="!appService.isApp()" text-center padding-top>
+    <ion-row class="ion-text-center ion-padding-top" *ngIf="!appService.isApp()">
       <ion-col size="1" size-md="2" size-lg="3"></ion-col>
       <ion-col size="5" size-md="4" size-lg="3">
         <a href="https://itunes.apple.com/us/app/funfunspell-Dictation/id1364341686?mt=8" target="_blank" rel="noopener" style=" text-decoration: none;" aria-label="Get app from Appstore">
           <img class="appImage" src="https://linkmaker.itunes.apple.com/assets/shared/badges/en-us/appstore-lrg.svg" alt="appstore" />
         </a>
       </ion-col>
-      <ion-col size="5" size-md="4" size-lg="3" text-center>
+      <ion-col class="ion-text-center" size="5" size-md="4" size-lg="3">
         <a href="https://play.google.com/store/apps/details?id=com.esl.ionic" target="_blank" rel="noopener" aria-label="Get app from google play store">
           <ion-img class="appImage" src="assets/img/google-play-badge.png" alt="google play"></ion-img>
         </a>
       </ion-col>
       <ion-col size="1" size-md="2" size-lg="3"></ion-col>
     </ion-row>
-
-    <div  style="width: 100%; text-align: center;" padding-top>
-
-
-
-    </div>
   </div>
 
   <footer></footer>

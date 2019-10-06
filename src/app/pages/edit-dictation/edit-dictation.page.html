@@ -71,7 +71,7 @@
             <div *ngIf="vocabulary.errors.pattern">{{'Cannot contain invalid character(s)'|translate}}</div>
           </div>
 
-          <ion-button float-right (click)="saveDictation()" style="margin: 16px;" [disabled]="inputForm.invalid">
+          <ion-button class="ion-float-right" (click)="saveDictation()" style="margin: 16px;" [disabled]="inputForm.invalid">
             <fa-icon icon="save"></fa-icon>&nbsp;{{'Save'|translate}}
           </ion-button>
 

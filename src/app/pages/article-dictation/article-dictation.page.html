@@ -10,7 +10,6 @@
     <ion-card class="card">
       <ion-card-header>
         {{'Sentence'|translate}} {{ currentSentence + 1 }}/{{sentences?.length}}
-        <!--<score float-right [mark]="mark"></score>-->
       </ion-card-header>
 
       <ion-card-content>
@@ -19,7 +18,7 @@
             <ion-col size="12" size-sm="12" size-md="6">
               <ion-button shape="round" class="speakButton" (click)="speak()"><fa-icon [icon]="['fas', 'headphones']"></fa-icon>&nbsp;{{'Listen'|translate}}</ion-button>
             </ion-col>
-            <ion-col size="12" size-sm="12" size-md="6" text-right>
+            <ion-col size="12" size-sm="12" size-md="6" class="ion-text-right">
               <ion-button fill="outline" shape="round" (click)="slower()"><fa-icon [icon]="['fas', 'bicycle']"></fa-icon>&nbsp;{{'Slower'|translate}}</ion-button>
               <ion-button fill="outline" shape="round" (click)="faster()"><fa-icon [icon]="['fas', 'rocket']"></fa-icon>&nbsp;{{'Faster'|translate}}</ion-button>
             </ion-col>
@@ -35,7 +34,7 @@
             </ion-col>
           </ion-row>
           <ion-row>
-            <ion-col text-right>
+            <ion-col class="ion-text-right">
               <ion-button class="submitButton" (click)="submitAnswer()"><fa-icon icon="check"></fa-icon>&nbsp;{{'Submit'|translate}}</ion-button>
             </ion-col>
           </ion-row>
