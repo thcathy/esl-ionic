@@ -5,26 +5,36 @@ import {MemberService, UpdateMemberRequest} from '../../services/member/member.s
 import {Member} from '../../entity/member';
 import {IonicComponentService} from '../../services/ionic-component.service';
 import {NGXLogger} from 'ngx-logger';
+import {Observable, Subject} from 'rxjs';
+import {CanComponentDeactivate} from '../../guards/can-deactivate.guard';
+import {AlertController} from '@ionic/angular';
 
 @Component({
   selector: 'app-account',
   templateUrl: './account.page.html',
   styleUrls: ['./account.page.scss'],
 })
-export class AccountPage implements OnInit {
+export class AccountPage implements OnInit, CanComponentDeactivate {
   inputForm: FormGroup;
   member: Member;
+  confirmExit$: Subject<boolean> = new Subject<boolean>();
 
   constructor(
     public memberService: MemberService,
     public formBuilder: FormBuilder,
     public translate: TranslateService,
     public ionicComponentService: IonicComponentService,
+    public alertController: AlertController,
     private log: NGXLogger,
   ) { }
 
   ngOnInit() {
     this.createForm();
+    this.memberService.getProfile().subscribe((m) => {
+      this.log.debug(`member: ${JSON.stringify(m)}`);
+      this.member = m;
+      this.setFormValue(m);
+    });
   }
 
   get firstName() { return this.inputForm.get('firstName'); }
@@ -34,13 +44,7 @@ export class AccountPage implements OnInit {
   get phoneNumber() { return this.inputForm.get('phoneNumber'); }
   get school() { return this.inputForm.get('school'); }
 
-  ionViewDidEnter() {
-    this.memberService.getProfile().subscribe((m) => {
-      this.log.debug(`member: ${JSON.stringify(m)}`);
-      this.member = m;
-      this.setFormValue(m);
-    });
-  }
+  ionViewDidEnter() {}
 
   setFormValue(member: Member) {
     this.firstName.setValue(member.name.firstName);
@@ -71,9 +75,43 @@ export class AccountPage implements OnInit {
       phoneNumber: this.phoneNumber.value,
       school: this.school.value
     }).subscribe(
-      _m => this.ionicComponentService.showToastMessage(this.translate.instant('Personal information updated')),
+      m => this.afterSave(m),
       _e => this.ionicComponentService.showToastMessage(this.translate.instant('Error when update personal information'))
     );
+  }
+
+  afterSave(newMember: Member) {
+    this.inputForm.reset();
+    this.setFormValue(newMember);
+    this.ionicComponentService.showToastMessage(this.translate.instant('Personal information updated'));
+    this.member = newMember;
+  }
+
+  canDeactivate(): Observable<boolean> | boolean {
+    if (!this.inputForm || !this.inputForm.dirty) {
+      return true;
+    }
+    this.confirmExit();
+    return this.confirmExit$;
+  }
+
+  async confirmExit() {
+    const alert = await this.alertController.create({
+      header: `${this.translate.instant('Confirm')}!`,
+      message: `${this.translate.instant('Exit without saving update(s)')}?`,
+      buttons: [
+        {
+          text: this.translate.instant('Yes'),
+          handler: () => this.confirmExit$.next(true)
+        },
+        {
+          text: this.translate.instant('No'),
+          handler: () => this.confirmExit$.next(false)
+        }
+      ]
+    });
+
+    await alert.present();
   }
 
 }

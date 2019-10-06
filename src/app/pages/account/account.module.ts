@@ -1,17 +1,15 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { Routes, RouterModule } from '@angular/router';
 
-import { IonicModule } from '@ionic/angular';
-
 import { AccountPage } from './account.page';
-import {SharedModule} from "../../shared.module";
+import {SharedModule} from '../../shared.module';
+import {CanDeactivateGuard} from '../../guards/can-deactivate.guard';
 
 const routes: Routes = [
   {
     path: '',
-    component: AccountPage
+    component: AccountPage,
+    canDeactivate: [CanDeactivateGuard]
   }
 ];
 
