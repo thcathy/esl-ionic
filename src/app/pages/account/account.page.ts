@@ -8,6 +8,7 @@ import {NGXLogger} from 'ngx-logger';
 import {Observable, Subject} from 'rxjs';
 import {CanComponentDeactivate} from '../../guards/can-deactivate.guard';
 import {AlertController} from '@ionic/angular';
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'app-account',
@@ -25,16 +26,17 @@ export class AccountPage implements OnInit, CanComponentDeactivate {
     public translate: TranslateService,
     public ionicComponentService: IonicComponentService,
     public alertController: AlertController,
+    public route: ActivatedRoute,
     private log: NGXLogger,
   ) { }
 
   ngOnInit() {
     this.createForm();
-    this.memberService.getProfile().subscribe((m) => {
-      this.log.debug(`member: ${JSON.stringify(m)}`);
-      this.member = m;
-      this.setFormValue(m);
-    });
+    this.route.data
+      .subscribe((data: { member: Member }) => {
+        this.member = data.member;
+        this.setFormValue(data.member);
+      });
   }
 
   get firstName() { return this.inputForm.get('firstName'); }
@@ -101,11 +103,11 @@ export class AccountPage implements OnInit, CanComponentDeactivate {
       message: `${this.translate.instant('Exit without saving update(s)')}?`,
       buttons: [
         {
-          text: this.translate.instant('Yes'),
+          text: this.translate.instant('Leave'),
           handler: () => this.confirmExit$.next(true)
         },
         {
-          text: this.translate.instant('No'),
+          text: this.translate.instant('Back'),
           handler: () => this.confirmExit$.next(false)
         }
       ]
