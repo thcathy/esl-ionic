@@ -107,7 +107,7 @@ export const GoogleAnalyticsSpy = () => jasmine.createSpyObj('GoogleAnalytics',
 );
 
 export const NavigationServiceSpy = () => jasmine.createSpyObj('NavigationService',
-  ['goTo', 'openVocabularyStarter', 'retryDictation', 'openDictation', 'startDictation']);
+  ['goTo', 'openVocabularyStarter', 'retryDictation', 'openDictation', 'startDictation', 'openHomePage']);
 
 export const StorageSpy = () => {
   const storageSpy = jasmine.createSpyObj('Storage', ['get', 'set']);
