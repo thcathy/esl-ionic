@@ -100,7 +100,7 @@ export class AccountPage implements OnInit, CanComponentDeactivate {
   async confirmExit() {
     const alert = await this.alertController.create({
       header: `${this.translate.instant('Confirm')}!`,
-      message: `${this.translate.instant('Exit without saving update(s)')}?`,
+      message: `${this.translate.instant('Exit without saving')}?`,
       buttons: [
         {
           text: this.translate.instant('Leave'),
