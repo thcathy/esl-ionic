@@ -6,7 +6,7 @@ import {
   memberVocabularyMember1Apple,
   memberVocabularyMember1Banana,
   memberVocabularyMember1Cat
-} from '../../../test-config/test-data';
+} from '../../../testing/test-data';
 import {Observable} from 'rxjs';
 import 'rxjs-compat/add/observable/of';
 

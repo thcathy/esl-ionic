@@ -5,7 +5,7 @@ import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 
 import { AppComponent } from './app.component';
-import {SharedTestModule} from '../test-config/shared-test.module';
+import {SharedTestModule} from '../testing/shared-test.module';
 
 describe('AppComponent', () => {
 

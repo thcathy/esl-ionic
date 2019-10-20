@@ -1,8 +1,8 @@
 import { DictationQuestionsPipe } from './dictation-questions.pipe';
 import {TranslateService} from '@ngx-translate/core';
 import {ArticleDictationService} from '../../services/dictation/article-dictation.service';
-import {NGXLoggerSpy} from '../../../test-config/mocks-ionic';
-import {dictation1} from '../../../test-config/test-data';
+import {NGXLoggerSpy} from '../../../testing/mocks-ionic';
+import {dictation1} from '../../../testing/test-data';
 import {Dictation} from '../../entity/dictation';
 
 describe('DictationQuestionsPipe', () => {

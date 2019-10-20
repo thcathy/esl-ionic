@@ -2,7 +2,7 @@ import {VocabPracticeService} from "./vocab-practice.service";
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {TestBed} from "@angular/core/testing";
 import {VocabPracticeHistory} from "../../entity/vocab-practice-history";
-import {vocab_apple, vocab_banana} from "../../../test-config/test-data";
+import {vocab_apple, vocab_banana} from "../../../testing/test-data";
 import {HttpClient} from "@angular/common/http";
 
 describe('VocabPracticeService', () => {

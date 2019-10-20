@@ -2,16 +2,16 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import {async, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
 
 import { PracticeCompletePage } from './practice-complete.page';
-import {dictation1} from '../../../test-config/test-data';
+import {dictation1} from '../../../testing/test-data';
 import {DictationService} from '../../services/dictation/dictation.service';
 import {
   AuthServiceSpy,
   DictationServiceSpy, ManageVocabHistoryServiceSpy, NavigationServiceSpy,
   StorageSpy, VocabPracticeServiceSpy,
-} from '../../../test-config/mocks-ionic';
+} from '../../../testing/mocks-ionic';
 import {Storage} from '@ionic/storage';
 import 'rxjs-compat/add/observable/of';
-import {SharedTestModule} from '../../../test-config/shared-test.module';
+import {SharedTestModule} from '../../../testing/shared-test.module';
 import {AuthService} from '../../services/auth.service';
 import {NavigationService} from '../../services/navigation.service';
 import {VocabPracticeService} from '../../services/practice/vocab-practice.service';

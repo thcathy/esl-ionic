@@ -2,7 +2,7 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DictationPracticePage } from './dictation-practice.page';
-import {SharedTestModule} from "../../../test-config/shared-test.module";
+import {SharedTestModule} from "../../../testing/shared-test.module";
 import {NoopAnimationsModule} from "@angular/platform-browser/animations";
 
 describe('DictationPracticePage', () => {

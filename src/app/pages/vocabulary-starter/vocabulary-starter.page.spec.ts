@@ -2,7 +2,7 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { VocabularyStarterPage } from './vocabulary-starter.page';
-import {SharedTestModule} from "../../../test-config/shared-test.module";
+import {SharedTestModule} from "../../../testing/shared-test.module";
 import {ActivatedRoute} from "@angular/router";
 import {Observable} from "rxjs";
 

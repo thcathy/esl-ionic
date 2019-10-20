@@ -2,8 +2,8 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import {async, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
 
 import { SearchDictationPage } from './search-dictation.page';
-import {SharedTestModule} from "../../../test-config/shared-test.module";
-import {StorageSpy} from "../../../test-config/mocks-ionic";
+import {SharedTestModule} from "../../../testing/shared-test.module";
+import {StorageSpy} from "../../../testing/mocks-ionic";
 import {Storage} from "@ionic/storage";
 import {ActivatedRoute, convertToParamMap} from "@angular/router";
 

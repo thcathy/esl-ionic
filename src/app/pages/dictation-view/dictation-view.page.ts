@@ -45,5 +45,4 @@ export class DictationViewPage implements OnInit {
         .toPromise().then(d => this.dictation = d);
     }
   }
-
 }

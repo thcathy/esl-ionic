@@ -2,20 +2,19 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import {async, ComponentFixture, fakeAsync, TestBed} from '@angular/core/testing';
 
 import { AccountPage } from './account.page';
-import {member1} from "../../../test-config/test-data";
-import {SharedTestModule} from "../../../test-config/shared-test.module";
-import {MemberService} from "../../services/member/member.service";
-import {of} from "rxjs";
+import {member1} from '../../../testing/test-data';
+import {SharedTestModule} from '../../../testing/shared-test.module';
+import {of} from 'rxjs';
+import {ActivatedRoute} from '@angular/router';
 
 describe('AccountPage', () => {
   let component: AccountPage;
   let fixture: ComponentFixture<AccountPage>;
   let pageElement: HTMLElement;
-  let getProfileSpy;
 
   beforeEach(async(() => {
-    const memberService = jasmine.createSpyObj('MemberService', ['getProfile']);
-    getProfileSpy = memberService.getProfile.and.returnValue(of(member1));
+    const activatedRoute = jasmine.createSpyObj('ActivatedRoute', ['']);
+    activatedRoute.data = of({member: member1});
 
     TestBed.configureTestingModule({
       declarations: [ AccountPage ],
@@ -24,7 +23,7 @@ describe('AccountPage', () => {
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [
-        { provide: MemberService, useValue: memberService},
+        { provide: ActivatedRoute, useValue: activatedRoute}
       ],
     })
     .compileComponents();
@@ -42,10 +41,9 @@ describe('AccountPage', () => {
   });
 
   it('should show user information in html', fakeAsync(() => {
-    component.ionViewDidEnter();
+    component.ngOnInit();
     fixture.detectChanges();
-    let input = pageElement.querySelector('#userIdInput') as HTMLInputElement;
+    const input = pageElement.querySelector('#userIdInput') as HTMLInputElement;
     expect(input.value).toEqual('tester1');
-    expect(getProfileSpy.calls.any()).toBe(true);
   }));
 });

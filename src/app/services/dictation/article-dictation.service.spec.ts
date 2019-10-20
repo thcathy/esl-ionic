@@ -1,6 +1,6 @@
 import {ArticleDictationService} from './article-dictation.service';
 import {ValidationUtils} from '../../utils/validation-utils';
-import {NGXLoggerSpy} from '../../../test-config/mocks-ionic';
+import {NGXLoggerSpy} from '../../../testing/mocks-ionic';
 
 describe('ArticleDictationService', () => {
   let service: ArticleDictationService;

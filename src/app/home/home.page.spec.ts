@@ -15,8 +15,8 @@ import {
   SplashScreenSpy,
   StatusBarSpy,
   StorageSpy
-} from '../../test-config/mocks-ionic';
-import {SharedTestModule} from '../../test-config/shared-test.module';
+} from '../../testing/mocks-ionic';
+import {SharedTestModule} from '../../testing/shared-test.module';
 import {AppService} from '../services/app.service';
 
 describe('HomePage', () => {

@@ -1,5 +1,5 @@
 import {CreateDictationHistoryRequest, DictationService} from "./dictation.service";
-import {dictation1, vocab_apple, vocab_banana} from "../../../test-config/test-data";
+import {dictation1, vocab_apple, vocab_banana} from "../../../testing/test-data";
 import {Dictation} from "../../entity/dictation";
 import {SentenceHistory} from "../../entity/sentence-history";
 import {VocabPracticeHistory} from "../../entity/vocab-practice-history";
