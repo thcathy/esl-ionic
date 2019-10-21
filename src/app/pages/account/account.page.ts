@@ -5,9 +5,8 @@ import {MemberService, UpdateMemberRequest} from '../../services/member/member.s
 import {Member} from '../../entity/member';
 import {IonicComponentService} from '../../services/ionic-component.service';
 import {NGXLogger} from 'ngx-logger';
-import {Observable, Subject} from 'rxjs';
+import {Observable} from 'rxjs';
 import {CanComponentDeactivate} from '../../guards/can-deactivate.guard';
-import {AlertController} from '@ionic/angular';
 import {ActivatedRoute} from '@angular/router';
 
 @Component({
@@ -18,14 +17,12 @@ import {ActivatedRoute} from '@angular/router';
 export class AccountPage implements OnInit, CanComponentDeactivate {
   inputForm: FormGroup;
   member: Member;
-  confirmExit$: Subject<boolean> = new Subject<boolean>();
 
   constructor(
     public memberService: MemberService,
     public formBuilder: FormBuilder,
     public translate: TranslateService,
     public ionicComponentService: IonicComponentService,
-    public alertController: AlertController,
     public route: ActivatedRoute,
     private log: NGXLogger,
   ) { }
@@ -93,27 +90,6 @@ export class AccountPage implements OnInit, CanComponentDeactivate {
     if (!this.inputForm || !this.inputForm.dirty) {
       return true;
     }
-    this.confirmExit();
-    return this.confirmExit$;
+    return this.ionicComponentService.confirmExit();
   }
-
-  async confirmExit() {
-    const alert = await this.alertController.create({
-      header: `${this.translate.instant('Confirm')}!`,
-      message: `${this.translate.instant('Exit without saving')}?`,
-      buttons: [
-        {
-          text: this.translate.instant('Leave'),
-          handler: () => this.confirmExit$.next(true)
-        },
-        {
-          text: this.translate.instant('Back'),
-          handler: () => this.confirmExit$.next(false)
-        }
-      ]
-    });
-
-    await alert.present();
-  }
-
 }

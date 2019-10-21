@@ -9,17 +9,20 @@ import {DictationService} from '../../services/dictation/dictation.service';
 import {ValidationUtils} from '../../utils/validation-utils';
 import {IonicComponentService} from '../../services/ionic-component.service';
 import {Storage} from '@ionic/storage';
+import {CanComponentDeactivate} from '../../guards/can-deactivate.guard';
+import {Observable} from 'rxjs';
 
 @Component({
   selector: 'app-edit-dictation',
   templateUrl: './edit-dictation.page.html',
   styleUrls: ['./edit-dictation.page.scss'],
 })
-export class EditDictationPage implements OnInit {
+export class EditDictationPage implements OnInit, CanComponentDeactivate {
   inputForm: FormGroup;
   loader: any;
   dictation: Dictation;
   isEdit: boolean;
+  isSaved: boolean;
   suitableStudentOptions = SuitableStudentOptions;
   sentenceLengthOptions = SentenceLengthOptions;
 
@@ -44,6 +47,7 @@ export class EditDictationPage implements OnInit {
   }
 
   async init() {
+    this.isSaved = false;
     this.dictation = await this.storage.get(NavigationService.storageKeys.editDictation);
     this.isEdit = this.dictation != null;
     this.setupForm(this.dictation);
@@ -131,10 +135,11 @@ export class EditDictationPage implements OnInit {
 
   afterSaved(dictation: Dictation) {
     this.dictation = null;
+    this.isSaved = true;
     this.storage.remove(NavigationService.storageKeys.editDictation);
 
     if (this.loader) { this.loader.dismiss(); }
-    this.translate.get('UpdatedDictation', {title: dictation.title}).subscribe((msg: string) => {
+    this.translate.get('UpdatedDictation', {title: dictation.title}).subscribe(msg => {
       this.navService.openDictation(dictation, msg);
     });
   }
@@ -144,6 +149,12 @@ export class EditDictationPage implements OnInit {
     this.ionicComponentService.showAlert(this.translate.instant('Fail to create or update dictation'));
   }
 
+  canDeactivate(): Observable<boolean> | boolean {
+    if (!this.inputForm || !this.inputForm.dirty || this.isSaved) {
+      return true;
+    }
+    return this.ionicComponentService.confirmExit();
+  }
 }
 
 export function maxVocabularyValidator(max: number): ValidatorFn {

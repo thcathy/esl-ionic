@@ -1,7 +1,8 @@
 import {Injectable} from '@angular/core';
 
-import {TranslateService} from "@ngx-translate/core";
-import {AlertController, LoadingController, ToastController} from "@ionic/angular";
+import {TranslateService} from '@ngx-translate/core';
+import {AlertController, LoadingController, ToastController} from '@ionic/angular';
+import {Observable, Subject} from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class IonicComponentService {
@@ -38,5 +39,25 @@ export class IonicComponentService {
       position: position
     });
     toast.present();
+  }
+
+  confirmExit(): Observable<boolean> {
+    const confirmExit$ = new Subject<boolean>();
+
+    this.alertController.create({
+      header: `${this.translate.instant('Confirm')}!`,
+      message: `${this.translate.instant('Exit without saving')}?`,
+      buttons: [
+        {
+          text: this.translate.instant('Leave'),
+          handler: () => confirmExit$.next(true)
+        },
+        {
+          text: this.translate.instant('Back'),
+          handler: () => confirmExit$.next(false)
+        }
+      ]
+    }).then(alert => alert.present());
+    return confirmExit$;
   }
 }
