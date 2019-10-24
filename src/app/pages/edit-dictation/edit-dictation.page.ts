@@ -134,6 +134,7 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
   }
 
   afterSaved(dictation: Dictation) {
+
     this.dictation = null;
     this.isSaved = true;
     this.storage.remove(NavigationService.storageKeys.editDictation);

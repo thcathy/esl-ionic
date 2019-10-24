@@ -110,7 +110,7 @@ export const NavigationServiceSpy = () => jasmine.createSpyObj('NavigationServic
   ['goTo', 'openVocabularyStarter', 'retryDictation', 'openDictation', 'startDictation', 'openHomePage']);
 
 export const StorageSpy = () => {
-  const storageSpy = jasmine.createSpyObj('Storage', ['get', 'set']);
+  const storageSpy = jasmine.createSpyObj('Storage', ['get', 'set', 'remove']);
   storageSpy.get.and.callFake((param) => Promise.resolve());
   return storageSpy;
 };
