@@ -4,13 +4,10 @@ import {async, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/t
 import { EditDictationPage } from './edit-dictation.page';
 import {SharedTestModule} from '../../../testing/shared-test.module';
 import {dictation1} from '../../../testing/test-data';
-import { cold } from 'jasmine-marbles';
-import {DictationService} from '../../services/dictation/dictation.service';
-import {Storage} from '@ionic/storage';
-import {ActivatedRoute, convertToParamMap} from '@angular/router';
 import {MemberDictationService} from '../../services/dictation/member-dictation.service';
 import {AuthServiceSpy} from '../../../testing/mocks-ionic';
 import {AuthService} from '../../services/auth.service';
+import {of} from 'rxjs';
 
 describe('EditDictationPage', () => {
   let component: EditDictationPage;
@@ -29,7 +26,7 @@ describe('EditDictationPage', () => {
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [
         { provide: MemberDictationService, useValue: memberDictationServiceSpy},
-        { provide: AuthService, useValue: authServiceSpy }
+        { provide: AuthService, useValue: authServiceSpy },
       ]
     })
     .compileComponents();
@@ -45,12 +42,12 @@ describe('EditDictationPage', () => {
     expect(component).toBeTruthy();
   });
 
-  fit('open dictation page if dictation is saved', fakeAsync(() => {
-    memberDictationServiceSpy.createOrAmendDictation.and.returnValue(cold('-x|', { x: dictation1 }));
+  it('open dictation page if dictation is saved', fakeAsync(() => {
+    memberDictationServiceSpy.createOrAmendDictation.and.returnValue(of(dictation1));
     authServiceSpy.isAuthenticated.and.returnValue(true);
 
     component.ionViewDidEnter();
-    tick();
+    fixture.detectChanges();
 
     component.vocabulary.setValue('apple');
     component.saveDictation();
