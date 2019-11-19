@@ -13,6 +13,10 @@ import Auth0Cordova from '@auth0/cordova';
 import {NavigationService} from './services/navigation.service';
 import {AppService} from './services/app.service';
 import {NGXLogger} from 'ngx-logger';
+import {Deeplinks} from '@ionic-native/deeplinks/ngx';
+import {InstantDictationPage} from './pages/instant-dictation/instant-dictation.page';
+import {SearchDictationPage} from './pages/search-dictation/search-dictation.page';
+import {DictationViewPage} from './pages/dictation-view/dictation-view.page';
 
 declare let ga: Function;
 
@@ -35,6 +39,7 @@ export class AppComponent {
     public storage: Storage,
     public appService: AppService,
     public googleAnalytics: GoogleAnalytics,
+    public deeplinks: Deeplinks,
     private log: NGXLogger,
   ) {
     this.authService.handleAuthentication();
@@ -47,6 +52,7 @@ export class AppComponent {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
       this.setupGoogleAnalytics();
+      this.setupDeepLinks();
 
       (<any>window).handleOpenURL = (url) => {
         this.log.info(`url: ${url}`);
@@ -100,5 +106,22 @@ export class AppComponent {
         })
         .catch(e => this.log.error('Error starting GoogleAnalytics', e));
     }
+  }
+
+  private setupDeepLinks() {
+    this.deeplinks.route({
+      '/instant-dictation': InstantDictationPage,
+      '/search-dictation': SearchDictationPage,
+      'dictation-view/:dictationId': DictationViewPage,
+    }).subscribe((match) => {
+        // match.$route - the route we matched, which is the matched entry from the arguments to route()
+        // match.$args - the args passed in the link
+        // match.$link - the full link data
+        console.log('Successfully matched route', match);
+      },
+      (nomatch) => {
+        // nomatch.$link - the full link data
+        console.error('Got a deeplink that did not match', nomatch);
+      });
   }
 }
