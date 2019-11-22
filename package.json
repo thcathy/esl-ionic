@@ -121,7 +121,9 @@
       "ionic-plugin-deeplinks": {
         "URL_SCHEME": "com.esl.ionic",
         "DEEPLINK_SCHEME": "https",
-        "DEEPLINK_HOST": "funfunspell.com"
+        "DEEPLINK_HOST": "funfunspell.com",
+        "DEEPLINK_2_SCHEME": "https",
+        "DEEPLINK_2_HOST": "www.funfunspell.com"
       },
       "cordova-plugin-splashscreen": {}
     },

@@ -31,6 +31,7 @@
                 "output": "./svg"
               },
               "src/manifest.json",
+              "src/apple-app-site-association",
               {
                 "glob": "**/*",
                 "input": "src/.well-known",
