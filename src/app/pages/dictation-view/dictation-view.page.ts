@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Dictation} from '../../entity/dictation';
 import {AuthService} from '../../services/auth.service';
 import {DictationService} from '../../services/dictation/dictation.service';
@@ -26,7 +26,19 @@ export class DictationViewPage implements OnInit {
     public navigationService: NavigationService,
   ) { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    console.log(`called`);
+    this.route.paramMap.subscribe(
+      params => {
+        if (params.has('dictationId')) {
+          this.storage.set(NavigationService.storageKeys.dictation, null);
+          this.dictation = null;
+          console.log(`params.get('dictationId') ${params.get('dictationId')}`);
+          this.dictationService.getById(Number(params.get('dictationId'))).subscribe(d => this.dictation = d);
+        }
+      }
+    );
+  }
 
   ionViewDidEnter() {
     this.showBackButton = false;
@@ -35,14 +47,9 @@ export class DictationViewPage implements OnInit {
 
   async init() {
     this.dictation = await this.storage.get(NavigationService.storageKeys.dictation);
-    this.dictationId = await this.storage.get(NavigationService.storageKeys.dictationId);
     this.showBackButton = await this.storage.get(NavigationService.storageKeys.showBackButton);
     const toastMessage = await this.storage.get(NavigationService.storageKeys.toastMessage);
 
     if (toastMessage != null) { this.ionicComponentService.showToastMessage(toastMessage); }
-    if (this.dictation == null && this.dictationId > 0) {
-      this.dictationService.getById(this.dictationId)
-        .toPromise().then(d => this.dictation = d);
-    }
   }
 }

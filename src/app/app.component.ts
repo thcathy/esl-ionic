@@ -80,6 +80,8 @@ export class AppComponent {
 
   private setupGoogleAnalytics() {
     if (!this.appService.isCordova()) {
+      // expect deprecated as web version also build with cordova
+
       (function(i, s, o, g, r, a, m) {i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function() {
         (i[r].q = i[r].q || []).push(arguments); }, i[r].l = 1 * new Date().getMilliseconds(); a = s.createElement(o),
         m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m);
@@ -112,7 +114,7 @@ export class AppComponent {
     this.deeplinks.route({
       '/instant-dictation': InstantDictationPage,
       '/search-dictation': SearchDictationPage,
-      '/dictation-view/:dictationId': DictationViewPage,
+      '/dictation-view': DictationViewPage,
     }).subscribe((match) => {
         // match.$route - the route we matched, which is the matched entry from the arguments to route()
         // match.$args - the args passed in the link

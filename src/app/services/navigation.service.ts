@@ -51,7 +51,7 @@ export class NavigationService {
   }
 
   async startDictation(dictation: Dictation) {
-    await this.storage.set(NavigationService.storageKeys.dictationId, dictation.id);
+    // await this.storage.set(NavigationService.storageKeys.dictationId, dictation.id);
     this.storage.set(NavigationService.storageKeys.dictation, dictation).then(() => {
       if (this.dictationService.isSentenceDictation(dictation)) {
         this.router.navigate(['/article-dictation']);
@@ -74,7 +74,7 @@ export class NavigationService {
   }
 
   async openDictation(dictation: Dictation, toastMessage: string = null, showBackButton: boolean = false) {
-    await this.storage.set(NavigationService.storageKeys.dictationId, dictation.id);
+    // await this.storage.set(NavigationService.storageKeys.dictationId, dictation.id);
     await this.storage.set(NavigationService.storageKeys.toastMessage, toastMessage);
     await this.storage.set(NavigationService.storageKeys.showBackButton, showBackButton);
     this.storage.set(NavigationService.storageKeys.dictation, dictation)

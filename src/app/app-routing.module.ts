@@ -11,6 +11,7 @@ const routes: Routes = [
   { path: 'article-dictation', loadChildren: './pages/article-dictation/article-dictation.module#ArticleDictationPageModule' },
   { path: 'article-dictation-complete', loadChildren: './pages/article-dictation-complete/article-dictation-complete.module#ArticleDictationCompletePageModule' },
   { path: 'dictation-view', loadChildren: './pages/dictation-view/dictation-view.module#DictationViewPageModule' },
+  { path: 'dictation-view/:dictationId', loadChildren: './pages/dictation-view/dictation-view.module#DictationViewPageModule' },
   { path: 'account', loadChildren: './pages/account/account.module#AccountPageModule' },
   { path: 'member-home/:segment', loadChildren: './pages/member-home/member-home.module#MemberHomePageModule' },
   { path: 'edit-dictation', loadChildren: './pages/edit-dictation/edit-dictation.module#EditDictationPageModule' },
