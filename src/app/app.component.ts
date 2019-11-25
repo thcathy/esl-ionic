@@ -115,6 +115,7 @@ export class AppComponent {
       '/instant-dictation': InstantDictationPage,
       '/search-dictation': SearchDictationPage,
       '/dictation-view': DictationViewPage,
+      '/dictation-view/:dictationId': DictationViewPage,
     }).subscribe((match) => {
         // match.$route - the route we matched, which is the matched entry from the arguments to route()
         // match.$args - the args passed in the link
@@ -124,7 +125,7 @@ export class AppComponent {
       },
       (nomatch) => {
         // nomatch.$link - the full link data
-        console.error(`Got a deeplink that did not match ${JSON.stringify(nomatch.$link)}`);
+        alert(`Got a deeplink that did not match ${JSON.stringify(nomatch.$link.path)}`);
       });
   }
 }

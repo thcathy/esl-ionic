@@ -6,6 +6,7 @@ import {Storage} from '@ionic/storage';
 import {IonicComponentService} from '../../services/ionic-component.service';
 import {NavigationService} from '../../services/navigation.service';
 import {ActivatedRoute} from '@angular/router';
+import {Observable} from 'rxjs';
 
 @Component({
   selector: 'app-dictation-view',
@@ -27,14 +28,15 @@ export class DictationViewPage implements OnInit {
   ) { }
 
   ngOnInit() {
-    console.log(`called`);
     this.route.paramMap.subscribe(
       params => {
         if (params.has('dictationId')) {
-          this.storage.set(NavigationService.storageKeys.dictation, null);
-          this.dictation = null;
           console.log(`params.get('dictationId') ${params.get('dictationId')}`);
-          this.dictationService.getById(Number(params.get('dictationId'))).subscribe(d => this.dictation = d);
+          this.resetStorage()
+            .then(p => this.dictationService.getById(Number(params.get('dictationId'))).toPromise())
+            .then(d => this.storage.set(NavigationService.storageKeys.dictation, d))
+            .then(p => this.init())
+            .catch(e => console.error(e));
         }
       }
     );
@@ -45,7 +47,14 @@ export class DictationViewPage implements OnInit {
     this.init();
   }
 
+  async resetStorage() {
+    await this.storage.set(NavigationService.storageKeys.dictation, null);
+    await this.storage.set(NavigationService.storageKeys.showBackButton, false);
+    await this.storage.set(NavigationService.storageKeys.toastMessage, null);
+  }
+
   async init() {
+    console.log(`init`);
     this.dictation = await this.storage.get(NavigationService.storageKeys.dictation);
     this.showBackButton = await this.storage.get(NavigationService.storageKeys.showBackButton);
     const toastMessage = await this.storage.get(NavigationService.storageKeys.toastMessage);
