@@ -42,6 +42,8 @@ import {MemberHomePageModule} from './pages/member-home/member-home.module';
 import {GoogleAnalytics} from '@ionic-native/google-analytics/ngx';
 import { environment } from '../environments/environment';
 import { Deeplinks } from '@ionic-native/deeplinks/ngx';
+import { SocialSharing } from '@ionic-native/social-sharing/ngx';
+import {SafariViewController} from '@ionic-native/safari-view-controller/ngx';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -72,7 +74,7 @@ library.add(fas, far);
   providers: [
     StatusBar,
     SplashScreen,
-    Deeplinks,
+    Deeplinks, SocialSharing,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     NavigationService, RankingService,
     DictationService, VocabPracticeService, MemberDictationService, MemberService, SpeechService,
@@ -80,6 +82,7 @@ library.add(fas, far);
     ServerService,
     ArticleDictationService,
     TextToSpeech, InAppBrowser, GoogleAnalytics,
+    SafariViewController,
     PracticeHistoryService, IonicComponentService,
     {
       provide: HTTP_INTERCEPTORS,

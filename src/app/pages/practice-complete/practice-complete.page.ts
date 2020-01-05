@@ -101,12 +101,14 @@ export class PracticeCompletePage implements OnInit {
   getDictationThenOpen() {
     if (this.dictationService.isGeneratedDictation(this.dictation)) {
       this.navigationService.startDictation(this.dictation);
-    } else if (this.dictationService.isGeneratedDictation(this.dictation) || this.dictationService.isInstantDictation(this.dictation)) {
+    } else if (this.dictationService.isInstantDictation(this.dictation)) {
       this.openDictation(this.dictation);
     } else {
       // this.ionicComponentService.showLoading().then(l => this.loader = l);
       this.dictationService.getById(this.dictation.id)
-        .toPromise().then(d => this.openDictation(d)).catch(e => this.showCannotGetDictation(e));
+        .toPromise()
+        .then(d => this.openDictation(d))
+        .catch(e => this.showCannotGetDictation(e));
     }
   }
 
@@ -117,7 +119,7 @@ export class PracticeCompletePage implements OnInit {
 
   showCannotGetDictation(error) {
     console.warn(`Cannot get dictation: ${JSON.stringify(error)}`);
-    this.loader.dismiss();
+    if (this.loader) { this.loader.dismiss(); }
     this.ionicComponentService.showToastMessage(this.translateService.instant('Dictation not found'), 'top');
   }
 

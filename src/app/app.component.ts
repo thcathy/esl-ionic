@@ -14,8 +14,6 @@ import {NavigationService} from './services/navigation.service';
 import {AppService} from './services/app.service';
 import {NGXLogger} from 'ngx-logger';
 import {Deeplinks} from '@ionic-native/deeplinks/ngx';
-import {InstantDictationPage} from './pages/instant-dictation/instant-dictation.page';
-import {SearchDictationPage} from './pages/search-dictation/search-dictation.page';
 import {DictationViewPage} from './pages/dictation-view/dictation-view.page';
 
 declare let ga: Function;
@@ -54,10 +52,10 @@ export class AppComponent {
       this.setupGoogleAnalytics();
       this.setupDeepLinks();
 
-      (<any>window).handleOpenURL = (url) => {
-        this.log.info(`url: ${url}`);
-        Auth0Cordova.onRedirectUri(url);
-      };
+      // (window as any).handleOpenURL = (url) => {
+      //  this.log.info(`url: ${url}`);
+      //  Auth0Cordova.onRedirectUri(url);
+      // };
     });
   }
 
@@ -80,8 +78,6 @@ export class AppComponent {
 
   private setupGoogleAnalytics() {
     if (!this.appService.isCordova()) {
-      // expect deprecated as web version also build with cordova
-
       (function(i, s, o, g, r, a, m) {i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function() {
         (i[r].q = i[r].q || []).push(arguments); }, i[r].l = 1 * new Date().getMilliseconds(); a = s.createElement(o),
         m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m);
@@ -111,21 +107,25 @@ export class AppComponent {
   }
 
   private setupDeepLinks() {
+    if (!this.appService.isCordova()) { return; }
+
     this.deeplinks.route({
-      '/instant-dictation': InstantDictationPage,
-      '/search-dictation': SearchDictationPage,
-      '/dictation-view': DictationViewPage,
-      '/dictation-view/:dictationId': DictationViewPage,
-    }).subscribe((match) => {
+      '/link/dictation-view': DictationViewPage,
+      '/link/dictation-view/:dictationId': DictationViewPage,})
+      .subscribe((match) => {
         // match.$route - the route we matched, which is the matched entry from the arguments to route()
         // match.$args - the args passed in the link
         // match.$link - the full link data
-        alert(`Successfully matched route ${JSON.stringify(match.$args)}, ${JSON.stringify(match.$link)}`);
+        // alert(`Successfully matched route ${JSON.stringify(match.$args)}, ${JSON.stringify(match.$link)}`);
         this.navigationService.navigate(match.$link.path, match.$args);
       },
       (nomatch) => {
-        // nomatch.$link - the full link data
-        alert(`Got a deeplink that did not match ${JSON.stringify(nomatch.$link.path)}`);
+        if (nomatch.$link.url.includes('com.esl.ionic://thcathy.auth0.com/cordova/com.esl.ionic/callback')) {
+          console.log(`auth0 redirect`);
+          Auth0Cordova.onRedirectUri(nomatch.$link.url);
+        } else {
+          console.error(`Got a deeplink that did not match ${JSON.stringify(nomatch.$link)}`);
+        }
       });
   }
 }

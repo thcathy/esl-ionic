@@ -4,7 +4,7 @@
     "details": [
       {
         "appID": "DU483K8F48.com.esl.ionic",
-        "paths": [ "*" ]
+        "paths": [ "/link/*" ]
       }
     ]
   }
