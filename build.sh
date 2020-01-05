@@ -1,9 +1,5 @@
 set -e
 
-buildWebProd() {
-  ionic cordova build browser --prod
-}
-
 deployWebUAT() {
   firebase deploy -P batch4-161201
 }
