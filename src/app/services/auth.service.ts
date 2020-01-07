@@ -26,7 +26,6 @@ export const auth0CordovaConfig = {
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  client = new Auth0Cordova(auth0CordovaConfig);
   userProfile: any;
   idTokenKey = 'id_token';
   expiresAtKey = 'expires_at';
@@ -98,13 +97,14 @@ export class AuthService {
   }
 
   public loginCordova(signUp = false) {
+    const client = new Auth0Cordova(auth0CordovaConfig);
     const options = { scope: 'openid profile offline_access email' };
     options['languageBaseUrl'] = this.getAuth0Language();
     if (signUp) {
       options['initialScreen'] = 'signUp';
     }
 
-    this.client.authorize(options, (err, authResult) => this.handleAuthResult(this.auth0Cordova, authResult, err));
+    client.authorize(options, (err, authResult) => this.handleAuthResult(this.auth0Cordova, authResult, err));
   }
 
   private setSession(authResult): void {
