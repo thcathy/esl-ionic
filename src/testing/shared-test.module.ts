@@ -27,6 +27,8 @@ import {GoogleAnalytics} from '@ionic-native/google-analytics/ngx';
 import {AppService} from '../app/services/app.service';
 import {NGXLogger} from 'ngx-logger';
 import {NavigationService} from '../app/services/navigation.service';
+import { SocialSharing } from '@ionic-native/social-sharing/ngx';
+import { Deeplinks } from '@ionic-native/deeplinks/ngx';
 
 @NgModule({
   imports:      [
@@ -63,6 +65,8 @@ export class SharedTestModule {
         AppService,
         NavController,
         Platform,
+        SocialSharing,
+        Deeplinks,
       ]
     };
   }

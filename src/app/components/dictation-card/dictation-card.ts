@@ -7,6 +7,8 @@ import {NavigationService} from '../../services/navigation.service';
 import {DictationService} from '../../services/dictation/dictation.service';
 import {MemberDictationService} from '../../services/dictation/member-dictation.service';
 import {Router} from '@angular/router';
+import {SocialSharing} from '@ionic-native/social-sharing/ngx';
+import {AppService} from '../../services/app.service';
 
 @Component({
   selector: 'dictation-card',
@@ -37,11 +39,13 @@ export class DictationCardComponent {
 
   constructor(public router: Router,
               public navService: NavigationService,
+              public appService: AppService,
               public dictationService: DictationService,
               public memberDictationService: MemberDictationService,
               public translate: TranslateService,
               public alertController: AlertController,
-              public toastController: ToastController, ) {}
+              public toastController: ToastController,
+              public socialSharing: SocialSharing, ) {}
 
   highlightRecommend() {
     this.recommendState = 'highlight';
@@ -106,5 +110,24 @@ export class DictationCardComponent {
       buttons: [this.translate.instant('OK')]
     });
     await alert.present();
+  }
+
+  shareDictation() {
+    // this is the complete list of currently supported params you can pass to the plugin (all optional)
+    const options = {
+      message: `Dictation: ${this.dictation.title}`, // not supported on some apps (Facebook, Instagram)
+      url: `https://www.funfunspell.com/link/dictation-view/${this.dictation.id}`,
+    };
+
+    const onSuccess = function(result) {
+      console.log('Share completed? ' + result.completed); // On Android apps mostly return false even while it's true
+      console.log('Shared to app: ' + result.app); // On Android result.app since plugin version 5.4.0 this is no longer empty. On iOS it's empty when sharing is cancelled (result.completed=false)
+    };
+
+    const onError = function(msg) {
+      console.log('Sharing failed with message: ' + msg);
+    };
+
+    this.socialSharing.shareWithOptions(options).then(onSuccess).catch(onError);
   }
 }

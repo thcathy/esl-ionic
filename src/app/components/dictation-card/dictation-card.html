@@ -9,7 +9,10 @@
           <table width="95%">
             <tr *ngIf="dictation.id > 0">
               <td width="125">{{ 'ID' | translate }}</td>
-              <td><strong>{{dictation.id}}</strong> <fa-icon class="info-button" (click)="openSearchByIdPopup()" [icon]="['fas', 'info-circle']"></fa-icon></td>
+              <td>
+                <strong>{{dictation.id}}</strong>
+                <fa-icon class="info-button" (click)="openSearchByIdPopup()" [icon]="['fas', 'info-circle']"></fa-icon>
+              </td>
             </tr>
             <tr>
               <td width="125">{{ 'Title' | translate }}</td>
@@ -61,6 +64,9 @@
     </ion-grid>
     <ion-row>
       <ion-col>
+        <ion-button *ngIf="appService.isCordova() && !dictationService.isInstantDictation(dictation)" fill="outline" (click)="shareDictation()"><fa-icon [icon]="['fas', 'share-square']"></fa-icon>&nbsp;{{'Share'|translate}}</ion-button>
+      </ion-col>
+      <ion-col class="ion-text-right">
         <ion-button *ngIf="start" (click)="navService.startDictation(dictation)"><fa-icon [icon]="['fas', 'play']"></fa-icon>&nbsp;{{'Start'|translate}}</ion-button>
         <ion-button *ngIf="retry" (click)="navService.startDictation(dictation)"><fa-icon [icon]="['fas', 'redo']"></fa-icon>&nbsp;{{'Retry'|translate}}</ion-button>
       </ion-col>

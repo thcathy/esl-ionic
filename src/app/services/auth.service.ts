@@ -166,6 +166,7 @@ export class AuthService {
   private handleAuthResult(auth0WebAuth: any, authResult: any, err: any) {
     if (err) {
       this.log.error(err);
+      throw err;
     }
 
     if (authResult && authResult.accessToken && authResult.idToken) {

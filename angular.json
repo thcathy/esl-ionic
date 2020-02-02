@@ -11,7 +11,7 @@
       "schematics": {},
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-builders/custom-webpack:browser",
           "options": {
             "progress": false,
             "outputPath": "www",
@@ -19,6 +19,9 @@
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "src/tsconfig.app.json",
+            "customWebpackConfig": {
+              "path": "webpack.config.js"
+            },
             "assets": [
               {
                 "glob": "**/*",
@@ -30,7 +33,13 @@
                 "input": "node_modules/ionicons/dist/ionicons/svg",
                 "output": "./svg"
               },
-              "src/manifest.json"
+              "src/manifest.json",
+              "src/apple-app-site-association",
+              {
+                "glob": "**/*",
+                "input": "src/.well-known",
+                "output": ".well-known"
+              }
             ],
             "styles": [
               {
@@ -71,7 +80,7 @@
           }
         },
         "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
+          "builder": "@angular-builders/custom-webpack:dev-server",
           "options": {
             "browserTarget": "app:build"
           },
@@ -127,7 +136,7 @@
           }
         },
         "ionic-cordova-build": {
-          "builder": "@ionic/ng-toolkit:cordova-build",
+          "builder": "@ionic/angular-toolkit:cordova-build",
           "options": {
             "browserTarget": "app:build"
           },
@@ -138,7 +147,7 @@
           }
         },
         "ionic-cordova-serve": {
-          "builder": "@ionic/ng-toolkit:cordova-serve",
+          "builder": "@ionic/angular-toolkit:cordova-serve",
           "options": {
             "cordovaBuildTarget": "app:ionic-cordova-build",
             "devServerTarget": "app:serve"
@@ -181,13 +190,13 @@
     }
   },
   "cli": {
-    "defaultCollection": "@ionic/schematics-angular"
+    "defaultCollection": "@ionic/angular-toolkit"
   },
   "schematics": {
-    "@ionic/schematics-angular:component": {
+    "@ionic/angular-toolkit:component": {
       "styleext": "scss"
     },
-    "@ionic/schematics-angular:page": {
+    "@ionic/angular-toolkit:page": {
       "styleext": "scss"
     }
   }

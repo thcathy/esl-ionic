@@ -13,6 +13,8 @@ import Auth0Cordova from '@auth0/cordova';
 import {NavigationService} from './services/navigation.service';
 import {AppService} from './services/app.service';
 import {NGXLogger} from 'ngx-logger';
+import {Deeplinks} from '@ionic-native/deeplinks/ngx';
+import {DictationViewPage} from './pages/dictation-view/dictation-view.page';
 
 declare let ga: Function;
 
@@ -35,6 +37,7 @@ export class AppComponent {
     public storage: Storage,
     public appService: AppService,
     public googleAnalytics: GoogleAnalytics,
+    public deeplinks: Deeplinks,
     private log: NGXLogger,
   ) {
     this.authService.handleAuthentication();
@@ -47,11 +50,12 @@ export class AppComponent {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
       this.setupGoogleAnalytics();
+      this.setupDeepLinks();
 
-      (<any>window).handleOpenURL = (url) => {
-        this.log.info(`url: ${url}`);
-        Auth0Cordova.onRedirectUri(url);
-      };
+      // (window as any).handleOpenURL = (url) => {
+      //  this.log.info(`url: ${url}`);
+      //  Auth0Cordova.onRedirectUri(url);
+      // };
     });
   }
 
@@ -100,5 +104,28 @@ export class AppComponent {
         })
         .catch(e => this.log.error('Error starting GoogleAnalytics', e));
     }
+  }
+
+  private setupDeepLinks() {
+    if (!this.appService.isCordova()) { return; }
+
+    this.deeplinks.route({
+      '/link/dictation-view': DictationViewPage,
+      '/link/dictation-view/:dictationId': DictationViewPage,})
+      .subscribe((match) => {
+        // match.$route - the route we matched, which is the matched entry from the arguments to route()
+        // match.$args - the args passed in the link
+        // match.$link - the full link data
+        // alert(`Successfully matched route ${JSON.stringify(match.$args)}, ${JSON.stringify(match.$link)}`);
+        this.navigationService.navigate(match.$link.path, match.$args);
+      },
+      (nomatch) => {
+        if (nomatch.$link.url.includes('com.esl.ionic://thcathy.auth0.com/cordova/com.esl.ionic/callback')) {
+          console.log(`auth0 redirect`);
+          Auth0Cordova.onRedirectUri(nomatch.$link.url);
+        } else {
+          console.error(`Got a deeplink that did not match ${JSON.stringify(nomatch.$link)}`);
+        }
+      });
   }
 }

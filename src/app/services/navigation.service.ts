@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 
 import {Dictation} from '../entity/dictation';
 import {DictationService} from './dictation/dictation.service';
-import {convertToParamMap, Router} from '@angular/router';
+import {NavigationExtras, Router} from '@angular/router';
 import {Storage} from '@ionic/storage';
 import {VocabPracticeHistory} from '../entity/vocab-practice-history';
 import {SentenceHistory} from '../entity/sentence-history';
@@ -51,7 +51,7 @@ export class NavigationService {
   }
 
   async startDictation(dictation: Dictation) {
-    await this.storage.set(NavigationService.storageKeys.dictationId, dictation.id);
+    // await this.storage.set(NavigationService.storageKeys.dictationId, dictation.id);
     this.storage.set(NavigationService.storageKeys.dictation, dictation).then(() => {
       if (this.dictationService.isSentenceDictation(dictation)) {
         this.router.navigate(['/article-dictation']);
@@ -73,12 +73,15 @@ export class NavigationService {
     }
   }
 
-  async openDictation(dictation: Dictation, toastMessage: string = null, showBackButton: boolean = false) {
-    await this.storage.set(NavigationService.storageKeys.dictationId, dictation.id);
-    await this.storage.set(NavigationService.storageKeys.toastMessage, toastMessage);
-    await this.storage.set(NavigationService.storageKeys.showBackButton, showBackButton);
-    this.storage.set(NavigationService.storageKeys.dictation, dictation)
-      .then(() => this.router.navigate(['/dictation-view']));
+  openDictation(dictation: Dictation, toastMessage: string = null, showBackButton: boolean = false) {
+    const navigationExtras: NavigationExtras = {
+      state: {
+        dictation: JSON.stringify(dictation),
+        toastMessage: toastMessage,
+        showBackButton: showBackButton
+      }
+    };
+    return this.router.navigate(['/dictation-view'], navigationExtras);
   }
 
   pushOpenDictation(dictation: Dictation, toastMessage: string = null) {

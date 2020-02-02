@@ -1,7 +1,11 @@
 set -e
 
-buildWebProd() {
-  ionic cordova build browser --prod
+deployWebUAT() {
+  firebase deploy -P batch4-161201
+}
+
+deployWebProd() {
+  firebase deploy -P funfunspell-firebase
 }
 
 buildFirebase() {
