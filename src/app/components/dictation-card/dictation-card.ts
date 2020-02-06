@@ -2,7 +2,7 @@ import {Component, Input} from '@angular/core';
 import {Dictation} from '../../entity/dictation';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {TranslateService} from '@ngx-translate/core';
-import {AlertController, ToastController} from '@ionic/angular';
+import {AlertController, PopoverController, ToastController} from '@ionic/angular';
 import {NavigationService} from '../../services/navigation.service';
 import {DictationService} from '../../services/dictation/dictation.service';
 import {MemberDictationService} from '../../services/dictation/member-dictation.service';
@@ -36,6 +36,8 @@ export class DictationCardComponent {
   @Input() edit = false;
   @Input() showContent = true;
   recommendState = 'normal';
+  share = false;
+  dictationUrl: string;
 
   constructor(public router: Router,
               public navService: NavigationService,
@@ -45,7 +47,7 @@ export class DictationCardComponent {
               public translate: TranslateService,
               public alertController: AlertController,
               public toastController: ToastController,
-              public socialSharing: SocialSharing, ) {}
+              public socialSharing: SocialSharing) {}
 
   highlightRecommend() {
     this.recommendState = 'highlight';
@@ -113,21 +115,27 @@ export class DictationCardComponent {
   }
 
   shareDictation() {
-    // this is the complete list of currently supported params you can pass to the plugin (all optional)
-    const options = {
-      message: `Dictation: ${this.dictation.title}`, // not supported on some apps (Facebook, Instagram)
-      url: `https://www.funfunspell.com/link/dictation-view/${this.dictation.id}`,
-    };
+    this.dictationUrl = `https://www.funfunspell.com/link/dictation-view/${this.dictation.id}`;
+    if (this.appService.isCordova()) {
+      // this is the complete list of currently supported params you can pass to the plugin (all optional)
+      const options = {
+        message: `Dictation: ${this.dictation.title}`, // not supported on some apps (Facebook, Instagram)
+        url: this.dictationUrl,
+      };
 
-    const onSuccess = function(result) {
-      console.log('Share completed? ' + result.completed); // On Android apps mostly return false even while it's true
-      console.log('Shared to app: ' + result.app); // On Android result.app since plugin version 5.4.0 this is no longer empty. On iOS it's empty when sharing is cancelled (result.completed=false)
-    };
+      const onSuccess = function(result) {
+        console.log('Share completed? ' + result.completed); // On Android apps mostly return false even while it's true
+        console.log('Shared to app: ' + result.app); // On Android result.app since plugin version 5.4.0 this is no longer empty. On iOS it's empty when sharing is cancelled (result.completed=false)
+      };
 
-    const onError = function(msg) {
-      console.log('Sharing failed with message: ' + msg);
-    };
+      const onError = function(msg) {
+        console.log('Sharing failed with message: ' + msg);
+      };
 
-    this.socialSharing.shareWithOptions(options).then(onSuccess).catch(onError);
+      this.socialSharing.shareWithOptions(options).then(onSuccess).catch(onError);
+    } else {
+      this.share = !this.share;
+    }
+
   }
 }

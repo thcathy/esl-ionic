@@ -10,6 +10,8 @@
 @import "~@ionic/angular/css/text-transformation.css";
 @import "~@ionic/angular/css/flex-utils.css";
 
+@import '~@ngx-share/button/themes/modern/modern-dark-theme';
+
 /** Ionic CSS Variables **/
 :root {
   /** secondary **/ --ion-color-secondary: #4CAF50; --ion-color-secondary-rgb: 76,175,80; --ion-color-secondary-contrast: #ffffff; --ion-color-secondary-contrast-rgb: 0,0,0; --ion-color-secondary-shade: #439a46; --ion-color-secondary-tint: #5eb762;
@@ -85,6 +87,7 @@
 
 .navbar-logo {
   height: 36px;
+  width: 129.7px;
 }
 
 .toolbar-title {
@@ -103,6 +106,7 @@
 }
 
 ion-content {
+  background-color: #46c6fc;
   --background: #46c6fc linear-gradient(#cdeffe, #04b1fb);
 }
 

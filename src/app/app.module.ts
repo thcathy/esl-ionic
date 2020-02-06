@@ -14,7 +14,7 @@ import {IonicStorageModule} from '@ionic/storage';
 import {ComponentsModule} from './components/components.module';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {CommonModule} from '@angular/common';
-import {HTTP_INTERCEPTORS, HttpClient, HttpClientModule} from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClient, HttpClientJsonpModule, HttpClientModule} from '@angular/common/http';
 import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
 import {ReactiveFormsModule} from '@angular/forms';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
@@ -44,6 +44,7 @@ import { environment } from '../environments/environment';
 import { Deeplinks } from '@ionic-native/deeplinks/ngx';
 import { SocialSharing } from '@ionic-native/social-sharing/ngx';
 import {SafariViewController} from '@ionic-native/safari-view-controller/ngx';
+import {ShareButtonsModule} from '@ngx-share/buttons';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -57,9 +58,10 @@ library.add(fas, far);
   entryComponents: [],
   imports: [
     BrowserModule, IonicModule.forRoot(), AppRoutingModule,
-    BrowserAnimationsModule, CommonModule, HttpClientModule, ReactiveFormsModule,
+    BrowserAnimationsModule, CommonModule, HttpClientModule, HttpClientJsonpModule, ReactiveFormsModule,
     IonicStorageModule.forRoot(),
     FontAwesomeModule,
+    ShareButtonsModule,
     PipesModule, ComponentsModule,
     TranslateModule.forRoot({
       loader: {

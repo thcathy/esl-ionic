@@ -1,25 +1,27 @@
 import { NgModule } from '@angular/core';
 import { MemberScoreRankingComponent } from './member-score-ranking/member-score-ranking';
 import { DictationStatisticsComponent } from './dictation-statistics/dictation-statistics';
-import {TranslateModule} from "@ngx-translate/core";
+import {TranslateModule} from '@ngx-translate/core';
 import { VocabImageComponent } from './vocab-image/vocab-image';
 import { PracticeHistoryListComponent } from './practice-history-list/practice-history-list';
 import { ScoreComponent } from './score/score';
 import { DictationCardComponent } from './dictation-card/dictation-card';
 import { FooterComponent } from './footer/footer';
 import { DictationListComponent } from './dictation-list/dictation-list';
-import {PipesModule} from "../pipes/pipes.module";
+import {PipesModule} from '../pipes/pipes.module';
 import { SentenceHistoriesComponent } from './sentence-histories/sentence-histories';
 import { MemberScoreListComponent } from './member-score-list/member-score-list';
-import {MemberPracticeHistoryListComponent} from "./member-practice-history-list/member-practice-history-list";
-import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
-import {IonicModule} from "@ionic/angular";
-import {CommonModule} from "@angular/common";
-import {VocabHistoryListComponent} from "./vocab-history-list/vocab-history-list";
-import {VirtualKeyboardComponent} from "./virtual-keyboard/virtual-keyboard";
+import {MemberPracticeHistoryListComponent} from './member-practice-history-list/member-practice-history-list';
+import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
+import {IonicModule} from '@ionic/angular';
+import {CommonModule} from '@angular/common';
+import {VocabHistoryListComponent} from './vocab-history-list/vocab-history-list';
+import {VirtualKeyboardComponent} from './virtual-keyboard/virtual-keyboard';
+import {ShareButtonsModule} from '@ngx-share/buttons';
+import {HttpClientModule} from '@angular/common/http';
 
 @NgModule({
-	declarations: [MemberScoreRankingComponent,
+  declarations: [MemberScoreRankingComponent,
     DictationStatisticsComponent,
     VocabImageComponent,
     PracticeHistoryListComponent,
@@ -33,14 +35,17 @@ import {VirtualKeyboardComponent} from "./virtual-keyboard/virtual-keyboard";
     VocabHistoryListComponent,
     VirtualKeyboardComponent,
   ],
-	imports: [
-	  IonicModule,
+  imports: [
+    IonicModule,
     TranslateModule,
     PipesModule,
     FontAwesomeModule,
     CommonModule,
+    HttpClientModule,
+    ShareButtonsModule,
+
   ],
-	exports: [MemberScoreRankingComponent,
+  exports: [MemberScoreRankingComponent,
     DictationStatisticsComponent,
     VocabImageComponent,
     PracticeHistoryListComponent,

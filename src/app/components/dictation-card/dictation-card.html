@@ -64,11 +64,23 @@
     </ion-grid>
     <ion-row>
       <ion-col>
-        <ion-button *ngIf="appService.isCordova() && !dictationService.isInstantDictation(dictation)" fill="outline" (click)="shareDictation()"><fa-icon [icon]="['fas', 'share-square']"></fa-icon>&nbsp;{{'Share'|translate}}</ion-button>
+        <ion-button *ngIf="!dictationService.isInstantDictation(dictation)" fill="outline" (click)="shareDictation()"><fa-icon [icon]="['fas', 'share-square']"></fa-icon>&nbsp;{{'Share'|translate}}</ion-button>
       </ion-col>
       <ion-col class="ion-text-right">
         <ion-button *ngIf="start" (click)="navService.startDictation(dictation)"><fa-icon [icon]="['fas', 'play']"></fa-icon>&nbsp;{{'Start'|translate}}</ion-button>
         <ion-button *ngIf="retry" (click)="navService.startDictation(dictation)"><fa-icon [icon]="['fas', 'redo']"></fa-icon>&nbsp;{{'Retry'|translate}}</ion-button>
+      </ion-col>
+    </ion-row>
+    <ion-row *ngIf="share">
+      <ion-col>
+        <share-buttons [theme]="'modern-dark'"
+                       [include]="['facebook','twitter','whatsapp','line','messenger','email','copy']"
+                       [show]="'7'"
+                       [showText]="'true'"
+                       [size]="'1'"
+                       [autoSetMeta]="false"
+                       [url]="dictationUrl"
+        ></share-buttons>
       </ion-col>
     </ion-row>
     <ion-row>
