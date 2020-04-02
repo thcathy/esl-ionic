@@ -45,6 +45,7 @@ import { Deeplinks } from '@ionic-native/deeplinks/ngx';
 import { SocialSharing } from '@ionic-native/social-sharing/ngx';
 import {SafariViewController} from '@ionic-native/safari-view-controller/ngx';
 import {ShareButtonsModule} from '@ngx-share/buttons';
+import { ServiceWorkerModule } from '@angular/service-worker';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -72,6 +73,7 @@ library.add(fas, far);
     }),
     LoggerModule.forRoot(environment.logging),
     MemberHomePageModule,
+    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
   ],
   providers: [
     StatusBar,

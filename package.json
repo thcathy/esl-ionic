@@ -28,6 +28,7 @@
     "@angular/platform-browser-dynamic": "^8.2.8",
     "@angular/pwa": "^0.13.8",
     "@angular/router": "^8.2.8",
+    "@angular/service-worker": "^8.2.8",
     "@auth0/cordova": "^0.4.1",
     "@fortawesome/angular-fontawesome": "^0.3.0",
     "@fortawesome/fontawesome-svg-core": "^1.2.26",

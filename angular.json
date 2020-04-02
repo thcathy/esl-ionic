@@ -67,7 +67,9 @@
               "aot": true,
               "extractLicenses": true,
               "vendorChunk": false,
-              "buildOptimizer": true
+              "buildOptimizer": true,
+              "serviceWorker": true,
+              "ngswConfigPath": "src/ngsw-config.json"
             },
             "test": {
               "fileReplacements": [
@@ -119,7 +121,8 @@
                 "input": "src/assets",
                 "output": "/assets"
               },
-              "src/manifest.json"
+              "src/manifest.json",
+              "src/manifest.webmanifest"
             ]
           }
         },
