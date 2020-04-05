@@ -210,6 +210,12 @@ ion-menu-button {
   color: #f53d3d;
 }
 
+.leave-button {
+  span {
+    color: var(--ion-color-danger);
+  }
+}
+
 h3 {
   font-size: 1.4rem !important;
   color: #007d6f !important;

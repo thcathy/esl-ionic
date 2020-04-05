@@ -48,7 +48,7 @@ import { Deeplinks } from '@ionic-native/deeplinks/ngx';
   ]
 })
 export class SharedTestModule {
-  static forRoot(): ModuleWithProviders {
+  static forRoot(): ModuleWithProviders<SharedTestModule> {
     return {
       ngModule: SharedTestModule,
       providers: [

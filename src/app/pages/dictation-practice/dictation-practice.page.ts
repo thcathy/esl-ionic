@@ -31,7 +31,7 @@ export class DictationPracticePage implements OnInit {
   histories: VocabPracticeHistory[] = [];
   audio: Map<string, HTMLAudioElement> = new Map<string, HTMLAudioElement>();
   loading: any;
-  @ViewChild('answerElement', { static: false }) answerInput;
+  @ViewChild('answerElement') answerInput;
 
   constructor(
     public route: ActivatedRoute,

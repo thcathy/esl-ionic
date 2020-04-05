@@ -9,6 +9,7 @@ import {MemberDictationService} from '../../services/dictation/member-dictation.
 import {Router} from '@angular/router';
 import {SocialSharing} from '@ionic-native/social-sharing/ngx';
 import {AppService} from '../../services/app.service';
+import {ShareService} from '@ngx-share/core';
 
 @Component({
   selector: 'dictation-card',
@@ -47,6 +48,7 @@ export class DictationCardComponent {
               public translate: TranslateService,
               public alertController: AlertController,
               public toastController: ToastController,
+              public shareService: ShareService,
               public socialSharing: SocialSharing) {}
 
   highlightRecommend() {
@@ -68,7 +70,8 @@ export class DictationCardComponent {
         },
         {
           text: this.translate.instant('OK'),
-          handler: this.deleteDictation
+          handler: this.deleteDictation,
+          cssClass: 'leave-button'
         }
       ]
     });

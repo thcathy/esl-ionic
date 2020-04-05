@@ -17,10 +17,9 @@ import {CommonModule} from '@angular/common';
 import {HTTP_INTERCEPTORS, HttpClient, HttpClientJsonpModule, HttpClientModule} from '@angular/common/http';
 import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
 import {ReactiveFormsModule} from '@angular/forms';
-import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
+import {FontAwesomeModule, FaIconLibrary} from '@fortawesome/angular-fontawesome';
 import {PipesModule} from './pipes/pipes.module';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
-import {library} from '@fortawesome/fontawesome-svg-core';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 import { far } from '@fortawesome/free-regular-svg-icons';
 import {NavigationService} from './services/navigation.service';
@@ -51,8 +50,6 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
 }
-
-library.add(fas, far);
 
 @NgModule({
   declarations: [AppComponent],
@@ -96,4 +93,8 @@ library.add(fas, far);
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule {
+  constructor(library: FaIconLibrary) {
+    library.addIconPacks(fas, far);
+  }
+}

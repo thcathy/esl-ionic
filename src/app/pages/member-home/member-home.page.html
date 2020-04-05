@@ -4,9 +4,9 @@
     <ion-title>{{'My Records' | translate}}</ion-title>
   </ion-toolbar>
   <ion-toolbar color="primary">
-    <ion-segment #ionSegment (ionChange)="segmentChanged($event)">
-      <ion-segment-button value="dictation" [checked]="selectedSegment === 'dictation'">{{'Dictation' | translate }}</ion-segment-button>
-      <ion-segment-button value="vocabulary" [checked]="selectedSegment === 'vocabulary'">{{'Vocabulary' | translate }}</ion-segment-button>
+    <ion-segment #ionSegment (ionChange)="segmentChanged($event)" [value]="selectedSegment">
+      <ion-segment-button value="dictation">{{'Dictation' | translate }}</ion-segment-button>
+      <ion-segment-button value="vocabulary">{{'Vocabulary' | translate }}</ion-segment-button>
     </ion-segment>
   </ion-toolbar>
 </ion-header>

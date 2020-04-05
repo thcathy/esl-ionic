@@ -16,7 +16,7 @@ export class SpeechService {
 
   speak(text: string, rate = 0.7) {
     rate = Math.round(rate * 10) / 10;
-    this.log.debug(`speak ${text} in speed ${rate}`);
+    this.log.info(`speak ${text} in speed ${rate}`);
     if (this.appService.isApp()) {
       if (this.appService.isIOS()) { rate = rate * 2; }
       this.textToSpeech.speak({

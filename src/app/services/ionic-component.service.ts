@@ -49,13 +49,14 @@ export class IonicComponentService {
       message: `${this.translate.instant('Exit without saving')}?`,
       buttons: [
         {
-          text: this.translate.instant('Leave'),
-          handler: () => confirmExit$.next(true)
-        },
-        {
           text: this.translate.instant('Back'),
           handler: () => confirmExit$.next(false)
-        }
+        },
+        {
+          text: this.translate.instant('Leave'),
+          cssClass: 'leave-button',
+          handler: () => confirmExit$.next(true)
+        },
       ]
     }).then(alert => alert.present());
     return confirmExit$;
