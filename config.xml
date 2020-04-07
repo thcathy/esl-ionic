@@ -25,6 +25,7 @@
     <preference name="SplashScreenDelay" value="3000" />
     <preference name="AndroidLaunchMode" value="singleTask" />
     <preferance name="android-usesCleartextTraffic" value="true" />
+    <preference name="WKWebViewOnly" value="true" />
     <platform name="android">
         <allow-intent href="market:*" />
         <icon density="ldpi" src="resources/android/icon/drawable-ldpi-icon.png" />
