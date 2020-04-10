@@ -17,8 +17,9 @@ import {IonicModule} from '@ionic/angular';
 import {CommonModule} from '@angular/common';
 import {VocabHistoryListComponent} from './vocab-history-list/vocab-history-list';
 import {VirtualKeyboardComponent} from './virtual-keyboard/virtual-keyboard';
-import {ShareButtonsModule} from '@ngx-share/buttons';
 import {HttpClientModule} from '@angular/common/http';
+import {ShareButtonsModule} from 'ngx-sharebuttons/buttons';
+import {ShareIconsModule} from 'ngx-sharebuttons/icons';
 
 @NgModule({
   declarations: [MemberScoreRankingComponent,
@@ -42,8 +43,10 @@ import {HttpClientModule} from '@angular/common/http';
     FontAwesomeModule,
     CommonModule,
     HttpClientModule,
-    ShareButtonsModule,
-
+    ShareButtonsModule.withConfig({
+      debug: true
+    }),
+    ShareIconsModule.forRoot()
   ],
   exports: [MemberScoreRankingComponent,
     DictationStatisticsComponent,

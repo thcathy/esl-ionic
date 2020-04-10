@@ -43,8 +43,9 @@ import { environment } from '../environments/environment';
 import { Deeplinks } from '@ionic-native/deeplinks/ngx';
 import { SocialSharing } from '@ionic-native/social-sharing/ngx';
 import {SafariViewController} from '@ionic-native/safari-view-controller/ngx';
-import {ShareButtonsModule} from '@ngx-share/buttons';
 import { ServiceWorkerModule } from '@angular/service-worker';
+import {ShareButtonsModule} from 'ngx-sharebuttons/buttons';
+import {ShareIconsModule} from 'ngx-sharebuttons/icons';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -59,7 +60,10 @@ export function HttpLoaderFactory(http: HttpClient) {
     BrowserAnimationsModule, CommonModule, HttpClientModule, HttpClientJsonpModule, ReactiveFormsModule,
     IonicStorageModule.forRoot(),
     FontAwesomeModule,
-    ShareButtonsModule,
+    ShareButtonsModule.withConfig({
+      debug: true
+    }),
+    ShareIconsModule.forRoot(),
     PipesModule, ComponentsModule,
     TranslateModule.forRoot({
       loader: {

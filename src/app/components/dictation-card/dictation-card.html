@@ -73,14 +73,12 @@
     </ion-row>
     <ion-row *ngIf="share">
       <ion-col>
-        <button mat-fab shareButton="facebook" [style.backgroundColor]="shareService.prop.facebook.color">
-          <fa-icon [icon]="shareService.prop.facebook.icon" size="lg"></fa-icon>
-        </button>
+
         <share-buttons [theme]="'modern-dark'"
                        [include]="['facebook','twitter','whatsapp','line','messenger','email','copy']"
-                       [show]="'7'"
-                       [showText]="'true'"
-                       [size]="'1'"
+                       show="7"
+                       [showText]="false"
+                       size="1"
                        [autoSetMeta]="false"
                        [url]="dictationUrl"
         ></share-buttons>
