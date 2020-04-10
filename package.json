@@ -52,7 +52,7 @@
     "@ngx-share/core": "^7.1.4",
     "@ngx-translate/core": "^10.0.2",
     "@ngx-translate/http-loader": "^3.0.1",
-    "auth0-js": "^9.12.1",
+    "auth0-js": "^9.13.2",
     "cordova-android": "^8.1.0",
     "cordova-android-support-gradle-release": "^2.1.0",
     "cordova-browser": "^6.0.0",
