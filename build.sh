@@ -9,11 +9,11 @@ deployWebProd() {
 }
 
 buildFirebase() {
-  ionic build --prod --service-worker
+  ionic build --prod
 }
 
 buildios() {
- ionic cordova build ios --prod 
+ ionic cordova build ios --prod
 }
 
 buildAndroid() {
