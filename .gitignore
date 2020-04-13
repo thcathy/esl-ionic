@@ -5,6 +5,7 @@
 *.sw[mnpcod]
 *.log
 *.tmp
+*.apk
 *.tmp.*
 log.txt
 *.sublime-project

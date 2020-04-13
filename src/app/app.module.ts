@@ -8,6 +8,7 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 
 import { LoggerModule} from 'ngx-logger';
 
+import { FontAwesomeIconsModule } from './fontawesome-icons.module';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import {IonicStorageModule} from '@ionic/storage';
@@ -17,11 +18,8 @@ import {CommonModule} from '@angular/common';
 import {HTTP_INTERCEPTORS, HttpClient, HttpClientJsonpModule, HttpClientModule} from '@angular/common/http';
 import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
 import {ReactiveFormsModule} from '@angular/forms';
-import {FontAwesomeModule, FaIconLibrary} from '@fortawesome/angular-fontawesome';
 import {PipesModule} from './pipes/pipes.module';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
-import { fas } from '@fortawesome/free-solid-svg-icons';
-import { far } from '@fortawesome/free-regular-svg-icons';
 import {NavigationService} from './services/navigation.service';
 import {RankingService} from './services/ranking/ranking.service';
 import {DictationService} from './services/dictation/dictation.service';
@@ -59,7 +57,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     BrowserModule, IonicModule.forRoot(), AppRoutingModule,
     BrowserAnimationsModule, CommonModule, HttpClientModule, HttpClientJsonpModule, ReactiveFormsModule,
     IonicStorageModule.forRoot(),
-    FontAwesomeModule,
+    FontAwesomeIconsModule,
     ShareButtonsModule.withConfig({
       debug: true
     }),
@@ -97,8 +95,4 @@ export function HttpLoaderFactory(http: HttpClient) {
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule {
-  constructor(library: FaIconLibrary) {
-    library.addIconPacks(fas, far);
-  }
-}
+export class AppModule {}

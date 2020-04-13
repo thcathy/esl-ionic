@@ -29,6 +29,8 @@ import {NGXLogger} from 'ngx-logger';
 import {NavigationService} from '../app/services/navigation.service';
 import { SocialSharing } from '@ionic-native/social-sharing/ngx';
 import { Deeplinks } from '@ionic-native/deeplinks/ngx';
+import {FontAwesomeTestingModule} from '@fortawesome/angular-fontawesome/testing';
+import {FontAwesomeIconsModule} from '../app/fontawesome-icons.module';
 
 @NgModule({
   imports:      [
@@ -39,12 +41,14 @@ import { Deeplinks } from '@ionic-native/deeplinks/ngx';
     FormsModule, ReactiveFormsModule, NoopAnimationsModule,
     ComponentsModule,
     IonicModule.forRoot(),
+    FontAwesomeIconsModule,
   ],
   declarations: [ ],
   exports:      [
     CommonModule, FormsModule, ReactiveFormsModule, NoopAnimationsModule,
     TranslateModule, IonicModule,
     ComponentsModule,
+    FontAwesomeIconsModule,
   ]
 })
 export class SharedTestModule {

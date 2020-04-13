@@ -2,12 +2,12 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import {async, ComponentFixture, fakeAsync, TestBed} from '@angular/core/testing';
 
 import { ArticleDictationCompletePage } from './article-dictation-complete.page';
-import {SharedTestModule} from "../../../testing/shared-test.module";
-import {dictation1, dictation1Histories} from "../../../testing/test-data";
-import {StorageSpy} from "../../../testing/mocks-ionic";
-import {Storage} from "@ionic/storage";
-import {DictationService} from "../../services/dictation/dictation.service";
-import {ActivatedRoute, convertToParamMap} from "@angular/router";
+import {SharedTestModule} from '../../../testing/shared-test.module';
+import {dictation1, dictation1Histories} from '../../../testing/test-data';
+import {StorageSpy} from '../../../testing/mocks-ionic';
+import {Storage} from '@ionic/storage';
+import {DictationService} from '../../services/dictation/dictation.service';
+import {ActivatedRoute, convertToParamMap} from '@angular/router';
 
 describe('ArticleDictationCompletePage', () => {
   let component: ArticleDictationCompletePage;
@@ -22,11 +22,11 @@ describe('ArticleDictationCompletePage', () => {
       'dictation': dictation1,
       'histories': dictation1Histories
     };
-    let storageSpy = StorageSpy();
-    storageSpy.get.and.callFake((param) => {return params[param]});
+    const storageSpy = StorageSpy();
+    storageSpy.get.and.callFake((param) => params[param]);
 
     TestBed.configureTestingModule({
-      declarations: [ ArticleDictationCompletePage ],
+      declarations: [ ArticleDictationCompletePage,  ],
       imports: [
         SharedTestModule.forRoot(),
       ],
