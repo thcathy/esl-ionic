@@ -16,7 +16,7 @@
         <ion-col>
           <ion-button (click)="getDictationThenOpen()"><fa-icon [icon]="['fas', 'redo']"></fa-icon>&nbsp;{{'Retry'|translate}}</ion-button>
           <ion-button *ngIf="dictation && dictationService.isGeneratedDictation(dictation)" (click)="navigationService.openVocabularyStarter()">
-            <fa-icon icon="hand-pointer"></fa-icon>&nbsp;{{'Select Difficulty'|translate}}
+            <fa-icon icon="sliders-h"></fa-icon>&nbsp;{{'Select Difficulty'|translate}}
           </ion-button>
         </ion-col>
         <ion-col class="ion-text-right">

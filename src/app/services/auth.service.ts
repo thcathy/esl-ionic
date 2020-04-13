@@ -173,9 +173,9 @@ export class AuthService {
       this.showLoading();
       this.setSession(authResult);
 
-      auth0WebAuth.client.userInfo(this.accessToken, (err, profile) => {
-        if (err) {
-          console.error(`${JSON.stringify(err)}`);
+      auth0WebAuth.client.userInfo(this.accessToken, (err2, profile) => {
+        if (err2) {
+          console.error(`${JSON.stringify(err2)}`);
           this.router.navigateByUrl('/home');
         }
 

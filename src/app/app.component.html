@@ -9,7 +9,7 @@
       </ion-toolbar>
     </ion-header>
 
-    <ion-content>
+    <ion-content style="background-color: white; --background: white;">
         <ion-list>
           <ion-menu-toggle auto-hide="false">
             <ion-item (click)="navigationService.openHomePage()">
@@ -72,5 +72,5 @@
 
   </ion-menu>
 
-  <ion-router-outlet id="main"></ion-router-outlet>
+  <ion-router-outlet id="main" [swipeGesture]="false"></ion-router-outlet>
 </ion-app>
