@@ -10,7 +10,7 @@ export const environment = {
     level: NgxLoggerLevel.INFO,
   },
   //apiHost: 'https://esl-rest.funfunspell.com',
-  apiHost: 'http://Timmys-MacBook-Pro.local:8380',
+  apiHost: 'http://ubuntu.local:8190',
   maxSentenceLength: 40,
   learntVocabularyMinimumCorrect: 5,
   vocabPracticeQuestions: 3,
