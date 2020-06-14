@@ -7,6 +7,7 @@ import {Storage} from '@ionic/storage';
 import {VocabPracticeHistory} from '../entity/vocab-practice-history';
 import {SentenceHistory} from '../entity/sentence-history';
 import {Location} from '@angular/common';
+import {TranslateService} from '@ngx-translate/core';
 
 export interface NavigationRequest {
   destination: any;
@@ -25,12 +26,14 @@ export class NavigationService {
     toastMessage: 'toastMessage',
     showBackButton: 'showBackButton',
     memberHomeSegment: 'memberHomeSegment',
+    language: 'language',
   };
 
   constructor(private router: Router,
               private location: Location,
               private storage: Storage,
-              private dictationService: DictationService) {}
+              private dictationService: DictationService,
+              private translate: TranslateService) {}
 
   openHomePage() { this.navigate('/home') ; }
   openAccountPage() { this.navigate('/account'); }
@@ -110,5 +113,14 @@ export class NavigationService {
     await this.storage.set(NavigationService.storageKeys.histories, histories);
     await this.storage.set(NavigationService.storageKeys.historyStored, historyStored);
     return await this.router.navigate(['/article-dictation-complete']);
+  }
+
+  openContactUs() {
+    window.open(this.translate.instant('ContactUsUrl'), '_system');
+  }
+
+  changeLanguage(lang: string) {
+    this.translate.use(lang);
+    this.storage.set(NavigationService.storageKeys.language, lang);
   }
 }

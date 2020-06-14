@@ -30,10 +30,17 @@
                 <ion-input #answerElement [(ngModel)]="answer" type="text" inputmode="text" maxlength="30" (keyup.enter)="submitAnswer()"
                            autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></ion-input>
               </ion-item>
-              <div><virtual-keyboard (keyPress)="onKeyPress($event)" (backspace)="onBackspace($event)"></virtual-keyboard></div>
-              <div class="ion-text-right">
-                <ion-button class="submitBtn" (click)="submitAnswer()"><fa-icon icon="check"></fa-icon>&nbsp;{{'Submit'|translate}}</ion-button>
+              <div>
+                  <ion-button fill="clear" size="large"
+                              [class.grey-text]="!showKeyboard"
+                              (click)="showKeyboard=!showKeyboard">
+                    <fa-icon icon="keyboard"></fa-icon>
+                  </ion-button>
+                  <ion-button class="submitBtn ion-float-right" (click)="submitAnswer()">
+                    <fa-icon icon="check"></fa-icon>&nbsp;{{'Submit'|translate}}
+                  </ion-button>
               </div>
+              <div *ngIf="showKeyboard"><virtual-keyboard (keyPress)="onKeyPress($event)" (backspace)="onBackspace($event)"></virtual-keyboard></div>
             </ion-col>
             <ion-col size="12" size-sm="12" size-md="6">
               <vocab-image [images]="currentQuestion().picsFullPaths"></vocab-image>
@@ -45,5 +52,5 @@
 
     <practice-history-list [histories]="histories" [mark]="mark"></practice-history-list>
   </div>
-  <footer></footer>
+  <app-footer></app-footer>
 </ion-content>

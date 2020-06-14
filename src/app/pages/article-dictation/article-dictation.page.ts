@@ -20,8 +20,8 @@ export class ArticleDictationPage implements OnInit {
   mark = 0;
   answer = '';
   histories: SentenceHistory[] = [];
+  showKeyboard = true;
   @ViewChild('answerElement', { static: true }) answerInput;
-
 
   constructor(
     public articleDictationService: ArticleDictationService,

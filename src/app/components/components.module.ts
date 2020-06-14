@@ -6,7 +6,7 @@ import { VocabImageComponent } from './vocab-image/vocab-image';
 import { PracticeHistoryListComponent } from './practice-history-list/practice-history-list';
 import { ScoreComponent } from './score/score';
 import { DictationCardComponent } from './dictation-card/dictation-card';
-import { FooterComponent } from './footer/footer';
+import { FooterComponent } from './app-footer/footer';
 import { DictationListComponent } from './dictation-list/dictation-list';
 import {PipesModule} from '../pipes/pipes.module';
 import { SentenceHistoriesComponent } from './sentence-histories/sentence-histories';

@@ -1,0 +1,66 @@
+<div class="footer">
+  <ion-row style="padding-left: 1rem; padding-right: 1rem;" *ngIf="!appService.isApp()">
+    <ion-col size="6" size-sm="6" size-md="3" size-lg="3">
+      <h5><fa-icon [icon]="['fas', 'info-circle']"></fa-icon> {{'About Us'|translate}}</h5>
+      <hr>
+      <p>{{'About_Us_Content'|translate}}</p>
+      <a href="mailto: contactfunfunspell@gmail.com"><fa-icon class="square-button" [icon]="['fas', 'envelope']"></fa-icon></a>
+      <a (click)="navigationService.openContactUs()"><fa-icon class="square-button" [icon]="['fas', 'question-circle']"></fa-icon></a>
+    </ion-col>
+    <ion-col size="6" size-sm="6" size-md="3" size-lg="3">
+      <h5><fa-icon [icon]="['fas', 'link']"></fa-icon> {{'Links'|translate}}</h5>
+      <hr>
+      <ul>
+        <li><a (click)="navigationService.openHomePage()">{{'Home'|translate}}</a></li>
+      </ul>
+      <h6>{{'Dictation'|translate}}</h6>
+      <ul>
+        <li><a (click)="navigationService.openInstantDictation()">{{'Menu_Start'|translate}}</a></li>
+        <li><a (click)="navigationService.editDictation()">{{'Menu_Create'|translate}}</a></li>
+        <li><a (click)="navigationService.openSearchDictation()">{{'Menu_Search'|translate}}</a></li>
+      </ul>
+      <h6>{{'Vocabulary Practice'|translate}}</h6>
+      <ul>
+        <li><a (click)="navigationService.openVocabularyStarter()">{{'Menu_Start'|translate}}</a></li>
+        <li><a *ngIf="authService.isAuthenticated()" (click)="navigationService.openMemberHome('vocabulary')">{{'My Vocabulary'|translate}}</a></li>
+      </ul>
+    </ion-col>
+    <ion-col size="6" size-sm="6" size-md="3" size-lg="3">
+      <h5><fa-icon [icon]="['fas', 'user-circle']"></fa-icon> {{'Account'|translate}}</h5>
+      <hr>
+      <ul style="padding-inline-start: 0px;">
+        <li><a (click)="authService.signUp()">{{'Sign Up'|translate}}</a></li>
+        <li><a (click)="authService.login()">{{'Login'|translate}}</a></li>
+        <li><a *ngIf="authService.isAuthenticated()" (click)="navigationService.openAccountPage()">{{'My Account'|translate}}</a></li>
+      </ul>
+      <h5><fa-icon [icon]="['fas', 'language']"></fa-icon> {{'Language'|translate}}</h5>
+      <hr>
+      <p>
+        <span class="square-button" (click)="navigationService.changeLanguage('en')"><a>Eng</a></span>
+        <span class="square-button" (click)="navigationService.changeLanguage('zh-Hant')"><a>繁</a></span>
+        <span class="square-button" (click)="navigationService.changeLanguage('zh-Hans')"><a>简</a></span>
+      </p>
+    </ion-col>
+    <ion-col size="6" size-sm="6" size-md="3" size-lg="3">
+      <h5><fa-icon [icon]="['fas', 'mobile-alt']"></fa-icon> {{'Mobile App'|translate}}</h5>
+      <hr>
+      <p>
+        <a href="https://itunes.apple.com/us/app/funfunspell-Dictation/id1364341686?mt=8" target="_blank" rel="noopener" style=" text-decoration: none;" aria-label="Get app from Appstore">
+          <img class="appImage" src="https://linkmaker.itunes.apple.com/assets/shared/badges/en-us/appstore-lrg.svg" alt="appstore" />
+        </a>
+      </p>
+      <p>
+        <a href="https://play.google.com/store/apps/details?id=com.esl.ionic" target="_blank" rel="noopener" aria-label="Get app from google play store">
+          <img class="appImage" src="assets/img/google-play-badge.png" alt="google play store" />
+        </a>
+      </p>
+    </ion-col>
+  </ion-row>
+  <div>
+    <ion-img src="assets/img/footer_hd.png" alt="footer" style="width:100%"></ion-img>
+  </div>
+  <ion-row>
+    <ion-col style="text-align: left;">Developing by Timmy Wong</ion-col>
+    <ion-col class="ion-text-right">© 2008-2020 funfunspell.com</ion-col>
+  </ion-row>
+</div>

@@ -23,7 +23,10 @@
           <ion-button *ngIf="dictation && dictation.id > 0 && !historyStored" color="secondary" (click)="recommend()" [disabled]="recommended">
             <fa-icon [icon]="['fas', 'thumbs-up']"></fa-icon>&nbsp;{{ recommendBtnText() }}
           </ion-button>
-          <ion-button *ngIf="dictation && dictation.id <= 0 && !dictationService.isGeneratedDictation(dictation)" color="secondary" (click)="navigationService.editDictation(dictation)">
+          <ion-button
+            *ngIf="dictation && dictation.id <= 0 && !dictationService.isGeneratedDictation(dictation)"
+            (click)="navigationService.editDictation(dictation)"
+            color="secondary">
             <fa-icon [icon]="['fas', 'save']"></fa-icon>&nbsp;{{'Save'|translate}}
           </ion-button>
           <ion-button *ngIf="showOpenMyVocabulary()" color="secondary" (click)="navigationService.openMemberHome('vocabulary')">
@@ -36,5 +39,5 @@
     <dictation-card *ngIf="!dictationService.isGeneratedDictation(dictation)" #dictationCard [dictation]="dictation" [showContent]="false"></dictation-card>
     <practice-history-list [histories]="histories" [mark]="mark" ></practice-history-list>
   </div>
-  <footer></footer>
+  <app-footer></app-footer>
 </ion-content>

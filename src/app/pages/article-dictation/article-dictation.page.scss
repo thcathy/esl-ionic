@@ -1,7 +1,6 @@
 .speakButton {
   --margin-top: 0px;
   --margin-bottom: 0px;
-  --background: #69BB7B;
-  --background-activated: #59AB6B;
+  --background: var(--ion-color-primary-tint);
   --color: #ffffff;
 }

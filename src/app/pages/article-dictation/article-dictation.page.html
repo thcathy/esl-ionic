@@ -15,12 +15,16 @@
       <ion-card-content>
         <ion-grid>
           <ion-row>
-            <ion-col size="12" size-sm="12" size-md="6">
+            <ion-col>
               <ion-button shape="round" class="speakButton" (click)="speak()"><fa-icon [icon]="['fas', 'headphones']"></fa-icon>&nbsp;{{'Listen'|translate}}</ion-button>
             </ion-col>
-            <ion-col size="12" size-sm="12" size-md="6" class="ion-text-right">
-              <ion-button fill="outline" shape="round" (click)="slower()"><fa-icon [icon]="['fas', 'bicycle']"></fa-icon>&nbsp;{{'Slower'|translate}}</ion-button>
-              <ion-button fill="outline" shape="round" (click)="faster()"><fa-icon [icon]="['fas', 'rocket']"></fa-icon>&nbsp;{{'Faster'|translate}}</ion-button>
+            <ion-col class="ion-text-right">
+              <ion-button fill="outline" shape="round" color="secondary" (click)="slower()">
+                <fa-icon [icon]="['fas', 'bicycle']"></fa-icon><span class="ion-hide-md-down">&nbsp;{{'Slower'|translate}}</span>
+              </ion-button>
+              <ion-button fill="outline" shape="round" color="secondary" (click)="faster()">
+                <fa-icon [icon]="['fas', 'rocket']"></fa-icon><span class="ion-hide-md-down">&nbsp;{{'Faster'|translate}}</span>
+              </ion-button>
             </ion-col>
           </ion-row>
           <ion-row>
@@ -30,14 +34,19 @@
                 <ion-input #answerElement [(ngModel)]="answer" type="text" inputmode="verbatim" maxlength="255" (keyup.enter)="submitAnswer()"
                            autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></ion-input>
               </ion-item>
-              <div><virtual-keyboard (keyPress)="onKeyPress($event)" (backspace)="onBackspace($event)"></virtual-keyboard></div>
             </ion-col>
           </ion-row>
-          <ion-row>
-            <ion-col class="ion-text-right">
-              <ion-button class="submitButton" (click)="submitAnswer()"><fa-icon icon="check"></fa-icon>&nbsp;{{'Submit'|translate}}</ion-button>
-            </ion-col>
-          </ion-row>
+          <div>
+            <ion-button fill="clear" size="large"
+                        [class.grey-text]="!showKeyboard"
+                        (click)="showKeyboard=!showKeyboard">
+              <fa-icon icon="keyboard"></fa-icon>
+            </ion-button>
+            <ion-button class="submitBtn ion-float-right" (click)="submitAnswer()">
+              <fa-icon icon="check"></fa-icon>&nbsp;{{'Submit'|translate}}
+            </ion-button>
+          </div>
+          <div *ngIf="showKeyboard"><virtual-keyboard (keyPress)="onKeyPress($event)" (backspace)="onBackspace($event)"></virtual-keyboard></div>
         </ion-grid>
       </ion-card-content>
     </ion-card>
@@ -45,5 +54,5 @@
     <sentence-histories [histories]="histories"></sentence-histories>
 
   </div>
-  <footer></footer>
+  <app-footer></app-footer>
 </ion-content>

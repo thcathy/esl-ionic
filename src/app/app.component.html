@@ -53,12 +53,12 @@
             </ion-item>
 
             <ion-item-divider><ion-label>{{ 'Language' | translate }}</ion-label></ion-item-divider>
-            <ion-item (click)="changeLanguage('en')"><ion-label>Eng</ion-label></ion-item>
-            <ion-item (click)="changeLanguage('zh-Hant')"><ion-label>繁體</ion-label></ion-item>
-            <ion-item (click)="changeLanguage('zh-Hans')"><ion-label>简体</ion-label></ion-item>
+            <ion-item (click)="navigationService.changeLanguage('en')"><ion-label>Eng</ion-label></ion-item>
+            <ion-item (click)="navigationService.changeLanguage('zh-Hant')"><ion-label>繁體</ion-label></ion-item>
+            <ion-item (click)="navigationService.changeLanguage('zh-Hans')"><ion-label>简体</ion-label></ion-item>
 
             <ion-item-divider></ion-item-divider>
-            <ion-item (click)="openContactUs()">
+            <ion-item (click)="navigationService.openContactUs()">
               <ion-label>{{'Contact Us'|translate}}</ion-label>
               <fa-icon class="ion-float-end" [icon]="['fas', 'external-link-alt']"></fa-icon>
             </ion-item>

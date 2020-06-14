@@ -51,5 +51,6 @@
   "CharactersTooShort": " cannot less than {{length}} characters",
   "CharactersTooLong": " cannot over {{length}} characters",
   "ContactUsUrl": "https://goo.gl/forms/XtQdla9UKYDlAiRl2",
-  "LastTimesPractice": "Last {{times}} Practice Results"
+  "LastTimesPractice": "Last {{times}} Practice Results",
+  "About_Us_Content": "We provide free English vocabulary exercise or create vocabulary exercise yourself. Totally free without advertisement. Program can speak any English word or sentence, also provides image and phonetic symbols when learning vocabulary."
 }

@@ -9,7 +9,7 @@
           <!--<ion-badge item-start style="margin: 0px; margin-right: 4px;">{{ histories.length - i }}</ion-badge>-->
           <ion-label>
             <p><span *ngFor="let word of history.questionSegments; let j = index"
-                     [class.green]="history.isCorrect[j]"
+                     [class.green-text]="history.isCorrect[j]"
                      [class.red]="!history.isCorrect[j]">{{word}}&nbsp;</span></p>
             <p>{{history.answer}} &nbsp;</p>
           </ion-label>

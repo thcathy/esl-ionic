@@ -2,8 +2,7 @@
   --width: 150px;
   --margin-top: 0px;
   --margin-bottom: 0px;
-  --background: #e91e63;
-  --background-activated: #d90e53;
+  --background: var(--ion-color-primary-tint);
   --color: #ffffff;
 }
 
@@ -11,8 +10,7 @@
   --width: 150px;
   --margin-top: 0px;
   --margin-bottom: 0px;
-  --background: #69BB7B;
-  --background-activated: #59AB6B;
+  --background: var(--ion-color-primary-tint);
   --color: #ffffff;
 }
 

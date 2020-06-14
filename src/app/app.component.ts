@@ -24,7 +24,6 @@ declare let ga: Function;
 })
 export class AppComponent {
   defaultLanguage = 'en';
-  languageKey = 'language';
 
   constructor(
     public platform: Platform,
@@ -62,18 +61,9 @@ export class AppComponent {
   private initLanguage() {
     this.translate.addLangs(['en', 'zh-Hans', 'zh-Hant']);
     this.translate.setDefaultLang(this.defaultLanguage);
-    this.storage.get(this.languageKey).then(locale => {
+    this.storage.get(NavigationService.storageKeys.language).then(locale => {
       if (locale != null) { this.translate.use(locale); }
     });
-  }
-
-  changeLanguage(lang: string) {
-    this.translate.use(lang);
-    this.storage.set(this.languageKey, lang);
-  }
-
-  openContactUs() {
-    window.open(this.translate.instant('ContactUsUrl'), '_system');
   }
 
   private setupGoogleAnalytics() {
@@ -111,7 +101,8 @@ export class AppComponent {
 
     this.deeplinks.route({
       '/link/dictation-view': DictationViewPage,
-      '/link/dictation-view/:dictationId': DictationViewPage,})
+      '/link/dictation-view/:dictationId': DictationViewPage
+    })
       .subscribe((match) => {
         // match.$route - the route we matched, which is the matched entry from the arguments to route()
         // match.$args - the args passed in the link

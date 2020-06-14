@@ -1,0 +1,79 @@
+.footer {
+  margin-top: 8px;
+  padding-bottom: 4px;
+  position: absolute;
+  width: 100%;
+  color: #ffffff;
+  background-color: var(--ion-color-primary-shade);
+  font-size: 0.8rem;
+  line-height:20px;
+  font-family: Roboto,sans-serif;
+  text-align: center;
+}
+
+.footer h5 {
+  font-size:1.1rem !important;
+  text-transform:uppercase;
+  letter-spacing: 0.05rem;
+}
+
+.footer h6 {
+  padding-top: 0px;
+  padding-bottom: 0px;
+  font-size: 1.1rem !important;
+  font-weight: bold;
+}
+
+.footer hr
+{
+  width: 10rem;
+  margin-bottom: 0.5rem!important;
+  margin-top: 0!important;
+  border-top: 1px solid white;
+  background: white;
+}
+
+.footer ul {
+  margin-block-start: 0px;
+  margin-block-end: 0px;
+  padding-inline-start: 0;
+}
+
+.footer li {
+  display:block;
+  line-height: 1.6rem;
+  font-size: 0.9rem;
+}
+
+.footer a {
+  color: white;
+  cursor: pointer;
+}
+
+.footer a:hover {
+  color: var(--ion-color-secondary-tint);
+  text-decoration:none;
+  cursor: pointer;
+}
+
+.footer a:active,.footer-links a:focus,.footer-links a:hover
+{
+  color: var(--ion-color-secondary-tint);
+  text-decoration:none;
+}
+.footer-links.inline li
+{
+  display:inline-block
+}
+
+.square-button {
+  padding: 1rem;
+  font-size: 1.2rem;
+}
+
+.appImage {
+  max-width: 135px;
+  align-items: center;
+  margin: auto;
+  display: block;
+}

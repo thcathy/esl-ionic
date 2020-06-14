@@ -5,7 +5,7 @@
   <ion-card-content>
     <ion-list>
       <ion-item *ngFor="let dictation of stat.dictations; let i = index">
-        <ion-badge item-start style="background-color: #4CAF50; margin: 0px;">{{ i+1 }}</ion-badge>
+        <ion-badge item-start style="background-color: var(--ion-color-secondary); margin: 0px;">{{ i+1 }}</ion-badge>
         <ion-label>
           <ion-row class="sub-row">
             <ion-col>{{ dictation.title | truncate:20 }}</ion-col>
