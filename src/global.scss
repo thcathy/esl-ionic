@@ -157,6 +157,10 @@ ion-content {
   [item-end] {
     margin: 0px;
   }
+
+  td {
+    word-break: break-all;
+  }
 }
 
 ion-menu-button {
