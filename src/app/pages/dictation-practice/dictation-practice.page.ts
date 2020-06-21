@@ -13,6 +13,7 @@ import {NavigationService} from '../../services/navigation.service';
 import {ActivatedRoute} from '@angular/router';
 import {MemberVocabulary} from "../../entity/member-vocabulary";
 import {NGXLogger} from 'ngx-logger';
+import {UIOptionsService} from '../../services/ui-options.service';
 
 @Component({
   selector: 'app-dictation-practice',
@@ -44,10 +45,13 @@ export class DictationPracticePage implements OnInit {
     public navigationService: NavigationService,
     public ionicComponentService: IonicComponentService,
     public storage: Storage,
+    public uiOptionsService: UIOptionsService,
     private log: NGXLogger,
   ) { }
 
   ngOnInit() {
+    this.uiOptionsService.loadOption(UIOptionsService.keys.disableKeyboard)
+      .then(v => this.showKeyboard = !v);
   }
 
   ionViewDidEnter() {
@@ -172,6 +176,11 @@ export class DictationPracticePage implements OnInit {
 
       this.loading.dismiss();
     }
+  }
+
+  clickShowKeyboard() {
+    this.showKeyboard = !this.showKeyboard;
+    this.uiOptionsService.saveOption(UIOptionsService.keys.disableKeyboard, !this.showKeyboard);
   }
 
   sleep(ms = 0) { return new Promise(r => setTimeout(r, ms)); }

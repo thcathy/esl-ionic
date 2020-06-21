@@ -6,6 +6,7 @@ import {SpeechService} from '../../services/speech.service';
 import {NavigationService} from '../../services/navigation.service';
 import {Storage} from '@ionic/storage';
 import {NGXLogger} from 'ngx-logger';
+import {UIOptionsService} from '../../services/ui-options.service';
 
 @Component({
   selector: 'app-article-dictation',
@@ -28,10 +29,14 @@ export class ArticleDictationPage implements OnInit {
     public speechService: SpeechService,
     public storage: Storage,
     public navigationService: NavigationService,
+    public uiOptionsService: UIOptionsService,
     private log: NGXLogger,
   ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.uiOptionsService.loadOption(UIOptionsService.keys.disableKeyboard)
+      .then(v => this.showKeyboard = !v);
+  }
 
   clearVariables() {
     this.currentSentence = 0;
@@ -92,6 +97,11 @@ export class ArticleDictationPage implements OnInit {
 
   onBackspace(any) {
     this.answer = this.answer.slice(0, this.answer.length - 1);
+  }
+
+  clickShowKeyboard() {
+    this.showKeyboard = !this.showKeyboard;
+    this.uiOptionsService.saveOption(UIOptionsService.keys.disableKeyboard, !this.showKeyboard);
   }
 
 }
