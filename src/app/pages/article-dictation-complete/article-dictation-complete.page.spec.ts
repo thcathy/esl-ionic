@@ -4,10 +4,11 @@ import {async, ComponentFixture, fakeAsync, TestBed} from '@angular/core/testing
 import { ArticleDictationCompletePage } from './article-dictation-complete.page';
 import {SharedTestModule} from '../../../testing/shared-test.module';
 import {dictation1, dictation1Histories} from '../../../testing/test-data';
-import {StorageSpy} from '../../../testing/mocks-ionic';
+import {ManageVocabHistoryServiceSpy, StorageSpy} from '../../../testing/mocks-ionic';
 import {Storage} from '@ionic/storage';
 import {DictationService} from '../../services/dictation/dictation.service';
 import {ActivatedRoute, convertToParamMap} from '@angular/router';
+import {ManageVocabHistoryService} from '../../services/member/manage-vocab-history.service';
 
 describe('ArticleDictationCompletePage', () => {
   let component: ArticleDictationCompletePage;
@@ -34,6 +35,7 @@ describe('ArticleDictationCompletePage', () => {
       providers: [
         { provide: DictationService, useValue: dictationServiceSpy},
         { provide: Storage, useValue: storageSpy },
+        { provide: ManageVocabHistoryService, useValue: ManageVocabHistoryServiceSpy},
         { provide: ActivatedRoute, useValue: {
             snapshot: {
               queryParamMap: convertToParamMap({

@@ -2,10 +2,11 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import {async, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
 
 import { SearchDictationPage } from './search-dictation.page';
-import {SharedTestModule} from "../../../testing/shared-test.module";
-import {StorageSpy} from "../../../testing/mocks-ionic";
-import {Storage} from "@ionic/storage";
-import {ActivatedRoute, convertToParamMap} from "@angular/router";
+import {SharedTestModule} from '../../../testing/shared-test.module';
+import {ManageVocabHistoryServiceSpy, StorageSpy} from '../../../testing/mocks-ionic';
+import {Storage} from '@ionic/storage';
+import {ActivatedRoute, convertToParamMap} from '@angular/router';
+import {ManageVocabHistoryService} from '../../services/member/manage-vocab-history.service';
 
 describe('SearchDictationPage', () => {
   let component: SearchDictationPage;
@@ -24,6 +25,7 @@ describe('SearchDictationPage', () => {
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [
         { provide: Storage, useValue: storageSpy },
+        { provide: ManageVocabHistoryService, useValue: ManageVocabHistoryServiceSpy},
       ]
     })
     .compileComponents();
@@ -84,7 +86,7 @@ describe('SearchDictationPage', () => {
   }));
 
   it('keep last 10 history at max', fakeAsync(() => {
-    for (let i=0; i < 15; i++) {
+    for (let i = 0; i < 15; i++) {
       component.keyword.setValue(`new search ${i}`);
       component.search();
       tick();
@@ -94,7 +96,7 @@ describe('SearchDictationPage', () => {
   }));
 
   it('showHistory only contain history which is started with input keyword', () => {
-    component.history = ['apple','banana','await'];
+    component.history = ['apple', 'banana', 'await'];
     component.keyword.setValue('a');
     component.filterHistory(null);
 
