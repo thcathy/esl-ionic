@@ -1,5 +1,5 @@
 import {Component, Input} from '@angular/core';
-import {MemberScore} from "../../entity/member-score";
+import {MemberScore} from '../../entity/member-score';
 
 @Component({
   selector: 'member-score-list',
@@ -9,7 +9,7 @@ import {MemberScore} from "../../entity/member-score";
 export class MemberScoreListComponent {
   @Input() allTimesScore: MemberScore;
   @Input() scores: MemberScore[];
-
+  @Input() loading: boolean;
 
   constructor() {}
 

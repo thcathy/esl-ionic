@@ -1,8 +1,9 @@
-<ion-card class="card list" style="margin-top: 12px;" *ngIf="histories">
+<ion-card class="card list" style="margin-top: 12px;">
   <ion-card-header>
     <fa-icon [icon]="['fas', 'edit']"></fa-icon> {{ 'LastTimesPractice' | translate: { times: histories.length} }}
   </ion-card-header>
   <ion-card-content>
+    <ion-progress-bar *ngIf="loading" type="indeterminate"></ion-progress-bar>
     <ion-list>
       <ion-item *ngFor="let h of histories; let i = index">
         <ion-label>

@@ -16,6 +16,7 @@ export class VocabHistoryListComponent implements OnChanges {
   @Input() icon: string;
   @Input() showReview: boolean;
   @Input() infoText: string;
+  @Input() loading: boolean;
   @Output() click = new EventEmitter<string>();
 
   viewVocabs: Array<MemberVocabulary>;

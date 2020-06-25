@@ -4,6 +4,7 @@
     <fa-icon [icon]="['fas', 'trophy']"></fa-icon> {{ 'My Scores' | translate }}
   </ion-card-header>
   <ion-card-content>
+    <ion-progress-bar *ngIf="loading" type="indeterminate"></ion-progress-bar>
     <ion-list>
       <ion-item *ngIf="allTimesScore">
         <ion-label>{{ 'Full' | translate }}</ion-label>

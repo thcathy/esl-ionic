@@ -15,17 +15,21 @@
   <ion-grid>
     <ion-row>
       <ion-col size="12" size-sm="12" size-md="12" size-lg="6">
-        <member-score-list [allTimesScore]="allTimesScore" [scores]="latestScore"></member-score-list>
-        <member-practice-history-list *ngIf="selectedSegment === 'dictation'" [histories]="practiceHistories"></member-practice-history-list>
+        <member-score-list [allTimesScore]="allTimesScore" [scores]="latestScore" [loading]="loadingAllTimesAndLast6Score"></member-score-list>
+        <member-practice-history-list *ngIf="selectedSegment === 'dictation'" [histories]="practiceHistories" [loading]="loadingPracticeHistories"></member-practice-history-list>
       </ion-col>
       <ion-col size="12" size-sm="12" size-md="12" size-lg="6" *ngIf="selectedSegment === 'dictation'">
-        <dictation-list [dictations]="createdDictations" showCreateButton="true" title="My Dictation Created"></dictation-list>
+        <dictation-list [dictations]="createdDictations" [loading]="loadingCreatedDictations"
+                        showCreateButton="true" title="My Dictation Created">
+        </dictation-list>
       </ion-col>
       <ion-col size="12" size-sm="12" size-md="12" size-lg="6" *ngIf="selectedSegment === 'vocabulary'">
-        <app-vocab-history-list [vocabs]="learntVocabs" title="Learnt" icon="check-circle"></app-vocab-history-list>
+        <app-vocab-history-list [vocabs]="learntVocabs" [loading]="loadingVocabHistory"
+                                title="Learnt" icon="check-circle">
+        </app-vocab-history-list>
       </ion-col>
       <ion-col size="12" size-sm="12" size-md="12" size-lg="6" *ngIf="selectedSegment === 'vocabulary'">
-        <app-vocab-history-list [vocabs]="answeredBeforeVocabs"
+        <app-vocab-history-list [vocabs]="answeredBeforeVocabs" [loading]="loadingVocabHistory"
                             title="Answered Before"
                             icon="times-circle"
                             infoText="Not include learnt"

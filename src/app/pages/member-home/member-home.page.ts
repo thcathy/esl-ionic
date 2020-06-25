@@ -11,6 +11,8 @@ import {MemberVocabulary} from '../../entity/member-vocabulary';
 import {NavigationService} from '../../services/navigation.service';
 import {ActivatedRoute} from '@angular/router';
 import {NGXLogger} from 'ngx-logger';
+import 'rxjs-compat/add/operator/finally';
+import {delay, finalize} from 'rxjs/operators';
 
 @Component({
   selector: 'app-member-home',
@@ -18,14 +20,16 @@ import {NGXLogger} from 'ngx-logger';
   styleUrls: ['./member-home.page.scss'],
 })
 export class MemberHomePage implements OnInit {
-  createdDictations: Dictation[];
+  createdDictations = [] as Dictation[];
   allTimesScore: MemberScore;
-  latestScore: MemberScore[];
-  practiceHistories: PracticeHistory[];
+  latestScore = [] as MemberScore[];
+  practiceHistories = [] as PracticeHistory[];
   selectedSegment: String;
   learntVocabs: Map<string, MemberVocabulary> = new Map<string, MemberVocabulary>();
   answeredBeforeVocabs: Map<string, MemberVocabulary> = new Map<string, MemberVocabulary>();
   @ViewChild('ionSegment', { static: true }) ionSegment;
+  loadingAllTimesAndLast6Score: boolean; loadingPracticeHistories: boolean;
+  loadingCreatedDictations: boolean; loadingVocabHistory: boolean;
 
   constructor(
     public memberDictationService: MemberDictationService,
@@ -40,10 +44,6 @@ export class MemberHomePage implements OnInit {
 
   ngOnInit() {
     this.log.info(`${this.selectedSegment}`);
-    this.manageVocabHistoryService.loadFromServer().then(_p => {
-      this.learntVocabs = this.manageVocabHistoryService.learntVocabs;
-      this.answeredBeforeVocabs = this.manageVocabHistoryService.answeredBefore;
-    });
   }
 
   ionViewDidEnter() {
@@ -53,18 +53,38 @@ export class MemberHomePage implements OnInit {
       if (params.segment) { this.selectedSegment = params.segment; }
       this.ionSegment.value = this.selectedSegment;
     });
-    this.createdDictations = [];
-    this.allTimesScore = null;
-    this.latestScore = [];
-    this.practiceHistories = [];
+    // this.createdDictations = [];
+    // this.allTimesScore = null;
+    // this.latestScore = [];
+    // this.practiceHistories = [];
     this.init();
   }
 
   async init() {
-    this.rankingService.allTimesAndLast6Score().subscribe(s => this.setScores(s));
-    this.practiceHistoryService.getAll().subscribe(s => this.practiceHistories = s);
-    this.memberDictationService.getAllDictation().subscribe(dictations => {
+    this.loadingAllTimesAndLast6Score = true;
+    this.loadingPracticeHistories = true;
+    this.loadingCreatedDictations = true;
+    this.loadingVocabHistory = true;
+
+    this.rankingService.allTimesAndLast6Score().pipe(
+      finalize(() => this.loadingAllTimesAndLast6Score = false),
+    ).subscribe(s => this.setScores(s));
+
+    this.practiceHistoryService.getAll().pipe(
+      finalize(() => this.loadingPracticeHistories = false),
+    ).subscribe(s => this.practiceHistories = s);
+
+    this.memberDictationService.getAllDictation().pipe(
+      finalize(() => this.loadingCreatedDictations = false),
+    ).subscribe(dictations => {
       this.createdDictations = dictations;
+    });
+
+    this.manageVocabHistoryService.loadFromServer()
+      .finally(() => this.loadingVocabHistory = false)
+      .then(_p => {
+      this.learntVocabs = this.manageVocabHistoryService.learntVocabs;
+      this.answeredBeforeVocabs = this.manageVocabHistoryService.answeredBefore;
     });
   }
 

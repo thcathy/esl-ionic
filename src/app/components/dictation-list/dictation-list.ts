@@ -13,6 +13,7 @@ export class DictationListComponent implements OnChanges {
   @Input() dictations: Array<Dictation>;
   @Input() showCreateButton: boolean;
   @Input() title: string;
+  @Input() loading: boolean;
 
   viewDictations: Array<Dictation>;
   page: number;

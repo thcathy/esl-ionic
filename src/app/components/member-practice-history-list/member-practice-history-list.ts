@@ -1,9 +1,9 @@
 import {Component, Input} from '@angular/core';
-import {PracticeHistory} from "../../entity/practice-models";
-import {ValidationUtils} from "../../utils/validation-utils";
-import {NavigationService} from "../../services/navigation.service";
-import {DictationService} from "../../services/dictation/dictation.service";
-import {Router} from "@angular/router";
+import {PracticeHistory} from '../../entity/practice-models';
+import {ValidationUtils} from '../../utils/validation-utils';
+import {NavigationService} from '../../services/navigation.service';
+import {DictationService} from '../../services/dictation/dictation.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'member-practice-history-list',
@@ -12,6 +12,7 @@ import {Router} from "@angular/router";
 })
 export class MemberPracticeHistoryListComponent {
   @Input() histories: PracticeHistory[];
+  @Input() loading: boolean;
 
   constructor(
     public router: Router,
@@ -20,7 +21,7 @@ export class MemberPracticeHistoryListComponent {
   ) {}
 
   getDictationTitle(historyJSON: string) {
-    if (ValidationUtils.isBlankString(historyJSON)) return '';
+    if (ValidationUtils.isBlankString(historyJSON)) { return ''; }
 
     const history = JSON.parse(historyJSON);
     return history.dictation.title;

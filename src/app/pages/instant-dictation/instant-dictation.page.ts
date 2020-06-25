@@ -77,6 +77,8 @@ export class InstantDictationPage implements OnInit {
             this.vocabs.at(i).patchValue(dictation.vocabs[i]);
           }
         }
+        const vocab0Element = document.getElementById('vocab0');
+        vocab0Element.scrollIntoView();
       }
     });
   }
