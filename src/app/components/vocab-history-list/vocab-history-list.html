@@ -10,7 +10,7 @@
     <ion-list>
       <ion-item *ngFor="let vocab of viewVocabs; let i = index">
         <ion-label>
-          <ion-row>
+          <ion-row [@move]="state" (@move.done)="onDone($event)">
             <ion-col class="heading">{{vocab.id.word}}</ion-col>
             <ion-col class="ion-text-right">
               <span class="green-text"><fa-icon [icon]="['fas', 'check']"></fa-icon> {{vocab.correct}}</span>

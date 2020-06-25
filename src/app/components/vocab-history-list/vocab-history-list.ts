@@ -1,12 +1,25 @@
 import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {MemberVocabulary} from '../../entity/member-vocabulary';
-import {AlertController} from "@ionic/angular";
-import {TranslateService} from "@ngx-translate/core";
+import {AlertController} from '@ionic/angular';
+import {TranslateService} from '@ngx-translate/core';
+import {animate, state, style, transition, trigger} from '@angular/animations';
 
 @Component({
   selector: 'app-vocab-history-list',
   templateUrl: 'vocab-history-list.html',
   styleUrls: ['vocab-history-list.scss'],
+  animations: [
+    trigger('move', [
+      state('center', style({ transform: 'translateX(0%)' })),
+      state('left', style({ transform: 'translateX(-200%)' })),
+      state('right', style({ transform: 'translateX(200%)' })),
+      state('left-end', style({ transform: 'translateX(-200%)' })),
+      state('right-end', style({ transform: 'translateX(200%)' })),
+      transition('center <=> *', [
+        animate(250)
+      ])
+    ])
+  ]
 })
 export class VocabHistoryListComponent implements OnChanges {
   private vocabPerPage = 10;
@@ -22,6 +35,7 @@ export class VocabHistoryListComponent implements OnChanges {
   viewVocabs: Array<MemberVocabulary>;
   page: number;
   showNext: boolean;
+  state = 'center';
 
   vocabComparator = (a: [string, MemberVocabulary], b: [string, MemberVocabulary]) => {
     if (b[1].correct === a[1].correct) {
@@ -49,14 +63,14 @@ export class VocabHistoryListComponent implements OnChanges {
 
   next() {
     this.page++;
-    this.sliceVocabs();
     this.showNext = this.vocabs.size > this.vocabPerPage * (this.page + 1);
+    this.state = 'right';
   }
 
   previous() {
     this.page--;
-    this.sliceVocabs();
     this.showNext = true;
+    this.state = 'left';
   }
 
   sliceVocabs() {
@@ -80,4 +94,16 @@ export class VocabHistoryListComponent implements OnChanges {
     });
     await alert.present();
   }
+
+  onDone($event) {
+    this.sliceVocabs();
+    if (this.state === 'left') {
+      this.state = 'right-end';
+    } else if (this.state === 'right') {
+      this.state = 'left-end';
+    } else if (this.state.endsWith('-end')) {
+    this.state = 'center';
+    }
+  }
+
 }

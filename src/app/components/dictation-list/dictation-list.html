@@ -7,7 +7,7 @@
     <div class="ion-text-center" *ngIf="dictations?.length == 0" style="padding: 16px;">{{ 'No dictation' | translate}}</div>
     <ion-list>
       <ion-item *ngFor="let dictation of viewDictations; let i = index">
-        <ion-label>
+        <ion-label [@move]="state" (@move.done)="onDone($event)">
           <ion-row>
             <ion-col class="heading">{{dictation.title}}</ion-col>
             <ion-col class="ion-text-right">{{ dictation.createdDate | date: 'yyyy-MM-dd' }}</ion-col>

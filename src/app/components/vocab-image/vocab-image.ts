@@ -1,5 +1,5 @@
 import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
-import {animate, state, style, transition, trigger} from "@angular/animations";
+import {animate, state, style, transition, trigger} from '@angular/animations';
 
 @Component({
   selector: 'vocab-image',
@@ -22,7 +22,7 @@ export class VocabImageComponent implements OnChanges {
   @Input() images: string[];
   index: number;
   state = 'center';
-  imageBase64: string = '';
+  imageBase64 = '';
 
   constructor() {
     this.index = 0;
@@ -36,23 +36,25 @@ export class VocabImageComponent implements OnChanges {
   nextImage() {
     this.state = 'right';
     this.index++;
-    if (this.index >= this.images.length) this.index=0;
+    if (this.index >= this.images.length) { this.index = 0; }
   }
 
   previousImage() {
     this.state = 'left';
     this.index--;
-    if (this.index < 0)
+    if (this.index < 0) {
       this.index = this.images.length - 1;
+    }
   }
 
   onDone($event) {
     this.imageBase64 = this.images[this.index];
-    if (this.state === 'left')
+    if (this.state === 'left') {
       this.state = 'right-end';
-    else if (this.state === 'right')
+    } else if (this.state === 'right') {
       this.state = 'left-end';
-    else if (this.state.endsWith('-end'))
+    } else if (this.state.endsWith('-end')) {
       this.state = 'center';
+    }
   }
 }
