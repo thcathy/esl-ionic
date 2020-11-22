@@ -5,7 +5,7 @@
   <ion-card-content>
     <ion-progress-bar *ngIf="loading" type="indeterminate"></ion-progress-bar>
     <div class="ion-text-center" *ngIf="dictations?.length == 0" style="padding: 16px;">{{ 'No dictation' | translate}}</div>
-    <ion-list>
+    <ion-list id="dictation-list">
       <ion-item *ngFor="let dictation of viewDictations; let i = index">
         <ion-label [@move]="state" (@move.done)="onDone($event)">
           <ion-row>

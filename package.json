@@ -1,6 +1,6 @@
 {
   "name": "FunFunSpell",
-  "version": "6.0.0",
+  "version": "6.1.0",
   "author": "thcathy",
   "homepage": "https://www.funfunspell.com",
   "scripts": {
@@ -43,7 +43,7 @@
     "@ionic-native/splash-screen": "^5.23.0",
     "@ionic-native/status-bar": "^5.23.0",
     "@ionic-native/text-to-speech": "^5.23.0",
-    "@ionic/angular": "^5.0.7",
+    "@ionic/angular": "^5.2.3",
     "@ionic/lab": "^3.1.3",
     "@ionic/storage": "^2.2.0",
     "@ngx-translate/core": "^12.1.2",
@@ -58,13 +58,11 @@
     "cordova-plugin-device": "^2.0.2",
     "cordova-plugin-google-analytics": "~1.9.0",
     "cordova-plugin-inappbrowser": "^3.2.0",
-    "cordova-plugin-ionic-keyboard": "^2.1.3",
     "cordova-plugin-ionic-webview": "^4.1.3",
     "cordova-plugin-safariviewcontroller": "^1.6.0",
     "cordova-plugin-splashscreen": "^5.0.3",
     "cordova-plugin-tts": "^0.2.3",
     "cordova-plugin-whitelist": "^1.3.3",
-    "cordova-plugin-wkwebview-engine": "^1.2.1",
     "cordova-plugin-x-socialsharing": "^5.6.4",
     "cordova-sqlite-storage": "^5.0.0",
     "core-js": "^3.6.4",
@@ -115,7 +113,6 @@
       "cordova-plugin-tts": {},
       "cordova-plugin-whitelist": {},
       "cordova-plugin-device": {},
-      "cordova-plugin-ionic-keyboard": {},
       "cordova-plugin-google-analytics": {},
       "cordova-plugin-compat": {},
       "cordova-android-support-gradle-release": {
@@ -152,7 +149,6 @@
         "DEEPLINK_5_HOST": "www.funfunspell.com",
         "ANDROID_5_PATH_PREFIX": "/link"
       },
-      "cordova-plugin-wkwebview-engine": {},
       "cordova-plugin-ionic-webview": {
         "ANDROID_SUPPORT_ANNOTATIONS_VERSION": "27.+"
       },

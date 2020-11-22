@@ -2,6 +2,7 @@ import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {Dictation} from '../../entity/dictation';
 import {NavigationService} from '../../services/navigation.service';
 import {animate, state, style, transition, trigger} from '@angular/animations';
+import {AppService} from '../../services/app.service';
 
 @Component({
   selector: 'dictation-list',
@@ -35,6 +36,7 @@ export class DictationListComponent implements OnChanges {
 
   constructor(
     public navService: NavigationService,
+    public appService: AppService,
   ) {
     this.page = 0;
     this.showCreateButton = false;
@@ -51,13 +53,15 @@ export class DictationListComponent implements OnChanges {
   older() {
     this.page++;
     this.showOlder = this.dictations.length >  this.dictationPerPage * (this.page + 1);
-    this.state = 'left';
+    this.state = 'right';
+    this.sliceDictations();
   }
 
   newer() {
     this.page--;
     this.showOlder = true;
-    this.state = 'right';
+    this.state = 'left';
+    this.sliceDictations();
   }
 
   sliceDictations() {
@@ -65,13 +69,12 @@ export class DictationListComponent implements OnChanges {
   }
 
   onDone($event) {
-    this.sliceDictations();
-    if (this.state === 'left') {
+    if (this.state.endsWith('-end')) {
+      this.state = 'center';
+    } else if (this.state === 'left') {
       this.state = 'right-end';
     } else if (this.state === 'right') {
       this.state = 'left-end';
-    } else if (this.state.endsWith('-end')) {
-      this.state = 'center';
     }
   }
 
