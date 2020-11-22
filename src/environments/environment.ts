@@ -9,8 +9,7 @@ export const environment = {
   logging: {
     level: NgxLoggerLevel.INFO,
   },
-  //apiHost: 'https://esl-rest.funfunspell.com',
-  apiHost: 'https://oc-uat.funfunspell.com/esl-rest',
+  apiHost: 'http://hp-g42.local:8080',
   maxSentenceLength: 40,
   learntVocabularyMinimumCorrect: 5,
   vocabPracticeQuestions: 3,
