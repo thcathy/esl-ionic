@@ -65,12 +65,14 @@ export class VocabHistoryListComponent implements OnChanges {
     this.page++;
     this.showNext = this.vocabs.size > this.vocabPerPage * (this.page + 1);
     this.state = 'right';
+    this.sliceVocabs();
   }
 
   previous() {
     this.page--;
     this.showNext = true;
     this.state = 'left';
+    this.sliceVocabs();
   }
 
   sliceVocabs() {
@@ -96,7 +98,6 @@ export class VocabHistoryListComponent implements OnChanges {
   }
 
   onDone($event) {
-    this.sliceVocabs();
     if (this.state === 'left') {
       this.state = 'right-end';
     } else if (this.state === 'right') {

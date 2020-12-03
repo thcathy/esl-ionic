@@ -7,6 +7,7 @@ import {Storage} from '@ionic/storage';
 export class UIOptionsService {
   public static keys = {
     disableKeyboard: 'UIOptionsService.keys.disableKeyboard',
+    keyboardType: 'UIOptionsService.keys.keyboardType',
   };
 
   constructor(

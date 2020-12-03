@@ -1,6 +1,18 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {animate, state, style, transition, trigger} from '@angular/animations';
-import {VocabPracticeHistory} from "../../entity/vocab-practice-history";
+import {UIOptionsService} from '../../services/ui-options.service';
+
+export enum VirtualKeyboardEvent {
+  Backspace = 'Backspace',
+  Clear = 'Clear',
+  Close = 'Close',
+  Open = 'Open'
+}
+
+export enum VirtualKeyboardType {
+  None = 'None',
+  Standard = 'Standard',
+  Alphabetical = 'Alphabetical'
+}
 
 @Component({
   selector: 'virtual-keyboard',
@@ -9,15 +21,42 @@ import {VocabPracticeHistory} from "../../entity/vocab-practice-history";
 })
 export class VirtualKeyboardComponent {
   @Output() keyPress = new EventEmitter<string>();
-  @Output() backspace = new EventEmitter<boolean>();
+  @Output() keyboardEvent = new EventEmitter<VirtualKeyboardEvent>();
+  activeType = VirtualKeyboardType.None;
 
-  constructor() {}
+  constructor(public uiOptionsService: UIOptionsService) {
+    this.uiOptionsService.loadOption(UIOptionsService.keys.keyboardType)
+      .then(v => this.setKeyboardType(v));
+  }
 
   onKeyPress(key: string) {
     this.keyPress.emit(key);
   }
 
-  onBackspace() {
-    this.backspace.emit(true);
+  onEvent(event: VirtualKeyboardEvent) {
+    this.keyboardEvent.emit(event);
   }
+
+  setKeyboardType(type: VirtualKeyboardType) {
+    this.activeType = (type == null) ? VirtualKeyboardType.Standard : type;
+    if (type === VirtualKeyboardType.None) {
+      this.onEvent(VirtualKeyboardEvent.Close);
+    } else {
+      this.onEvent(VirtualKeyboardEvent.Open);
+    }
+    this.uiOptionsService.saveOption(UIOptionsService.keys.keyboardType, this.activeType);
+  }
+
+  changeKeyboardType() {
+    if (this.activeType === VirtualKeyboardType.None) {
+      this.setKeyboardType(VirtualKeyboardType.Standard);
+    } else if (this.activeType === VirtualKeyboardType.Standard) {
+      this.setKeyboardType(VirtualKeyboardType.Alphabetical);
+    } else if (this.activeType === VirtualKeyboardType.Alphabetical) {
+      this.setKeyboardType(VirtualKeyboardType.None);
+    }
+  }
+
+  get virtualKeyboardEvent() { return VirtualKeyboardEvent; }
+  get virtualKeyboardType() { return VirtualKeyboardType; }
 }

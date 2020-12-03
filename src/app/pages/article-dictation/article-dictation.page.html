@@ -38,21 +38,25 @@
           </ion-row>
           <div>
             <ion-button fill="clear" size="large"
-                        [class.grey-text]="!showKeyboard"
-                        (click)="clickShowKeyboard()">
+                        [class.grey-text]="!isKeyboardActive"
+                        (click)="virtualKeyboard.changeKeyboardType()">
               <fa-icon icon="keyboard"></fa-icon>
             </ion-button>
             <ion-button class="submitBtn ion-float-right" (click)="submitAnswer()">
               <fa-icon icon="check"></fa-icon>&nbsp;{{'Submit'|translate}}
             </ion-button>
           </div>
-          <div *ngIf="showKeyboard"><virtual-keyboard (keyPress)="onKeyPress($event)" (backspace)="onBackspace($event)"></virtual-keyboard></div>
+
         </ion-grid>
       </ion-card-content>
     </ion-card>
-
     <sentence-histories [histories]="histories"></sentence-histories>
-
   </div>
   <app-footer></app-footer>
 </ion-content>
+
+<ion-footer>
+  <virtual-keyboard #virtualKeyboard
+                    (keyPress)="onKeyPress($event)"
+                    (keyboardEvent)="onKeyboardEvent($event)"></virtual-keyboard>
+</ion-footer>

@@ -1,11 +1,31 @@
 .virtual-keyboard {
   width: 100%;
-  padding-top: 12px;
+  padding-top: 4px;
+  padding-bottom: 8px;
+  background-color: rgba(240, 240, 240);
+}
+
+p {
+  margin-top: 0px;
+  margin-bottom: 0px;
 }
 
 .keyboard-button {
   width: 8.5%;
   max-width: 60px;
+  height: 2.5rem;
+  font-size: 1.1rem;
+  --margin-top: 0px;
+  --margin-bottom: 0px;
+  --padding-bottom: 0px;
+  --padding-top: 0px;
+}
+
+.keyboard-button2 {
+  width: 11%;
+  max-width: 60px;
+  height: 2.5rem;
+  font-size: 1.2rem;
   --margin-top: 0px;
   --margin-bottom: 0px;
   --padding-bottom: 0px;
@@ -14,5 +34,10 @@
 
 .space-button {
   width: 24%;
+  max-width: 180px;
 }
 
+.space-button2 {
+  width: 40%;
+  max-width: 240px;
+}

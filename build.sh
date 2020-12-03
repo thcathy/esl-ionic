@@ -14,6 +14,7 @@ buildFirebase() {
 
 buildios() {
  ionic cordova build ios --prod
+ xed platforms/ios/FunFunSpell.xcworkspace/
 }
 
 buildAndroidApk() {
@@ -31,7 +32,7 @@ buildAndroidAab() {
   cd platforms/android
   ./gradlew bundle
   cd ../..
-  jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore my-release-key.jks -storepass funfunspell platforms/android/app/build/outputs/bundle/release/app.aab esl-dictation
+  jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore my-release-key.jks -storepass funfunspell platforms/android/app/build/outputs/bundle/release/app-release.aab esl-dictation
 }
 
 simios() {

@@ -2,18 +2,15 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {Dictation} from '../../entity/dictation';
 import {VocabPractice} from '../../entity/voacb-practice';
 import {VocabPracticeHistory} from '../../entity/vocab-practice-history';
-import {LoadingController} from '@ionic/angular';
 import {DictationService} from '../../services/dictation/dictation.service';
 import {VocabPracticeService} from '../../services/practice/vocab-practice.service';
-import {TranslateService} from '@ngx-translate/core';
 import {SpeechService} from '../../services/speech.service';
 import {IonicComponentService} from '../../services/ionic-component.service';
 import {Storage} from '@ionic/storage';
 import {NavigationService} from '../../services/navigation.service';
 import {ActivatedRoute} from '@angular/router';
-import {MemberVocabulary} from "../../entity/member-vocabulary";
 import {NGXLogger} from 'ngx-logger';
-import {UIOptionsService} from '../../services/ui-options.service';
+import {VirtualKeyboardEvent} from '../../components/virtual-keyboard/virtual-keyboard';
 
 @Component({
   selector: 'app-dictation-practice',
@@ -32,27 +29,20 @@ export class DictationPracticePage implements OnInit {
   histories: VocabPracticeHistory[] = [];
   audio: Map<string, HTMLAudioElement> = new Map<string, HTMLAudioElement>();
   loading: any;
-  showKeyboard = true;
-  @ViewChild('answerElement') answerInput;
+  isKeyboardActive: boolean;
 
   constructor(
     public route: ActivatedRoute,
-    public loadingController: LoadingController,
     public vocabPracticeService: VocabPracticeService,
     public dictationService: DictationService,
-    public translateService: TranslateService,
     public speechService: SpeechService,
     public navigationService: NavigationService,
     public ionicComponentService: IonicComponentService,
     public storage: Storage,
-    public uiOptionsService: UIOptionsService,
     private log: NGXLogger,
   ) { }
 
-  ngOnInit() {
-    this.uiOptionsService.loadOption(UIOptionsService.keys.disableKeyboard)
-      .then(v => this.showKeyboard = !v);
-  }
+  ngOnInit() {      }
 
   ionViewDidEnter() {
     this.clearVaribles();
@@ -140,7 +130,24 @@ export class DictationPracticePage implements OnInit {
     this.answer += key;
   }
 
-  onBackspace(any) {
+  onKeyboardEvent(event: VirtualKeyboardEvent) {
+    switch (event) {
+      case VirtualKeyboardEvent.Backspace:
+        this.backspace();
+        break;
+      case VirtualKeyboardEvent.Clear:
+        this.answer = '';
+        break;
+      case VirtualKeyboardEvent.Close:
+        this.isKeyboardActive = false;
+        break;
+      case VirtualKeyboardEvent.Open:
+        this.isKeyboardActive = true;
+        break;
+    }
+  }
+
+  backspace() {
     this.answer = this.answer.slice(0, this.answer.length - 1);
   }
 
@@ -176,11 +183,6 @@ export class DictationPracticePage implements OnInit {
 
       this.loading.dismiss();
     }
-  }
-
-  clickShowKeyboard() {
-    this.showKeyboard = !this.showKeyboard;
-    this.uiOptionsService.saveOption(UIOptionsService.keys.disableKeyboard, !this.showKeyboard);
   }
 
   sleep(ms = 0) { return new Promise(r => setTimeout(r, ms)); }

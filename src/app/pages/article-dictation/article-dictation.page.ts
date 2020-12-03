@@ -7,6 +7,7 @@ import {NavigationService} from '../../services/navigation.service';
 import {Storage} from '@ionic/storage';
 import {NGXLogger} from 'ngx-logger';
 import {UIOptionsService} from '../../services/ui-options.service';
+import {VirtualKeyboardEvent} from '../../components/virtual-keyboard/virtual-keyboard';
 
 @Component({
   selector: 'app-article-dictation',
@@ -21,22 +22,17 @@ export class ArticleDictationPage implements OnInit {
   mark = 0;
   answer = '';
   histories: SentenceHistory[] = [];
-  showKeyboard = true;
-  @ViewChild('answerElement', { static: true }) answerInput;
+  isKeyboardActive: boolean;
 
   constructor(
     public articleDictationService: ArticleDictationService,
     public speechService: SpeechService,
     public storage: Storage,
     public navigationService: NavigationService,
-    public uiOptionsService: UIOptionsService,
     private log: NGXLogger,
   ) {}
 
-  ngOnInit() {
-    this.uiOptionsService.loadOption(UIOptionsService.keys.disableKeyboard)
-      .then(v => this.showKeyboard = !v);
-  }
+  ngOnInit() {}
 
   clearVariables() {
     this.currentSentence = 0;
@@ -95,13 +91,24 @@ export class ArticleDictationPage implements OnInit {
     this.answer += key;
   }
 
-  onBackspace(any) {
-    this.answer = this.answer.slice(0, this.answer.length - 1);
+  onKeyboardEvent(event: VirtualKeyboardEvent) {
+    switch (event) {
+      case VirtualKeyboardEvent.Backspace:
+        this.backspace();
+        break;
+      case VirtualKeyboardEvent.Clear:
+        this.answer = '';
+        break;
+      case VirtualKeyboardEvent.Close:
+        this.isKeyboardActive = false;
+        break;
+      case VirtualKeyboardEvent.Open:
+        this.isKeyboardActive = true;
+        break;
+    }
   }
-
-  clickShowKeyboard() {
-    this.showKeyboard = !this.showKeyboard;
-    this.uiOptionsService.saveOption(UIOptionsService.keys.disableKeyboard, !this.showKeyboard);
+  backspace() {
+    this.answer = this.answer.slice(0, this.answer.length - 1);
   }
 
 }
