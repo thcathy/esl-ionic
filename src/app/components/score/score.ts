@@ -1,6 +1,6 @@
 import { Component, Input} from '@angular/core';
 import {animate, state, style, transition, trigger} from '@angular/animations';
-import {VocabPracticeHistory} from "../../entity/vocab-practice-history";
+import {VocabPracticeHistory} from '../../entity/vocab-practice-history';
 
 @Component({
   selector: 'score',
@@ -12,7 +12,7 @@ import {VocabPracticeHistory} from "../../entity/vocab-practice-history";
       transition('* => highlight', [
         animate('750ms ease-out',
           style({
-            color: '#ffff33',
+            color: '#10dc60',
             transform: 'scale(1.2)'
           })
         ),
@@ -32,12 +32,12 @@ export class ScoreComponent {
   @Input()
   set mark(mark: number) {
     this._mark = mark;
-    if (mark != 0) this.state = 'highlight';
+    if (mark != 0) { this.state = 'highlight'; }
   }
 
   get mark(): number { return this._mark; }
 
-  changeDone($event: any) : void {
+  changeDone($event: any): void {
     this.state = '';
   }
 

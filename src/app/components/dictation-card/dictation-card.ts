@@ -20,7 +20,7 @@ import {AppService} from '../../services/app.service';
       transition('normal => highlight', [
         animate('1s ease-out',
           style({
-            backgroundColor: '#4ab948',
+            backgroundColor: '#A7C713',
             color: '#ffffff'
           })
         ),

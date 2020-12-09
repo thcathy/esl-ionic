@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.esl.ionic" version="7.1.1" xmlns="http://www.w3.org/ns/widgets"
+<widget id="com.esl.ionic" version="7.2.0" xmlns="http://www.w3.org/ns/widgets"
         xmlns:android="http://schemas.android.com/apk/res/android" xmlns:cdv="http://cordova.apache.org/ns/1.0"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://www.w3.org/ns/widgets ">
   <name>FunFunSpell</name>
