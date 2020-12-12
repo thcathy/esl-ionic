@@ -12,66 +12,64 @@
 
 <ion-content>
   <div style="padding: 16px;">
-    <ion-card class="header">
-      <ion-card-header>
-        <fa-icon [icon]="['fas', 'leaf']"></fa-icon> FunFunSpell
-      </ion-card-header>
-      <ion-card-content>{{ 'Online Dictation' | translate }}</ion-card-content>
-      <ion-grid>
-        <ion-row class="ion-justify-content-center">
-          <ion-col size="6" size-sm="6" size-md="4" size-lg="3">
-            <ion-card class="card-button">
-              <ion-card-content>
-                <div><fa-icon [icon]="['fas', 'rocket']" size="4x"></fa-icon></div>
-                <div>{{ 'Input and Start' | translate }}</div>
-                <div><ion-button id="instant-dictation-button" fill="outline" color="light" (click)="navigationService.openInstantDictation()">{{ 'Menu_Start' | translate }}</ion-button></div>
-              </ion-card-content>
-            </ion-card>
-          </ion-col>
-          <ion-col size="6" size-sm="6" size-md="4" size-lg="3" class="hidden-sm-down">
-            <ion-card class="card-button">
-              <ion-card-content>
-                <div><fa-icon [icon]="['fas', 'headphones']" size="4x"></fa-icon></div>
-                <div>{{ 'Create and Save' | translate }}</div>
-                <div><ion-button fill="outline" color="light" (click)="navigationService.editDictation()">{{ 'Menu_Create' | translate }}</ion-button></div>
-              </ion-card-content>
-            </ion-card>
-          </ion-col>
-          <ion-col *ngIf="authService.isAuthenticated()" size="6" size-sm="6" size-md="4" size-lg="3" class="hidden-sm-down">
-            <ion-card class="card-button">
-              <ion-card-content>
-                <div><fa-icon icon="list" size="4x"></fa-icon></div>
-                <div>{{ 'Show record' | translate }}</div>
-                <div><ion-button fill="outline" color="light" (click)="navigationService.openMemberHome('dictation')">{{ 'My Dictation' | translate }}</ion-button></div>
-              </ion-card-content>
-            </ion-card>
-          </ion-col>
-          <ion-col size="6" size-sm="6" size-md="4" size-lg="3">
-            <ion-card class="card-button">
-              <ion-card-content>
-                <div><fa-icon [icon]="['fas', 'search']" size="4x"></fa-icon></div>
-                <div>{{ 'Find & Start' | translate }}</div>
-                <div><ion-button fill="outline" color="light" (click)="navigationService.openSearchDictation()">{{ 'Search' | translate }}</ion-button></div>
-              </ion-card-content>
-            </ion-card>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-
-      <ion-card-content>{{ 'English Exercise' | translate }}</ion-card-content>
-      <ion-grid>
-        <ion-row class="ion-justify-content-center">
-          <ion-col size="6" size-sm="6" size-md="4" size-lg="3">
-            <ion-card class="card-button">
-              <ion-card-content>
-                <div><fa-icon icon="book" size="4x"></fa-icon></div>
-                <div>{{ 'Learn Vocabulary' | translate }}</div>
-                <div><ion-button fill="outline" color="light" (click)="navigationService.openVocabularyStarter()">{{ 'Menu_Start' | translate }}</ion-button></div>
-              </ion-card-content>
-            </ion-card>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
+    <ion-card class="main-card">
+      <ion-card-header><fa-icon [icon]="['fas', 'leaf']"></fa-icon> FunFunSpell</ion-card-header>
+      <ion-card-content>
+        <ion-grid>
+          <ion-row>
+            <ion-col size="12" size-sm="6" size-md="3" size-lg="3">
+              <ion-card class="main-image-card">
+                  <img src="assets/img/teacher_speaking.png" alt="teacher spearking" />
+              </ion-card>
+            </ion-col>
+            <ion-col size="12" size-sm="6" size-md="5" size-lg="5">
+              <h2>{{ 'Online Dictation' | translate }}</h2>
+              <p>{{ 'Home_Online_Dictation_description' | translate }}</p>
+            </ion-col>
+            <ion-col size="12" size-sm="12" size-md="4" size-lg="4">
+              <ion-list>
+                <ion-item (click)="navigationService.openInstantDictation()">
+                  <ion-label><fa-icon [icon]="['fas', 'rocket']"></fa-icon> {{ 'Quick Start' | translate }}</ion-label>
+                  <fa-icon slot="end"  [icon]="['fas', 'angle-right']"></fa-icon>
+                </ion-item>
+                <ion-item (click)="navigationService.openSearchDictation()">
+                  <ion-label><fa-icon [icon]="['fas', 'search']"></fa-icon> {{ 'Search' | translate }}</ion-label>
+                  <fa-icon slot="end" [icon]="['fas', 'angle-right']"></fa-icon>
+                </ion-item>
+                <ion-item (click)="navigationService.editDictation()">
+                  <ion-label><fa-icon [icon]="['fas', 'plus']"></fa-icon> {{ 'Create' | translate }}</ion-label>
+                  <fa-icon  slot="end"[icon]="['fas', 'angle-right']"></fa-icon>
+                </ion-item>
+                <ion-item *ngIf="authService.isAuthenticated()" (click)="navigationService.openMemberHome('dictation')">
+                  <ion-label><fa-icon icon="list"></fa-icon> {{ 'My Records' | translate }}</ion-label>
+                  <fa-icon slot="end" [icon]="['fas', 'angle-right']"></fa-icon>
+                </ion-item>
+              </ion-list>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+        <ion-grid>
+          <ion-row>
+            <ion-col size="12" size-sm="6" size-md="3" size-lg="3">
+              <ion-card class="main-image-card">
+                <img src="assets/img/vocabulary_card.png" alt="vocabulary card" />
+              </ion-card>
+            </ion-col>
+            <ion-col size="12" size-sm="6" size-md="5" size-lg="5">
+              <h2>{{'English Vocabulary' | translate }}</h2>
+              <p>{{ 'Home_English_Vocabulary_description' | translate }}</p>
+            </ion-col>
+            <ion-col size="12" size-sm="12" size-md="4" size-lg="4">
+              <ion-list>
+                <ion-item (click)="navigationService.openVocabularyStarter()">
+                  <ion-label><fa-icon [icon]="['fas', 'spell-check']"></fa-icon> {{ 'Learn' | translate }}</ion-label>
+                  <fa-icon slot="end"  [icon]="['fas', 'angle-right']"></fa-icon>
+                </ion-item>
+              </ion-list>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card-content>
 
     </ion-card>
 
