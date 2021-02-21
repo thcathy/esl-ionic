@@ -11,6 +11,7 @@ import {IonicComponentService} from '../../services/ionic-component.service';
 import {Storage} from '@ionic/storage';
 import {CanComponentDeactivate} from '../../guards/can-deactivate.guard';
 import {Observable} from 'rxjs';
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'app-edit-dictation',
@@ -21,7 +22,7 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
   inputForm: FormGroup;
   loader: any;
   dictation: Dictation;
-  isEdit: boolean;
+  mode: EditDictationPageMode = EditDictationPageMode.Edit;
   isSaved: boolean;
   suitableStudentOptions = SuitableStudentOptions;
   sentenceLengthOptions = SentenceLengthOptions;
@@ -35,24 +36,31 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
     public dictationService: DictationService,
     public ionicComponentService: IonicComponentService,
     public storage: Storage,
+    private activatedroute: ActivatedRoute,
   ) { }
 
-  ngOnInit() {
-
-  }
+  ngOnInit() {}
 
   ionViewDidEnter() {
     this.createForm();
     this.init();
   }
 
+  getTitle(): String {
+    if (this.mode === EditDictationPageMode.Start) {
+      return 'Start Dictation';
+    } else {
+      return 'Create Dictation';
+    }
+  }
+
   async init() {
     this.isSaved = false;
     this.dictation = await this.storage.get(NavigationService.storageKeys.editDictation);
-    this.isEdit = this.dictation != null;
+    this.mode = EditDictationPageMode[this.activatedroute.snapshot.queryParamMap?.get('mode')] || EditDictationPageMode.Edit;
     this.setupForm(this.dictation);
 
-    if (!this.authService.isAuthenticated()) {
+    if (!this.authService.isAuthenticated() && this.mode !== EditDictationPageMode.Start) {
       this.authService.login({
         destination: '/edit-dictation',
         params: {dictation: this.dictation}
@@ -156,6 +164,29 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
     }
     return this.ionicComponentService.confirmExit();
   }
+
+  get editDictationPageMode(): typeof EditDictationPageMode {
+    return EditDictationPageMode;
+  }
+
+  startByWord() {
+    const d = this.prepareVocabDictation();
+    if (d.vocabs.length < 1) {
+      this.showNoVocabAlert();
+      return;
+    }
+
+    this.storage.set(this.INSTANT_DICTATION_KEY, d);
+    this.navService.startDictation(d);
+  }
+
+  async showNoVocabAlert() {
+    const alert = await this.alertController.create({
+      header: `${this.translate.instant('At least input 1 word')}!`,
+      buttons: [this.translate.instant('OK')]
+    });
+    await alert.present();
+  }
 }
 
 export function maxVocabularyValidator(max: number): ValidatorFn {
@@ -163,4 +194,9 @@ export function maxVocabularyValidator(max: number): ValidatorFn {
     const tooLarge = control.value != null && control.value.split(/[\s,]+/).length > max;
     return tooLarge ? {'maxVocabulary': {value: control.value}} : null;
   };
+}
+
+export enum EditDictationPageMode {
+  Edit = 'Edit',
+  Start = 'Start'
 }

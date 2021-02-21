@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar color="primary">
     <ion-buttons slot="start"><ion-menu-button></ion-menu-button></ion-buttons>
-    <ion-title>{{'Create Dictation' | translate}}</ion-title>
+    <ion-title>{{ getTitle() | translate}}</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -10,23 +10,28 @@
     <ion-card class="card">
       <ion-card-content>
         <form *ngIf="inputForm" class="input-form" [formGroup]="inputForm" novalidate>
-          <ion-item>
-            <ion-label stacked>{{'Title'|translate}} *</ion-label>
-            <ion-input type="text" formControlName="title" placeholder="Dictation {{now | date:'yyyy-MM-dd'}}"></ion-input>
-          </ion-item>
-          <div *ngIf="title.invalid && (title.dirty || title.touched)" class="error-text">
-            <div *ngIf="title.errors.required">{{'Title is required'|translate}}</div>
-            <div *ngIf="title.errors.minlength">{{'Title must be at least 5 characters long'|translate}}</div>
-            <div *ngIf="title.errors.maxlength">{{'Title cannot over 50 characters long'|translate}}</div>
+          <div class="title" *ngIf="mode === editDictationPageMode.Edit">
+            <ion-item>
+              <ion-label stacked>{{'Title'|translate}} *</ion-label>
+              <ion-input type="text" formControlName="title" placeholder="Dictation {{now | date:'yyyy-MM-dd'}}"></ion-input>
+            </ion-item>
+            <div *ngIf="title.invalid && (title.dirty || title.touched)" class="error-text">
+              <div *ngIf="title.errors.required">{{'Title is required'|translate}}</div>
+              <div *ngIf="title.errors.minlength">{{'Title must be at least 5 characters long'|translate}}</div>
+              <div *ngIf="title.errors.maxlength">{{'Title cannot over 50 characters long'|translate}}</div>
+            </div>
           </div>
-          <ion-item>
-            <ion-label stacked>{{'Description'|translate}}</ion-label>
-            <ion-input type="text" formControlName="description"></ion-input>
-          </ion-item>
-          <div *ngIf="description.invalid && (description.dirty || description.touched)" class="error-text">
-            <div *ngIf="description.errors.maxlength">{{'Description cannot over 100 characters long'|translate}}</div>
+          <div class="description" *ngIf="mode === editDictationPageMode.Edit">
+            <ion-item>
+              <ion-label stacked>{{'Description'|translate}}</ion-label>
+              <ion-input type="text" formControlName="description"></ion-input>
+            </ion-item>
+            <div *ngIf="description.invalid && (description.dirty || description.touched)" class="error-text">
+              <div
+                *ngIf="description.errors.maxlength">{{'Description cannot over 100 characters long'|translate}}</div>
+            </div>
           </div>
-          <ion-item>
+          <ion-item class="suitableAge" *ngIf="mode === editDictationPageMode.Edit">
             <ion-label style="margin: inherit;">{{'Suitable'|translate}} ({{'Age'|translate}})</ion-label>
             <ion-select style="padding-right: 30px;" formControlName="suitableStudent" interface="popover">
               <ion-select-option *ngFor="let state of suitableStudentOptions" [value]="state">{{'SuitableStudent.' + state|translate}}</ion-select-option>
@@ -36,13 +41,13 @@
           <ion-row class="radio">
             <ion-col>
               <ion-item>
-                <ion-label>{{'Single Word'|translate}}</ion-label>
+                <ion-label><fa-icon [icon]="['fas', 'list-ol']"></fa-icon> {{'Single Word'|translate}}</ion-label>
                 <ion-radio value="word"></ion-radio>
               </ion-item>
             </ion-col>
             <ion-col>
               <ion-item>
-                <ion-label>{{'Sentence'|translate}}</ion-label>
+                <ion-label><fa-icon [icon]="['fas', 'align-left']"></fa-icon> {{'Sentence'|translate}}</ion-label>
                 <ion-radio value="sentence"></ion-radio>
               </ion-item>
             </ion-col>
