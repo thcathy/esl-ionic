@@ -12,6 +12,8 @@ import {Storage} from '@ionic/storage';
 import {CanComponentDeactivate} from '../../guards/can-deactivate.guard';
 import {Observable} from 'rxjs';
 import {ActivatedRoute} from '@angular/router';
+import {Vocab} from '../../entity/vocab';
+import {AlertController} from '@ionic/angular';
 
 @Component({
   selector: 'app-edit-dictation',
@@ -36,7 +38,8 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
     public dictationService: DictationService,
     public ionicComponentService: IonicComponentService,
     public storage: Storage,
-    private activatedroute: ActivatedRoute,
+    public alertController: AlertController,
+    private activatedRoute: ActivatedRoute,
   ) { }
 
   ngOnInit() {}
@@ -57,7 +60,7 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
   async init() {
     this.isSaved = false;
     this.dictation = await this.storage.get(NavigationService.storageKeys.editDictation);
-    this.mode = EditDictationPageMode[this.activatedroute.snapshot.queryParamMap?.get('mode')] || EditDictationPageMode.Edit;
+    this.mode = EditDictationPageMode[this.activatedRoute.snapshot.queryParamMap?.get('mode')] || EditDictationPageMode.Edit;
     this.setupForm(this.dictation);
 
     if (!this.authService.isAuthenticated() && this.mode !== EditDictationPageMode.Start) {
@@ -101,7 +104,7 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
     this.description.setValue(dictation.description);
     this.showImage.setValue(dictation.showImage);
     this.suitableStudent.setValue(dictation.suitableStudent);
-    if (dictation.sentenceLength) this.sentenceLength.setValue(dictation.sentenceLength);
+    if (dictation.sentenceLength) { this.sentenceLength.setValue(dictation.sentenceLength); }
     if (this.dictationService.isSentenceDictation(dictation)) {
       this.type.setValue('sentence');
       this.article.setValue(dictation.article);
@@ -121,7 +124,7 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
       title: this.title.value,
       description: this.description.value,
       showImage: this.showImage.value,
-      vocabulary: this.type.value === 'word' ?  this.vocabulary.value.split(/[\s,]+/).filter(v => !ValidationUtils.isBlankString(v)) : [],
+      vocabulary: this.type.value === 'word' ?  vocabularyValueToArray(this.vocabulary.value) : [],
       article: this.type.value === 'sentence' ? this.article.value : '',
       suitableStudent: this.suitableStudent.value,
       sentenceLength: this.sentenceLength.value,
@@ -170,14 +173,25 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
   }
 
   startByWord() {
-    const d = this.prepareVocabDictation();
+    const d = this.prepareDictation();
+    console.log(`${JSON.stringify(d)}`);
     if (d.vocabs.length < 1) {
       this.showNoVocabAlert();
       return;
     }
-
-    this.storage.set(this.INSTANT_DICTATION_KEY, d);
     this.navService.startDictation(d);
+  }
+
+  prepareDictation(): Dictation {
+    return <Dictation>{
+      id: -1,
+      showImage: this.showImage.value as boolean,
+      vocabs: vocabularyValueToArray(this.vocabulary.value).map(v => new Vocab(v)),
+      totalRecommended: 0,
+      title: new Date().toDateString(),
+      suitableStudent: 'Any',
+    };
+
   }
 
   async showNoVocabAlert() {
@@ -191,9 +205,14 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
 
 export function maxVocabularyValidator(max: number): ValidatorFn {
   return (control: AbstractControl): {[key: string]: any} => {
-    const tooLarge = control.value != null && control.value.split(/[\s,]+/).length > max;
+    const tooLarge = control.value != null && vocabularyValueToArray(control.value).length > max;
     return tooLarge ? {'maxVocabulary': {value: control.value}} : null;
   };
+}
+
+function vocabularyValueToArray(input: string): string[] {
+  return input.split(/[\s,]+/)
+          .filter(v => !ValidationUtils.isBlankString(v));
 }
 
 export enum EditDictationPageMode {

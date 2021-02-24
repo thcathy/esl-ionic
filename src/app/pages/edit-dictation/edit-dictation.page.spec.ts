@@ -5,7 +5,7 @@ import { EditDictationPage } from './edit-dictation.page';
 import {SharedTestModule} from '../../../testing/shared-test.module';
 import {dictation1} from '../../../testing/test-data';
 import {MemberDictationService} from '../../services/dictation/member-dictation.service';
-import {AuthServiceSpy, StorageSpy} from '../../../testing/mocks-ionic';
+import {AuthServiceSpy, NavigationServiceSpy, StorageSpy} from '../../../testing/mocks-ionic';
 import {AuthService} from '../../services/auth.service';
 import {of} from 'rxjs';
 import {NavigationService} from '../../services/navigation.service';
@@ -13,17 +13,19 @@ import {Storage} from '@ionic/storage';
 import {ActivatedRouteStub} from '../../../testing/activated-route-stub';
 import {ActivatedRoute} from '@angular/router';
 import {By} from '@angular/platform-browser';
+import {Dictation} from '../../entity/dictation';
 
 fdescribe('EditDictationPage', () => {
   let component: EditDictationPage;
   let fixture: ComponentFixture<EditDictationPage>;
-  let memberDictationServiceSpy, authServiceSpy, storageSpy, activateRouteStub;
+  let memberDictationServiceSpy, authServiceSpy, storageSpy, activateRouteStub, navigationServiceSpy;
 
   beforeEach(async(() => {
     memberDictationServiceSpy = jasmine.createSpyObj('MemberDictationService', ['createOrAmendDictation']);
     authServiceSpy = AuthServiceSpy();
     storageSpy = StorageSpy();
     activateRouteStub = new ActivatedRouteStub();
+    navigationServiceSpy = NavigationServiceSpy();
 
     TestBed.configureTestingModule({
       declarations: [ EditDictationPage ],
@@ -35,7 +37,8 @@ fdescribe('EditDictationPage', () => {
         { provide: MemberDictationService, useValue: memberDictationServiceSpy},
         { provide: AuthService, useValue: authServiceSpy },
         { provide: Storage, useValue: storageSpy },
-        { provide: ActivatedRoute, useValue: activateRouteStub }
+        { provide: ActivatedRoute, useValue: activateRouteStub },
+        { provide: NavigationService, useValue: navigationServiceSpy }
       ]
     })
     .compileComponents();
@@ -118,6 +121,27 @@ fdescribe('EditDictationPage', () => {
     authServiceSpy.isAuthenticated.and.returnValue(false);
     componentViewDidEnter();
 
+    component.vocabulary.setValue(`
+      apple
+           banana
+               cup
+    `);
+    component.showImage.setValue(true);
+    component.startByWord();
 
+    const dictation = navigationServiceSpy.startDictation.calls.mostRecent().args[0] as Dictation;
+    expect(dictation.showImage).toBeTrue();
+    expect(dictation.vocabs.length).toEqual(3);
+    expect(dictation.vocabs[0].word).toEqual('apple');
+    expect(dictation.vocabs[1].word).toEqual('banana');
+    expect(dictation.vocabs[2].word).toEqual('cup');
+
+    component.vocabulary.setValue(` apple , banana,cup`);
+    component.startByWord();
+    const dictation2 = navigationServiceSpy.startDictation.calls.mostRecent().args[0] as Dictation;
+    expect(dictation2.vocabs.length).toEqual(3);
+    expect(dictation2.vocabs[0].word).toEqual('apple');
+    expect(dictation2.vocabs[1].word).toEqual('banana');
+    expect(dictation2.vocabs[2].word).toEqual('cup');
   }));
 });
