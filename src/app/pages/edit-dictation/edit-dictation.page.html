@@ -10,74 +10,104 @@
     <ion-card class="card">
       <ion-card-content>
         <form *ngIf="inputForm" class="input-form" [formGroup]="inputForm" novalidate>
-          <div class="title" *ngIf="mode === editDictationPageMode.Edit">
-            <ion-item>
-              <ion-label stacked>{{'Title'|translate}} *</ion-label>
-              <ion-input type="text" formControlName="title" placeholder="Dictation {{now | date:'yyyy-MM-dd'}}"></ion-input>
-            </ion-item>
-            <div *ngIf="title.invalid && (title.dirty || title.touched)" class="error-text">
-              <div *ngIf="title.errors.required">{{'Title is required'|translate}}</div>
-              <div *ngIf="title.errors.minlength">{{'Title must be at least 5 characters long'|translate}}</div>
-              <div *ngIf="title.errors.maxlength">{{'Title cannot over 50 characters long'|translate}}</div>
-            </div>
-          </div>
-          <div class="description" *ngIf="mode === editDictationPageMode.Edit">
-            <ion-item>
-              <ion-label stacked>{{'Description'|translate}}</ion-label>
-              <ion-input type="text" formControlName="description"></ion-input>
-            </ion-item>
-            <div *ngIf="description.invalid && (description.dirty || description.touched)" class="error-text">
-              <div
-                *ngIf="description.errors.maxlength">{{'Description cannot over 100 characters long'|translate}}</div>
-            </div>
-          </div>
-          <ion-item class="suitableAge" *ngIf="mode === editDictationPageMode.Edit">
-            <ion-label style="margin: inherit;">{{'Suitable'|translate}} ({{'Age'|translate}})</ion-label>
-            <ion-select style="padding-right: 30px;" formControlName="suitableStudent" interface="popover">
-              <ion-select-option *ngFor="let state of suitableStudentOptions" [value]="state">{{'SuitableStudent.' + state|translate}}</ion-select-option>
-            </ion-select>
-          </ion-item>
-          <ion-radio-group [formControl]="inputForm.controls['type']">
-          <ion-row class="radio">
-            <ion-col>
-              <ion-item>
-                <ion-label><fa-icon [icon]="['fas', 'list-ol']"></fa-icon> {{'Single Word'|translate}}</ion-label>
-                <ion-radio value="word"></ion-radio>
+          <ion-row>
+            <ion-col size="12" size-sm="12" size-md="12" size-lg="6">
+              <div class="title" *ngIf="mode === editDictationPageMode.Edit">
+                <ion-item>
+                  <ion-label stacked>{{'Title'|translate}} *</ion-label>
+                  <ion-input type="text" formControlName="title"
+                             placeholder="Dictation {{now | date:'yyyy-MM-dd'}}"></ion-input>
+                </ion-item>
+                <div *ngIf="title.invalid && (title.dirty || title.touched)" class="error-text">
+                  <div *ngIf="title.errors.required">{{'Title is required'|translate}}</div>
+                  <div *ngIf="title.errors.minlength">{{'Title must be at least 5 characters long'|translate}}</div>
+                  <div *ngIf="title.errors.maxlength">{{'Title cannot over 50 characters long'|translate}}</div>
+                </div>
+              </div>
+              <div class="description" *ngIf="mode === editDictationPageMode.Edit">
+                <ion-item>
+                  <ion-label stacked>{{'Description'|translate}}</ion-label>
+                  <ion-input type="text" formControlName="description"></ion-input>
+                </ion-item>
+                <div *ngIf="description.invalid && (description.dirty || description.touched)" class="error-text">
+                  <div
+                    *ngIf="description.errors.maxlength">{{'Description cannot over 100 characters long'|translate}}</div>
+                </div>
+              </div>
+              <ion-item class="suitableAge" *ngIf="mode === editDictationPageMode.Edit">
+                <ion-label style="margin: inherit;">{{'Suitable'|translate}} ({{'Age'|translate}})</ion-label>
+                <ion-select style="padding-right: 30px;" formControlName="suitableStudent" interface="popover">
+                  <ion-select-option *ngFor="let state of suitableStudentOptions"
+                                     [value]="state">{{'SuitableStudent.' + state|translate}}</ion-select-option>
+                </ion-select>
+              </ion-item>
+              <ion-radio-group [formControl]="inputForm.controls['type']">
+                <ion-row class="radio">
+                  <ion-col>
+                    <ion-item>
+                      <ion-label>
+                        <fa-icon [icon]="['fas', 'list-ol']"></fa-icon>
+                        {{'Single Word'|translate}}</ion-label>
+                      <ion-radio value="word"></ion-radio>
+                    </ion-item>
+                    <div class="type-example" [class.selected]="type.value === 'word'">
+                      Example:<br/>apple<br/>bus-stop<br/>cat
+                    </div>
+                  </ion-col>
+                  <ion-col>
+                    <ion-item>
+                      <ion-label>
+                        <fa-icon [icon]="['fas', 'align-left']"></fa-icon>
+                        {{'Sentence'|translate}}</ion-label>
+                      <ion-radio value="sentence"></ion-radio>
+                    </ion-item>
+                    <div class="type-example" [class.selected]="type.value === 'sentence'">
+                      Example:<br/> I walk to school. I do not ride a bike. I do not ride the bus.
+                    </div>
+                  </ion-col>
+                </ion-row>
+              </ion-radio-group>
+              <ion-item *ngIf="type.value=='word'">
+                <ion-label>
+                  <fa-icon [icon]="['far', 'images']"></fa-icon>
+                  {{'Show Image'|translate}}</ion-label>
+                <ion-toggle style="padding-right: 30px;" formControlName="showImage"></ion-toggle>
+              </ion-item>
+              <ion-item *ngIf="type.value=='sentence'">
+                <ion-label style="margin: inherit;">{{'Each Sentence Length'|translate}}</ion-label>
+                <ion-select style="padding-right: 30px;" formControlName="sentenceLength" interface="popover">
+                  <ion-select-option *ngFor="let state of sentenceLengthOptions"
+                                     [value]="state">{{'SentenceLength.' + state|translate}}</ion-select-option>
+                </ion-select>
               </ion-item>
             </ion-col>
-            <ion-col>
-              <ion-item>
-                <ion-label><fa-icon [icon]="['fas', 'align-left']"></fa-icon> {{'Sentence'|translate}}</ion-label>
-                <ion-radio value="sentence"></ion-radio>
+
+            <ion-col size="12" size-sm="12" size-md="12" size-lg="6">
+              <ion-item *ngIf="type.value == 'word'" class="">
+                <ion-label position="floating">{{'Vocabulary'|translate}} * ({{'separate by space, comma or 1 word per line'|translate}})
+                </ion-label>
+                <ion-textarea formControlName="vocabulary" rows="10"></ion-textarea>
               </ion-item>
+              <ion-item *ngIf="type.value == 'sentence'">
+                <ion-label position="floating">{{'Input an passage'|translate}} *:</ion-label>
+                <ion-textarea formControlName="article" rows="10"></ion-textarea>
+              </ion-item>
+              <div *ngIf="vocabulary.invalid && (vocabulary.dirty || vocabulary.touched)" class="error-text">
+                <div *ngIf="vocabulary.errors.maxVocabulary">{{'Cannot over 50 vocabulary'|translate}}</div>
+                <div *ngIf="vocabulary.errors.pattern">{{'Cannot contain invalid character(s)'|translate}}</div>
+              </div>
             </ion-col>
           </ion-row>
-          </ion-radio-group>
-          <ion-item *ngIf="type.value=='word'">
-            <ion-label><fa-icon [icon]="['far', 'images']"></fa-icon> {{'Show Image'|translate}}</ion-label>
-            <ion-toggle style="padding-right: 30px;" formControlName="showImage"></ion-toggle>
-          </ion-item>
-          <ion-item *ngIf="type.value=='sentence'">
-            <ion-label style="margin: inherit;">{{'Each Sentence Length'|translate}}</ion-label>
-            <ion-select style="padding-right: 30px;" formControlName="sentenceLength" interface="popover">
-              <ion-select-option *ngFor="let state of sentenceLengthOptions" [value]="state">{{'SentenceLength.' + state|translate}}</ion-select-option>
-            </ion-select>
-          </ion-item>
-          <ion-item *ngIf="inputForm.controls['type'].value == 'word'" class="questionsInput">
-            <ion-label position="stacked">{{'Vocabulary'|translate}} * ({{'separate by space or comma'|translate}})</ion-label>
-            <ion-textarea placeholder="apple bus-stop cat" formControlName="vocabulary" rows="10"></ion-textarea>
-          </ion-item>
-          <ion-item *ngIf="inputForm.controls['type'].value == 'sentence'" class="questionsInput">
-            <ion-label position="stacked">{{'Input an passage'|translate}} *:</ion-label>
-            <ion-textarea formControlName="article" rows="10"></ion-textarea>
-          </ion-item>
-          <div *ngIf="vocabulary.invalid && (vocabulary.dirty || vocabulary.touched)" class="error-text">
-            <div *ngIf="vocabulary.errors.maxVocabulary">{{'Cannot over 50 vocabulary'|translate}}</div>
-            <div *ngIf="vocabulary.errors.pattern">{{'Cannot contain invalid character(s)'|translate}}</div>
-          </div>
 
-          <ion-button class="ion-float-right" (click)="saveDictation()" style="margin: 16px;" [disabled]="inputForm.invalid">
+          <ion-button class="ion-float-right" style="margin: 16px;"
+                      *ngIf="mode === 'Edit'"
+                      (click)="saveDictation()" [disabled]="inputForm.invalid">
             <fa-icon icon="save"></fa-icon>&nbsp;{{'Save'|translate}}
+          </ion-button>
+          <ion-button class="ion-float-right" style="margin: 16px;"
+                      *ngIf="mode === 'Start'"
+                      (click)="startDictationNow()" [disabled]="inputForm.invalid">
+            <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>&nbsp;{{'Start'|translate}}
           </ion-button>
 
         </form>

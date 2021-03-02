@@ -13,17 +13,21 @@
 }
 
 .questionsInput {
-  padding-top: 1rem;
-
-  ion-label {
-    font-size: 1rem;
-  }
-
   ion-textarea {
-    font-size: 0.9rem;
+    font-size: 0.7rem;
   }
 }
 
 fa-icon {
-  padding-left: 8px;
+  padding-right: 8px;
+}
+
+.type-example {
+  padding-left: 42px;
+  font-size: 0.8rem;
+  color: #666666;
+}
+
+.selected {
+  color: #000000;
 }

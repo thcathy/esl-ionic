@@ -91,7 +91,7 @@
   "Title cannot over 50 characters long": "標題不能超過50個字符",
   "Description cannot over 100 characters long": "描述不能超過100個字符",
   "Age": "年紀",
-  "separate by space or comma": "用空格或逗號分隔",
+  "separate by space, comma or 1 word per line": "用空格或逗號分隔 或每行一個生字",
   "Cannot over 50 vocabulary": "不能超過50個生字",
   "Save": "保存",
   "Input vocabulary": "輸入生字",

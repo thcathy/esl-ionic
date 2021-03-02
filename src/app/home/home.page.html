@@ -28,7 +28,7 @@
             </ion-col>
             <ion-col size="12" size-sm="12" size-md="4" size-lg="4">
               <ion-list>
-                <ion-item (click)="navigationService.openInstantDictation()">
+                <ion-item (click)="navigationService.editDictation(null, 'Start')">
                   <ion-label><fa-icon [icon]="['fas', 'rocket']"></fa-icon> {{ 'Quick Start' | translate }}</ion-label>
                   <fa-icon slot="end"  [icon]="['fas', 'angle-right']"></fa-icon>
                 </ion-item>

@@ -91,9 +91,9 @@ export class NavigationService {
     this.openDictation(dictation, toastMessage, true);
   }
 
-  async editDictation(dictation: Dictation = null) {
+  async editDictation(dictation: Dictation = null, mode: string = 'Edit') {
     await this.storage.set(NavigationService.storageKeys.editDictation, dictation);
-    return await this.router.navigate(['/edit-dictation']);
+    return await this.router.navigate(['/edit-dictation'], { queryParams: { mode: mode } });
   }
 
   async practiceComplete(dictation: Dictation, mark: number, histories: VocabPracticeHistory[], historyStored: boolean = false) {

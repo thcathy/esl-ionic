@@ -127,7 +127,8 @@ fdescribe('EditDictationPage', () => {
                cup
     `);
     component.showImage.setValue(true);
-    component.startByWord();
+    component.type.setValue('word');
+    component.startDictationNow();
 
     const dictation = navigationServiceSpy.startDictation.calls.mostRecent().args[0] as Dictation;
     expect(dictation.showImage).toBeTrue();
@@ -137,11 +138,26 @@ fdescribe('EditDictationPage', () => {
     expect(dictation.vocabs[2].word).toEqual('cup');
 
     component.vocabulary.setValue(` apple , banana,cup`);
-    component.startByWord();
+    component.startDictationNow();
     const dictation2 = navigationServiceSpy.startDictation.calls.mostRecent().args[0] as Dictation;
     expect(dictation2.vocabs.length).toEqual(3);
     expect(dictation2.vocabs[0].word).toEqual('apple');
     expect(dictation2.vocabs[1].word).toEqual('banana');
     expect(dictation2.vocabs[2].word).toEqual('cup');
+  }));
+
+  it('start instant dictation by article will navigate to start dictation page', fakeAsync(() => {
+    activateRouteStub.setQueryParamMap({ mode: 'Start' });
+    authServiceSpy.isAuthenticated.and.returnValue(false);
+    componentViewDidEnter();
+
+    component.article.setValue(`This is a article.`);
+    component.sentenceLength.setValue('Short');
+    component.type.setValue('sentence');
+    component.startDictationNow();
+
+    const dictation = navigationServiceSpy.startDictation.calls.mostRecent().args[0] as Dictation;
+    expect(dictation.sentenceLength).toEqual('Short');
+    expect(dictation.article).toEqual('This is a article.');
   }));
 });

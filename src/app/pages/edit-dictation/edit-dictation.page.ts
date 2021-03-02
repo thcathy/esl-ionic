@@ -45,6 +45,7 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
   ngOnInit() {}
 
   ionViewDidEnter() {
+    this.mode = EditDictationPageMode[this.activatedRoute.snapshot.queryParamMap?.get('mode')] || EditDictationPageMode.Edit;
     this.createForm();
     this.init();
   }
@@ -60,7 +61,6 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
   async init() {
     this.isSaved = false;
     this.dictation = await this.storage.get(NavigationService.storageKeys.editDictation);
-    this.mode = EditDictationPageMode[this.activatedRoute.snapshot.queryParamMap?.get('mode')] || EditDictationPageMode.Edit;
     this.setupForm(this.dictation);
 
     if (!this.authService.isAuthenticated() && this.mode !== EditDictationPageMode.Start) {
@@ -73,16 +73,27 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
   }
 
   createForm() {
-    this.inputForm = this.formBuilder.group({
-      'title': new FormControl('', [Validators.required, Validators.minLength(5),  Validators.maxLength(50)]),
-      'description': new FormControl('', [Validators.maxLength(100)]),
-      'showImage': true,
-      'vocabulary': new FormControl('', [maxVocabularyValidator(50), Validators.pattern('^([a-zA-Z\\s]+[\\-,]?)+')]),
-      'article': '',
-      'type': 'word',
-      'suitableStudent': 'Any',
-      'sentenceLength': 'Normal',
-    });
+    if (this.mode === 'Edit') {
+      this.inputForm = this.formBuilder.group({
+        'title': new FormControl('', [Validators.required, Validators.minLength(5),  Validators.maxLength(50)]),
+        'description': new FormControl('', [Validators.maxLength(100)]),
+        'showImage': true,
+        'vocabulary': new FormControl('', [maxVocabularyValidator(50), Validators.pattern('^([a-zA-Z\\s]+[\\-,]?)+')]),
+        'article': '',
+        'type': 'word',
+        'suitableStudent': 'Any',
+        'sentenceLength': 'Normal',
+      });
+    } else {
+      this.inputForm = this.formBuilder.group({
+        'showImage': true,
+        'vocabulary': new FormControl('', [maxVocabularyValidator(50), Validators.pattern('^([a-zA-Z\\s]+[\\-,]?)+')]),
+        'article': '',
+        'type': 'word',
+        'sentenceLength': 'Normal',
+      });
+    }
+
     this.inputForm.get('suitableStudent').setValue('Any');
     this.inputForm.get('sentenceLength').setValue('Normal');
   }
@@ -145,7 +156,6 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
   }
 
   afterSaved(dictation: Dictation) {
-
     this.dictation = null;
     this.isSaved = true;
     this.storage.remove(NavigationService.storageKeys.editDictation);
@@ -172,10 +182,9 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
     return EditDictationPageMode;
   }
 
-  startByWord() {
+  startDictationNow() {
     const d = this.prepareDictation();
-    console.log(`${JSON.stringify(d)}`);
-    if (d.vocabs.length < 1) {
+    if (!this.dictationService.isSentenceDictation(d) && d.vocabs.length < 1) {
       this.showNoVocabAlert();
       return;
     }
@@ -183,15 +192,25 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
   }
 
   prepareDictation(): Dictation {
-    return <Dictation>{
-      id: -1,
-      showImage: this.showImage.value as boolean,
-      vocabs: vocabularyValueToArray(this.vocabulary.value).map(v => new Vocab(v)),
-      totalRecommended: 0,
-      title: new Date().toDateString(),
-      suitableStudent: 'Any',
-    };
-
+    if (this.type.value === 'word') {
+      return <Dictation>{
+        id: -1,
+        showImage: this.showImage.value as boolean,
+        vocabs: vocabularyValueToArray(this.vocabulary.value).map(v => new Vocab(v)),
+        totalRecommended: 0,
+        title: new Date().toDateString(),
+        suitableStudent: 'Any',
+      };
+    } else {
+      return <Dictation>{
+        id: -1,
+        sentenceLength: this.sentenceLength.value,
+        article: this.article.value,
+        totalRecommended: 0,
+        title: new Date().toDateString(),
+        suitableStudent: 'Any',
+      };
+    }
   }
 
   async showNoVocabAlert() {
