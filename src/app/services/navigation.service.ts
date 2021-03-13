@@ -8,6 +8,7 @@ import {VocabPracticeHistory} from '../entity/vocab-practice-history';
 import {SentenceHistory} from '../entity/sentence-history';
 import {Location} from '@angular/common';
 import {TranslateService} from '@ngx-translate/core';
+import {EditDictationPageMode} from '../pages/edit-dictation/edit-dictation-page-enum';
 
 export interface NavigationRequest {
   destination: any;
@@ -70,7 +71,8 @@ export class NavigationService {
 
   retryDictation(dictation: Dictation) {
     if (this.dictationService.isInstantDictation(dictation)) {
-      this.openInstantDictation();
+      // this.openInstantDictation();
+      this.editDictation(dictation, EditDictationPageMode.Start);
     } else {
       this.startDictation(dictation);
     }
@@ -93,7 +95,7 @@ export class NavigationService {
 
   async editDictation(dictation: Dictation = null, mode: string = 'Edit') {
     await this.storage.set(NavigationService.storageKeys.editDictation, dictation);
-    return await this.router.navigate(['/edit-dictation'], { queryParams: { mode: mode } });
+    return this.router.navigate(['/edit-dictation/' + mode]);
   }
 
   async practiceComplete(dictation: Dictation, mark: number, histories: VocabPracticeHistory[], historyStored: boolean = false) {

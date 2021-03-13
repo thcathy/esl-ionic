@@ -1,7 +1,7 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import {async, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
 
-import { EditDictationPage } from './edit-dictation.page';
+import {EditDictationPage} from './edit-dictation.page';
 import {SharedTestModule} from '../../../testing/shared-test.module';
 import {dictation1} from '../../../testing/test-data';
 import {MemberDictationService} from '../../services/dictation/member-dictation.service';
@@ -14,11 +14,22 @@ import {ActivatedRouteStub} from '../../../testing/activated-route-stub';
 import {ActivatedRoute} from '@angular/router';
 import {By} from '@angular/platform-browser';
 import {Dictation} from '../../entity/dictation';
+import {EditDictationPageMode} from './edit-dictation-page-enum';
+import {DictationType} from './edit-dictation-page-enum';
 
 fdescribe('EditDictationPage', () => {
   let component: EditDictationPage;
   let fixture: ComponentFixture<EditDictationPage>;
   let memberDictationServiceSpy, authServiceSpy, storageSpy, activateRouteStub, navigationServiceSpy;
+
+  const instantVocabDictation = <Dictation>{
+    id: -1,
+    showImage: false,
+    vocabs: [{word: 'test'}],
+    totalRecommended: 0,
+    title: new Date().toDateString(),
+    suitableStudent: 'Any',
+  };
 
   beforeEach(async(() => {
     memberDictationServiceSpy = jasmine.createSpyObj('MemberDictationService', ['createOrAmendDictation']);
@@ -89,7 +100,7 @@ fdescribe('EditDictationPage', () => {
   }));
 
   it('show start dictation in title in start mode without login', fakeAsync(() => {
-    activateRouteStub.setQueryParamMap({ mode: 'Start' });
+    activateRouteStub.setParamMap({ mode: EditDictationPageMode.Start });
     authServiceSpy.isAuthenticated.and.returnValue(false);
     componentViewDidEnter();
 
@@ -97,7 +108,7 @@ fdescribe('EditDictationPage', () => {
   }));
 
   it('dont show some of the elements in Start mode', fakeAsync(() => {
-    activateRouteStub.setQueryParamMap({ mode: 'Start' });
+    activateRouteStub.setParamMap({ mode: EditDictationPageMode.Start });
     authServiceSpy.isAuthenticated.and.returnValue(false);
     componentViewDidEnter();
 
@@ -107,7 +118,7 @@ fdescribe('EditDictationPage', () => {
   }));
 
   it('show some of the elements in Edit mode', fakeAsync(() => {
-    activateRouteStub.setQueryParamMap({ mode: 'Edit' });
+    activateRouteStub.setParamMap({ mode: EditDictationPageMode.Edit });
     authServiceSpy.isAuthenticated.and.returnValue(true);
     componentViewDidEnter();
 
@@ -117,7 +128,7 @@ fdescribe('EditDictationPage', () => {
   }));
 
   it('start instant dictation by single word will navigate to start dictation page', fakeAsync(() => {
-    activateRouteStub.setQueryParamMap({ mode: 'Start' });
+    activateRouteStub.setParamMap({ mode: EditDictationPageMode.Start });
     authServiceSpy.isAuthenticated.and.returnValue(false);
     componentViewDidEnter();
 
@@ -127,7 +138,7 @@ fdescribe('EditDictationPage', () => {
                cup
     `);
     component.showImage.setValue(true);
-    component.type.setValue('word');
+    component.type.setValue(DictationType.Word);
     component.startDictationNow();
 
     const dictation = navigationServiceSpy.startDictation.calls.mostRecent().args[0] as Dictation;
@@ -147,17 +158,49 @@ fdescribe('EditDictationPage', () => {
   }));
 
   it('start instant dictation by article will navigate to start dictation page', fakeAsync(() => {
-    activateRouteStub.setQueryParamMap({ mode: 'Start' });
+    activateRouteStub.setParamMap({ mode: EditDictationPageMode.Start });
     authServiceSpy.isAuthenticated.and.returnValue(false);
     componentViewDidEnter();
 
     component.article.setValue(`This is a article.`);
     component.sentenceLength.setValue('Short');
-    component.type.setValue('sentence');
+    component.type.setValue(DictationType.Sentence);
     component.startDictationNow();
 
     const dictation = navigationServiceSpy.startDictation.calls.mostRecent().args[0] as Dictation;
     expect(dictation.sentenceLength).toEqual('Short');
     expect(dictation.article).toEqual('This is a article.');
+  }));
+
+  it('click preview will set the questions array and preview flag', fakeAsync(() => {
+    activateRouteStub.setParamMap({ mode: EditDictationPageMode.Start });
+    componentViewDidEnter();
+    component.vocabulary.setValue(`apple banana cup`);
+    component.type.setValue(DictationType.Word);
+    component.preview();
+
+    expect(component.isPreview).toBeTrue();
+    expect(component.questions.length).toEqual(3);
+
+    component.article.setValue(`i go to school`);
+    component.type.setValue(DictationType.Sentence);
+    component.sentenceLength.setValue('Long');
+    component.preview();
+
+    expect(component.isPreview).toBeTrue();
+    expect(component.questions.length).toEqual(1);
+  }));
+
+  it('setupForm will init form value from instant dictation', fakeAsync(() => {
+    activateRouteStub.setParamMap({ mode: EditDictationPageMode.Start });
+    const params = {
+      'editDictation': instantVocabDictation
+    };
+    storageSpy.get.and.callFake((param) => params[param]);
+    componentViewDidEnter();
+
+    expect(component.showImage.value).toBeFalse();
+    expect(component.vocabulary.value).toEqual('test');
+    expect(component.type.value).toEqual(DictationType.Word);
   }));
 });

@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import {MemberHomePage} from "./pages/member-home/member-home.page";
+import {MemberHomePage} from './pages/member-home/member-home.page';
 
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -17,6 +17,7 @@ const routes: Routes = [
   { path: 'account', loadChildren: () => import('./pages/account/account.module').then(m => m.AccountPageModule) },
   { path: 'member-home/:segment', loadChildren: () => import('./pages/member-home/member-home.module').then(m => m.MemberHomePageModule) },
   { path: 'edit-dictation', loadChildren: () => import('./pages/edit-dictation/edit-dictation.module').then(m => m.EditDictationPageModule) },
+  { path: 'edit-dictation/:mode', loadChildren: () => import('./pages/edit-dictation/edit-dictation.module').then(m => m.EditDictationPageModule) },
   { path: 'search-dictation', loadChildren: () => import('./pages/search-dictation/search-dictation.module').then(m => m.SearchDictationPageModule) },
   { path: 'vocabulary-starter', loadChildren: () => import('./pages/vocabulary-starter/vocabulary-starter.module').then(m => m.VocabularyStarterPageModule) },
 ];

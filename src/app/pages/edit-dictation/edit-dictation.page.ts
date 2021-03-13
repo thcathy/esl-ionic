@@ -14,6 +14,8 @@ import {Observable} from 'rxjs';
 import {ActivatedRoute} from '@angular/router';
 import {Vocab} from '../../entity/vocab';
 import {AlertController} from '@ionic/angular';
+import {ArticleDictationService} from '../../services/dictation/article-dictation.service';
+import {DictationType, EditDictationPageMode} from './edit-dictation-page-enum';
 
 @Component({
   selector: 'app-edit-dictation',
@@ -28,6 +30,9 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
   isSaved: boolean;
   suitableStudentOptions = SuitableStudentOptions;
   sentenceLengthOptions = SentenceLengthOptions;
+  isPreview = false;
+  questions: string[];
+  isInitialized: boolean;
 
   constructor(
     public formBuilder: FormBuilder,
@@ -40,14 +45,16 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
     public storage: Storage,
     public alertController: AlertController,
     private activatedRoute: ActivatedRoute,
+    private articleDictationService: ArticleDictationService,
   ) { }
 
   ngOnInit() {}
 
   ionViewDidEnter() {
-    this.mode = EditDictationPageMode[this.activatedRoute.snapshot.queryParamMap?.get('mode')] || EditDictationPageMode.Edit;
+    this.isInitialized = false;
+    this.mode = EditDictationPageMode[this.activatedRoute.snapshot.paramMap?.get('mode')] || EditDictationPageMode.Edit;
     this.createForm();
-    this.init();
+    this.init().then(() => { this.isInitialized = true; });
   }
 
   getTitle(): String {
@@ -59,10 +66,6 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
   }
 
   async init() {
-    this.isSaved = false;
-    this.dictation = await this.storage.get(NavigationService.storageKeys.editDictation);
-    this.setupForm(this.dictation);
-
     if (!this.authService.isAuthenticated() && this.mode !== EditDictationPageMode.Start) {
       this.authService.login({
         destination: '/edit-dictation',
@@ -70,32 +73,41 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
       });
       return;
     }
+
+    this.isSaved = false;
+    this.isPreview = false;
+    this.dictation = await this.storage.get(NavigationService.storageKeys.editDictation);
+    this.setupForm(this.dictation);
   }
 
   createForm() {
-    if (this.mode === 'Edit') {
+    if (this.mode === EditDictationPageMode.Edit) {
       this.inputForm = this.formBuilder.group({
         'title': new FormControl('', [Validators.required, Validators.minLength(5),  Validators.maxLength(50)]),
         'description': new FormControl('', [Validators.maxLength(100)]),
         'showImage': true,
         'vocabulary': new FormControl('', [maxVocabularyValidator(50), Validators.pattern('^([a-zA-Z\\s]+[\\-,]?)+')]),
         'article': '',
-        'type': 'word',
+        'type': DictationType.Word,
         'suitableStudent': 'Any',
         'sentenceLength': 'Normal',
       });
+      this.inputForm.get('suitableStudent').setValue('Any');
     } else {
       this.inputForm = this.formBuilder.group({
         'showImage': true,
         'vocabulary': new FormControl('', [maxVocabularyValidator(50), Validators.pattern('^([a-zA-Z\\s]+[\\-,]?)+')]),
         'article': '',
-        'type': 'word',
+        'type': DictationType.Word,
         'sentenceLength': 'Normal',
       });
     }
 
-    this.inputForm.get('suitableStudent').setValue('Any');
     this.inputForm.get('sentenceLength').setValue('Normal');
+
+    this.inputForm.valueChanges.subscribe(val => {
+      this.closePreview();
+    });
   }
 
   get title() { return this.inputForm.get('title'); }
@@ -108,20 +120,27 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
   get sentenceLength() { return this.inputForm.get('sentenceLength'); }
   get type() { return this.inputForm.get('type'); }
 
+  get pageMode() { return EditDictationPageMode; }
+
+  get dictationType() { return DictationType; }
+
   setupForm(dictation: Dictation) {
     if (dictation == null) { return; }
 
-    this.title.setValue(dictation.title);
-    this.description.setValue(dictation.description);
-    this.showImage.setValue(dictation.showImage);
-    this.suitableStudent.setValue(dictation.suitableStudent);
     if (dictation.sentenceLength) { this.sentenceLength.setValue(dictation.sentenceLength); }
     if (this.dictationService.isSentenceDictation(dictation)) {
-      this.type.setValue('sentence');
+      this.type.setValue(DictationType.Sentence);
       this.article.setValue(dictation.article);
     } else {
-      this.type.setValue('word');
+      this.type.setValue(DictationType.Word);
       this.vocabulary.setValue(dictation.vocabs.map(v => v.word).join(' '));
+      this.showImage.setValue(dictation.showImage);
+    }
+
+    if (!this.dictationService.isInstantDictation(dictation)) {
+      this.title.setValue(dictation.title);
+      this.description.setValue(dictation.description);
+      this.suitableStudent.setValue(dictation.suitableStudent);
     }
   }
 
@@ -135,8 +154,8 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
       title: this.title.value,
       description: this.description.value,
       showImage: this.showImage.value,
-      vocabulary: this.type.value === 'word' ?  vocabularyValueToArray(this.vocabulary.value) : [],
-      article: this.type.value === 'sentence' ? this.article.value : '',
+      vocabulary: this.type.value === DictationType.Word ?  vocabularyValueToArray(this.vocabulary.value) : [],
+      article: this.type.value === DictationType.Sentence ? this.article.value : '',
       suitableStudent: this.suitableStudent.value,
       sentenceLength: this.sentenceLength.value,
     }).subscribe(
@@ -175,6 +194,9 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
     if (!this.inputForm || !this.inputForm.dirty || this.isSaved) {
       return true;
     }
+    if (this.mode === EditDictationPageMode.Start) {
+      return true;
+    }
     return this.ionicComponentService.confirmExit();
   }
 
@@ -183,16 +205,15 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
   }
 
   startDictationNow() {
-    const d = this.prepareDictation();
-    if (!this.dictationService.isSentenceDictation(d) && d.vocabs.length < 1) {
-      this.showNoVocabAlert();
+    if (this.isEmptyDictation()) {
       return;
     }
+    const d = this.prepareDictation();
     this.navService.startDictation(d);
   }
 
   prepareDictation(): Dictation {
-    if (this.type.value === 'word') {
+    if (this.type.value === DictationType.Word) {
       return <Dictation>{
         id: -1,
         showImage: this.showImage.value as boolean,
@@ -213,13 +234,24 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
     }
   }
 
-  async showNoVocabAlert() {
-    const alert = await this.alertController.create({
-      header: `${this.translate.instant('At least input 1 word')}!`,
-      buttons: [this.translate.instant('OK')]
-    });
-    await alert.present();
+  preview() {
+    this.isPreview = true;
+
+    if (this.type.value === DictationType.Word) {
+      this.questions = vocabularyValueToArray(this.vocabulary.value);
+    } else {
+      this.questions = this.articleDictationService.divideToSentences(this.article.value, this.articleDictationService.sentenceLengthOptionsToValue(this.sentenceLength.value));
+    }
+
   }
+
+  closePreview() {
+    if (this.isPreview) {
+      this.isPreview = false;
+      document.getElementById('ion-col-textarea')?.scrollIntoView();
+    }
+  }
+
 }
 
 export function maxVocabularyValidator(max: number): ValidatorFn {
@@ -232,9 +264,4 @@ export function maxVocabularyValidator(max: number): ValidatorFn {
 function vocabularyValueToArray(input: string): string[] {
   return input.split(/[\s,]+/)
           .filter(v => !ValidationUtils.isBlankString(v));
-}
-
-export enum EditDictationPageMode {
-  Edit = 'Edit',
-  Start = 'Start'
 }
