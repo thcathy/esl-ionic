@@ -12,7 +12,7 @@ import {EditDictationPageMode} from '../pages/edit-dictation/edit-dictation-page
 
 export interface NavigationRequest {
   destination: any;
-  params: any;
+  params: { [key: string]: any; };
 }
 
 @Injectable({ providedIn: 'root' })
@@ -30,15 +30,25 @@ export class NavigationService {
     language: 'language',
   };
 
+  params = {};
+
   constructor(private router: Router,
               private location: Location,
               private storage: Storage,
               private dictationService: DictationService,
               private translate: TranslateService) {}
 
+
+  getParam(key: string) {
+    return this.params[key];
+  }
+
+  setParam(key: string, object: any) {
+    this.params[key] = object;
+  }
+
   openHomePage() { this.navigate('/home') ; }
   openAccountPage() { this.navigate('/account'); }
-  openInstantDictation() { this.navigate('/instant-dictation'); }
   openSearchDictation() { this.navigate('/search-dictation'); }
   openVocabularyStarter() { this.navigate('/vocabulary-starter'); }
 
@@ -93,8 +103,9 @@ export class NavigationService {
     this.openDictation(dictation, toastMessage, true);
   }
 
-  async editDictation(dictation: Dictation = null, mode: string = 'Edit') {
-    await this.storage.set(NavigationService.storageKeys.editDictation, dictation);
+  editDictation(dictation: Dictation = null, mode: string = 'Edit') {
+    // await this.storage.set(NavigationService.storageKeys.editDictation, dictation);
+    this.setParam(NavigationService.storageKeys.editDictation, dictation);
     return this.router.navigate(['/edit-dictation/' + mode]);
   }
 

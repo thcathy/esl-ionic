@@ -9,7 +9,7 @@
   <div class="inner-content">
     <ion-card class="card">
       <ion-card-content>
-        <form *ngIf="inputForm && isInitialized" class="input-form" [formGroup]="inputForm" novalidate>
+        <form *ngIf="inputForm" class="input-form" [formGroup]="inputForm" novalidate>
           <ion-row>
             <ion-col size="12" size-sm="12" size-md="12" size-lg="6">
               <div class="title" *ngIf="mode === editDictationPageMode.Edit">
@@ -84,18 +84,31 @@
             </ion-col>
 
             <ion-col id="ion-col-textarea" size="12" size-sm="12" size-md="12" size-lg="6">
-              <ion-item *ngIf="type.value == dictationType.Word && !false">
-                <ion-label position="floating">{{'Vocabulary'|translate}} * ({{'separate by space, comma or 1 word per line'|translate}})
+<!--              <ion-item>-->
+<!--                <ion-label position="floating">{{'Vocabulary'|translate}} * ({{'separate by space, comma or 1 word per line'|translate}})-->
+<!--                </ion-label>-->
+<!--                <ion-textarea formControlName="vocabulary" rows="10"></ion-textarea>-->
+<!--              </ion-item>-->
+              <ion-item>
+                <ion-label position="floating" *ngIf="type.value == dictationType.Word">
+                  {{'Vocabulary'|translate}} * ({{'separate by space, comma or 1 word per line'|translate}})
                 </ion-label>
-                <ion-textarea formControlName="vocabulary" rows="10"></ion-textarea>
+                <ion-label position="floating" *ngIf="type.value == dictationType.Sentence">
+                  {{'Input an passage'|translate}} *:
+                </ion-label>
+<!--                <ion-textarea formControlName="article" rows="10"></ion-textarea>-->
+                <ion-textarea formControlName="question" rows="10"></ion-textarea>
               </ion-item>
-              <ion-item *ngIf="type.value == dictationType.Sentence && !false">
-                <ion-label position="floating">{{'Input an passage'|translate}} *:</ion-label>
-                <ion-textarea formControlName="article" rows="10"></ion-textarea>
-              </ion-item>
-              <div *ngIf="vocabulary.invalid && (vocabulary.dirty || vocabulary.touched)" class="error-text">
-                <div *ngIf="vocabulary.errors.maxVocabulary">{{'Cannot over 50 vocabulary'|translate}}</div>
-                <div *ngIf="vocabulary.errors.pattern">{{'Cannot contain invalid character(s)'|translate}}</div>
+<!--              <div *ngIf="vocabulary.invalid && (vocabulary.dirty || vocabulary.touched)" class="error-text">-->
+<!--                <div *ngIf="vocabulary.errors.maxVocabulary">{{'Cannot over 50 vocabulary'|translate}}</div>-->
+<!--                <div *ngIf="vocabulary.errors.pattern">{{'Cannot contain invalid character(s)'|translate}}</div>-->
+<!--              </div>-->
+              <div *ngIf="question.invalid && (question.dirty || question.touched)" class="error-text">
+                <div *ngIf="question.errors?.required">{{'Cannot find any word or sentence'|translate}}</div>
+              </div>
+              <div *ngIf="inputForm.invalid && (question.touched || question.dirty)" class="error-text">
+                <div *ngIf="inputForm.errors?.maxVocabulary">{{'Cannot over 50 vocabulary'|translate}}</div>
+                <div *ngIf="inputForm.errors?.invalidVocabularyPattern">{{'Cannot contain invalid character(s)'|translate}}</div>
               </div>
 
               <ion-button fill="clear" (click)="closePreview()" *ngIf="isPreview">
@@ -116,12 +129,12 @@
               </ion-button>
               <ion-button class="ion-float-right" style="margin: 16px;"
                           *ngIf="mode === pageMode.Edit"
-                          (click)="saveDictation()" [disabled]="inputForm.invalid">
+                          (click)="saveDictation()" [disabled]="!inputForm.valid">
                 <fa-icon icon="save"></fa-icon>&nbsp;{{'Save'|translate}}
               </ion-button>
               <ion-button class="ion-float-right" style="margin: 16px;"
                           *ngIf="mode === pageMode.Start"
-                          (click)="startDictationNow()" [disabled]="inputForm.invalid">
+                          (click)="startDictationNow()" [disabled]="!inputForm.valid">
                 <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>&nbsp;{{'Start'|translate}}
               </ion-button>
             </ion-col>
