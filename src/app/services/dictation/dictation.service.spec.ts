@@ -1,9 +1,9 @@
-import {CreateDictationHistoryRequest, DictationService} from "./dictation.service";
-import {dictation1, vocab_apple, vocab_banana} from "../../../testing/test-data";
-import {Dictation} from "../../entity/dictation";
-import {SentenceHistory} from "../../entity/sentence-history";
-import {VocabPracticeHistory} from "../../entity/vocab-practice-history";
-import {VocabPracticeService} from "../practice/vocab-practice.service";
+import {CreateDictationHistoryRequest, DictationService} from './dictation.service';
+import {dictation1, vocab_apple, vocab_banana} from '../../../testing/test-data';
+import {Dictation} from '../../entity/dictation';
+import {SentenceHistory} from '../../entity/sentence-history';
+import {VocabPracticeHistory} from '../../entity/vocab-practice-history';
+import {VocabPracticeService} from '../practice/vocab-practice.service';
 
 describe('DictationService', () => {
   let service: DictationService;

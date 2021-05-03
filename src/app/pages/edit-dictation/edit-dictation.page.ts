@@ -15,6 +15,7 @@ import {Vocab} from '../../entity/vocab';
 import {AlertController} from '@ionic/angular';
 import {ArticleDictationService} from '../../services/dictation/article-dictation.service';
 import {DictationType, EditDictationPageMode} from './edit-dictation-page-enum';
+import {DictationUtils} from '../../utils/dictation-utils';
 
 @Component({
   selector: 'app-edit-dictation',
@@ -144,7 +145,7 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
       title: this.title.value,
       description: this.description.value,
       showImage: this.showImage.value,
-      vocabulary: this.type.value === DictationType.Word ?  vocabularyValueToArray(this.question.value) : [],
+      vocabulary: this.type.value === DictationType.Word ?  DictationUtils.vocabularyValueToArray(this.question.value) : [],
       article: this.type.value === DictationType.Sentence ? this.question.value : '',
       suitableStudent: this.suitableStudent.value,
       sentenceLength: this.sentenceLength.value,
@@ -194,7 +195,7 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
       return <Dictation>{
         id: -1,
         showImage: this.showImage.value as boolean,
-        vocabs: vocabularyValueToArray(this.question.value).map(v => new Vocab(v)),
+        vocabs: DictationUtils.vocabularyValueToArray(this.question.value).map(v => new Vocab(v)),
         totalRecommended: 0,
         title: new Date().toDateString(),
         suitableStudent: 'Any',
@@ -215,7 +216,7 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
     this.isPreview = true;
 
     if (this.type.value === DictationType.Word) {
-      this.questions = vocabularyValueToArray(this.question.value);
+      this.questions = DictationUtils.vocabularyValueToArray(this.question.value);
     } else {
       this.questions = this.articleDictationService.divideToSentences(this.question.value, this.articleDictationService.sentenceLengthOptionsToValue(this.sentenceLength.value));
     }
@@ -237,7 +238,7 @@ function maxVocabularyValidator(max: number, typeName: string, questionName: str
     if (type == null || type === DictationType.Sentence) { return null; }
 
     const question = control.get(questionName).value;
-    const tooLarge = question != null && vocabularyValueToArray(question).length > max;
+    const tooLarge = question != null && DictationUtils.vocabularyValueToArray(question).length > max;
     return tooLarge ? {'maxVocabulary': true} : null;
   };
 }
@@ -252,9 +253,4 @@ function vocabularyPatternValidator(typeName: string, questionName: string): Val
     const valid = !ValidationUtils.isBlankString(question) && !pattern.test(question);
     return valid ? {'invalidVocabularyPattern': true} : null;
   };
-}
-
-function vocabularyValueToArray(input: string): string[] {
-  return input.split(/[\s,]+/)
-          .filter(v => !ValidationUtils.isBlankString(v));
 }
