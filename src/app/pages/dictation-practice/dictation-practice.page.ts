@@ -8,7 +8,7 @@ import {SpeechService} from '../../services/speech.service';
 import {IonicComponentService} from '../../services/ionic-component.service';
 import {Storage} from '@ionic/storage';
 import {NavigationService} from '../../services/navigation.service';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {NGXLogger} from 'ngx-logger';
 import {VirtualKeyboardEvent} from '../../components/virtual-keyboard/virtual-keyboard';
 
@@ -44,7 +44,7 @@ export class DictationPracticePage implements OnInit {
 
   ngOnInit() {      }
 
-  ionViewDidEnter() {
+  ionViewWillEnter() {
     this.clearVaribles();
     this.initDictation();
   }
@@ -62,11 +62,10 @@ export class DictationPracticePage implements OnInit {
   async initDictation() {
     this.loading = await this.ionicComponentService.showLoading();
     this.dictation = await this.storage.get(NavigationService.storageKeys.dictation);
-    this.dictationId = await this.storage.get(NavigationService.storageKeys.dictationId);
-    if (this.dictation == null && this.dictationId > 0) {
-      this.dictation = await this.dictationService.getById(this.dictationId).toPromise();
-    }
-
+    // this.dictationId = await this.storage.get(NavigationService.storageKeys.dictationId);
+    // if (this.dictation == null && this.dictationId > 0) {
+    //   this.dictation = await this.dictationService.getById(this.dictationId).toPromise();
+    // }
     this.questionIndex = 0;
     this.mark = 0;
     this.phonics = 'Phonetic';
