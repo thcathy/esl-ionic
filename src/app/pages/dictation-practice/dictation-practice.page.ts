@@ -152,7 +152,7 @@ export class DictationPracticePage implements OnInit {
   }
 
   private checkAnswer() {
-    const correct = this.vocabPracticeService.isWordEqual(this.currentQuestion().word, this.answer == null ? '' : this.answer);
+    const correct = this.vocabPracticeService.isWordEqual(this.currentQuestion().word, this.answer == null ? '' : this.answer, this.dictation.wordContainSpace);
     if (correct) { this.mark++; }
 
     const history = <VocabPracticeHistory>  {

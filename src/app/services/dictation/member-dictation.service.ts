@@ -14,6 +14,7 @@ export interface EditDictationRequest {
   suitableStudent: string;
   article: string;
   sentenceLength: string;
+  wordContainSpace: string;
 }
 
 @Injectable({ providedIn: 'root' })

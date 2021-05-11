@@ -24,6 +24,7 @@ export class Dictation {
   suitableStudent?: string;
   generated?: boolean;
   sentenceLength?: string;
+  wordContainSpace?: boolean;
 }
 
 export const SuitableStudentOptions = ['Any', 'Kindergarten', 'JuniorPrimary', 'SeniorPrimary', 'JuniorSecondary', 'SeniorSecondary'];

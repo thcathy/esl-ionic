@@ -194,17 +194,20 @@ describe('EditDictationPage', () => {
                      cup
           `);
           component.showImage.setValue(true);
+          component.wordContainSpace.setValue(true);
           component.type.setValue(DictationType.Word);
           component.startDictationNow();
 
           const dictation = navigationServiceSpy.startDictation.calls.mostRecent().args[0] as Dictation;
           expect(dictation.showImage).toBeTrue();
+          expect(dictation.wordContainSpace).toBeTrue();
           expect(dictation.vocabs.length).toEqual(3);
           expect(dictation.vocabs[0].word).toEqual('apple');
           expect(dictation.vocabs[1].word).toEqual('banana');
           expect(dictation.vocabs[2].word).toEqual('cup');
 
           component.question.setValue(` apple , banana,cup`);
+          component.wordContainSpace.setValue(false);
           component.startDictationNow();
           const dictation2 = navigationServiceSpy.startDictation.calls.mostRecent().args[0] as Dictation;
           expect(dictation2.vocabs.length).toEqual(3);

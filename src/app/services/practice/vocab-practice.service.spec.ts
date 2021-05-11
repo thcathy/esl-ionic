@@ -1,9 +1,9 @@
-import {VocabPracticeService} from "./vocab-practice.service";
+import {VocabPracticeService} from './vocab-practice.service';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
-import {TestBed} from "@angular/core/testing";
-import {VocabPracticeHistory} from "../../entity/vocab-practice-history";
-import {vocab_apple, vocab_banana} from "../../../testing/test-data";
-import {HttpClient} from "@angular/common/http";
+import {TestBed} from '@angular/core/testing';
+import {VocabPracticeHistory} from '../../entity/vocab-practice-history';
+import {vocab_apple, vocab_banana} from '../../../testing/test-data';
+import {HttpClient} from '@angular/common/http';
 
 describe('VocabPracticeService', () => {
   let service: VocabPracticeService;
@@ -29,12 +29,18 @@ describe('VocabPracticeService', () => {
     const busstop = 'busstop';
     const busstopWithHyphen = 'bus-stop';
     const busstopWithSpace = 'bus stop';
-    const userInput = ['busstop','bus-stop','bus stop',' bus stop '];
+    const userInput = ['busstop', 'bus-stop', 'bus stop', ' bus stop '];
     userInput.forEach(input => {
       expect(service.isWordEqual(busstop, input)).toBe(true);
       expect(service.isWordEqual(busstopWithHyphen, input)).toBe(true);
       expect(service.isWordEqual(busstopWithSpace, input)).toBe(true);
     });
+  });
+
+  it('isWordEqual can validate include space', () => {
+    expect(service.isWordEqual('bus stop', 'busstop', false)).toBe(true);
+    expect(service.isWordEqual('bus stop', 'busstop', true)).toBe(false);
+    expect(service.isWordEqual('bus stop', 'bus stop', true)).toBe(true);
   });
 
   it('isWordEqual is case insensitive', () => {
@@ -60,7 +66,7 @@ describe('VocabPracticeService', () => {
   });
 
   it('generatePracticeFromWords create a vocabulary practice dictation', () => {
-    let result = service.generatePracticeFromWords(['test']);
+    const result = service.generatePracticeFromWords(['test']);
     expect(result.id).toEqual(-1);
     expect(result.generated).toBeTruthy();
     expect(result.showImage).toBeTruthy();

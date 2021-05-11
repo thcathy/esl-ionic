@@ -82,6 +82,7 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
   createForm() {
     const controlsConfig = {};
     controlsConfig['showImage'] = true;
+    controlsConfig['wordContainSpace'] = false;
     controlsConfig['question'] = new FormControl('', [Validators.required]);
     controlsConfig['type'] = DictationType.Word;
     controlsConfig['sentenceLength'] = 'Normal';
@@ -95,7 +96,7 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
       controlsConfig,
       {
         validators: [
-          maxVocabularyValidator(50, 'type', 'question'),
+          maxVocabularyValidator(50, 'type', 'question', 'wordContainSpace'),
           vocabularyPatternValidator('type', 'question')
         ]
       });
@@ -113,6 +114,7 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
   get suitableStudent() { return this.inputForm.get('suitableStudent'); }
   get sentenceLength() { return this.inputForm.get('sentenceLength'); }
   get type() { return this.inputForm.get('type'); }
+  get wordContainSpace() { return this.inputForm.get('wordContainSpace'); }
 
   get pageMode() { return EditDictationPageMode; }
 
@@ -127,8 +129,9 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
       this.question.setValue(dictation.article);
     } else {
       this.type.setValue(DictationType.Word);
-      this.question.setValue(dictation.vocabs.map(v => v.word).join(' '));
+      this.question.setValue(dictation.vocabs.map(v => v.word).join(dictation.wordContainSpace ? '\n' : ' '));
       this.showImage.setValue(dictation.showImage);
+      this.wordContainSpace.setValue(dictation.wordContainSpace);
     }
 
     if (!this.dictationService.isInstantDictation(dictation)) {
@@ -145,10 +148,11 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
       title: this.title.value,
       description: this.description.value,
       showImage: this.showImage.value,
-      vocabulary: this.type.value === DictationType.Word ?  DictationUtils.vocabularyValueToArray(this.question.value) : [],
+      vocabulary: this.type.value === DictationType.Word ?  DictationUtils.vocabularyValueToArray(this.question.value, this.wordContainSpace.value) : [],
       article: this.type.value === DictationType.Sentence ? this.question.value : '',
       suitableStudent: this.suitableStudent.value,
       sentenceLength: this.sentenceLength.value,
+      wordContainSpace : this.wordContainSpace.value,
     }).subscribe(
       dic => this.afterSaved(dic),
       err => this.showError(err)
@@ -195,10 +199,11 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
       return <Dictation>{
         id: -1,
         showImage: this.showImage.value as boolean,
-        vocabs: DictationUtils.vocabularyValueToArray(this.question.value).map(v => new Vocab(v)),
+        vocabs: DictationUtils.vocabularyValueToArray(this.question.value, this.wordContainSpace.value).map(v => new Vocab(v)),
         totalRecommended: 0,
         title: new Date().toDateString(),
         suitableStudent: 'Any',
+        wordContainSpace: this.wordContainSpace.value,
       };
     } else {
       return <Dictation>{
@@ -216,7 +221,7 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
     this.isPreview = true;
 
     if (this.type.value === DictationType.Word) {
-      this.questions = DictationUtils.vocabularyValueToArray(this.question.value);
+      this.questions = DictationUtils.vocabularyValueToArray(this.question.value, this.wordContainSpace.value);
     } else {
       this.questions = this.articleDictationService.divideToSentences(this.question.value, this.articleDictationService.sentenceLengthOptionsToValue(this.sentenceLength.value));
     }
@@ -232,13 +237,13 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
 
 }
 
-function maxVocabularyValidator(max: number, typeName: string, questionName: string): ValidatorFn {
+function maxVocabularyValidator(max: number, typeName: string, questionName: string, wordContainSpaceName: string): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
     const type = control.get(typeName).value;
     if (type == null || type === DictationType.Sentence) { return null; }
 
     const question = control.get(questionName).value;
-    const tooLarge = question != null && DictationUtils.vocabularyValueToArray(question).length > max;
+    const tooLarge = question != null && DictationUtils.vocabularyValueToArray(question, control.get(wordContainSpaceName).value).length > max;
     return tooLarge ? {'maxVocabulary': true} : null;
   };
 }

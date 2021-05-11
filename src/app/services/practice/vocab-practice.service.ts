@@ -31,8 +31,12 @@ export class VocabPracticeService extends Service {
     return this.http.get<VocabPractice>(this.getQuestionUrl + word,  {params: params});
   }
 
-  isWordEqual(word: string, input: string): boolean {
-    return word.replace(/ /g, '').replace(/-/g, '').toLowerCase() === (input.replace(/ /g, '').replace(/-/g, '').toLowerCase());
+  isWordEqual(word: string, input: string, includeSpace: boolean = false): boolean {
+    if (!includeSpace) {
+      word = word.replace(/ /g, '');
+      input = input.replace(/ /g, '');
+    }
+    return word.replace(/-/g, '').toLowerCase() === (input.replace(/-/g, '').toLowerCase());
   }
 
   generatePractice(difficulty: string): Observable<Dictation> {

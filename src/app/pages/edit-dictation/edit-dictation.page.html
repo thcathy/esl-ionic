@@ -72,6 +72,11 @@
                   <fa-icon [icon]="['far', 'images']"></fa-icon> {{'Show Image'|translate}}</ion-label>
                 <ion-toggle style="padding-right: 30px;" formControlName="showImage"></ion-toggle>
               </ion-item>
+              <ion-item *ngIf="type.value === dictationType.Word">
+                <ion-label>
+                  <fa-icon [icon]="['fas', 'window-minimize']"></fa-icon> {{'Words Contain Space'|translate}}</ion-label>
+                <ion-toggle style="padding-right: 30px;" formControlName="wordContainSpace"></ion-toggle>
+              </ion-item>
               <ion-item *ngIf="type.value === dictationType.Sentence">
                 <ion-label>
                   <fa-icon [icon]="['fas', 'ruler']"></fa-icon> {{'Each Sentence Length'|translate}}
