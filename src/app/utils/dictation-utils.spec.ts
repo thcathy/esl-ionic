@@ -1,6 +1,6 @@
 import {DictationUtils} from './dictation-utils';
 
-fdescribe('DictationUtils', () => {
+describe('DictationUtils', () => {
   it('vocabularyValueToArray can split input to string arrays', () => {
     let count;
     count = DictationUtils.vocabularyValueToArray(`apple banana`).length;

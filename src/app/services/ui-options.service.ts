@@ -8,6 +8,8 @@ export class UIOptionsService {
   public static keys = {
     disableKeyboard: 'UIOptionsService.keys.disableKeyboard',
     keyboardType: 'UIOptionsService.keys.keyboardType',
+    vocabPracticeType: 'UIOptionsService.keys.vocabPracticeType',
+    puzzleSize: 'UIOptionsService.keys.puzzleSize',
   };
 
   constructor(

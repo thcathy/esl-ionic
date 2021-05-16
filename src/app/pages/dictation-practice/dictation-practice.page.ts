@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Dictation} from '../../entity/dictation';
 import {VocabPractice} from '../../entity/voacb-practice';
 import {VocabPracticeHistory} from '../../entity/vocab-practice-history';
@@ -11,6 +11,8 @@ import {NavigationService} from '../../services/navigation.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {NGXLogger} from 'ngx-logger';
 import {VirtualKeyboardEvent} from '../../components/virtual-keyboard/virtual-keyboard';
+import {VocabPracticeType} from '../../enum/vocab-practice-type.enum';
+import {DictationUtils} from '../../utils/dictation-utils';
 
 @Component({
   selector: 'app-dictation-practice',
@@ -30,6 +32,8 @@ export class DictationPracticePage implements OnInit {
   audio: Map<string, HTMLAudioElement> = new Map<string, HTMLAudioElement>();
   loading: any;
   isKeyboardActive: boolean;
+  practiceType: VocabPracticeType;
+  puzzleControls: PuzzleControls;
 
   constructor(
     public route: ActivatedRoute,
@@ -62,10 +66,7 @@ export class DictationPracticePage implements OnInit {
   async initDictation() {
     this.loading = await this.ionicComponentService.showLoading();
     this.dictation = await this.storage.get(NavigationService.storageKeys.dictation);
-    // this.dictationId = await this.storage.get(NavigationService.storageKeys.dictationId);
-    // if (this.dictation == null && this.dictationId > 0) {
-    //   this.dictation = await this.dictationService.getById(this.dictationId).toPromise();
-    // }
+    this.practiceType = await this.storage.get(NavigationService.storageKeys.vocabPracticeType);
     this.questionIndex = 0;
     this.mark = 0;
     this.phonics = 'Phonetic';
@@ -81,8 +82,15 @@ export class DictationPracticePage implements OnInit {
   }
 
   gotPractice(p: VocabPractice) {
-    this.vocabPractices.push(p);
     if (p.activePronounceLink) { this.audio.set(p.word, new Audio(p.activePronounceLink)); }
+    this.vocabPractices.push(p);
+  }
+
+  createPuzzleControls(word: string) {
+    const answer = DictationUtils.splitWord(word).map(() => '?');
+    answer[0] = '_';
+    this.puzzleControls.answers.push(answer);
+    this.puzzleControls.buttons.push(DictationUtils.toCharacters(word));
   }
 
   speak() {
@@ -185,4 +193,9 @@ export class DictationPracticePage implements OnInit {
   }
 
   sleep(ms = 0) { return new Promise(r => setTimeout(r, ms)); }
+}
+
+export class PuzzleControls {
+  answers: string[][];
+  buttons: string[][];
 }

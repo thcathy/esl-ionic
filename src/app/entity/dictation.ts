@@ -31,3 +31,8 @@ export const SuitableStudentOptions = ['Any', 'Kindergarten', 'JuniorPrimary', '
 
 export const SentenceLengthOptions = ['Short', 'Normal', 'Long', 'VeryLong'];
 
+export class DictationOptions {
+  letterPuzzle?: boolean;
+  puzzleSize = 10;
+}
+

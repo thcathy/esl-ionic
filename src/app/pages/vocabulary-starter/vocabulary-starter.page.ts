@@ -1,13 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import {FormBuilder, FormGroup} from "@angular/forms";
-import {VocabDifficulty, vocabDifficulties} from "../../entity/voacb-practice";
-import {VocabPracticeService} from "../../services/practice/vocab-practice.service";
-import {NavigationService} from "../../services/navigation.service";
-import {IonicComponentService} from "../../services/ionic-component.service";
-import {ActivatedRoute} from "@angular/router";
-import {switchMap} from "rxjs-compat/operator/switchMap";
-import {map} from "rxjs/operators";
-import {AuthService} from "../../services/auth.service";
+import {FormBuilder, FormGroup} from '@angular/forms';
+import {VocabDifficulty, vocabDifficulties} from '../../entity/voacb-practice';
+import {VocabPracticeService} from '../../services/practice/vocab-practice.service';
+import {NavigationService} from '../../services/navigation.service';
+import {IonicComponentService} from '../../services/ionic-component.service';
+import {ActivatedRoute} from '@angular/router';
+import {switchMap} from 'rxjs-compat/operator/switchMap';
+import {map} from 'rxjs/operators';
+import {AuthService} from '../../services/auth.service';
+import {VocabPracticeType} from '../../enum/vocab-practice-type.enum';
+import {DictationType} from '../edit-dictation/edit-dictation-page-enum';
 
 @Component({
   selector: 'app-vocabulary-starter',
@@ -35,18 +37,23 @@ export class VocabularyStarterPage implements OnInit {
     );
   }
 
-  get difficulty() { return this.inputForm.get('difficulty') }
+  get difficulty() { return this.inputForm.get('difficulty'); }
+  get type() { return this.inputForm.get('type'); }
+
+  get practiceType() { return VocabPracticeType; }
 
   createForm() {
     this.inputForm = this.formBuilder.group({
       'difficulty': '',
+      'type': '',
     });
-    this.inputForm.get('difficulty').setValue(VocabDifficulty.Beginner);
+    this.difficulty.setValue(VocabDifficulty.Beginner);
+    this.type.setValue(VocabPracticeType.Spell);
   }
 
   start() {
     this.vocabPracticeService.generatePractice(this.difficulty.value)
-      .subscribe(d => this.navigationService.startDictation(d));
+      .subscribe(d => this.navigationService.startDictation(d, this.type.value));
   }
 
 }

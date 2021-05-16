@@ -9,6 +9,7 @@ import {SentenceHistory} from '../entity/sentence-history';
 import {Location} from '@angular/common';
 import {TranslateService} from '@ngx-translate/core';
 import {EditDictationPageMode} from '../pages/edit-dictation/edit-dictation-page-enum';
+import {VocabPracticeType} from '../enum/vocab-practice-type.enum';
 
 export interface NavigationRequest {
   destination: any;
@@ -28,6 +29,7 @@ export class NavigationService {
     showBackButton: 'showBackButton',
     memberHomeSegment: 'memberHomeSegment',
     language: 'language',
+    vocabPracticeType: 'vocabPracticeType',
   };
 
   params = {};
@@ -64,15 +66,15 @@ export class NavigationService {
     this.location.back();
   }
 
-  async startDictation(dictation: Dictation) {
-    // await this.storage.set(NavigationService.storageKeys.dictationId, dictation.id);
-    this.storage.set(NavigationService.storageKeys.dictation, dictation).then(() => {
-      if (this.dictationService.isSentenceDictation(dictation)) {
-        this.router.navigate(['/article-dictation']);
-      } else {
-        this.router.navigate(['/dictation-practice']);
-      }
-    });
+  async startDictation(dictation: Dictation, type: VocabPracticeType = VocabPracticeType.Spell) {
+    await this.storage.set(NavigationService.storageKeys.dictation, dictation);
+    await this.storage.set(NavigationService.storageKeys.vocabPracticeType, type);
+
+    if (this.dictationService.isSentenceDictation(dictation)) {
+      this.router.navigate(['/article-dictation']);
+    } else {
+      this.router.navigate(['/dictation-practice']);
+    }
   }
 
   openMemberHome(segment: String = 'dictation') {

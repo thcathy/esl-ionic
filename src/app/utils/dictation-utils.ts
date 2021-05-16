@@ -14,7 +14,7 @@ export class DictationUtils {
   }
 
   static toCharacters(word: string, minCharacters = 10): string[] {
-    const characters = new Set(word.toLowerCase().split(''));
+    const characters = new Set(this.splitWord(word));
     while (characters.size < minCharacters) {
       const char = DictationUtils.AtoZ.charAt(Math.random() * 26);
       if (!characters.has(char)) {
@@ -23,6 +23,8 @@ export class DictationUtils {
     }
     return DictationUtils.shuffle(Array.from(characters));
   }
+
+  static splitWord = (word: string): string[] => word.toLowerCase().split('');
 
   private static shuffle(array: string[]): string[] {
     let currentIndex = array.length, temporaryValue, randomIndex;

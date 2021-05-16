@@ -20,22 +20,24 @@ import {VirtualKeyboardComponent} from './virtual-keyboard/virtual-keyboard';
 import {HttpClientModule} from '@angular/common/http';
 import {ShareButtonsModule} from 'ngx-sharebuttons/buttons';
 import {ShareIconsModule} from 'ngx-sharebuttons/icons';
+import {CharacterButtonComponent} from './character-button/character-button.component';
+import {CharacterComponent} from './character/character.component';
 
 @NgModule({
-  declarations: [MemberScoreRankingComponent,
-    DictationStatisticsComponent,
-    VocabImageComponent,
-    PracticeHistoryListComponent,
-    ScoreComponent,
-    DictationCardComponent,
-    FooterComponent,
-    DictationListComponent,
-    SentenceHistoriesComponent,
-    MemberScoreListComponent,
-    MemberPracticeHistoryListComponent,
-    VocabHistoryListComponent,
-    VirtualKeyboardComponent,
-  ],
+    declarations: [MemberScoreRankingComponent,
+        DictationStatisticsComponent,
+        VocabImageComponent,
+        PracticeHistoryListComponent,
+        ScoreComponent,
+        DictationCardComponent,
+        FooterComponent,
+        DictationListComponent,
+        SentenceHistoriesComponent,
+        MemberScoreListComponent,
+        MemberPracticeHistoryListComponent,
+        VocabHistoryListComponent,
+        VirtualKeyboardComponent, CharacterButtonComponent, CharacterComponent,
+    ],
   imports: [
     IonicModule,
     TranslateModule,
@@ -48,19 +50,19 @@ import {ShareIconsModule} from 'ngx-sharebuttons/icons';
     }),
     ShareIconsModule.forRoot()
   ],
-  exports: [MemberScoreRankingComponent,
-    DictationStatisticsComponent,
-    VocabImageComponent,
-    PracticeHistoryListComponent,
-    ScoreComponent,
-    DictationCardComponent,
-    FooterComponent,
-    DictationListComponent,
-    SentenceHistoriesComponent,
-    MemberScoreListComponent,
-    MemberPracticeHistoryListComponent,
-    VocabHistoryListComponent,
-    VirtualKeyboardComponent,
-  ]
+    exports: [MemberScoreRankingComponent,
+        DictationStatisticsComponent,
+        VocabImageComponent,
+        PracticeHistoryListComponent,
+        ScoreComponent,
+        DictationCardComponent,
+        FooterComponent,
+        DictationListComponent,
+        SentenceHistoriesComponent,
+        MemberScoreListComponent,
+        MemberPracticeHistoryListComponent,
+        VocabHistoryListComponent,
+        VirtualKeyboardComponent, CharacterButtonComponent, CharacterComponent,
+    ]
 })
 export class ComponentsModule {}

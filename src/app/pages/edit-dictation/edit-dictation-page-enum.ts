@@ -5,5 +5,5 @@ export enum EditDictationPageMode {
 
 export enum DictationType {
   Sentence = 'sentence',
-  Word = 'word'
+  Word = 'word',
 }

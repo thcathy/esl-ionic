@@ -41,6 +41,16 @@
                   </ion-button>
               </div>
 
+              <div>
+                <app-character character="a"></app-character>
+                <app-character character="_"></app-character>
+              </div>
+
+              <div>
+                <app-character-button character="a" [isCorrect]="true"></app-character-button>
+                <app-character-button character="b" [isCorrect]="false"></app-character-button>
+              </div>
+
             </ion-col>
             <ion-col size="12" size-sm="12" size-md="6">
               <vocab-image [images]="currentQuestion().picsFullPaths"></vocab-image>

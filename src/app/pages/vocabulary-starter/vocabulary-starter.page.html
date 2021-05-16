@@ -19,6 +19,31 @@
                   <ion-select formControlName="difficulty" interface="popover">
                     <ion-select-option *ngFor="let d of vocabDifficulties" [value]="d">{{'VocabDifficulty.' + d|translate}}</ion-select-option>
                   </ion-select>
+                  <ion-radio-group [formControl]="type">
+                    <ion-row class="radio">
+                      <ion-col>
+                        <ion-item>
+                          <ion-label [class.deselected]="type.value === practiceType.Spell">
+                            {{'Spelling'|translate}}</ion-label>
+                          <ion-radio value="Spell"></ion-radio>
+                        </ion-item>
+                        <div class="type-example" [class.deselected]="type.value === practiceType.Spell">
+                          <fa-icon icon="apple-alt"></fa-icon>&nbsp;<span class="spell">apple</span>
+                        </div>
+                      </ion-col>
+                      <ion-col>
+                        <ion-item>
+                          <ion-label [class.deselected]="type.value === practiceType.Puzzle">
+                            {{'Puzzle'|translate}}</ion-label>
+                          <ion-radio value="Puzzle"></ion-radio>
+                        </ion-item>
+                        <div class="type-example puzzle" [class.deselected]="type.value === practiceType.Puzzle">
+                          <fa-icon icon="apple-alt"></fa-icon>
+                          <span class="puzzle">p</span><span>e</span><span>l</span><span>a</span>
+                        </div>
+                      </ion-col>
+                    </ion-row>
+                  </ion-radio-group>
                   <ion-button class="ion-float-right" (click)="start()">
                     <fa-icon icon="play"></fa-icon>&nbsp;{{'Start'|translate}}
                   </ion-button>
