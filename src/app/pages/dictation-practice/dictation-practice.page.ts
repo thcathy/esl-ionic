@@ -8,7 +8,7 @@ import {SpeechService} from '../../services/speech.service';
 import {IonicComponentService} from '../../services/ionic-component.service';
 import {Storage} from '@ionic/storage';
 import {NavigationService} from '../../services/navigation.service';
-import {ActivatedRoute, Router} from '@angular/router';
+import {ActivatedRoute} from '@angular/router';
 import {NGXLogger} from 'ngx-logger';
 import {VirtualKeyboardEvent} from '../../components/virtual-keyboard/virtual-keyboard';
 import {VocabPracticeType} from '../../enum/vocab-practice-type.enum';
@@ -61,6 +61,7 @@ export class DictationPracticePage implements OnInit {
     this.questionIndex = 0;
     this.mark = 0;
     this.answer = '';
+    this.puzzleControls = new PuzzleControls();
   }
 
   async initDictation() {
@@ -81,8 +82,11 @@ export class DictationPracticePage implements OnInit {
       }));
   }
 
+  get type() { return VocabPracticeType; }
+
   gotPractice(p: VocabPractice) {
     if (p.activePronounceLink) { this.audio.set(p.word, new Audio(p.activePronounceLink)); }
+    if (this.practiceType === VocabPracticeType.Puzzle) { this.createPuzzleControls(p.word); }
     this.vocabPractices.push(p);
   }
 
@@ -196,6 +200,7 @@ export class DictationPracticePage implements OnInit {
 }
 
 export class PuzzleControls {
-  answers: string[][];
-  buttons: string[][];
+  answers: string[][] = new Array<string[]>();
+  buttons: string[][] = new Array<string[]>();
+  counter = 0;
 }

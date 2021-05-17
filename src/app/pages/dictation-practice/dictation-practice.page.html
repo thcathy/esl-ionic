@@ -25,30 +25,31 @@
                   <ion-button shape="round" class="phonicsButton" (click)="showPhonics()">{{phonics|translate}}</ion-button>
                 </ion-col>
               </ion-row>
-              <ion-item class="answerInput">
-                <ion-label position="floating">{{'Answer'|translate}}</ion-label>
-                <ion-input [(ngModel)]="answer" type="text" inputmode="text" maxlength="30" (keyup.enter)="submitAnswer()"
-                           autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></ion-input>
-              </ion-item>
-              <div>
-                  <ion-button fill="clear" size="large"
-                              [class.grey-text]="!isKeyboardActive"
-                              (click)="virtualKeyboard.changeKeyboardType()">
-                    <fa-icon icon="keyboard"></fa-icon>
-                  </ion-button>
-                  <ion-button class="submitBtn ion-float-right" (click)="submitAnswer()">
-                    <fa-icon icon="check"></fa-icon>&nbsp;{{'Submit'|translate}}
-                  </ion-button>
+              <div *ngIf="practiceType === type.Spell">
+                <ion-item class="answerInput">
+                  <ion-label position="floating">{{'Answer'|translate}}</ion-label>
+                  <ion-input [(ngModel)]="answer" type="text" inputmode="text" maxlength="30" (keyup.enter)="submitAnswer()"
+                             autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></ion-input>
+                </ion-item>
+                <div>
+                    <ion-button fill="clear" size="large"
+                                [class.grey-text]="!isKeyboardActive"
+                                (click)="virtualKeyboard.changeKeyboardType()">
+                      <fa-icon icon="keyboard"></fa-icon>
+                    </ion-button>
+                    <ion-button class="submitBtn ion-float-right" (click)="submitAnswer()">
+                      <fa-icon icon="check"></fa-icon>&nbsp;{{'Submit'|translate}}
+                    </ion-button>
+                </div>
               </div>
+              <div *ngIf="practiceType === type.Puzzle">
+                <div>
+                  <app-character *ngFor="let char of puzzleControls.answers[questionIndex]" [character]="char"></app-character>
+                </div>
 
-              <div>
-                <app-character character="a"></app-character>
-                <app-character character="_"></app-character>
-              </div>
-
-              <div>
-                <app-character-button character="a" [isCorrect]="true"></app-character-button>
-                <app-character-button character="b" [isCorrect]="false"></app-character-button>
+                <div>
+                  <app-character-button *ngFor="let char of puzzleControls.buttons[questionIndex]" [character]ª="char" [isCorrect]="currentQuestion().word.indexOf(char) >= 0"></app-character-button>
+                </div>
               </div>
 
             </ion-col>
