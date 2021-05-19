@@ -36,12 +36,13 @@ export class DictationOptions {
   puzzleSize = 10;
 }
 
-export class PuzzleControls {
+export class  PuzzleControls {
   word: string;
   answers: string[];
   buttons: string[];
   buttonCorrects: boolean[];
   counter = 0;
+  answerState = '';
 
   constructor(word: string, answers: string[], buttons: string[], buttonCorrects: boolean[]) {
     this.word = word;

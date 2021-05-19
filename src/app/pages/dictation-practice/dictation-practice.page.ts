@@ -141,7 +141,10 @@ export class DictationPracticePage implements OnInit {
 
   onCharacterButtonPress(character: string) {
     this.vocabPracticeService.receiveAnswer(this.puzzleControls, character);
-    if (this.puzzleControls.isComplete()) { this.finishPuzzleQuestion(); }
+    if (this.puzzleControls.isComplete()) {
+      this.puzzleControls.answerState = 'correct';
+      setTimeout(() => this.finishPuzzleQuestion(), 3000);
+    }
   }
 
   onKeyboardEvent(event: VirtualKeyboardEvent) {

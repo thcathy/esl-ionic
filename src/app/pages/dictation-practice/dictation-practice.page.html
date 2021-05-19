@@ -28,7 +28,7 @@
               <div *ngIf="practiceType === type.Spell">
                 <ion-item class="answerInput">
                   <ion-label position="floating">{{'Answer'|translate}}</ion-label>
-                  <ion-input [(ngModel)]="answer" type="text" inputmode="text" maxlength="30" (keyup.enter)="submitAnswer()"
+                  <ion-input [(ngModel)]="answer" type="text" inputmode="text" maxlength="30" (keyup.enter)="submitSpellingAnswer()"
                              autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></ion-input>
                 </ion-item>
                 <div>
@@ -37,14 +37,17 @@
                                 (click)="virtualKeyboard.changeKeyboardType()">
                       <fa-icon icon="keyboard"></fa-icon>
                     </ion-button>
-                    <ion-button class="submitBtn ion-float-right" (click)="submitAnswer()">
+                    <ion-button class="submitBtn ion-float-right" (click)="submitSpellingAnswer()">
                       <fa-icon icon="check"></fa-icon>&nbsp;{{'Submit'|translate}}
                     </ion-button>
                 </div>
               </div>
               <div *ngIf="practiceType === type.Puzzle && puzzleControls != null" class="puzzle-div">
                 <div>
-                  <app-character *ngFor="let char of puzzleControls.answers" [character]="char"></app-character>
+                  <app-character *ngFor="let char of puzzleControls.answers"
+                                 [character]="char" [state]="puzzleControls.answerState"></app-character>
+                  <span>I will display &#x1F44D; &#66; &#67;</span>
+                  <p>I will display &#x1F981;</p>
                 </div>
 
                 <div>
