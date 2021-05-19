@@ -24,12 +24,14 @@ describe('CharacterButtonComponent', () => {
   }));
 
   it('click correct button twice only emit event once', () => {
-    spyOn(component.correctPress, 'emit');
+    const emitSpy = spyOn(component.correctPress, 'emit');
     component.isCorrect = true;
+    component.character = 'a';
     component.onClick();
     component.onClick();
     fixture.detectChanges();
     expect(component.correctPress.emit).toHaveBeenCalledTimes(1);
+    expect(emitSpy.calls.mostRecent().args[0]).toEqual('a');
   });
 
   it('click correct button', () => {

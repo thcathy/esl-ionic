@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {Dictation} from '../../entity/dictation';
+import {Dictation, PuzzleControls} from '../../entity/dictation';
 import {VocabPractice} from '../../entity/voacb-practice';
 import {VocabPracticeHistory} from '../../entity/vocab-practice-history';
 import {DictationService} from '../../services/dictation/dictation.service';
@@ -61,7 +61,7 @@ export class DictationPracticePage implements OnInit {
     this.questionIndex = 0;
     this.mark = 0;
     this.answer = '';
-    this.puzzleControls = new PuzzleControls();
+    this.puzzleControls = null;
   }
 
   async initDictation() {
@@ -78,6 +78,9 @@ export class DictationPracticePage implements OnInit {
         if (this.vocabPractices.length === 1) {
           this.loading.dismiss();
           this.speak();
+          if (this.practiceType === VocabPracticeType.Puzzle) {
+            this.puzzleControls = this.vocabPracticeService.createPuzzleControls(p.word);
+          }
         }
       }));
   }
@@ -86,15 +89,7 @@ export class DictationPracticePage implements OnInit {
 
   gotPractice(p: VocabPractice) {
     if (p.activePronounceLink) { this.audio.set(p.word, new Audio(p.activePronounceLink)); }
-    if (this.practiceType === VocabPracticeType.Puzzle) { this.createPuzzleControls(p.word); }
     this.vocabPractices.push(p);
-  }
-
-  createPuzzleControls(word: string) {
-    const answer = DictationUtils.splitWord(word).map(() => '?');
-    answer[0] = '_';
-    this.puzzleControls.answers.push(answer);
-    this.puzzleControls.buttons.push(DictationUtils.toCharacters(word));
   }
 
   speak() {
@@ -115,30 +110,38 @@ export class DictationPracticePage implements OnInit {
     }
   }
 
-  currentQuestion() {
-    return this.vocabPractices[this.questionIndex];
+  currentQuestion() { return this.vocabPractices[this.questionIndex]; }
+
+  submitSpellingAnswer() { this.submitAnswer(this.isSpellingCorrect); }
+
+  finishPuzzleQuestion() { this.submitAnswer(() => true); }
+
+  submitAnswer(isCorrect: () => boolean) {
+    this.checkAnswer(isCorrect);
+    this.nextQuestion();
   }
 
-  submitAnswer() {
-    this.checkAnswer();
+  nextQuestion() {
     this.questionIndex++;
+    if (this.end()) {
+      this.navigationService.practiceComplete(this.dictation, this.mark, this.histories);
+    }
 
     this.waitForNextQuestion().then(() => {
-      if (this.end()) {
-        this.navigationService.practiceComplete(this.dictation, this.mark, this.histories);
-      } else {
-        this.preNextQuestion();
-        this.speak();
+      this.preNextQuestion();
+      this.speak();
+      if (this.practiceType === VocabPracticeType.Puzzle) {
+        this.puzzleControls = this.vocabPracticeService.createPuzzleControls(this.currentQuestion().word);
       }
     });
   }
 
-  end(): boolean {
-    return this.questionIndex >= this.vocabPractices.length;
-  }
+  end = (): boolean => this.questionIndex >= this.vocabPractices.length;
+  onKeyPress = (key: string) => this.answer += key;
 
-  onKeyPress(key: string) {
-    this.answer += key;
+  onCharacterButtonPress(character: string) {
+    this.vocabPracticeService.receiveAnswer(this.puzzleControls, character);
+    if (this.puzzleControls.isComplete()) { this.finishPuzzleQuestion(); }
   }
 
   onKeyboardEvent(event: VirtualKeyboardEvent) {
@@ -158,12 +161,11 @@ export class DictationPracticePage implements OnInit {
     }
   }
 
-  backspace() {
-    this.answer = this.answer.slice(0, this.answer.length - 1);
-  }
+  backspace() { this.answer = this.answer.slice(0, this.answer.length - 1); }
+  isSpellingCorrect() { return this.vocabPracticeService.isWordEqual(this.currentQuestion().word, this.answer == null ? '' : this.answer, this.dictation.wordContainSpace); }
 
-  private checkAnswer() {
-    const correct = this.vocabPracticeService.isWordEqual(this.currentQuestion().word, this.answer == null ? '' : this.answer, this.dictation.wordContainSpace);
+  private checkAnswer(isCorrect: () => boolean) {
+    const correct = isCorrect();
     if (correct) { this.mark++; }
 
     const history = <VocabPracticeHistory>  {
@@ -197,10 +199,4 @@ export class DictationPracticePage implements OnInit {
   }
 
   sleep(ms = 0) { return new Promise(r => setTimeout(r, ms)); }
-}
-
-export class PuzzleControls {
-  answers: string[][] = new Array<string[]>();
-  buttons: string[][] = new Array<string[]>();
-  counter = 0;
 }

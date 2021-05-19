@@ -42,13 +42,17 @@
                     </ion-button>
                 </div>
               </div>
-              <div *ngIf="practiceType === type.Puzzle">
+              <div *ngIf="practiceType === type.Puzzle && puzzleControls != null" class="puzzle-div">
                 <div>
-                  <app-character *ngFor="let char of puzzleControls.answers[questionIndex]" [character]="char"></app-character>
+                  <app-character *ngFor="let char of puzzleControls.answers" [character]="char"></app-character>
                 </div>
 
                 <div>
-                  <app-character-button *ngFor="let char of puzzleControls.buttons[questionIndex]" [character]ª="char" [isCorrect]="currentQuestion().word.indexOf(char) >= 0"></app-character-button>
+                  <app-character-button *ngFor="let char of puzzleControls.buttons; let i = index"
+                                        [character]="char" [isCorrect]="puzzleControls.buttonCorrects[i]"
+                                        (correctPress)="onCharacterButtonPress($event)">
+
+                  </app-character-button>
                 </div>
               </div>
 

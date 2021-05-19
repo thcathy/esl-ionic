@@ -4,6 +4,7 @@ import {TestBed} from '@angular/core/testing';
 import {VocabPracticeHistory} from '../../entity/vocab-practice-history';
 import {vocab_apple, vocab_banana} from '../../../testing/test-data';
 import {HttpClient} from '@angular/common/http';
+import {PuzzleControls} from '../../entity/dictation';
 
 describe('VocabPracticeService', () => {
   let service: VocabPracticeService;
@@ -72,5 +73,42 @@ describe('VocabPracticeService', () => {
     expect(result.showImage).toBeTruthy();
     expect(result.vocabs.length).toEqual(1);
     expect(result.vocabs[0].word).toEqual('test');
+  });
+
+  it('createPuzzleControls create a new object for new word', () => {
+    const result = service.createPuzzleControls('banana');
+    expect(result.word).toEqual('banana');
+    expect(result.buttons.length).toEqual(8);
+    expect(result.buttonCorrects.length).toEqual(8);
+    expect(result.buttonCorrects.filter(c => c).length).toEqual(1);
+    expect(result.answers.length).toEqual(6);
+    expect(result.answers[0]).toEqual('_');
+    expect(result.answers.filter(a => a === '?').length).toEqual(5);
+  });
+
+  describe('test receiveAnswer', () => {
+    let controls: PuzzleControls;
+
+    beforeEach(() => {
+      controls = service.createPuzzleControls('banana');
+    });
+
+    it('update controls when receive first answer', () => {
+      service.receiveAnswer(controls, 'b');
+      expect(controls.counter).toEqual(1);
+      expect(controls.answers[0]).toEqual('b');
+      expect(controls.answers[1]).toEqual('_');
+      expect(controls.answers.filter(a => a === '?').length).toEqual(4);
+      const button = controls.buttons[controls.buttonCorrects.findIndex(c => c)];
+      expect(button).toEqual(controls.word.charAt(controls.counter));
+    });
+
+    it('counter will not larger than length of word', () => {
+      controls = service.createPuzzleControls('on');
+      service.receiveAnswer(controls, 'o');
+      service.receiveAnswer(controls, 'n');
+      expect(controls.counter).toEqual(2);
+      expect(controls.isComplete()).toBeTrue();
+    });
   });
 });

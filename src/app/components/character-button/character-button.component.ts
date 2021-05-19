@@ -11,7 +11,7 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
         animate('500ms ease-out',
           style({
             color: '#FF4500',
-            transform: 'scale(1.5)'
+            transform: 'scale(1.3) translateY(-5%)',
           })
         ),
         animate('500ms ease-in', style({
@@ -22,7 +22,7 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
         animate('500ms ease-out',
           style({
             color: '#00FF00',
-            transform: 'scale(1.5)'
+            transform: 'scale(1.3) translateY(-5%)',
           })
         ),
         animate('500ms ease-in', style({
@@ -35,7 +35,7 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
 export class CharacterButtonComponent implements OnInit {
   @Input() character: string;
   @Input() isCorrect: boolean;
-  @Output() correctPress = new EventEmitter<boolean>();
+  @Output() correctPress = new EventEmitter<string>();
 
   state = '';
 
@@ -44,18 +44,18 @@ export class CharacterButtonComponent implements OnInit {
   ngOnInit() {}
 
   onClick() {
+    if (this.state !== '') {
+      return;
+    }
+
     if (this.isCorrect) {
-      if (this.state === '') {
-        this.correctPress.emit(true);
-      }
       this.state = 'correct';
+      console.log(`passed correct button`);
+      this.correctPress.emit(this.character);
     } else {
       this.state = 'wrong';
     }
-  }
-
-  changeDone($event: any): void {
-    this.state = '';
+    setTimeout(() => this.state = '', 1000);
   }
 
 }

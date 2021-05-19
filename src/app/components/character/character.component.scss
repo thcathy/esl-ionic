@@ -1,15 +1,11 @@
 span {
-  font-size: 24px;
+  font-size: 36px;
+  margin: 2px;
+  color: var(--ion-color-medium-shade);
 }
 
 .blinking {
-  font-weight: 100;
-  font-size: 30px;
-  color: #2E3D48;
-  -webkit-animation: 1s blink step-end infinite;
-  -moz-animation: 1s blink step-end infinite;
-  -ms-animation: 1s blink step-end infinite;
-  -o-animation: 1s blink step-end infinite;
+  font-weight: 900;
   animation: 1s blink step-end infinite;
 }
 
@@ -18,42 +14,6 @@ span {
     color: transparent;
   }
   50% {
-    color: black;
-  }
-}
-
-@-moz-keyframes blink {
-  from, to {
-    color: transparent;
-  }
-  50% {
-    color: black;
-  }
-}
-
-@-webkit-keyframes blink {
-  from, to {
-    color: transparent;
-  }
-  50% {
-    color: black;
-  }
-}
-
-@-ms-keyframes blink {
-  from, to {
-    color: transparent;
-  }
-  50% {
-    color: black;
-  }
-}
-
-@-o-keyframes blink {
-  from, to {
-    color: transparent;
-  }
-  50% {
-    color: black;
+    color: var(--ion-color-dark-tint);
   }
 }

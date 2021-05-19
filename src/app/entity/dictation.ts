@@ -36,3 +36,19 @@ export class DictationOptions {
   puzzleSize = 10;
 }
 
+export class PuzzleControls {
+  word: string;
+  answers: string[];
+  buttons: string[];
+  buttonCorrects: boolean[];
+  counter = 0;
+
+  constructor(word: string, answers: string[], buttons: string[], buttonCorrects: boolean[]) {
+    this.word = word;
+    this.answers = answers;
+    this.buttons = buttons;
+    this.buttonCorrects = buttonCorrects;
+  }
+
+  isComplete() { return this.counter >= this.word.length; }
+}

@@ -5,12 +5,11 @@ import {Service} from '../root.service';
 import {VocabPractice} from '../../entity/voacb-practice';
 import {environment} from '../../../environments/environment';
 import {Observable} from 'rxjs/internal/Observable';
-import {Dictation} from '../../entity/dictation';
+import {Dictation, PuzzleControls} from '../../entity/dictation';
 import {VocabPracticeHistory} from '../../entity/vocab-practice-history';
 import {MemberVocabulary} from '../../entity/member-vocabulary';
 import {Vocab} from '../../entity/vocab';
-
-
+import {DictationUtils} from '../../utils/dictation-utils';
 
 @Injectable({ providedIn: 'root' })
 export class VocabPracticeService extends Service {
@@ -71,4 +70,22 @@ export class VocabPracticeService extends Service {
     });
   }
 
+  createPuzzleControls(word: string): PuzzleControls {
+    const answer = DictationUtils.splitWord(word).map(() => '?');
+    const buttons = DictationUtils.toCharacterSet(word);
+    const buttonCorrects = this.buttonCorrects(buttons, word.charAt(0));
+    answer[0] = '_';
+    return new PuzzleControls(word, answer, buttons, buttonCorrects);
+  }
+
+  receiveAnswer(controls: PuzzleControls, answer: string) {
+    controls.answers[controls.counter] = answer;
+    controls.counter++;
+    if (!controls.isComplete()) {
+      controls.answers[controls.counter] = '_';
+      controls.buttonCorrects = this.buttonCorrects(controls.buttons, controls.word.charAt(controls.counter));
+    }
+  }
+
+  private buttonCorrects = (buttons: string[], character: string) => buttons.map(s => s === character);
 }

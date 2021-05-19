@@ -13,7 +13,7 @@ export class DictationUtils {
     return input.split(splitter).map(v => v.trim()).filter(v => !ValidationUtils.isBlankString(v));
   }
 
-  static toCharacters(word: string, minCharacters = 10): string[] {
+  static toCharacterSet(word: string, minCharacters = 8): string[] {
     const characters = new Set(this.splitWord(word));
     while (characters.size < minCharacters) {
       const char = DictationUtils.AtoZ.charAt(Math.random() * 26);
