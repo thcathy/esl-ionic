@@ -39,16 +39,18 @@ describe('DictationUtils', () => {
       expect(DictationUtils.toCharacterSet('bus stop', 10).length).toEqual(10);
     });
 
-    it('toCharacters result are random', () => {
+    it('toCharacters result are sorted', () => {
       const chars1 = DictationUtils.toCharacterSet('apple', 10);
-      const chars2 = DictationUtils.toCharacterSet('apple', 10);
-      expect(chars1.join().localeCompare(chars2.join()) !== 0).toBeTrue();
+      for (let i = 0; i < chars1.length - 1; i++) {
+        expect(chars1[i] < chars1[i + 1]).toBeTrue();
+      }
     });
 
     it('toCharacters result are lowercase', () => {
       const chars1 = DictationUtils.toCharacterSet('apple', 10);
       expect(chars1.join().toLowerCase()).toEqual(chars1.join());
     });
+
   });
 
 });

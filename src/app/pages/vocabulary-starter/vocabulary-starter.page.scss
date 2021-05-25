@@ -19,7 +19,18 @@ ion-badge {
     text-align: center;
 }
 
+.type-example {
+  height: 24px;
+  padding-left: 20px;
+  font-size: 0.9rem;
+  color: #555555;
+}
+
 .type-example .spell {
   text-decoration: underline;
+}
+
+.deselected {
+  color: #aaaaaa;
 }
 

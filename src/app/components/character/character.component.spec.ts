@@ -3,6 +3,7 @@ import { IonicModule } from '@ionic/angular';
 
 import { CharacterComponent } from './character.component';
 import {By} from '@angular/platform-browser';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 
 describe('CharacterComponent', () => {
   let component: CharacterComponent;
@@ -11,7 +12,7 @@ describe('CharacterComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ CharacterComponent ],
-      imports: [IonicModule.forRoot()]
+      imports: [IonicModule.forRoot(), NoopAnimationsModule ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(CharacterComponent);

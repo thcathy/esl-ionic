@@ -7,8 +7,17 @@ import {animate, style, transition, trigger, state} from '@angular/animations';
   styleUrls: ['./character.component.scss'],
   animations: [
     trigger('change', [
-      state('correct', style({ color: '#00FF00'})),
-      transition('* => correct', [animate('1s ease-in')]),
+      state('correct',
+        style({ color: '#00FF00', transform: 'scale(1.3)'})
+      ),
+      transition('* => correct', [
+        animate('2s',
+          style({
+            transform: 'scale(1.3)',
+            color: '#00FF00',
+          }))
+      ]),
+
     ])
   ]
 })

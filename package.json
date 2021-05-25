@@ -49,6 +49,7 @@
     "@ngx-translate/core": "^12.1.2",
     "@ngx-translate/http-loader": "^4.0.0",
     "auth0-js": "^9.13.2",
+    "cordova": "^10.0.0",
     "cordova-android": "^9.0.0",
     "cordova-android-support-gradle-release": "^3.0.1",
     "cordova-browser": "^6.0.0",

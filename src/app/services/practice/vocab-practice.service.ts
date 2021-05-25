@@ -79,11 +79,15 @@ export class VocabPracticeService extends Service {
   }
 
   receiveAnswer(controls: PuzzleControls, answer: string) {
+    if (controls.isComplete()) { return; }
+
     controls.answers[controls.counter] = answer;
     controls.counter++;
     if (!controls.isComplete()) {
       controls.answers[controls.counter] = '_';
       controls.buttonCorrects = this.buttonCorrects(controls.buttons, controls.word.charAt(controls.counter));
+    } else {
+      controls.buttonCorrects.fill(false);
     }
   }
 

@@ -10,6 +10,10 @@ import {map} from 'rxjs/operators';
 import {AuthService} from '../../services/auth.service';
 import {VocabPracticeType} from '../../enum/vocab-practice-type.enum';
 import {DictationType} from '../edit-dictation/edit-dictation-page-enum';
+import {PracticeCompletePageInput} from '../practice-complete/practice-complete.page';
+import {Dictation} from '../../entity/dictation';
+import {VocabPracticeHistory} from '../../entity/vocab-practice-history';
+import {Storage} from '@ionic/storage';
 
 @Component({
   selector: 'app-vocabulary-starter',
@@ -17,6 +21,7 @@ import {DictationType} from '../edit-dictation/edit-dictation-page-enum';
   styleUrls: ['./vocabulary-starter.page.scss'],
 })
 export class VocabularyStarterPage implements OnInit {
+  inputKey = 'VocabularyStarterPage.vocabularyStarterPageInput';
   inputForm: FormGroup;
   vocabDifficulties: String[] = vocabDifficulties;
 
@@ -26,21 +31,26 @@ export class VocabularyStarterPage implements OnInit {
     public navigationService: NavigationService,
     public route: ActivatedRoute,
     public authService: AuthService,
+    public storage: Storage,
   ) { }
 
   ngOnInit() {
     this.createForm();
-    this.route.paramMap.pipe(
-      map(params => {
-        this.difficulty.setValue(params.get('difficulty'));
-      })
-    );
+  }
+
+  ionViewWillEnter() {
+    this.setupInput();
   }
 
   get difficulty() { return this.inputForm.get('difficulty'); }
   get type() { return this.inputForm.get('type'); }
-
   get practiceType() { return VocabPracticeType; }
+
+  async setupInput() {
+    const input = <VocabularyStarterPageInput> await this.storage.get(this.inputKey);
+    if (input?.difficulty !== undefined) { this.difficulty.setValue(input.difficulty); }
+    if (input?.type !== undefined) { this.type.setValue(input.type); }
+  }
 
   createForm() {
     this.inputForm = this.formBuilder.group({
@@ -52,8 +62,20 @@ export class VocabularyStarterPage implements OnInit {
   }
 
   start() {
+    this.saveInput();
     this.vocabPracticeService.generatePractice(this.difficulty.value)
       .subscribe(d => this.navigationService.startDictation(d, this.type.value));
   }
 
+  saveInput() {
+    this.storage.set(this.inputKey, <VocabularyStarterPageInput>{
+      difficulty: this.difficulty.value,
+      type: this.type.value,
+    });
+  }
+}
+
+export interface VocabularyStarterPageInput {
+  difficulty: VocabDifficulty;
+  type: VocabPracticeType;
 }

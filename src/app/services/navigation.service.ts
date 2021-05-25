@@ -10,6 +10,8 @@ import {Location} from '@angular/common';
 import {TranslateService} from '@ngx-translate/core';
 import {EditDictationPageMode} from '../pages/edit-dictation/edit-dictation-page-enum';
 import {VocabPracticeType} from '../enum/vocab-practice-type.enum';
+import {PracticeCompletePageObject} from '../../../e2e/src/page-object/practice-complete.po';
+import {PracticeCompletePageInput} from '../pages/practice-complete/practice-complete.page';
 
 export interface NavigationRequest {
   destination: any;
@@ -30,6 +32,7 @@ export class NavigationService {
     memberHomeSegment: 'memberHomeSegment',
     language: 'language',
     vocabPracticeType: 'vocabPracticeType',
+    practiceCompletePageInput: 'practiceCompletePageInput',
   };
 
   params = {};
@@ -111,11 +114,8 @@ export class NavigationService {
     return this.router.navigate(['/edit-dictation/' + mode]);
   }
 
-  async practiceComplete(dictation: Dictation, mark: number, histories: VocabPracticeHistory[], historyStored: boolean = false) {
-    await this.storage.set(NavigationService.storageKeys.dictation, dictation);
-    await this.storage.set(NavigationService.storageKeys.histories, histories);
-    await this.storage.set(NavigationService.storageKeys.mark, mark);
-    await this.storage.set(NavigationService.storageKeys.historyStored, historyStored);
+  async practiceComplete(input: PracticeCompletePageInput) {
+    await this.storage.set(NavigationService.storageKeys.practiceCompletePageInput, input);
     return await this.router.navigate(['/practice-complete']);
   }
 

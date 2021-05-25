@@ -21,7 +21,8 @@ export class DictationUtils {
         characters.add(char);
       }
     }
-    return DictationUtils.shuffle(Array.from(characters));
+    return Array.from(characters).sort();
+    // return DictationUtils.shuffle(Array.from(characters));
   }
 
   static splitWord = (word: string): string[] => word.toLowerCase().split('');

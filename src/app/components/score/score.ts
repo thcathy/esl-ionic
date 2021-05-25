@@ -11,12 +11,8 @@ import {VocabPracticeHistory} from '../../entity/vocab-practice-history';
       state('highlight', style({backgroundColor: 'transparent'})),
       transition('* => highlight', [
         animate('750ms ease-out',
-          style({
-            color: '#10dc60',
-            transform: 'scale(1.2)'
-          })
+          style({ transform: 'scale(1.2)' })
         ),
-        animate('750ms ease-in', style({color: '#ffffff'}))
       ])
     ])
   ]

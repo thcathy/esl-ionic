@@ -145,9 +145,12 @@ export const DictationServiceSpy = () => jasmine.createSpyObj('DictationService'
   ['createVocabDictationHistory', 'isInstantDictation', 'isGeneratedDictation', 'isSentenceDictation']
 );
 
-export const VocabPracticeServiceSpy = () => jasmine.createSpyObj('VocabPraticeService',
-{ saveHistory: Observable.of('') }
-);
+export const VocabPracticeServiceSpy = () => {
+  const spy = jasmine.createSpyObj('VocabPracticeService', ['saveHistory', 'generatePractice']);
+  spy.saveHistory.and.returnValue(Observable.of(''));
+  spy.generatePractice.and.returnValue(Observable.of(''));
+  return spy;
+};
 
 export const ManageVocabHistoryServiceSpy = () => jasmine.createSpyObj('ManageVocabHistoryService', ['classifyVocabulary']);
 

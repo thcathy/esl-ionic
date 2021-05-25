@@ -32,9 +32,8 @@ export class MemberPracticeHistoryListComponent {
     if (this.dictationService.isSentenceDictation(historyObj['dictation'])) {
       this.navService.articleDictationComplete(historyObj['dictation'], historyObj['histories'], true);
     } else {
-      this.navService.practiceComplete(historyObj['dictation'], historyObj['mark'], historyObj['histories'], true);
+      this.navService.practiceComplete({dictation: historyObj['dictation'], mark: historyObj['mark'], histories: historyObj['histories'], historyStored: true});
     }
-
   }
 
 }

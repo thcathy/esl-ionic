@@ -10,6 +10,7 @@ import {AuthService} from '../../services/auth.service';
 import {VocabPracticeService} from '../../services/practice/vocab-practice.service';
 import {ManageVocabHistoryService} from '../../services/member/manage-vocab-history.service';
 import {NGXLogger} from 'ngx-logger';
+import {VocabPracticeType} from '../../enum/vocab-practice-type.enum';
 
 @Component({
   selector: 'app-practice-complete',
@@ -25,6 +26,7 @@ export class PracticeCompletePage implements OnInit {
   finished = false;
   historyStored: boolean;
   loader: any;
+  practiceType: VocabPracticeType;
 
   constructor(
     public dictationService: DictationService,
@@ -41,7 +43,7 @@ export class PracticeCompletePage implements OnInit {
 
   ngOnInit() {}
 
-  ionViewDidEnter() {
+  ionViewWillEnter() {
     this.init();
   }
 
@@ -51,14 +53,16 @@ export class PracticeCompletePage implements OnInit {
   }
 
   async getNavParams() {
-    this.dictation = await this.storage.get(NavigationService.storageKeys.dictation);
-    this.histories = await this.storage.get(NavigationService.storageKeys.histories);
-    this.mark = await this.storage.get(NavigationService.storageKeys.mark);
-    this.historyStored = await this.storage.get(NavigationService.storageKeys.historyStored);
+    const input = <PracticeCompletePageInput> await this.storage.get(NavigationService.storageKeys.practiceCompletePageInput);
+    this.dictation = input.dictation;
+    this.histories = input.histories;
+    this.mark = input.mark;
+    this.practiceType = input.practiceType ?? VocabPracticeType.Spell;
+    this.historyStored = input.historyStored ?? false;
   }
 
   createHistory() {
-    if (this.historyStored || !this.authService.isAuthenticated()) {
+    if (this.historyStored || !this.authService.isAuthenticated() || this.practiceType === VocabPracticeType.Puzzle) {
       return;
     }
 
@@ -100,7 +104,8 @@ export class PracticeCompletePage implements OnInit {
 
   getDictationThenOpen() {
     if (this.dictationService.isGeneratedDictation(this.dictation)) {
-      this.navigationService.startDictation(this.dictation);
+      this.navigationService.startDictation(this.dictation, this.practiceType);
+      return;
     } else if (this.dictationService.isInstantDictation(this.dictation)) {
       this.openDictation(this.dictation);
     } else {
@@ -127,4 +132,12 @@ export class PracticeCompletePage implements OnInit {
     return this.dictation && this.dictationService.isGeneratedDictation(this.dictation) && this.authService.isAuthenticated();
   }
 
+}
+
+export interface PracticeCompletePageInput {
+  dictation: Dictation;
+  histories: VocabPracticeHistory[];
+  practiceType?: VocabPracticeType;
+  mark?: number;
+  historyStored?: boolean;
 }

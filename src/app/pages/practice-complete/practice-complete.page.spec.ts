@@ -1,14 +1,10 @@
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import {async, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
 
-import { PracticeCompletePage } from './practice-complete.page';
+import {PracticeCompletePage, PracticeCompletePageInput} from './practice-complete.page';
 import {dictation1} from '../../../testing/test-data';
 import {DictationService} from '../../services/dictation/dictation.service';
-import {
-  AuthServiceSpy,
-  DictationServiceSpy, ManageVocabHistoryServiceSpy, NavigationServiceSpy,
-  StorageSpy, VocabPracticeServiceSpy,
-} from '../../../testing/mocks-ionic';
+import {AuthServiceSpy, DictationServiceSpy, ManageVocabHistoryServiceSpy, NavigationServiceSpy, StorageSpy, VocabPracticeServiceSpy, } from '../../../testing/mocks-ionic';
 import {Storage} from '@ionic/storage';
 import 'rxjs-compat/add/observable/of';
 import {SharedTestModule} from '../../../testing/shared-test.module';
@@ -16,11 +12,13 @@ import {AuthService} from '../../services/auth.service';
 import {NavigationService} from '../../services/navigation.service';
 import {VocabPracticeService} from '../../services/practice/vocab-practice.service';
 import {ManageVocabHistoryService} from '../../services/member/manage-vocab-history.service';
+import {VocabPracticeType} from '../../enum/vocab-practice-type.enum';
 
 describe('PracticeCompletePage', () => {
   let component: PracticeCompletePage;
   let fixture: ComponentFixture<PracticeCompletePage>;
   let dictationServiceSpy, vocabPracticeServiceSpy, storageSpy, authServiceSpy, navigationServiceSpy, manageVocabHistoryServiceSpy;
+  let defaultInput;
 
   beforeEach(async(() => {
     vocabPracticeServiceSpy = VocabPracticeServiceSpy();
@@ -52,20 +50,23 @@ describe('PracticeCompletePage', () => {
     fixture = TestBed.createComponent(PracticeCompletePage);
     component = fixture.componentInstance;
     fixture.detectChanges();
+    defaultInput = <PracticeCompletePageInput>{
+      dictation: dictation1,
+      histories: [],
+      historyStored: false,
+      practiceType: VocabPracticeType.Puzzle,
+    };
   });
 
   it('should not call create history if history stored is true', fakeAsync(() => {
     dictationServiceSpy.isInstantDictation.and.returnValue(false);
     dictationServiceSpy.isGeneratedDictation.and.returnValue(false);
-    const params = {
-      'dictation': dictation1,
-      'histories': [],
-      'historyStored': true,
-    };
+    defaultInput.historyStored = true;
+    const params = { 'practiceCompletePageInput': defaultInput };
     storageSpy.get.and.callFake((param) => params[param]);
     authServiceSpy.isAuthenticated.and.returnValue(true);
 
-    component.ionViewDidEnter();
+    component.ionViewWillEnter();
 
     expect(dictationServiceSpy.createVocabDictationHistory.calls.count()).toEqual(0);
   }));
@@ -73,15 +74,11 @@ describe('PracticeCompletePage', () => {
   it('should not call save history if not login', fakeAsync(() => {
     dictationServiceSpy.isInstantDictation.and.returnValue(false);
     dictationServiceSpy.isGeneratedDictation.and.returnValue(true);
-    const params = {
-      'dictation': dictation1,
-      'histories': [],
-      'historyStored': false,
-    };
+    const params = { 'practiceCompletePageInput': defaultInput };
     storageSpy.get.and.callFake((param) => params[param]);
     authServiceSpy.isAuthenticated.and.returnValue(false);
 
-    component.ionViewDidEnter();
+    component.ionViewWillEnter();
     tick();
     fixture.detectChanges();
     expect(vocabPracticeServiceSpy.saveHistory.calls.count()).toEqual(0);
@@ -89,41 +86,48 @@ describe('PracticeCompletePage', () => {
     expect(dictationServiceSpy.createVocabDictationHistory.calls.count()).toEqual(0);
   }));
 
-  it('should call member vocabulary save history if dictation is generated', fakeAsync(() => {
-    dictationServiceSpy.isInstantDictation.and.returnValue(false);
-    dictationServiceSpy.isGeneratedDictation.and.returnValue(true);
-    const params = {
-      'dictation': dictation1,
-      'histories': [],
-      'historyStored': false,
-    };
-    storageSpy.get.and.callFake((param) => params[param]);
-    authServiceSpy.isAuthenticated.and.returnValue(true);
+  describe('test retry', () => {
+    it('retry generated dictation will go to vocabulary starter with correct vocabulary practice type', fakeAsync(() => {
+      dictationServiceSpy.isInstantDictation.and.returnValue(false);
+      dictationServiceSpy.isGeneratedDictation.and.returnValue(true);
+      const params = { 'practiceCompletePageInput': defaultInput };
+      storageSpy.get.and.callFake((param) => params[param]);
+      component.ionViewWillEnter();
+      tick();
+      fixture.detectChanges();
+      component.getDictationThenOpen();
 
-    component.ionViewDidEnter();
-    tick();
-    fixture.detectChanges();
+      expect(navigationServiceSpy.startDictation.calls.count()).toEqual(1);
+      expect(navigationServiceSpy.startDictation.calls.mostRecent().args[1]).toEqual(VocabPracticeType.Puzzle);
+    }));
+  });
 
-    expect(vocabPracticeServiceSpy.saveHistory.calls.count()).toEqual(1);
-    expect(manageVocabHistoryServiceSpy.classifyVocabulary.calls.count()).toEqual(1);
-    expect(dictationServiceSpy.createVocabDictationHistory.calls.count()).toEqual(0);
-  }));
+  describe('test createHistory', () => {
+    it('do not create history for practice type is puzzle', fakeAsync(() => {
+      defaultInput.type = VocabPracticeType.Puzzle;
+      const params = { 'practiceCompletePageInput': defaultInput };
+      storageSpy.get.and.callFake((param) => params[param]);
+      component.ionViewWillEnter();
+      tick();
 
-  it('retry generated dictation will go to vocabulary starter', fakeAsync(() => {
-    dictationServiceSpy.isInstantDictation.and.returnValue(false);
-    dictationServiceSpy.isGeneratedDictation.and.returnValue(true);
-    const params = {
-      'dictation': dictation1,
-      'histories': [],
-      'historyStored': false,
-    };
-    storageSpy.get.and.callFake((param) => params[param]);
+      expect(vocabPracticeServiceSpy.saveHistory).toHaveBeenCalledTimes(0);
+      expect(dictationServiceSpy.createVocabDictationHistory).toHaveBeenCalledTimes(0);
+    }));
 
-    component.ionViewDidEnter();
-    tick();
-    fixture.detectChanges();
-    component.getDictationThenOpen();
+    it('should call member vocabulary save history if dictation is generated', fakeAsync(() => {
+      dictationServiceSpy.isInstantDictation.and.returnValue(false);
+      dictationServiceSpy.isGeneratedDictation.and.returnValue(true);
+      defaultInput.practiceType = VocabPracticeType.Spell;
+      const params = { 'practiceCompletePageInput': defaultInput };
+      storageSpy.get.and.callFake((param) => params[param]);
+      authServiceSpy.isAuthenticated.and.returnValue(true);
+      component.ionViewWillEnter();
+      tick();
 
-    expect(navigationServiceSpy.startDictation.calls.count()).toEqual(1);
-  }));
+      expect(vocabPracticeServiceSpy.saveHistory.calls.count()).toEqual(1);
+      expect(manageVocabHistoryServiceSpy.classifyVocabulary.calls.count()).toEqual(1);
+      expect(dictationServiceSpy.createVocabDictationHistory.calls.count()).toEqual(0);
+    }));
+  });
+
 });

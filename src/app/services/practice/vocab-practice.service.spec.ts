@@ -107,8 +107,12 @@ describe('VocabPracticeService', () => {
       controls = service.createPuzzleControls('on');
       service.receiveAnswer(controls, 'o');
       service.receiveAnswer(controls, 'n');
+      service.receiveAnswer(controls, 'x');
       expect(controls.counter).toEqual(2);
+      expect(controls.answers.join('')).toEqual('on');
       expect(controls.isComplete()).toBeTrue();
+      expect(controls.buttonCorrects.every(v => !v)).toBeTrue();
     });
+
   });
 });

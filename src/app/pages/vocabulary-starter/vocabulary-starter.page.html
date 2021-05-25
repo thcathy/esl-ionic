@@ -15,10 +15,6 @@
             <ion-col size="12" size-sm="12" size-md="12" size-lg="6">
               <div class="col">
                 <form class="input-form" [formGroup]="inputForm" novalidate>
-                  <h3><fa-icon icon="sliders-h"></fa-icon> {{'Select Difficulty'|translate}}</h3>
-                  <ion-select formControlName="difficulty" interface="popover">
-                    <ion-select-option *ngFor="let d of vocabDifficulties" [value]="d">{{'VocabDifficulty.' + d|translate}}</ion-select-option>
-                  </ion-select>
                   <ion-radio-group [formControl]="type">
                     <ion-row class="radio">
                       <ion-col>
@@ -27,7 +23,7 @@
                             {{'Spelling'|translate}}</ion-label>
                           <ion-radio value="Spell"></ion-radio>
                         </ion-item>
-                        <div class="type-example" [class.deselected]="type.value === practiceType.Spell">
+                        <div class="type-example" [class.deselected]="type.value !== practiceType.Spell" style="padding-top: 6px;">
                           <fa-icon icon="apple-alt"></fa-icon>&nbsp;<span class="spell">apple</span>
                         </div>
                       </ion-col>
@@ -37,14 +33,22 @@
                             {{'Puzzle'|translate}}</ion-label>
                           <ion-radio value="Puzzle"></ion-radio>
                         </ion-item>
-                        <div class="type-example puzzle" [class.deselected]="type.value === practiceType.Puzzle">
+                        <div class="type-example puzzle" [class.deselected]="type.value !== practiceType.Puzzle">
                           <fa-icon icon="apple-alt"></fa-icon>
                           <span class="puzzle">p</span><span>e</span><span>l</span><span>a</span>
                         </div>
                       </ion-col>
                     </ion-row>
                   </ion-radio-group>
-                  <ion-button class="ion-float-right" (click)="start()">
+
+                  <ion-item>
+                    <ion-label><fa-icon icon="sliders-h"></fa-icon> {{'Select Difficulty'|translate}}</ion-label>
+                    <ion-select formControlName="difficulty" interface="popover">
+                      <ion-select-option *ngFor="let d of vocabDifficulties" [value]="d">{{'VocabDifficulty.' + d|translate}}</ion-select-option>
+                    </ion-select>
+                  </ion-item>
+
+                  <ion-button class="ion-float-right" style="margin: 16px;" (click)="start()">
                     <fa-icon icon="play"></fa-icon>&nbsp;{{'Start'|translate}}
                   </ion-button>
                 </form>

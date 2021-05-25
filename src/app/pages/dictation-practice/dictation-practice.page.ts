@@ -12,7 +12,6 @@ import {ActivatedRoute} from '@angular/router';
 import {NGXLogger} from 'ngx-logger';
 import {VirtualKeyboardEvent} from '../../components/virtual-keyboard/virtual-keyboard';
 import {VocabPracticeType} from '../../enum/vocab-practice-type.enum';
-import {DictationUtils} from '../../utils/dictation-utils';
 
 @Component({
   selector: 'app-dictation-practice',
@@ -114,7 +113,9 @@ export class DictationPracticePage implements OnInit {
 
   submitSpellingAnswer() { this.submitAnswer(this.isSpellingCorrect); }
 
-  finishPuzzleQuestion() { this.submitAnswer(() => true); }
+  finishPuzzleQuestion() {
+    this.submitAnswer(() => true);
+  }
 
   submitAnswer(isCorrect: () => boolean) {
     this.checkAnswer(isCorrect);
@@ -124,7 +125,10 @@ export class DictationPracticePage implements OnInit {
   nextQuestion() {
     this.questionIndex++;
     if (this.end()) {
-      this.navigationService.practiceComplete(this.dictation, this.mark, this.histories);
+      this.navigationService.practiceComplete({
+        dictation : this.dictation, histories: this.histories, practiceType: this.practiceType, mark: this.mark
+      });
+      return;
     }
 
     this.waitForNextQuestion().then(() => {
@@ -137,12 +141,14 @@ export class DictationPracticePage implements OnInit {
   }
 
   end = (): boolean => this.questionIndex >= this.vocabPractices.length;
+
   onKeyPress = (key: string) => this.answer += key;
 
   onCharacterButtonPress(character: string) {
     this.vocabPracticeService.receiveAnswer(this.puzzleControls, character);
     if (this.puzzleControls.isComplete()) {
       this.puzzleControls.answerState = 'correct';
+      this.speak();
       setTimeout(() => this.finishPuzzleQuestion(), 3000);
     }
   }
