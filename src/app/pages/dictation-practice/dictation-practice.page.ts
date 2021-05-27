@@ -111,7 +111,7 @@ export class DictationPracticePage implements OnInit {
 
   currentQuestion() { return this.vocabPractices[this.questionIndex]; }
 
-  submitSpellingAnswer() { this.submitAnswer(this.isSpellingCorrect); }
+  submitSpellingAnswer() { this.submitAnswer(() => this.isSpellingCorrect()); }
 
   finishPuzzleQuestion() {
     this.submitAnswer(() => true);
