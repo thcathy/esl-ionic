@@ -190,17 +190,17 @@ export class AuthService {
 
   private redirectAfterLogin() {
     this.storage.get(this.navigationRequestKey).then((request: NavigationRequest) => {
-      if (request != null) {
-        this.storage.set(this.navigationRequestKey, null);
-        if (request.params != null) {
-          Object.getOwnPropertyNames(request.params).forEach(key => this.navigationService.setParam(key, request.params[key]));
-        }
-        this.router.navigateByUrl(request.destination);
-      } else {
         this.memberService.getProfile().subscribe((_m) => {
-          this.navigationService.openMemberHome();
+          if (request != null) {
+            this.storage.set(this.navigationRequestKey, null);
+            if (request.params != null) {
+              Object.getOwnPropertyNames(request.params).forEach(key => this.navigationService.setParam(key, request.params[key]));
+            }
+            this.router.navigateByUrl(request.destination);
+          } else {
+            this.navigationService.openMemberHome();
+          }
         });
-      }
     });
   }
 
