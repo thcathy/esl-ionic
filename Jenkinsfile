@@ -14,7 +14,7 @@ pipeline {
         sh 'npm run test-ci'
       }
       post {
-        always { junit 'src/TESTS*.xml' }
+        always { junit testResults: 'junit/*.xml', skipPublishingChecks: true }
       }
     }
 
@@ -25,7 +25,7 @@ pipeline {
       }
       steps {
         sh 'npm install firebase-tools'
-        sh 'npx firebase deploy --token ${FIREBASE_DEPLOY_KEY}'
+        sh 'npx firebase deploy --token ${FIREBASE_DEPLOY_KEY} -P batch4-161201'
       }
     }
 
