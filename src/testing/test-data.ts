@@ -4,6 +4,7 @@ import {Name} from "../app/entity/name";
 import {SentenceHistory} from "../app/entity/sentence-history";
 import {VocabPractice} from "../app/entity/voacb-practice";
 import {MemberVocabulary} from "../app/entity/member-vocabulary";
+import {Vocab} from '../app/entity/vocab';
 
 
 export const member1 = new Member(
@@ -29,8 +30,18 @@ export const dictation1Histories = [
   <SentenceHistory>{question: 'sentence to learn', answer: 'sentence to learn', questionSegments: [''], isCorrect: [true]}
 ];
 
+export const dictation2_vocabDictation = <Dictation>{
+  id: 2,
+  title: 'test dictation 2',
+  vocabs: [
+    <Vocab>{word: 'apple'},
+    <Vocab>{word: 'banana'},
+    <Vocab>{word: 'cat'},
+  ]
+};
+
 export const vocab_apple = <VocabPractice>{
-  id:1,
+  id: 1,
   pronouncedLink:"http://dictionary.cambridge.org/media/english/uk_pron/u/uka/ukapp/ukappen014.mp3",
   pronouncedLinkBackup:"https://s.yimg.com/tn/dict/dreye/live/f/apple.mp3",
   word:"apple",
