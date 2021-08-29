@@ -1,4 +1,5 @@
 import {Observable} from 'rxjs';
+import {vocab_apple} from './test-data';
 
 
 export class PlatformMock {
@@ -146,12 +147,15 @@ export const DictationServiceSpy = () => jasmine.createSpyObj('DictationService'
 );
 
 export const VocabPracticeServiceSpy = () => {
-  const spy = jasmine.createSpyObj('VocabPracticeService', ['saveHistory', 'generatePractice']);
+  const spy = jasmine.createSpyObj('VocabPracticeService', ['saveHistory', 'generatePractice', 'getQuestion']);
   spy.saveHistory.and.returnValue(Observable.of(''));
   spy.generatePractice.and.returnValue(Observable.of(''));
+  spy. getQuestion.and.returnValue(Observable.of(vocab_apple));
   return spy;
 };
 
 export const ManageVocabHistoryServiceSpy = () => jasmine.createSpyObj('ManageVocabHistoryService', ['classifyVocabulary']);
 
 export const AppServiceSpy = () => jasmine.createSpyObj('AppService', ['isApp']);
+
+export const SpeechServiceSpy = () => jasmine.createSpyObj('SpeechServiceSpy', ['speak']);

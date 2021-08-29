@@ -12,6 +12,9 @@ import {ActivatedRoute} from '@angular/router';
 import {NGXLogger} from 'ngx-logger';
 import {VirtualKeyboardEvent} from '../../components/virtual-keyboard/virtual-keyboard';
 import {VocabPracticeType} from '../../enum/vocab-practice-type.enum';
+import {from, Observable, Subject} from 'rxjs';
+import {map, mergeAll, tap} from 'rxjs/operators';
+import {vocab_apple} from '../../../testing/test-data';
 
 @Component({
   selector: 'app-dictation-practice',
@@ -33,6 +36,7 @@ export class DictationPracticePage implements OnInit {
   isKeyboardActive: boolean;
   practiceType: VocabPracticeType;
   puzzleControls: PuzzleControls;
+  speak$ = new Subject<boolean>();
 
   constructor(
     public route: ActivatedRoute,
@@ -70,25 +74,21 @@ export class DictationPracticePage implements OnInit {
     this.questionIndex = 0;
     this.mark = 0;
     this.phonics = 'Phonetic';
-    this.dictation.vocabs
-      .map((vocab) => this.vocabPracticeService.getQuestion(vocab.word, this.dictation.showImage))
-      .map((o) => o.subscribe((p) => {
-        this.gotPractice(p);
-        if (this.vocabPractices.length === 1) {
-          this.loading.dismiss();
-          this.speak();
-          if (this.practiceType === VocabPracticeType.Puzzle) {
-            this.puzzleControls = this.vocabPracticeService.createPuzzleControls(p.word);
-          }
-        }
-      }));
+    from(this.dictation.vocabs)
+      .pipe(
+        map(vocab => this.vocabPracticeService.getQuestion(vocab.word, this.dictation.showImage)),
+        mergeAll()
+      ).subscribe(p => this.receiveVocabPractice(p));
   }
 
   get type() { return VocabPracticeType; }
 
-  gotPractice(p: VocabPractice) {
+  receiveVocabPractice(p: VocabPractice) {
     if (p.activePronounceLink) { this.audio.set(p.word, new Audio(p.activePronounceLink)); }
     this.vocabPractices.push(p);
+    if (this.vocabPractices.length === 1) {
+      this.onNextQuestion();
+    }
   }
 
   speak() {
@@ -99,6 +99,7 @@ export class DictationPracticePage implements OnInit {
     } else {
       this.speechService.speak(word);
     }
+    this.speak$.next(true);
   }
 
   showPhonics() {
@@ -131,13 +132,16 @@ export class DictationPracticePage implements OnInit {
       return;
     }
 
-    this.waitForNextQuestion().then(() => {
-      this.preNextQuestion();
-      this.speak();
-      if (this.practiceType === VocabPracticeType.Puzzle) {
-        this.puzzleControls = this.vocabPracticeService.createPuzzleControls(this.currentQuestion().word);
-      }
-    });
+    this.waitForNextQuestion().then(() => this.onNextQuestion());
+  }
+
+  onNextQuestion() {
+    this.loading.dismiss();
+    this.preNextQuestion();
+    this.speak();
+    if (this.practiceType === VocabPracticeType.Puzzle) {
+      this.puzzleControls = this.vocabPracticeService.createPuzzleControls(this.currentQuestion().word);
+    }
   }
 
   end = (): boolean => this.questionIndex >= this.vocabPractices.length;
