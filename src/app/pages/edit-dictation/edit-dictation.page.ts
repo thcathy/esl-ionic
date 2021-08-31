@@ -194,7 +194,7 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
 
   startDictationNow() {
     const d = this.prepareDictation();
-    this.navService.startDictation(d);
+    this.navService.startDictation(d, this.wordPracticeType.value);
   }
 
   prepareDictation(): Dictation {

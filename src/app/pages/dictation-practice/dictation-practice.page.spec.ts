@@ -43,7 +43,7 @@ describe('DictationPracticePage', () => {
   });
 
   describe('initDictation', () => {
-    fit('will call speak once', fakeAsync(() => {
+    it('will call speak once', fakeAsync(() => {
       const params = {
         'dictation': dictation2_vocabDictation,
         'vocabPracticeType': VocabPracticeType.Spell,
