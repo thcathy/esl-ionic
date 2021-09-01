@@ -10,6 +10,7 @@ import {VocabPracticeService} from '../../services/practice/vocab-practice.servi
 import {Storage} from '@ionic/storage';
 import {VocabDifficulty} from '../../entity/voacb-practice';
 import {VocabPracticeType} from '../../enum/vocab-practice-type.enum';
+import {dictation1} from '../../../testing/test-data';
 
 describe('VocabularyStarterPage', () => {
   let component: VocabularyStarterPage;
@@ -42,6 +43,7 @@ describe('VocabularyStarterPage', () => {
     fixture = TestBed.createComponent(VocabularyStarterPage);
     component = fixture.componentInstance;
     fixture.detectChanges();
+    vocabPracticeServiceSpy.generatePractice.and.returnValue(Observable.of(dictation1));
   });
 
   it('input are stored when submit and load when enter page', fakeAsync(() => {

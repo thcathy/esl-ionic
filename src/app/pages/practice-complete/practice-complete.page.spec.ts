@@ -50,11 +50,12 @@ describe('PracticeCompletePage', () => {
     fixture = TestBed.createComponent(PracticeCompletePage);
     component = fixture.componentInstance;
     fixture.detectChanges();
+    const dictation = dictation1;
+    dictation.options = { 'practiceType': VocabPracticeType.Puzzle };
     defaultInput = <PracticeCompletePageInput>{
-      dictation: dictation1,
+      dictation: dictation,
       histories: [],
       historyStored: false,
-      practiceType: VocabPracticeType.Puzzle,
     };
   });
 
@@ -98,13 +99,13 @@ describe('PracticeCompletePage', () => {
       component.getDictationThenOpen();
 
       expect(navigationServiceSpy.startDictation.calls.count()).toEqual(1);
-      expect(navigationServiceSpy.startDictation.calls.mostRecent().args[1]).toEqual(VocabPracticeType.Puzzle);
+      expect(navigationServiceSpy.startDictation.calls.mostRecent().args[0].options.practiceType).toEqual(VocabPracticeType.Puzzle);
     }));
   });
 
   describe('test createHistory', () => {
     it('do not create history for practice type is puzzle', fakeAsync(() => {
-      defaultInput.type = VocabPracticeType.Puzzle;
+      defaultInput.dictation.options.practiceType = VocabPracticeType.Puzzle;
       const params = { 'practiceCompletePageInput': defaultInput };
       storageSpy.get.and.callFake((param) => params[param]);
       component.ionViewWillEnter();
@@ -117,7 +118,7 @@ describe('PracticeCompletePage', () => {
     it('should call member vocabulary save history if dictation is generated', fakeAsync(() => {
       dictationServiceSpy.isInstantDictation.and.returnValue(false);
       dictationServiceSpy.isGeneratedDictation.and.returnValue(true);
-      defaultInput.practiceType = VocabPracticeType.Spell;
+      defaultInput.dictation.options.practiceType = VocabPracticeType.Spell;
       const params = { 'practiceCompletePageInput': defaultInput };
       storageSpy.get.and.callFake((param) => params[param]);
       authServiceSpy.isAuthenticated.and.returnValue(true);

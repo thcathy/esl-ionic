@@ -12,9 +12,8 @@ import {ActivatedRoute} from '@angular/router';
 import {NGXLogger} from 'ngx-logger';
 import {VirtualKeyboardEvent} from '../../components/virtual-keyboard/virtual-keyboard';
 import {VocabPracticeType} from '../../enum/vocab-practice-type.enum';
-import {from, Observable, Subject} from 'rxjs';
-import {map, mergeAll, tap} from 'rxjs/operators';
-import {vocab_apple} from '../../../testing/test-data';
+import {from, Subject} from 'rxjs';
+import {map, mergeAll} from 'rxjs/operators';
 
 @Component({
   selector: 'app-dictation-practice',
@@ -34,7 +33,6 @@ export class DictationPracticePage implements OnInit {
   audio: Map<string, HTMLAudioElement> = new Map<string, HTMLAudioElement>();
   loading: any;
   isKeyboardActive: boolean;
-  practiceType: VocabPracticeType;
   puzzleControls: PuzzleControls;
   speak$ = new Subject<boolean>();
 
@@ -70,7 +68,6 @@ export class DictationPracticePage implements OnInit {
   async initDictation() {
     this.loading = await this.ionicComponentService.showLoading();
     this.dictation = await this.storage.get(NavigationService.storageKeys.dictation);
-    this.practiceType = await this.storage.get(NavigationService.storageKeys.vocabPracticeType);
     this.questionIndex = 0;
     this.mark = 0;
     this.phonics = 'Phonetic';
@@ -82,6 +79,7 @@ export class DictationPracticePage implements OnInit {
   }
 
   get type() { return VocabPracticeType; }
+  get practiceType() { return this.dictation?.options?.practiceType; }
 
   receiveVocabPractice(p: VocabPractice) {
     if (p.activePronounceLink) { this.audio.set(p.word, new Audio(p.activePronounceLink)); }
@@ -127,7 +125,7 @@ export class DictationPracticePage implements OnInit {
     this.questionIndex++;
     if (this.end()) {
       this.navigationService.practiceComplete({
-        dictation : this.dictation, histories: this.histories, practiceType: this.practiceType, mark: this.mark
+        dictation : this.dictation, histories: this.histories, mark: this.mark
       });
       return;
     }

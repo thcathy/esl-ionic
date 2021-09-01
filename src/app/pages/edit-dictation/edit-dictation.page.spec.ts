@@ -213,7 +213,7 @@ describe('EditDictationPage', () => {
           expect(dictation.vocabs[0].word).toEqual('apple');
           expect(dictation.vocabs[1].word).toEqual('banana');
           expect(dictation.vocabs[2].word).toEqual('cup');
-          expect(call.args[1]).toEqual(VocabPracticeType.Puzzle);
+          expect(dictation.options.practiceType).toEqual(VocabPracticeType.Puzzle);
 
           component.question.setValue(` apple , banana,cup`);
           component.wordContainSpace.setValue(false);

@@ -11,7 +11,7 @@ import {AuthService} from '../../services/auth.service';
 import {VocabPracticeType} from '../../enum/vocab-practice-type.enum';
 import {DictationType} from '../edit-dictation/edit-dictation-page-enum';
 import {PracticeCompletePageInput} from '../practice-complete/practice-complete.page';
-import {Dictation} from '../../entity/dictation';
+import {Dictation, DictationOptions} from '../../entity/dictation';
 import {VocabPracticeHistory} from '../../entity/vocab-practice-history';
 import {Storage} from '@ionic/storage';
 
@@ -64,7 +64,10 @@ export class VocabularyStarterPage implements OnInit {
   start() {
     this.saveInput();
     this.vocabPracticeService.generatePractice(this.difficulty.value)
-      .subscribe(d => this.navigationService.startDictation(d, this.type.value));
+      .subscribe(d => {
+        d.options = { 'practiceType': this.type.value ?? VocabPracticeType.Spell };
+        this.navigationService.startDictation(d);
+      });
   }
 
   saveInput() {

@@ -194,7 +194,7 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
 
   startDictationNow() {
     const d = this.prepareDictation();
-    this.navService.startDictation(d, this.wordPracticeType.value);
+    this.navService.startDictation(d);
   }
 
   prepareDictation(): Dictation {
@@ -207,6 +207,7 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
         title: new Date().toDateString(),
         suitableStudent: 'Any',
         wordContainSpace: this.wordContainSpace.value,
+        options: { 'practiceType' : this.wordPracticeType.value },
       };
     } else {
       return <Dictation>{

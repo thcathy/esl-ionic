@@ -1,15 +1,13 @@
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import {async, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
 
-import { DictationPracticePage } from './dictation-practice.page';
+import {DictationPracticePage} from './dictation-practice.page';
 import {SharedTestModule} from '../../../testing/shared-test.module';
 import {Storage} from '@ionic/storage';
-import {NavigationServiceSpy, SpeechServiceSpy, StorageSpy, VocabPracticeServiceSpy} from '../../../testing/mocks-ionic';
+import {NavigationServiceSpy, StorageSpy, VocabPracticeServiceSpy} from '../../../testing/mocks-ionic';
 import {dictation2_vocabDictation} from '../../../testing/test-data';
 import {VocabPracticeType} from '../../enum/vocab-practice-type.enum';
 import {NavigationService} from '../../services/navigation.service';
-import {SpeechService} from '../../services/speech.service';
-import {count, tap} from 'rxjs/operators';
 import {VocabPracticeService} from '../../services/practice/vocab-practice.service';
 
 describe('DictationPracticePage', () => {
@@ -44,17 +42,16 @@ describe('DictationPracticePage', () => {
 
   describe('initDictation', () => {
     it('will call speak once', fakeAsync(() => {
-      const params = {
-        'dictation': dictation2_vocabDictation,
-        'vocabPracticeType': VocabPracticeType.Spell,
-      };
+      const dictation = dictation2_vocabDictation;
+      dictation.options = { 'practiceType': VocabPracticeType.Spell };
+      const params = { 'dictation': dictation };
       storageSpy.get.and.callFake((param) => params[param]);
       let total = 0;
       component.speak$.subscribe(v => total += 1);
 
       component.initDictation();
       tick();
-      expect(component.vocabPractices.length).toBe(dictation2_vocabDictation.vocabs.length);
+      expect(component.vocabPractices.length).toBe(dictation.vocabs.length);
       expect(total).toBe(1);
     }));
   });
