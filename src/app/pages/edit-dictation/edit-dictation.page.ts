@@ -135,6 +135,7 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
       this.question.setValue(dictation.vocabs.map(v => v.word).join(dictation.wordContainSpace ? '\n' : ' '));
       this.showImage.setValue(dictation.showImage);
       this.wordContainSpace.setValue(dictation.wordContainSpace);
+      this.wordPracticeType.setValue(dictation?.options?.practiceType);
     }
 
     if (!this.dictationService.isInstantDictation(dictation)) {

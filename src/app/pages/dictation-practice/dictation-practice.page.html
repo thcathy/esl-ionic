@@ -72,7 +72,7 @@
 </ion-content>
 
 <ion-footer>
-    <virtual-keyboard #virtualKeyboard
+    <virtual-keyboard #virtualKeyboard *ngIf="practiceType !== 'Puzzle'"
                       (keyPress)="onKeyPress($event)"
                       (keyboardEvent)="onKeyboardEvent($event)"></virtual-keyboard>
 </ion-footer>
