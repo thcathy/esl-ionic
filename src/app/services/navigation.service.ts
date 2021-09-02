@@ -31,7 +31,6 @@ export class NavigationService {
     showBackButton: 'showBackButton',
     memberHomeSegment: 'memberHomeSegment',
     language: 'language',
-    vocabPracticeType: 'vocabPracticeType',
     practiceCompletePageInput: 'practiceCompletePageInput',
   };
 
@@ -69,9 +68,8 @@ export class NavigationService {
     this.location.back();
   }
 
-  async startDictation(dictation: Dictation, type: VocabPracticeType = VocabPracticeType.Spell) {
+  async startDictation(dictation: Dictation) {
     await this.storage.set(NavigationService.storageKeys.dictation, dictation);
-    await this.storage.set(NavigationService.storageKeys.vocabPracticeType, type);
 
     if (this.dictationService.isSentenceDictation(dictation)) {
       this.router.navigate(['/article-dictation']);

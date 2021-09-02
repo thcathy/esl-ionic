@@ -41,7 +41,7 @@
                                      [value]="state">{{'SuitableStudent.' + state|translate}}</ion-select-option>
                 </ion-select>
               </ion-item>
-              <ion-radio-group [formControl]="inputForm.controls['type']">
+              <ion-radio-group [formControl]="type">
                 <ion-row class="radio">
                   <ion-col>
                     <ion-item>
@@ -67,16 +67,45 @@
                   </ion-col>
                 </ion-row>
               </ion-radio-group>
-              <ion-item *ngIf="type.value === dictationType.Word">
-                <ion-label>
-                  <fa-icon [icon]="['far', 'images']"></fa-icon> {{'Show Image'|translate}}</ion-label>
-                <ion-toggle style="padding-right: 30px;" formControlName="showImage"></ion-toggle>
-              </ion-item>
-              <ion-item *ngIf="type.value === dictationType.Word">
-                <ion-label>
-                  <fa-icon [icon]="['fas', 'window-minimize']"></fa-icon> {{'Words Contain Space'|translate}}</ion-label>
-                <ion-toggle style="padding-right: 30px;" formControlName="wordContainSpace"></ion-toggle>
-              </ion-item>
+              <ion-item style="font-size: small;">{{ 'Options' | translate }}:</ion-item>
+              <div class="word-options" *ngIf="type.value === dictationType.Word  && mode === pageMode.Start">
+                <ion-radio-group [formControl]="wordPracticeType">
+                  <ion-row class="radio">
+                    <ion-col>
+                      <ion-item>
+                        <ion-label [class.deselected]="wordPracticeType.value === practiceType.Spell">
+                          {{'Spelling'|translate}}</ion-label>
+                        <ion-radio value="Spell"></ion-radio>
+                      </ion-item>
+                      <div class="word-practice-type-example" [class.deselected]="wordPracticeType.value !== practiceType.Spell" style="padding-top: 6px;">
+                        <fa-icon icon="apple-alt"></fa-icon>&nbsp;<span class="spell">apple</span>
+                      </div>
+                    </ion-col>
+                    <ion-col>
+                      <ion-item>
+                        <ion-label [class.deselected]="wordPracticeType.value === practiceType.Puzzle">
+                          {{'Puzzle'|translate}}</ion-label>
+                        <ion-radio value="Puzzle"></ion-radio>
+                      </ion-item>
+                      <div class="word-practice-type-example puzzle" [class.deselected]="wordPracticeType.value !== practiceType.Puzzle">
+                        <fa-icon icon="apple-alt"></fa-icon>
+                        <span class="puzzle">p</span><span>e</span><span>l</span><span>a</span>
+                      </div>
+                    </ion-col>
+                  </ion-row>
+                </ion-radio-group>
+                <ion-item >
+                  <ion-label>
+                    <fa-icon [icon]="['far', 'images']"></fa-icon> {{'Show Image'|translate}}</ion-label>
+                  <ion-toggle style="padding-right: 30px;" formControlName="showImage"></ion-toggle>
+                </ion-item>
+                <ion-item *ngIf="type.value === dictationType.Word">
+                  <ion-label>
+                    <fa-icon [icon]="['fas', 'window-minimize']"></fa-icon> {{'Words Contain Space'|translate}}</ion-label>
+                  <ion-toggle style="padding-right: 30px;" formControlName="wordContainSpace"></ion-toggle>
+                </ion-item>
+              </div>
+
               <ion-item *ngIf="type.value === dictationType.Sentence">
                 <ion-label>
                   <fa-icon [icon]="['fas', 'ruler']"></fa-icon> {{'Each Sentence Length'|translate}}

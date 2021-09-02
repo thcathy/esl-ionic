@@ -1,5 +1,6 @@
 import {Member} from './member';
 import {Vocab} from './vocab';
+import {VocabPracticeType} from '../enum/vocab-practice-type.enum';
 
 export class Dictation {
   title?: string;
@@ -25,6 +26,7 @@ export class Dictation {
   generated?: boolean;
   sentenceLength?: string;
   wordContainSpace?: boolean;
+  options?: DictationOptions;
 }
 
 export const SuitableStudentOptions = ['Any', 'Kindergarten', 'JuniorPrimary', 'SeniorPrimary', 'JuniorSecondary', 'SeniorSecondary'];
@@ -32,8 +34,7 @@ export const SuitableStudentOptions = ['Any', 'Kindergarten', 'JuniorPrimary', '
 export const SentenceLengthOptions = ['Short', 'Normal', 'Long', 'VeryLong'];
 
 export class DictationOptions {
-  letterPuzzle?: boolean;
-  puzzleSize = 10;
+  practiceType?: VocabPracticeType;
 }
 
 export class  PuzzleControls {

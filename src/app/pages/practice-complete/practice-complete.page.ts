@@ -57,7 +57,7 @@ export class PracticeCompletePage implements OnInit {
     this.dictation = input.dictation;
     this.histories = input.histories;
     this.mark = input.mark;
-    this.practiceType = input.practiceType ?? VocabPracticeType.Spell;
+    this.practiceType = input.dictation?.options?.practiceType ?? VocabPracticeType.Spell;
     this.historyStored = input.historyStored ?? false;
   }
 
@@ -104,7 +104,7 @@ export class PracticeCompletePage implements OnInit {
 
   getDictationThenOpen() {
     if (this.dictationService.isGeneratedDictation(this.dictation)) {
-      this.navigationService.startDictation(this.dictation, this.practiceType);
+      this.navigationService.startDictation(this.dictation);
       return;
     } else if (this.dictationService.isInstantDictation(this.dictation)) {
       this.openDictation(this.dictation);
@@ -137,7 +137,6 @@ export class PracticeCompletePage implements OnInit {
 export interface PracticeCompletePageInput {
   dictation: Dictation;
   histories: VocabPracticeHistory[];
-  practiceType?: VocabPracticeType;
   mark?: number;
   historyStored?: boolean;
 }

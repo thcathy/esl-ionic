@@ -28,6 +28,26 @@ fa-icon {
   color: #555555;
 }
 
-.deselected {
-  color: #aaaaaa;
+.puzzle span {
+  display: inline-block;
+  border: 1px solid;
+  width: 24px;
+  margin: 4px;
+  text-align: center;
 }
+
+.word-practice-type-example {
+  height: 24px;
+  padding-left: 20px;
+  font-size: 0.9rem;
+  color: #555555;
+}
+
+.word-practice-type-example .spell {
+  text-decoration: underline;
+}
+
+.deselected {
+  color: #ccc;
+}
+

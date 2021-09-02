@@ -13,6 +13,7 @@ import {ActivatedRouteStub} from '../../../testing/activated-route-stub';
 import {ActivatedRoute} from '@angular/router';
 import {Dictation} from '../../entity/dictation';
 import {DictationType, EditDictationPageMode} from './edit-dictation-page-enum';
+import {VocabPracticeType} from '../../enum/vocab-practice-type.enum';
 
 describe('EditDictationPage', () => {
   let component: EditDictationPage;
@@ -110,6 +111,12 @@ describe('EditDictationPage', () => {
         expect(component.description).toBeDefined();
         expect(component.suitableStudent).toBeDefined();
       }));
+
+      it('do not show options for word', fakeAsync(() => {
+        componentViewWillEnter();
+        component.type.setValue(DictationType.Word);
+        expect(fixture.nativeElement.querySelector('.word-options')).toBeNull();
+      }));
     });
   });
 
@@ -173,9 +180,9 @@ describe('EditDictationPage', () => {
       }));
 
       describe('start instant dictation', () => {
-        it('start by article will navigate to start dictation page', fakeAsync(() => {
-          componentViewWillEnter();
+        beforeEach(fakeAsync(() => { componentViewWillEnter(); }));
 
+        it('start by article will navigate to start dictation page', fakeAsync(() => {
           component.question.setValue(`This is a article.`);
           component.sentenceLength.setValue('Short');
           component.type.setValue(DictationType.Sentence);
@@ -187,7 +194,6 @@ describe('EditDictationPage', () => {
         }));
 
         it('start instant dictation by single word will navigate to start dictation page', fakeAsync(() => {
-          componentViewWillEnter();
           component.question.setValue(`
             apple
                  banana
@@ -196,15 +202,18 @@ describe('EditDictationPage', () => {
           component.showImage.setValue(true);
           component.wordContainSpace.setValue(true);
           component.type.setValue(DictationType.Word);
+          component.wordPracticeType.setValue(VocabPracticeType.Puzzle);
           component.startDictationNow();
 
-          const dictation = navigationServiceSpy.startDictation.calls.mostRecent().args[0] as Dictation;
+          const call = navigationServiceSpy.startDictation.calls.mostRecent();
+          const dictation = call.args[0] as Dictation;
           expect(dictation.showImage).toBeTrue();
           expect(dictation.wordContainSpace).toBeTrue();
           expect(dictation.vocabs.length).toEqual(3);
           expect(dictation.vocabs[0].word).toEqual('apple');
           expect(dictation.vocabs[1].word).toEqual('banana');
           expect(dictation.vocabs[2].word).toEqual('cup');
+          expect(dictation.options.practiceType).toEqual(VocabPracticeType.Puzzle);
 
           component.question.setValue(` apple , banana,cup`);
           component.wordContainSpace.setValue(false);
@@ -216,6 +225,10 @@ describe('EditDictationPage', () => {
           expect(dictation2.vocabs[2].word).toEqual('cup');
         }));
 
+        it('select dictation by word will show options for word', fakeAsync(() => {
+          component.type.setValue(DictationType.Word);
+          expect(fixture.nativeElement.querySelector('.word-options')).toBeDefined();
+        }));
       });
 
       describe('form validation', () => {

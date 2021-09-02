@@ -1,9 +1,10 @@
-import {Member} from "../app/entity/member";
-import {Dictation} from "../app/entity/dictation";
-import {Name} from "../app/entity/name";
-import {SentenceHistory} from "../app/entity/sentence-history";
-import {VocabPractice} from "../app/entity/voacb-practice";
-import {MemberVocabulary} from "../app/entity/member-vocabulary";
+import {Member} from '../app/entity/member';
+import {Dictation} from '../app/entity/dictation';
+import {Name} from '../app/entity/name';
+import {SentenceHistory} from '../app/entity/sentence-history';
+import {VocabPractice} from '../app/entity/voacb-practice';
+import {MemberVocabulary} from '../app/entity/member-vocabulary';
+import {Vocab} from '../app/entity/vocab';
 
 
 export const member1 = new Member(
@@ -29,46 +30,57 @@ export const dictation1Histories = [
   <SentenceHistory>{question: 'sentence to learn', answer: 'sentence to learn', questionSegments: [''], isCorrect: [true]}
 ];
 
-export const vocab_apple = <VocabPractice>{
-  id:1,
-  pronouncedLink:"http://dictionary.cambridge.org/media/english/uk_pron/u/uka/ukapp/ukappen014.mp3",
-  pronouncedLinkBackup:"https://s.yimg.com/tn/dict/dreye/live/f/apple.mp3",
-  word:"apple",
-  picFileName:"FRUT_032.jpg",
-  frequency:18.9,
-  rank:3193,
-  grades:[],
-  picsFullPaths:[
-    "data:image/png;base64,*************************************************************",
-    "data:image/png;base64,*************************************************************",
-    "data:image/png;base64,*************************************************************",
+export const dictation2_vocabDictation = <Dictation>{
+  id: 2,
+  title: 'test dictation 2',
+  vocabs: [
+    <Vocab>{word: 'apple'},
+    <Vocab>{word: 'banana'},
+    <Vocab>{word: 'cat'},
   ],
-  picsFullPathsInString:"data:image/png;base64,*************************************************************",
-  ipa:"ˋæpl",
-  activePronounceLink:"http://dictionary.cambridge.org/media/english/uk_pron/u/uka/ukapp/ukappen014.mp3",
-  ipaunavailable:false,
-  suffledWord:"lapep"
+  showImage: true
+};
+
+export const vocab_apple = <VocabPractice>{
+  id: 1,
+  pronouncedLink: 'http://dictionary.cambridge.org/media/english/uk_pron/u/uka/ukapp/ukappen014.mp3',
+  pronouncedLinkBackup: 'https://s.yimg.com/tn/dict/dreye/live/f/apple.mp3',
+  word: 'apple',
+  picFileName: 'FRUT_032.jpg',
+  frequency: 18.9,
+  rank: 3193,
+  grades: [],
+  picsFullPaths: [
+    'data:image/png;base64,*************************************************************',
+    'data:image/png;base64,*************************************************************',
+    'data:image/png;base64,*************************************************************',
+  ],
+  picsFullPathsInString: 'data:image/png;base64,*************************************************************',
+  ipa: 'ˋæpl',
+  activePronounceLink: 'http://dictionary.cambridge.org/media/english/uk_pron/u/uka/ukapp/ukappen014.mp3',
+  ipaunavailable: false,
+  suffledWord: 'lapep'
 };
 
 export const vocab_banana = <VocabPractice>{
-  id:104,
-  pronouncedLink:"http://dictionary.cambridge.org/media/english/uk_pron/u/ukb/ukbal/ukballs018.mp3",
-  pronouncedLinkBackup:"https://s.yimg.com/tn/dict/dreye/live/f/banana.mp3",
-  word:"banana",
-  picFileName:"FRUT_113.jpg",
-  frequency:9.49,
-  rank:4828,
-  grades:[],
-  picsFullPaths:[
-    "data:image/png;base64,*************************************************************",
-    "data:image/png;base64,*************************************************************",
-    "data:image/png;base64,*************************************************************",
+  id: 104,
+  pronouncedLink: 'http://dictionary.cambridge.org/media/english/uk_pron/u/ukb/ukbal/ukballs018.mp3',
+  pronouncedLinkBackup: 'https://s.yimg.com/tn/dict/dreye/live/f/banana.mp3',
+  word: 'banana',
+  picFileName: 'FRUT_113.jpg',
+  frequency: 9.49,
+  rank: 4828,
+  grades: [],
+  picsFullPaths: [
+    'data:image/png;base64,*************************************************************',
+    'data:image/png;base64,*************************************************************',
+    'data:image/png;base64,*************************************************************',
   ],
-  picsFullPathsInString:"data:image/png;base64,*************************************************************",
-  ipa:"bəˋnɑ:nə",
-  activePronounceLink:"http://dictionary.cambridge.org/media/english/uk_pron/u/ukb/ukbal/ukballs018.mp3",
-  ipaunavailable:false,
-  suffledWord:"aaanbn"
+  picsFullPathsInString: 'data:image/png;base64,*************************************************************',
+  ipa: 'bəˋnɑ:nə',
+  activePronounceLink: 'http://dictionary.cambridge.org/media/english/uk_pron/u/ukb/ukbal/ukballs018.mp3',
+  ipaunavailable: false,
+  suffledWord: 'aaanbn'
 };
 
 export const memberVocabularyMember1Apple = () => <MemberVocabulary>{

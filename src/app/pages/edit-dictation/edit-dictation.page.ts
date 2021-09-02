@@ -16,6 +16,7 @@ import {AlertController} from '@ionic/angular';
 import {ArticleDictationService} from '../../services/dictation/article-dictation.service';
 import {DictationType, EditDictationPageMode} from './edit-dictation-page-enum';
 import {DictationUtils} from '../../utils/dictation-utils';
+import {VocabPracticeType} from '../../enum/vocab-practice-type.enum';
 
 @Component({
   selector: 'app-edit-dictation',
@@ -86,6 +87,7 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
     controlsConfig['question'] = new FormControl('', [Validators.required]);
     controlsConfig['type'] = DictationType.Word;
     controlsConfig['sentenceLength'] = 'Normal';
+    controlsConfig['wordPracticeType'] = VocabPracticeType.Spell;
 
     if (this.mode === EditDictationPageMode.Edit) {
       controlsConfig['title'] = new FormControl('', [Validators.required, Validators.minLength(5),  Validators.maxLength(50)]);
@@ -115,9 +117,10 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
   get sentenceLength() { return this.inputForm.get('sentenceLength'); }
   get type() { return this.inputForm.get('type'); }
   get wordContainSpace() { return this.inputForm.get('wordContainSpace'); }
+  get wordPracticeType() { return this.inputForm.get('wordPracticeType'); }
 
+  get practiceType() { return VocabPracticeType; }
   get pageMode() { return EditDictationPageMode; }
-
   get dictationType() { return DictationType; }
 
   setupFormValue(dictation: Dictation) {
@@ -132,6 +135,7 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
       this.question.setValue(dictation.vocabs.map(v => v.word).join(dictation.wordContainSpace ? '\n' : ' '));
       this.showImage.setValue(dictation.showImage);
       this.wordContainSpace.setValue(dictation.wordContainSpace);
+      this.wordPracticeType.setValue(dictation?.options?.practiceType);
     }
 
     if (!this.dictationService.isInstantDictation(dictation)) {
@@ -204,6 +208,7 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
         title: new Date().toDateString(),
         suitableStudent: 'Any',
         wordContainSpace: this.wordContainSpace.value,
+        options: { 'practiceType' : this.wordPracticeType.value },
       };
     } else {
       return <Dictation>{
