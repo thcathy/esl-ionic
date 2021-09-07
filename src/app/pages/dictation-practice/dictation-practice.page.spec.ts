@@ -54,5 +54,15 @@ describe('DictationPracticePage', () => {
       expect(component.vocabPractices.length).toBe(dictation.vocabs.length);
       expect(total).toBe(1);
     }));
+
+    it('default practice type be Spell', fakeAsync(() => {
+      const params = { 'dictation': dictation2_vocabDictation };
+      storageSpy.get.and.callFake((param) => params[param]);
+      component.initDictation();
+      tick();
+      expect(component.practiceType).toBe(VocabPracticeType.Spell);
+      expect(fixture.nativeElement.querySelector('.spell-input-div')).toBeDefined();
+      expect(fixture.nativeElement.querySelector('.puzzle-div')).toBeNull();
+    }));
   });
 });
