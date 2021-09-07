@@ -79,7 +79,7 @@ export class DictationPracticePage implements OnInit {
   }
 
   get type() { return VocabPracticeType; }
-  get practiceType() { return this.dictation?.options?.practiceType; }
+  get practiceType() { return this.dictation?.options?.practiceType ?? VocabPracticeType.Spell; }
 
   receiveVocabPractice(p: VocabPractice) {
     if (p.activePronounceLink) { this.audio.set(p.word, new Audio(p.activePronounceLink)); }

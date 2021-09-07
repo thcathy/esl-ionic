@@ -25,7 +25,7 @@
                   <ion-button shape="round" class="phonicsButton" (click)="showPhonics()">{{phonics|translate}}</ion-button>
                 </ion-col>
               </ion-row>
-              <div *ngIf="practiceType === type.Spell">
+              <div *ngIf="practiceType === type.Spell" class="spell-input-div">
                 <ion-item class="answerInput">
                   <ion-label position="floating">{{'Answer'|translate}}</ion-label>
                   <ion-input [(ngModel)]="answer" type="text" inputmode="text" maxlength="30" (keyup.enter)="submitSpellingAnswer()"
