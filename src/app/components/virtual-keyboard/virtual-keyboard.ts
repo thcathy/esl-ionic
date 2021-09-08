@@ -20,6 +20,7 @@ export enum VirtualKeyboardType {
   styleUrls: ['virtual-keyboard.scss'],
 })
 export class VirtualKeyboardComponent {
+  @Input() disabled = false;
   @Output() keyPress = new EventEmitter<string>();
   @Output() keyboardEvent = new EventEmitter<VirtualKeyboardEvent>();
   activeType = VirtualKeyboardType.None;
