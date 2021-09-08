@@ -72,7 +72,8 @@
 </ion-content>
 
 <ion-footer>
-    <virtual-keyboard #virtualKeyboard *ngIf="practiceType !== 'Puzzle'"
+    <virtual-keyboard #virtualKeyboard
+                      [disabled]="practiceType === type.Puzzle"
                       (keyPress)="onKeyPress($event)"
                       (keyboardEvent)="onKeyboardEvent($event)"></virtual-keyboard>
 </ion-footer>

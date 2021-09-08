@@ -1,4 +1,4 @@
-<div *ngIf="activeType == virtualKeyboardType.Alphabetical" class="virtual-keyboard ion-text-center">
+<div *ngIf="activeType == virtualKeyboardType.Alphabetical && !disabled" class="virtual-keyboard ion-text-center">
   <p>
     <ion-button fill="outline" size="small" class="keyboard-button2" (click)="onKeyPress('a')">a</ion-button>
     <ion-button fill="outline" size="small" class="keyboard-button2" (click)="onKeyPress('b')">b</ion-button>
@@ -51,7 +51,7 @@
 </div>
 
 
-<div *ngIf="activeType == virtualKeyboardType.Standard" class="virtual-keyboard ion-text-center">
+<div *ngIf="activeType == virtualKeyboardType.Standard && !disabled" class="virtual-keyboard ion-text-center">
   <p>
     <ion-button fill="outline" size="small" class="keyboard-button" (click)="onKeyPress('q')">q</ion-button>
     <ion-button fill="outline" size="small" class="keyboard-button" (click)="onKeyPress('w')">w</ion-button>
