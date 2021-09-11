@@ -19,7 +19,6 @@ pipeline {
     }
 
     stage('deploy to firebase') {
-      when { branch 'master' }
       environment {
         FIREBASE_DEPLOY_KEY = credentials('FIREBASE_DEPLOY_KEY')
       }
