@@ -2,16 +2,17 @@ import {Component, Input} from '@angular/core';
 import {Dictation} from '../../entity/dictation';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {TranslateService} from '@ngx-translate/core';
-import {AlertController, PopoverController, ToastController} from '@ionic/angular';
+import {ActionSheetController, AlertController, ToastController} from '@ionic/angular';
 import {NavigationService} from '../../services/navigation.service';
 import {DictationService} from '../../services/dictation/dictation.service';
 import {MemberDictationService} from '../../services/dictation/member-dictation.service';
 import {Router} from '@angular/router';
 import {SocialSharing} from '@ionic-native/social-sharing/ngx';
 import {AppService} from '../../services/app.service';
+import {VocabPracticeType} from '../../enum/vocab-practice-type.enum';
 
 @Component({
-  selector: 'dictation-card',
+  selector: 'app-dictation-card',
   templateUrl: 'dictation-card.html',
   styleUrls: ['dictation-card.scss'],
   animations: [
@@ -32,7 +33,6 @@ import {AppService} from '../../services/app.service';
 export class DictationCardComponent {
   @Input() dictation: Dictation;
   @Input() start = false;
-  @Input() retry = false;
   @Input() edit = false;
   @Input() showContent = true;
   recommendState = 'normal';
@@ -47,6 +47,7 @@ export class DictationCardComponent {
               public translate: TranslateService,
               public alertController: AlertController,
               public toastController: ToastController,
+              public actionSheetController: ActionSheetController,
               public socialSharing: SocialSharing) {}
 
   highlightRecommend() {
@@ -137,6 +138,38 @@ export class DictationCardComponent {
     } else {
       this.share = !this.share;
     }
+  }
 
+  startDictationOrShowOptions() {
+    if (this.dictationService.isSentenceDictation(this.dictation)) {
+      this.navService.startDictation(this.dictation);
+    } else {
+      this.presentActionSheet();
+    }
+  }
+
+  startVocabDictation(type: VocabPracticeType) {
+    this.dictation.options = { 'practiceType' : type };
+    this.navService.startDictation(this.dictation);
+  }
+
+  async presentActionSheet() {
+    const actionSheet = await this.actionSheetController.create({
+      header: this.translate.instant('Options'),
+      buttons: [{
+        text: this.translate.instant('Spelling'),
+        icon: 'pencil-outline',
+        handler: () => {
+          this.startVocabDictation(VocabPracticeType.Spell);
+        }
+      }, {
+        text: this.translate.instant('Puzzle'),
+        icon: 'code-working-outline',
+        handler: () => {
+          this.startVocabDictation(VocabPracticeType.Puzzle);
+        }
+      }]
+    });
+    actionSheet.present();
   }
 }

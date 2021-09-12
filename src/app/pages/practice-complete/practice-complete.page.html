@@ -36,7 +36,7 @@
       </ion-row>
     </ion-card>
 
-    <dictation-card *ngIf="!dictationService.isGeneratedDictation(dictation)" #dictationCard [dictation]="dictation" [showContent]="false"></dictation-card>
+    <app-dictation-card *ngIf="!dictationService.isGeneratedDictation(dictation)" #dictationCard [dictation]="dictation" [showContent]="false"></app-dictation-card>
     <practice-history-list [histories]="histories" [mark]="mark" ></practice-history-list>
   </div>
   <app-footer></app-footer>

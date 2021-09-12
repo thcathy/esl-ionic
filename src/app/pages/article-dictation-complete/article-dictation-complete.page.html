@@ -26,7 +26,7 @@
         </ion-col>
       </ion-row>
     </ion-card>
-    <dictation-card #dictationCard [dictation]="dictation" [showContent]="false"></dictation-card>
+    <app-dictation-card #dictationCard [dictation]="dictation" [showContent]="false"></app-dictation-card>
     <ion-card class="card" style="margin-top: 8px;">
       <h3><fa-icon [icon]="['fas', 'check']"></fa-icon> {{totalCorrect}} ({{totalCorrect / (totalCorrect + totalWrong) * 100 | number:'1.0-0'}}%)
         / <span class="red"><fa-icon [icon]="['fas', 'times']"></fa-icon> {{totalWrong}} ({{totalWrong / (totalCorrect + totalWrong) * 100 | number:'1.0-0'}}%)</span></h3>
