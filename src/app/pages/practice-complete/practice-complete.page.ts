@@ -110,15 +110,19 @@ export class PracticeCompletePage implements OnInit {
       this.openDictation(this.dictation);
     } else {
       // this.ionicComponentService.showLoading().then(l => this.loader = l);
-      this.dictationService.getById(this.dictation.id)
-        .toPromise()
-        .then(d => this.openDictation(d))
-        .catch(e => this.showCannotGetDictation(e));
+      this.ionicComponentService.presentVocabPracticeTypeActionSheet()
+        .then(type => {
+          this.dictationService.getById(this.dictation.id)
+            .toPromise()
+            .then(d => this.openDictation(d, type))
+            .catch(e => this.showCannotGetDictation(e));
+        });
     }
   }
 
-  openDictation(d: Dictation) {
+  openDictation(d: Dictation, type: VocabPracticeType = VocabPracticeType.Spell) {
     if (this.loader) { this.loader.dismiss(); }
+    d.options = { 'practiceType' : type };
     this.navigationService.retryDictation(d);
   }
 

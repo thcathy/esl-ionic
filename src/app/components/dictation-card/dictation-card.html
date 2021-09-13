@@ -67,8 +67,7 @@
         <ion-button *ngIf="!dictationService.isInstantDictation(dictation)" fill="outline" (click)="shareDictation()"><fa-icon [icon]="['fas', 'share-square']"></fa-icon>&nbsp;{{'Share'|translate}}</ion-button>
       </ion-col>
       <ion-col class="ion-text-right">
-        <ion-button *ngIf="start" (click)="navService.startDictation(dictation)"><fa-icon [icon]="['fas', 'play']"></fa-icon>&nbsp;{{'Start'|translate}}</ion-button>
-        <ion-button *ngIf="retry" (click)="navService.startDictation(dictation)"><fa-icon [icon]="['fas', 'redo']"></fa-icon>&nbsp;{{'Retry'|translate}}</ion-button>
+        <ion-button *ngIf="start" (click)="startDictationOrShowOptions()"><fa-icon [icon]="['fas', 'play']"></fa-icon>&nbsp;{{'Start'|translate}}</ion-button>
       </ion-col>
     </ion-row>
     <ion-row *ngIf="share">
