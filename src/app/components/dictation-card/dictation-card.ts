@@ -10,6 +10,7 @@ import {Router} from '@angular/router';
 import {SocialSharing} from '@ionic-native/social-sharing/ngx';
 import {AppService} from '../../services/app.service';
 import {VocabPracticeType} from '../../enum/vocab-practice-type.enum';
+import {IonicComponentService} from '../../services/ionic-component.service';
 
 @Component({
   selector: 'app-dictation-card',
@@ -47,7 +48,7 @@ export class DictationCardComponent {
               public translate: TranslateService,
               public alertController: AlertController,
               public toastController: ToastController,
-              public actionSheetController: ActionSheetController,
+              public componentService: IonicComponentService,
               public socialSharing: SocialSharing) {}
 
   highlightRecommend() {
@@ -144,7 +145,8 @@ export class DictationCardComponent {
     if (this.dictationService.isSentenceDictation(this.dictation)) {
       this.navService.startDictation(this.dictation);
     } else {
-      this.presentActionSheet();
+      this.componentService.presentVocabPracticeTypeActionSheet()
+        .then(type => this.startVocabDictation(type));
     }
   }
 
@@ -153,23 +155,4 @@ export class DictationCardComponent {
     this.navService.startDictation(this.dictation);
   }
 
-  async presentActionSheet() {
-    const actionSheet = await this.actionSheetController.create({
-      header: this.translate.instant('Options'),
-      buttons: [{
-        text: this.translate.instant('Spelling'),
-        icon: 'pencil-outline',
-        handler: () => {
-          this.startVocabDictation(VocabPracticeType.Spell);
-        }
-      }, {
-        text: this.translate.instant('Puzzle'),
-        icon: 'code-working-outline',
-        handler: () => {
-          this.startVocabDictation(VocabPracticeType.Puzzle);
-        }
-      }]
-    });
-    actionSheet.present();
-  }
 }

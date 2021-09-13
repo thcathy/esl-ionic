@@ -1,8 +1,9 @@
 import {Injectable} from '@angular/core';
 
 import {TranslateService} from '@ngx-translate/core';
-import {AlertController, LoadingController, ToastController} from '@ionic/angular';
+import {ActionSheetController, AlertController, LoadingController, ToastController} from '@ionic/angular';
 import {Observable, Subject} from 'rxjs';
+import {VocabPracticeType} from '../enum/vocab-practice-type.enum';
 
 @Injectable({ providedIn: 'root' })
 export class IonicComponentService {
@@ -11,6 +12,7 @@ export class IonicComponentService {
               public translate: TranslateService,
               public toastController: ToastController,
               public alertController: AlertController,
+              public actionSheetController: ActionSheetController,
   ) { }
 
   async showLoading() {
@@ -60,5 +62,29 @@ export class IonicComponentService {
       ]
     }).then(alert => alert.present());
     return confirmExit$;
+  }
+
+  async presentVocabPracticeTypeActionSheet() {
+    const actionSheet = await this.actionSheetController.create({
+      header: this.translate.instant('Options'),
+      buttons: [{
+        text: this.translate.instant('Spelling'),
+        icon: 'pencil-outline',
+        role: VocabPracticeType.Spell
+      }, {
+        text: this.translate.instant('Puzzle'),
+        icon: 'code-working-outline',
+        role: VocabPracticeType.Puzzle
+      }]
+    });
+    await actionSheet.present();
+
+    const { role } = await actionSheet.onDidDismiss();
+    console.log(`role = ${role}`);
+    if (role !== 'cancel' && role !== 'backdrop') {
+      return VocabPracticeType[role];
+    } else {
+      return Promise.reject(role);
+    }
   }
 }

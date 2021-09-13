@@ -4,7 +4,7 @@ import {async, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/t
 import {PracticeCompletePage, PracticeCompletePageInput} from './practice-complete.page';
 import {dictation1} from '../../../testing/test-data';
 import {DictationService} from '../../services/dictation/dictation.service';
-import {AuthServiceSpy, DictationServiceSpy, ManageVocabHistoryServiceSpy, NavigationServiceSpy, StorageSpy, VocabPracticeServiceSpy, } from '../../../testing/mocks-ionic';
+import {AuthServiceSpy, DictationServiceSpy, IonicComponentServiceSpy, ManageVocabHistoryServiceSpy, NavigationServiceSpy, StorageSpy, VocabPracticeServiceSpy,} from '../../../testing/mocks-ionic';
 import {Storage} from '@ionic/storage';
 import 'rxjs-compat/add/observable/of';
 import {SharedTestModule} from '../../../testing/shared-test.module';
@@ -13,11 +13,14 @@ import {NavigationService} from '../../services/navigation.service';
 import {VocabPracticeService} from '../../services/practice/vocab-practice.service';
 import {ManageVocabHistoryService} from '../../services/member/manage-vocab-history.service';
 import {VocabPracticeType} from '../../enum/vocab-practice-type.enum';
+import {IonicComponentService} from '../../services/ionic-component.service';
+import {Observable} from 'rxjs';
 
 describe('PracticeCompletePage', () => {
   let component: PracticeCompletePage;
   let fixture: ComponentFixture<PracticeCompletePage>;
-  let dictationServiceSpy, vocabPracticeServiceSpy, storageSpy, authServiceSpy, navigationServiceSpy, manageVocabHistoryServiceSpy;
+  let dictationServiceSpy, vocabPracticeServiceSpy, storageSpy,
+    authServiceSpy, navigationServiceSpy, manageVocabHistoryServiceSpy, ionicComponentServiceSpy;
   let defaultInput;
 
   beforeEach(async(() => {
@@ -27,6 +30,7 @@ describe('PracticeCompletePage', () => {
     authServiceSpy = AuthServiceSpy();
     navigationServiceSpy = NavigationServiceSpy();
     manageVocabHistoryServiceSpy = ManageVocabHistoryServiceSpy();
+    ionicComponentServiceSpy = IonicComponentServiceSpy();
 
     TestBed.configureTestingModule({
       declarations: [ PracticeCompletePage ],
@@ -40,7 +44,8 @@ describe('PracticeCompletePage', () => {
         { provide: Storage, useValue: storageSpy },
         { provide: AuthService, useValue: authServiceSpy },
         { provide: NavigationService, useValue: navigationServiceSpy },
-        { provide: ManageVocabHistoryService, useValue: manageVocabHistoryServiceSpy},
+        { provide: ManageVocabHistoryService, useValue: manageVocabHistoryServiceSpy },
+        { provide: IonicComponentService, useValue: ionicComponentServiceSpy },
       ]
     })
     .compileComponents();
@@ -100,6 +105,23 @@ describe('PracticeCompletePage', () => {
 
       expect(navigationServiceSpy.startDictation.calls.count()).toEqual(1);
       expect(navigationServiceSpy.startDictation.calls.mostRecent().args[0].options.practiceType).toEqual(VocabPracticeType.Puzzle);
+    }));
+
+    it('show vocabulary practice type options for saved vocabulary dictation', fakeAsync(() => {
+      dictationServiceSpy.isInstantDictation.and.returnValue(false);
+      dictationServiceSpy.isGeneratedDictation.and.returnValue(false);
+      dictationServiceSpy.isSentenceDictation.and.returnValue(true);
+      dictationServiceSpy.getById.and.returnValue(Observable.of(dictation1));
+      ionicComponentServiceSpy.presentVocabPracticeTypeActionSheet.and.returnValue(Promise.resolve(VocabPracticeType.Puzzle));
+      const params = { 'practiceCompletePageInput': defaultInput };
+      storageSpy.get.and.callFake((param) => params[param]);
+      component.ionViewWillEnter();
+      tick();
+      fixture.detectChanges();
+      component.getDictationThenOpen();
+
+      expect(navigationServiceSpy.startDictation.calls.count()).toEqual(0);
+      expect(ionicComponentServiceSpy.presentVocabPracticeTypeActionSheet.calls.count()).toEqual(1);
     }));
   });
 

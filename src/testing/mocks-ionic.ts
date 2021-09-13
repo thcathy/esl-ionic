@@ -143,7 +143,7 @@ export const PlatformSpy = () => jasmine.createSpyObj('Platform', { ready: Promi
 export const TextToSpeechSpy = () => jasmine.createSpyObj('TextToSpeech', ['speak']);
 
 export const DictationServiceSpy = () => jasmine.createSpyObj('DictationService',
-  ['createVocabDictationHistory', 'isInstantDictation', 'isGeneratedDictation', 'isSentenceDictation']
+  ['createVocabDictationHistory', 'isInstantDictation', 'isGeneratedDictation', 'isSentenceDictation', 'getById']
 );
 
 export const VocabPracticeServiceSpy = () => {
@@ -159,3 +159,5 @@ export const ManageVocabHistoryServiceSpy = () => jasmine.createSpyObj('ManageVo
 export const AppServiceSpy = () => jasmine.createSpyObj('AppService', ['isApp']);
 
 export const SpeechServiceSpy = () => jasmine.createSpyObj('SpeechServiceSpy', ['speak']);
+
+export const IonicComponentServiceSpy = () => jasmine.createSpyObj('IonicComponentServiceSpy', ['presentVocabPracticeTypeActionSheet']);
