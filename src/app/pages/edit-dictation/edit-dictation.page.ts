@@ -259,8 +259,7 @@ function vocabularyPatternValidator(typeName: string, questionName: string): Val
     if (type == null || type === DictationType.Sentence) { return null; }
 
     const question = control.get(questionName)?.value;
-    const pattern = new RegExp('^([a-zA-Z\\s]+[\\-,]?)+');
-    const valid = !ValidationUtils.isBlankString(question) && !pattern.test(question);
+    const valid = question != null && question !== '' && DictationUtils.vocabularyValueToArray(question, control.get(questionName).value).length <= 0;
     return valid ? {'invalidVocabularyPattern': true} : null;
   };
 }

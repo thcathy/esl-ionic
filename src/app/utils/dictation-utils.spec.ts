@@ -1,34 +1,55 @@
 import {DictationUtils} from './dictation-utils';
 
 describe('DictationUtils', () => {
-  it('vocabularyValueToArray can split input to string arrays', () => {
-    let count;
-    count = DictationUtils.vocabularyValueToArray(`apple banana`).length;
-    expect(count).toEqual(2);
+  describe('vocabularyValueToArray', () => {
+    it('vocabularyValueToArray can split input to string arrays', () => {
+      let count;
+      count = DictationUtils.vocabularyValueToArray(`apple banana`).length;
+      expect(count).toEqual(2);
 
-    count = DictationUtils.vocabularyValueToArray(`apple,banana`).length;
-    expect(count).toEqual(2);
+      count = DictationUtils.vocabularyValueToArray(`apple,banana`).length;
+      expect(count).toEqual(2);
 
-    count = DictationUtils.vocabularyValueToArray(`apple
+      count = DictationUtils.vocabularyValueToArray(`apple
     banana`).length;
-    expect(count).toEqual(2);
+      expect(count).toEqual(2);
 
-    count = DictationUtils.vocabularyValueToArray(`apple banana`, true).length;
-    expect(count).toEqual(1);
+      count = DictationUtils.vocabularyValueToArray(`apple banana`, true).length;
+      expect(count).toEqual(1);
 
-    count = DictationUtils.vocabularyValueToArray(`apple,banana`, true).length;
-    expect(count).toEqual(2);
+      count = DictationUtils.vocabularyValueToArray(`apple,banana`, true).length;
+      expect(count).toEqual(2);
 
-    const vocabs = DictationUtils.vocabularyValueToArray(`
+      const vocabs = DictationUtils.vocabularyValueToArray(`
     apple
     banana cake
     dog egg
     `, true);
-    expect(vocabs.length).toEqual(3);
-    expect(vocabs[0]).toEqual('apple');
-    expect(vocabs[1]).toEqual('banana cake');
-    expect(vocabs[2]).toEqual('dog egg');
+      expect(vocabs.length).toEqual(3);
+      expect(vocabs[0]).toEqual('apple');
+      expect(vocabs[1]).toEqual('banana cake');
+      expect(vocabs[2]).toEqual('dog egg');
+    });
+
+    it('can split input by numbers', () => {
+      const vocabs1 = DictationUtils.vocabularyValueToArray(`
+    1. apple
+    2. banana
+    3. dog
+    `, true);
+      expect(vocabs1.length).toEqual(3);
+      expect(vocabs1[0]).toEqual('apple');
+      expect(vocabs1[1]).toEqual('banana');
+      expect(vocabs1[2]).toEqual('dog');
+
+      const vocabs2 = DictationUtils.vocabularyValueToArray(`1. apple 2) banana 3 . dog`, true);
+      expect(vocabs2.length).toEqual(3);
+      expect(vocabs2[0]).toEqual('apple');
+      expect(vocabs2[1]).toEqual('banana');
+      expect(vocabs2[2]).toEqual('dog');
+    });
   });
+
 
   describe('test toCharacters', () => {
     it('toCharacters can provide character array in different size', () => {
