@@ -68,7 +68,7 @@
                 </ion-row>
               </ion-radio-group>
               <ion-item style="font-size: small;">{{ 'Options' | translate }}:</ion-item>
-              <div class="word-options" *ngIf="type.value === dictationType.Word  && mode === pageMode.Start">
+              <div class="word-options-instant" *ngIf="type.value === dictationType.Word && mode === pageMode.Start">
                 <ion-radio-group [formControl]="wordPracticeType">
                   <ion-row class="radio">
                     <ion-col>
@@ -94,6 +94,8 @@
                     </ion-col>
                   </ion-row>
                 </ion-radio-group>
+              </div>
+              <div class="word-options-all" *ngIf="type.value === dictationType.Word">
                 <ion-item >
                   <ion-label>
                     <fa-icon [icon]="['far', 'images']"></fa-icon> {{'Show Image'|translate}}</ion-label>

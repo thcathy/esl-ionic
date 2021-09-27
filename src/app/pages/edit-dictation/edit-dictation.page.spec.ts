@@ -115,7 +115,7 @@ describe('EditDictationPage', () => {
       it('do not show options for word', fakeAsync(() => {
         componentViewWillEnter();
         component.type.setValue(DictationType.Word);
-        expect(fixture.nativeElement.querySelector('.word-options')).toBeNull();
+        expect(fixture.nativeElement.querySelector('.word-options-instant')).toBeNull();
       }));
     });
   });
@@ -227,7 +227,8 @@ describe('EditDictationPage', () => {
 
         it('select dictation by word will show options for word', fakeAsync(() => {
           component.type.setValue(DictationType.Word);
-          expect(fixture.nativeElement.querySelector('.word-options')).toBeDefined();
+          expect(fixture.nativeElement.querySelector('.word-options-instant')).toBeDefined();
+          expect(fixture.nativeElement.querySelector('.word-options-all')).toBeDefined();
         }));
       });
 
@@ -253,7 +254,7 @@ describe('EditDictationPage', () => {
           component.question.setValue('');
           expect(component.inputForm.errors).toBeNull();
 
-          component.question.setValue('!@#$$%^^ start with invalid text');
+          component.question.setValue('中文');
           expect(component.inputForm.errors.invalidVocabularyPattern).toBeDefined();
 
           component.question.setValue('without invalid text');

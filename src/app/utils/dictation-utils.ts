@@ -6,9 +6,9 @@ export class DictationUtils {
   static vocabularyValueToArray(input: string, wordContainSpace: boolean = false): string[] {
     let splitter;
     if (wordContainSpace) {
-      splitter = /[\n,]+/;
+      splitter = /[^a-zA-Z\- ]+/;
     } else {
-      splitter = /[\s,]+/;
+      splitter = /[^a-zA-Z\-]+/;
     }
     return input.split(splitter).map(v => v.trim()).filter(v => !ValidationUtils.isBlankString(v));
   }
