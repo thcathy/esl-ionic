@@ -22,6 +22,7 @@ import {ShareButtonsModule} from 'ngx-sharebuttons/buttons';
 import {ShareIconsModule} from 'ngx-sharebuttons/icons';
 import {CharacterButtonComponent} from './character-button/character-button.component';
 import {CharacterComponent} from './character/character.component';
+import {VocabSelectionComponent} from './vocab-selection/vocab-selection.component';
 
 @NgModule({
     declarations: [MemberScoreRankingComponent,
@@ -36,7 +37,7 @@ import {CharacterComponent} from './character/character.component';
         MemberScoreListComponent,
         MemberPracticeHistoryListComponent,
         VocabHistoryListComponent,
-        VirtualKeyboardComponent, CharacterButtonComponent, CharacterComponent,
+        VirtualKeyboardComponent, CharacterButtonComponent, CharacterComponent, VocabSelectionComponent,
     ],
   imports: [
     IonicModule,
@@ -62,7 +63,7 @@ import {CharacterComponent} from './character/character.component';
         MemberScoreListComponent,
         MemberPracticeHistoryListComponent,
         VocabHistoryListComponent,
-        VirtualKeyboardComponent, CharacterButtonComponent, CharacterComponent,
+        VirtualKeyboardComponent, CharacterButtonComponent, CharacterComponent, VocabSelectionComponent,
     ]
 })
 export class ComponentsModule {}

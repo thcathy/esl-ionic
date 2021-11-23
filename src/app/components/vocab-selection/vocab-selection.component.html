@@ -1,5 +1,19 @@
-<ion-content>
-  <ion-list></ion-list>
+<ion-content style="height: 100%">
+  <ion-list>
+    <ion-item *ngFor="let vocab of showingVocabs; let i = index">
+      <ion-checkbox slot="start"></ion-checkbox>
+      <ion-label>
+        <ion-row>
+          <ion-col class="heading">{{vocab.id.word}}</ion-col>
+          <ion-col class="ion-text-right">
+            <span class="green-text"><fa-icon [icon]="['fas', 'check']"></fa-icon> {{vocab.correct}}</span>
+            /
+            <span class="red"><fa-icon [icon]="['fas', 'times']"></fa-icon> {{vocab.wrong}}</span>
+          </ion-col>
+        </ion-row>
+      </ion-label>
+    </ion-item>
+  </ion-list>
 
   <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
     <ion-infinite-scroll-content

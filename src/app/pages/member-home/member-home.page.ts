@@ -13,6 +13,8 @@ import {ActivatedRoute} from '@angular/router';
 import {NGXLogger} from 'ngx-logger';
 import 'rxjs-compat/add/operator/finally';
 import {delay, finalize} from 'rxjs/operators';
+import {ModalController} from '@ionic/angular';
+import {VocabSelectionComponent} from '../../components/vocab-selection/vocab-selection.component';
 
 @Component({
   selector: 'app-member-home',
@@ -40,6 +42,7 @@ export class MemberHomePage implements OnInit {
     public navigationService: NavigationService,
     public location: Location,
     private log: NGXLogger,
+    public modalController: ModalController,
   ) { }
 
   ngOnInit() {
@@ -105,6 +108,15 @@ export class MemberHomePage implements OnInit {
       this.navigationService.startDictation(
         this.manageVocabHistoryService.generatePracticeFromAnsweredBefore()
       );
+    } else if (value === 'review2') {
+      this.presentVocabSelectionModal();
     }
+  }
+
+  async presentVocabSelectionModal() {
+    const modal = await this.modalController.create({
+      component: VocabSelectionComponent,
+    });
+    return await modal.present();
   }
 }

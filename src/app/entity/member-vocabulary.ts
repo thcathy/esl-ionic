@@ -1,4 +1,4 @@
-import {Member} from "./member";
+import {Member} from './member';
 
 export interface MemberVocabulary {
   id: MemberVocabularyId;
