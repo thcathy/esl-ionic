@@ -1,7 +1,12 @@
+<ion-header>
+  <ion-title *ngIf="selectedVocabs?.size == 0">click on vocabulary to create an exercise</ion-title>
+  <ion-title *ngIf="selectedVocabs?.size > 0">selected {{ selectedVocabs.size }} vocabularies</ion-title>
+</ion-header>
 <ion-content style="height: 100%">
   <ion-list>
-    <ion-item *ngFor="let vocab of showingVocabs; let i = index">
-      <ion-checkbox slot="start"></ion-checkbox>
+    <ion-item *ngFor="let vocab of showingVocabs; let i = index"
+              button (click)="selectVocab(vocab)"
+              [class.highlight]="selectedVocabs.has(vocab.id.word)">
       <ion-label>
         <ion-row>
           <ion-col class="heading">{{vocab.id.word}}</ion-col>

@@ -13,9 +13,10 @@ export class VocabSelectionComponent implements OnInit {
 
   @Input() inputVocab: MemberVocabulary[];
   showingVocabs: MemberVocabulary[] = [];
-  selectedVocabs: MemberVocabulary[] = [];
+  selectedVocabs: Map<string, MemberVocabulary>;
 
   constructor() {
+    this.selectedVocabs = new Map<string, MemberVocabulary>();
     this.setTestingData();
   }
 
@@ -34,6 +35,15 @@ export class VocabSelectionComponent implements OnInit {
     event.target.complete();
   }
 
+  selectVocab(vocab: MemberVocabulary) {
+    const word = vocab.id.word;
+    if (this.selectedVocabs.has(word)) {
+      this.selectedVocabs.delete(word);
+    } else {
+      this.selectedVocabs.set(word, vocab);
+    }
+  }
+
   setTestingData() {
     const member1 = new Member(
       1,
@@ -48,103 +58,12 @@ export class VocabSelectionComponent implements OnInit {
       null,
       new Date('2008-01-01'));
 
-    this.inputVocab = [
-      {
-        id: {member: member1, word: 'apple'},
-        correct: 3, wrong: 1
-      },
-      {
-        id: {member: member1, word: 'banana'},
-        correct: 2, wrong: 3
-      },
-      {
-        id: {member: member1, word: 'cat'},
-        correct: 5, wrong: 0
-      },
-      {
-        id: {member: member1, word: 'apple'},
-        correct: 3, wrong: 1
-      },
-      {
-        id: {member: member1, word: 'banana'},
-        correct: 2, wrong: 3
-      },
-      {
-        id: {member: member1, word: 'cat'},
-        correct: 5, wrong: 0
-      },
-      {
-        id: {member: member1, word: 'apple'},
-        correct: 3, wrong: 1
-      },
-      {
-        id: {member: member1, word: 'banana'},
-        correct: 2, wrong: 3
-      },
-      {
-        id: {member: member1, word: 'cat'},
-        correct: 5, wrong: 0
-      },
-      {
-        id: {member: member1, word: 'apple'},
-        correct: 3, wrong: 1
-      },
-      {
-        id: {member: member1, word: 'banana'},
-        correct: 2, wrong: 3
-      },
-      {
-        id: {member: member1, word: 'cat'},
-        correct: 5, wrong: 0
-      },
-      {
-        id: {member: member1, word: 'apple'},
-        correct: 3, wrong: 1
-      },
-      {
-        id: {member: member1, word: 'banana'},
-        correct: 2, wrong: 3
-      },
-      {
-        id: {member: member1, word: 'cat'},
-        correct: 5, wrong: 0
-      },
-      {
-        id: {member: member1, word: 'apple'},
-        correct: 3, wrong: 1
-      },
-      {
-        id: {member: member1, word: 'banana'},
-        correct: 2, wrong: 3
-      },
-      {
-        id: {member: member1, word: 'cat'},
-        correct: 5, wrong: 0
-      },
-      {
-        id: {member: member1, word: 'apple'},
-        correct: 3, wrong: 1
-      },
-      {
-        id: {member: member1, word: 'banana'},
-        correct: 2, wrong: 3
-      },
-      {
-        id: {member: member1, word: 'cat'},
-        correct: 5, wrong: 0
-      },
-      {
-        id: {member: member1, word: 'apple'},
-        correct: 3, wrong: 1
-      },
-      {
-        id: {member: member1, word: 'banana'},
-        correct: 2, wrong: 3
-      },
-      {
-        id: {member: member1, word: 'cat'},
-        correct: 5, wrong: 0
-      },
-    ];
+    this.inputVocab = Array.from(Array(100).keys()).map(x => {
+      return {
+        id: {member: member1, word: 'word' + x},
+        correct: x, wrong: x
+      };
+    });
   }
+
 }

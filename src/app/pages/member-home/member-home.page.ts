@@ -116,6 +116,7 @@ export class MemberHomePage implements OnInit {
   async presentVocabSelectionModal() {
     const modal = await this.modalController.create({
       component: VocabSelectionComponent,
+      cssClass: 'vocab-selection-class'
     });
     return await modal.present();
   }
