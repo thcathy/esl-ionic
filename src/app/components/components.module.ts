@@ -23,6 +23,7 @@ import {ShareIconsModule} from 'ngx-sharebuttons/icons';
 import {CharacterButtonComponent} from './character-button/character-button.component';
 import {CharacterComponent} from './character/character.component';
 import {VocabSelectionComponent} from './vocab-selection/vocab-selection.component';
+import {ReactiveFormsModule} from '@angular/forms';
 
 @NgModule({
     declarations: [MemberScoreRankingComponent,
@@ -45,7 +46,7 @@ import {VocabSelectionComponent} from './vocab-selection/vocab-selection.compone
     PipesModule,
     FontAwesomeModule,
     CommonModule,
-    HttpClientModule,
+    HttpClientModule, ReactiveFormsModule,
     ShareButtonsModule.withConfig({
       debug: true
     }),

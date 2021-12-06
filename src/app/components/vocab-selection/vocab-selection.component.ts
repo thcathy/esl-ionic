@@ -2,6 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import {MemberVocabulary} from '../../entity/member-vocabulary';
 import {Member} from '../../entity/member';
 import {Name} from '../../entity/name';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 
 @Component({
   selector: 'app-vocab-selection',
@@ -15,15 +16,31 @@ export class VocabSelectionComponent implements OnInit {
   showingVocabs: MemberVocabulary[] = [];
   selectedVocabs: Map<string, MemberVocabulary>;
 
-  constructor() {
+  inputForm: FormGroup;
+
+  constructor(
+    public formBuilder: FormBuilder,
+  ) {
     this.selectedVocabs = new Map<string, MemberVocabulary>();
     this.setTestingData();
+  }
+
+  get title() { return this.inputForm.get('title'); }
+  get description() { return this.inputForm.get('description'); }
+  get now() { return new Date(); }
+
+  createAndSetupForm() {
+    const controlsConfig = {};
+    controlsConfig['title'] = new FormControl('', [Validators.required, Validators.minLength(5),  Validators.maxLength(50)]);
+    controlsConfig['description'] = new FormControl('', [Validators.maxLength(100)]);
+    this.inputForm = this.formBuilder.group(controlsConfig);
   }
 
   ngOnInit() {
     this.showingVocabs = this.showingVocabs.concat(
       this.inputVocab.slice(this.showingVocabs.length, this.showingVocabs.length + this.EACH_LOADING_SIZE)
     );
+    this.createAndSetupForm();
   }
 
   loadData(event) {
@@ -42,6 +59,10 @@ export class VocabSelectionComponent implements OnInit {
     } else {
       this.selectedVocabs.set(word, vocab);
     }
+  }
+
+  createExercise() {
+
   }
 
   setTestingData() {
