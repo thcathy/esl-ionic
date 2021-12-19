@@ -1,31 +1,24 @@
 <ion-header>
-  <ion-title *ngIf="selectedVocabs?.size == 0">click on vocabulary to create an exercise</ion-title>
-  <ion-title *ngIf="selectedVocabs?.size > 0">selected {{ selectedVocabs.size }} vocabularies</ion-title>
-  <ion-button (click)="createExercise()"><fa-icon [icon]="['fas', 'edit']"></fa-icon>&nbsp;{{ 'Create Exercise' | translate }}</ion-button>
+  <ion-toolbar>
+    <ion-title *ngIf="selectedVocabs?.size == 0">Click on vocabulary for review</ion-title>
+    <ion-button *ngIf="selectedVocabs?.size > 0" fill="clear" (click)="clearSelected()" slot="start"><fa-icon icon="trash"></fa-icon></ion-button>
+    <ion-title *ngIf="selectedVocabs?.size > 0">Selected {{ selectedVocabs.size }} vocabularies</ion-title>
+    <ion-button (click)="createExercise()" slot="end" style="padding-right: 8px;"><fa-icon [icon]="['fas', 'edit']"></fa-icon>&nbsp;{{ 'Create' | translate }}</ion-button>
+  </ion-toolbar>
 </ion-header>
 <ion-content style="height: 100%">
   <form *ngIf="inputForm" [formGroup]="inputForm" novalidate>
     <ion-list>
       <ion-item>
-        <ion-item>
-          <ion-label>{{'Title'|translate}} *</ion-label>
-          <ion-input type="text" formControlName="title"
-                     placeholder="Dictation {{now | date:'yyyy-MM-dd'}}"></ion-input>
-        </ion-item>
-        <ion-item>
-          <ion-label>{{'Description'|translate}}</ion-label>
-          <ion-input type="text" formControlName="description"></ion-input>
-        </ion-item>
-        <div *ngIf="description.invalid && (description.dirty || description.touched)" class="error-text">
-          <div
-            *ngIf="description.errors.maxlength">{{'Description cannot over 100 characters long'|translate}}</div>
-        </div>
-        <div *ngIf="title.invalid && (title.dirty || title.touched)" class="error-text">
-          <div *ngIf="title.errors.required">{{'Title is required'|translate}}</div>
-          <div *ngIf="title.errors.minlength">{{'Title must be at least 5 characters long'|translate}}</div>
-          <div *ngIf="title.errors.maxlength">{{'Title cannot over 50 characters long'|translate}}</div>
-        </div>
+        <ion-label>{{'Title'|translate}}:</ion-label>
+        <ion-input type="text" formControlName="title"></ion-input>
       </ion-item>
+      <ion-item *ngIf="title.invalid && (title.dirty || title.touched)" class="error-text">
+        <ion-label *ngIf="title.errors.required">{{'Title is required'|translate}}</ion-label>
+        <ion-label *ngIf="title.errors.minlength">{{'Title must be at least 5 characters long'|translate}}</ion-label>
+        <ion-label *ngIf="title.errors.maxlength">{{'Title cannot over 50 characters long'|translate}}</ion-label>
+      </ion-item>
+
       <ion-item *ngFor="let vocab of showingVocabs; let i = index"
                 button (click)="selectVocab(vocab)"
                 [class.highlight]="selectedVocabs.has(vocab.id.word)">

@@ -24,6 +24,7 @@ import {CharacterButtonComponent} from './character-button/character-button.comp
 import {CharacterComponent} from './character/character.component';
 import {VocabSelectionComponent} from './vocab-selection/vocab-selection.component';
 import {ReactiveFormsModule} from '@angular/forms';
+import {MemberVocabCardComponent} from './member-vocab-card/member-vocab-card.component';
 
 @NgModule({
     declarations: [MemberScoreRankingComponent,
@@ -38,7 +39,7 @@ import {ReactiveFormsModule} from '@angular/forms';
         MemberScoreListComponent,
         MemberPracticeHistoryListComponent,
         VocabHistoryListComponent,
-        VirtualKeyboardComponent, CharacterButtonComponent, CharacterComponent, VocabSelectionComponent,
+        VirtualKeyboardComponent, CharacterButtonComponent, CharacterComponent, VocabSelectionComponent, MemberVocabCardComponent
     ],
   imports: [
     IonicModule,
@@ -64,7 +65,7 @@ import {ReactiveFormsModule} from '@angular/forms';
         MemberScoreListComponent,
         MemberPracticeHistoryListComponent,
         VocabHistoryListComponent,
-        VirtualKeyboardComponent, CharacterButtonComponent, CharacterComponent, VocabSelectionComponent,
+        VirtualKeyboardComponent, CharacterButtonComponent, CharacterComponent, VocabSelectionComponent, MemberVocabCardComponent
     ]
 })
 export class ComponentsModule {}

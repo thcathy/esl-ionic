@@ -3,6 +3,11 @@ import {MemberVocabulary} from '../../entity/member-vocabulary';
 import {Member} from '../../entity/member';
 import {Name} from '../../entity/name';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {ModalController} from '@ionic/angular';
+import {EditDictationRequest, MemberDictationService} from '../../services/dictation/member-dictation.service';
+import {DictationType} from '../../pages/edit-dictation/edit-dictation-page-enum';
+import {DictationUtils} from '../../utils/dictation-utils';
+import {Dictation} from '../../entity/dictation';
 
 @Component({
   selector: 'app-vocab-selection',
@@ -20,20 +25,20 @@ export class VocabSelectionComponent implements OnInit {
 
   constructor(
     public formBuilder: FormBuilder,
+    public modalController: ModalController,
+    public memberDictationService: MemberDictationService,
   ) {
     this.selectedVocabs = new Map<string, MemberVocabulary>();
     this.setTestingData();
   }
 
   get title() { return this.inputForm.get('title'); }
-  get description() { return this.inputForm.get('description'); }
-  get now() { return new Date(); }
 
   createAndSetupForm() {
     const controlsConfig = {};
     controlsConfig['title'] = new FormControl('', [Validators.required, Validators.minLength(5),  Validators.maxLength(50)]);
-    controlsConfig['description'] = new FormControl('', [Validators.maxLength(100)]);
     this.inputForm = this.formBuilder.group(controlsConfig);
+    this.title.setValue(`My exercise ${new Date().toISOString().split('T')[0]}`);
   }
 
   ngOnInit() {
@@ -62,7 +67,17 @@ export class VocabSelectionComponent implements OnInit {
   }
 
   createExercise() {
-
+    this.memberDictationService.createOrAmendDictation(<EditDictationRequest>{
+      dictationId: -1,
+      title: this.title.value,
+      showImage: true,
+      vocabulary: Array.from(this.selectedVocabs.keys()),
+      wordContainSpace : true,
+      source : Dictation.Source.Select,
+    }).subscribe(
+      dic => this.afterSaved(dic),
+      err => this.showError(err)
+    );
   }
 
   setTestingData() {
@@ -87,4 +102,7 @@ export class VocabSelectionComponent implements OnInit {
     });
   }
 
+  clearSelected() {
+    this.selectedVocabs.clear();
+  }
 }

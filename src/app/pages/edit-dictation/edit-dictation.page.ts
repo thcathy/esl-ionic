@@ -6,7 +6,6 @@ import {NavigationService} from '../../services/navigation.service';
 import {AuthService} from '../../services/auth.service';
 import {TranslateService} from '@ngx-translate/core';
 import {DictationService} from '../../services/dictation/dictation.service';
-import {ValidationUtils} from '../../utils/validation-utils';
 import {IonicComponentService} from '../../services/ionic-component.service';
 import {CanComponentDeactivate} from '../../guards/can-deactivate.guard';
 import {Observable} from 'rxjs';
@@ -17,6 +16,7 @@ import {ArticleDictationService} from '../../services/dictation/article-dictatio
 import {DictationType, EditDictationPageMode} from './edit-dictation-page-enum';
 import {DictationUtils} from '../../utils/dictation-utils';
 import {VocabPracticeType} from '../../enum/vocab-practice-type.enum';
+import Source = Dictation.Source;
 
 @Component({
   selector: 'app-edit-dictation',
@@ -157,6 +157,7 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
       suitableStudent: this.suitableStudent.value,
       sentenceLength: this.sentenceLength.value,
       wordContainSpace : this.wordContainSpace.value,
+      source : Source.FillIn,
     }).subscribe(
       dic => this.afterSaved(dic),
       err => this.showError(err)
@@ -209,6 +210,7 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
         suitableStudent: 'Any',
         wordContainSpace: this.wordContainSpace.value,
         options: { 'practiceType' : this.wordPracticeType.value },
+        source: Dictation.Source.Generate,
       };
     } else {
       return <Dictation>{
@@ -218,6 +220,7 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
         totalRecommended: 0,
         title: new Date().toDateString(),
         suitableStudent: 'Any',
+        source: Dictation.Source.Generate,
       };
     }
   }

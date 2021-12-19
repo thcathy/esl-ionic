@@ -1,4 +1,4 @@
-import {Grade} from "./grade";
+import {Grade} from './grade';
 
 export interface VocabPractice {
   id?: number;
@@ -19,11 +19,11 @@ export interface VocabPractice {
 }
 
 export enum VocabDifficulty {
-  Beginner = "Beginner",
-  Easy = "Easy",
-  Normal = "Normal",
-  Hard = "Hard",
-  VeryHard = "VeryHard",
+  Beginner = 'Beginner',
+  Easy = 'Easy',
+  Normal = 'Normal',
+  Hard = 'Hard',
+  VeryHard = 'VeryHard',
 }
 
 export let vocabDifficulties = [VocabDifficulty.Beginner, VocabDifficulty.Easy, VocabDifficulty.Normal, VocabDifficulty.Hard, VocabDifficulty.VeryHard];

@@ -104,11 +104,11 @@ export class MemberHomePage implements OnInit {
   }
 
   onVocabHistoryList(value: string) {
-    if (value === 'review') {
+    if (value === 'reviewAll') {
       this.navigationService.startDictation(
         this.manageVocabHistoryService.generatePracticeFromAnsweredBefore()
       );
-    } else if (value === 'review2') {
+    } else if (value === 'reviewSelected') {
       this.presentVocabSelectionModal();
     }
   }

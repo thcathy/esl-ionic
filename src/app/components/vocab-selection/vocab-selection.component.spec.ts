@@ -2,6 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
 import { VocabSelectionComponent } from './vocab-selection.component';
+import {SharedTestModule} from '../../../testing/shared-test.module';
 
 describe('VocabSelectionComponent', () => {
   let component: VocabSelectionComponent;
@@ -10,7 +11,7 @@ describe('VocabSelectionComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ VocabSelectionComponent ],
-      imports: [IonicModule.forRoot()]
+      imports: [SharedTestModule.forRoot()]
     }).compileComponents();
 
     fixture = TestBed.createComponent(VocabSelectionComponent);

@@ -1,0 +1,13 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>{{ dictation.title }}</ion-title>
+    <ion-button slot="end" style="padding-right: 8px;"><fa-icon [icon]="['fas', 'edit']"></fa-icon>&nbsp;{{ 'Edit' | translate }}</ion-button>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+    <ion-list>
+      <ion-item *ngFor="let vocab of dictation.vocabs; let i = index">
+        <ion-label>{{ vocab.word }}</ion-label>
+      </ion-item>
+    </ion-list>
+</ion-content>

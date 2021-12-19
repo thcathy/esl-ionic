@@ -11,10 +11,11 @@ export interface EditDictationRequest {
   description?: string;
   showImage: boolean;
   vocabulary: string[];
-  suitableStudent: string;
-  article: string;
-  sentenceLength: string;
-  wordContainSpace: string;
+  suitableStudent?: string;
+  article?: string;
+  sentenceLength?: string;
+  wordContainSpace?: boolean;
+  source: Dictation.Source;
 }
 
 @Injectable({ providedIn: 'root' })

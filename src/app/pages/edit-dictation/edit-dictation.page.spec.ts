@@ -4,7 +4,7 @@ import {async, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/t
 import {EditDictationPage} from './edit-dictation.page';
 import {SharedTestModule} from '../../../testing/shared-test.module';
 import {dictation1} from '../../../testing/test-data';
-import {MemberDictationService} from '../../services/dictation/member-dictation.service';
+import {EditDictationRequest, MemberDictationService} from '../../services/dictation/member-dictation.service';
 import {AuthServiceSpy, NavigationServiceSpy} from '../../../testing/mocks-ionic';
 import {AuthService} from '../../services/auth.service';
 import {of} from 'rxjs';
@@ -83,6 +83,10 @@ describe('EditDictationPage', () => {
 
         expect(component.isSaved).toBeTruthy();
         expect(component.canDeactivate()).toBeTruthy();
+
+        const request = memberDictationServiceSpy.createOrAmendDictation.calls.mostRecent().args[0] as EditDictationRequest;
+        expect(request).toBeDefined();
+        expect(request.source).toEqual(Dictation.Source.FillIn);
       }));
 
       it('show create dictation in title in edit mode', fakeAsync(() => {
@@ -191,6 +195,7 @@ describe('EditDictationPage', () => {
           const dictation = navigationServiceSpy.startDictation.calls.mostRecent().args[0] as Dictation;
           expect(dictation.sentenceLength).toEqual('Short');
           expect(dictation.article).toEqual('This is a article.');
+          expect(dictation.source).toEqual(Dictation.Source.Generate);
         }));
 
         it('start instant dictation by single word will navigate to start dictation page', fakeAsync(() => {
@@ -214,6 +219,7 @@ describe('EditDictationPage', () => {
           expect(dictation.vocabs[1].word).toEqual('banana');
           expect(dictation.vocabs[2].word).toEqual('cup');
           expect(dictation.options.practiceType).toEqual(VocabPracticeType.Puzzle);
+          expect(dictation.source).toEqual(Dictation.Source.Generate);
 
           component.question.setValue(` apple , banana,cup`);
           component.wordContainSpace.setValue(false);

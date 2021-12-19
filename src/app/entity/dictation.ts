@@ -26,16 +26,25 @@ export class Dictation {
   generated?: boolean;
   sentenceLength?: string;
   wordContainSpace?: boolean;
-  options?: DictationOptions;
+  options?: Dictation.Options;
+  source?: string;
+}
+
+export namespace Dictation {
+  export enum Source {
+    FillIn = 'FillIn',
+    Generate = 'Generate',
+    Select = 'Select',
+  }
+
+  export class Options {
+    practiceType?: VocabPracticeType;
+  }
 }
 
 export const SuitableStudentOptions = ['Any', 'Kindergarten', 'JuniorPrimary', 'SeniorPrimary', 'JuniorSecondary', 'SeniorSecondary'];
 
 export const SentenceLengthOptions = ['Short', 'Normal', 'Long', 'VeryLong'];
-
-export class DictationOptions {
-  practiceType?: VocabPracticeType;
-}
 
 export class  PuzzleControls {
   word: string;
