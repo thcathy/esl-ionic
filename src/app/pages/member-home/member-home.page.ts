@@ -7,14 +7,14 @@ import {MemberDictationService} from '../../services/dictation/member-dictation.
 import {PracticeHistoryService} from '../../services/dictation/practice-history.service';
 import {RankingService} from '../../services/ranking/ranking.service';
 import {ManageVocabHistoryService} from '../../services/member/manage-vocab-history.service';
-import {MemberVocabulary} from '../../entity/member-vocabulary';
 import {NavigationService} from '../../services/navigation.service';
 import {ActivatedRoute} from '@angular/router';
 import {NGXLogger} from 'ngx-logger';
 import 'rxjs-compat/add/operator/finally';
-import {delay, finalize} from 'rxjs/operators';
+import {finalize} from 'rxjs/operators';
 import {ModalController} from '@ionic/angular';
 import {VocabSelectionComponent} from '../../components/vocab-selection/vocab-selection.component';
+import {MemberVocabCardComponent} from '../../components/member-vocab-card/member-vocab-card.component';
 
 @Component({
   selector: 'app-member-home',
@@ -27,8 +27,6 @@ export class MemberHomePage implements OnInit {
   latestScore = [] as MemberScore[];
   practiceHistories = [] as PracticeHistory[];
   selectedSegment: String;
-  learntVocabs: Map<string, MemberVocabulary> = new Map<string, MemberVocabulary>();
-  answeredBeforeVocabs: Map<string, MemberVocabulary> = new Map<string, MemberVocabulary>();
   @ViewChild('ionSegment', { static: true }) ionSegment;
   loadingAllTimesAndLast6Score: boolean; loadingPracticeHistories: boolean;
   loadingCreatedDictations: boolean; loadingVocabHistory: boolean;
@@ -84,12 +82,11 @@ export class MemberHomePage implements OnInit {
     });
 
     this.manageVocabHistoryService.loadFromServer()
-      .finally(() => this.loadingVocabHistory = false)
-      .then(_p => {
-      this.learntVocabs = this.manageVocabHistoryService.learntVocabs;
-      this.answeredBeforeVocabs = this.manageVocabHistoryService.answeredBefore;
-    });
+      .finally(() => this.loadingVocabHistory = false);
   }
+
+  get learntVocabs() { return this.manageVocabHistoryService.learntVocabs; }
+  get answeredBeforeVocabs() { return this.manageVocabHistoryService.answeredBefore; }
 
   private setScores(scores: MemberScore[]) {
     this.log.info(`${scores.length} scores is returned`);
@@ -116,8 +113,23 @@ export class MemberHomePage implements OnInit {
   async presentVocabSelectionModal() {
     const modal = await this.modalController.create({
       component: VocabSelectionComponent,
-      cssClass: 'vocab-selection-class'
+      cssClass: 'vocab-selection-class',
+      componentProps: {
+        'inputVocab': Array.from(this.answeredBeforeVocabs.values()),
+      }
     });
-    return await modal.present();
+    await modal.present();
+    modal.onDidDismiss().then(v => this.presentVocabCard(v.data));
+  }
+
+  presentVocabCard(data) {
+    if (data !== undefined && data['dictation'] !== undefined) {
+      this.modalController.create({
+        component: MemberVocabCardComponent,
+        componentProps: {
+          'dictation': data['dictation'],
+        }
+      }).then(v => v.present());
+    }
   }
 }

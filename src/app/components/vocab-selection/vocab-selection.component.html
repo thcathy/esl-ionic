@@ -3,7 +3,8 @@
     <ion-title *ngIf="selectedVocabs?.size == 0">Click on vocabulary for review</ion-title>
     <ion-button *ngIf="selectedVocabs?.size > 0" fill="clear" (click)="clearSelected()" slot="start"><fa-icon icon="trash"></fa-icon></ion-button>
     <ion-title *ngIf="selectedVocabs?.size > 0">Selected {{ selectedVocabs.size }} vocabularies</ion-title>
-    <ion-button (click)="createExercise()" slot="end" style="padding-right: 8px;"><fa-icon [icon]="['fas', 'edit']"></fa-icon>&nbsp;{{ 'Create' | translate }}</ion-button>
+    <ion-button (click)="createExercise()" slot="end"><fa-icon [icon]="['fas', 'edit']"></fa-icon>&nbsp;{{ 'Create' | translate }}</ion-button>
+    <ion-button fill="clear" slot="end"  (click)="this.modalController.dismiss()"><fa-icon [icon]="['fas', 'times']"></fa-icon></ion-button>
   </ion-toolbar>
 </ion-header>
 <ion-content style="height: 100%">

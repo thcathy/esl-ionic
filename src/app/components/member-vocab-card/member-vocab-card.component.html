@@ -2,6 +2,7 @@
   <ion-toolbar>
     <ion-title>{{ dictation.title }}</ion-title>
     <ion-button slot="end" style="padding-right: 8px;"><fa-icon [icon]="['fas', 'edit']"></fa-icon>&nbsp;{{ 'Edit' | translate }}</ion-button>
+    <ion-button slot="end" fill="clear" (click)="this.modalController.dismiss()"><fa-icon [icon]="['fas', 'times']"></fa-icon></ion-button>
   </ion-toolbar>
 </ion-header>
 <ion-content>
