@@ -7,8 +7,17 @@
 </ion-header>
 <ion-content>
     <ion-list>
-      <ion-item *ngFor="let vocab of dictation.vocabs; let i = index">
-        <ion-label>{{ vocab.word }}</ion-label>
+      <ion-item *ngFor="let vocab of memberVocabularies; let i = index">
+        <ion-label>
+          <ion-row>
+            <ion-col class="heading">{{vocab.id.word}}</ion-col>
+            <ion-col class="ion-text-right">
+              <span class="green-text"><fa-icon [icon]="['fas', 'check']"></fa-icon> {{vocab.correct}}</span>
+              /
+              <span class="red"><fa-icon [icon]="['fas', 'times']"></fa-icon> {{vocab.wrong}}</span>
+            </ion-col>
+          </ion-row>
+        </ion-label>
       </ion-item>
     </ion-list>
 </ion-content>

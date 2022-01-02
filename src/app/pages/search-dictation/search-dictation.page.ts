@@ -47,6 +47,7 @@ export class SearchDictationPage implements OnInit {
   get creator() { return this.inputForm.get('creator'); }
   get suitableStudent() { return this.inputForm.get('suitableStudent'); }
   get type() { return this.inputForm.get('type'); }
+  get source() { return Dictation.Source; }
 
   createForm() {
     this.inputForm = this.formBuilder.group({

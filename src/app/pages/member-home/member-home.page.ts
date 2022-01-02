@@ -23,13 +23,14 @@ import {MemberVocabCardComponent} from '../../components/member-vocab-card/membe
 })
 export class MemberHomePage implements OnInit {
   createdDictations = [] as Dictation[];
+  createdVocabExercise = [] as Dictation[];
   allTimesScore: MemberScore;
   latestScore = [] as MemberScore[];
   practiceHistories = [] as PracticeHistory[];
   selectedSegment: String;
   @ViewChild('ionSegment', { static: true }) ionSegment;
   loadingAllTimesAndLast6Score: boolean; loadingPracticeHistories: boolean;
-  loadingCreatedDictations: boolean; loadingVocabHistory: boolean;
+  loadingAllDictations: boolean; loadingVocabHistory: boolean;
 
   constructor(
     public memberDictationService: MemberDictationService,
@@ -54,17 +55,13 @@ export class MemberHomePage implements OnInit {
       if (params.segment) { this.selectedSegment = params.segment; }
       this.ionSegment.value = this.selectedSegment;
     });
-    // this.createdDictations = [];
-    // this.allTimesScore = null;
-    // this.latestScore = [];
-    // this.practiceHistories = [];
     this.init();
   }
 
   async init() {
     this.loadingAllTimesAndLast6Score = true;
     this.loadingPracticeHistories = true;
-    this.loadingCreatedDictations = true;
+    this.loadingAllDictations = true;
     this.loadingVocabHistory = true;
 
     this.rankingService.allTimesAndLast6Score().pipe(
@@ -76,9 +73,10 @@ export class MemberHomePage implements OnInit {
     ).subscribe(s => this.practiceHistories = s);
 
     this.memberDictationService.getAllDictation().pipe(
-      finalize(() => this.loadingCreatedDictations = false),
+      finalize(() => this.loadingAllDictations = false),
     ).subscribe(dictations => {
-      this.createdDictations = dictations;
+      this.createdDictations = dictations.filter(d => d.source === Dictation.Source.FillIn);
+      this.createdVocabExercise = dictations.filter(d => d.source === Dictation.Source.Select);
     });
 
     this.manageVocabHistoryService.loadFromServer()
@@ -87,6 +85,7 @@ export class MemberHomePage implements OnInit {
 
   get learntVocabs() { return this.manageVocabHistoryService.learntVocabs; }
   get answeredBeforeVocabs() { return this.manageVocabHistoryService.answeredBefore; }
+  get source() { return Dictation.Source; }
 
   private setScores(scores: MemberScore[]) {
     this.log.info(`${scores.length} scores is returned`);
@@ -124,12 +123,15 @@ export class MemberHomePage implements OnInit {
 
   presentVocabCard(data) {
     if (data !== undefined && data['dictation'] !== undefined) {
-      this.modalController.create({
-        component: MemberVocabCardComponent,
-        componentProps: {
-          'dictation': data['dictation'],
-        }
-      }).then(v => v.present());
+      const dictation = data['dictation'] as Dictation;
+      this.navigationService.pushOpenDictation(dictation);
+      // this.modalController.create({
+      //   component: MemberVocabCardComponent,
+      //   componentProps: {
+      //     'dictation': data['dictation'],
+      //     'memberVocabularies': dictation.vocabs.map(v => v.word).map(w => this.manageVocabHistoryService.findMemberVocabulary(w))
+      //   }
+      // }).then(v => v.present());
     }
   }
 }

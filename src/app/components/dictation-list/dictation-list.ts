@@ -5,7 +5,7 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
 import {AppService} from '../../services/app.service';
 
 @Component({
-  selector: 'dictation-list',
+  selector: 'app-dictation-list',
   templateUrl: 'dictation-list.html',
   styleUrls: ['dictation-list.scss'],
   animations: [
@@ -33,6 +33,15 @@ export class DictationListComponent implements OnChanges {
   page: number;
   showOlder: boolean;
   state = 'center';
+
+  get DictationSource() { return Dictation.Source; }
+  get source() {
+    if (this.dictations === undefined || this.dictations.length < 1) {
+      return Dictation.Source.FillIn;
+    } else {
+      return this.dictations[0].source;
+    }
+  }
 
   constructor(
     public navService: NavigationService,

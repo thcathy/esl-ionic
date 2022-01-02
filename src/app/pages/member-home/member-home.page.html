@@ -17,25 +17,28 @@
       <ion-col size="12" size-sm="12" size-md="12" size-lg="6">
         <member-score-list [allTimesScore]="allTimesScore" [scores]="latestScore" [loading]="loadingAllTimesAndLast6Score"></member-score-list>
         <member-practice-history-list *ngIf="selectedSegment === 'dictation'" [histories]="practiceHistories" [loading]="loadingPracticeHistories"></member-practice-history-list>
+        <app-dictation-list *ngIf="selectedSegment === 'vocabulary'"
+                            [dictations]="createdVocabExercise" [loading]="loadingAllDictations"
+                            [showCreateButton]="false" title="My Vocabulary Exercise">
+        </app-dictation-list>
       </ion-col>
       <ion-col size="12" size-sm="12" size-md="12" size-lg="6" *ngIf="selectedSegment === 'dictation'">
-        <dictation-list [dictations]="createdDictations" [loading]="loadingCreatedDictations"
-                        showCreateButton="true" title="My Dictation Created">
-        </dictation-list>
-      </ion-col>
-      <ion-col size="12" size-sm="12" size-md="12" size-lg="6" *ngIf="selectedSegment === 'vocabulary'">
-        <app-vocab-history-list [vocabs]="learntVocabs" [loading]="loadingVocabHistory"
-                                title="Learnt" icon="check-circle">
-        </app-vocab-history-list>
+        <app-dictation-list [dictations]="createdDictations" [loading]="loadingAllDictations"
+                            [showCreateButton]="true" title="My Dictation Created">
+        </app-dictation-list>
       </ion-col>
       <ion-col size="12" size-sm="12" size-md="12" size-lg="6" *ngIf="selectedSegment === 'vocabulary'">
         <app-vocab-history-list [vocabs]="answeredBeforeVocabs" [loading]="loadingVocabHistory"
-                            title="Answered Before"
-                            icon="times-circle"
-                            infoText="Not include learnt"
-                            [showReview]="answeredBeforeVocabs != null && answeredBeforeVocabs.size > 0"
-                            (click)="onVocabHistoryList($event)"
-        ></app-vocab-history-list>
+                                title="Answered Before"
+                                icon="times-circle"
+                                infoText="Not include learnt"
+                                [showReview]="answeredBeforeVocabs != null && answeredBeforeVocabs.size > 0"
+                                (click)="onVocabHistoryList($event)">
+        </app-vocab-history-list>
+
+        <app-vocab-history-list [vocabs]="learntVocabs" [loading]="loadingVocabHistory"
+                                title="Learnt" icon="check-circle">
+        </app-vocab-history-list>
       </ion-col>
     </ion-row>
   </ion-grid>

@@ -60,6 +60,14 @@ export class ManageVocabHistoryService extends Service {
     return CollectionUtils.randomPick(words, length);
   }
 
+  public findMemberVocabulary(word: string): MemberVocabulary {
+    if (this.learntVocabs.has(word)) {
+      return this.learntVocabs.get(word);
+    } else {
+      return this.answeredBefore.get(word);
+    }
+  }
+
   public clearCache() {
     this.learntVocabs.clear();
     this.answeredBefore.clear();

@@ -11,6 +11,7 @@ import {SocialSharing} from '@ionic-native/social-sharing/ngx';
 import {AppService} from '../../services/app.service';
 import {VocabPracticeType} from '../../enum/vocab-practice-type.enum';
 import {IonicComponentService} from '../../services/ionic-component.service';
+import {ManageVocabHistoryService} from '../../services/member/manage-vocab-history.service';
 
 @Component({
   selector: 'app-dictation-card',
@@ -44,12 +45,16 @@ export class DictationCardComponent {
               public navService: NavigationService,
               public appService: AppService,
               public dictationService: DictationService,
+              public manageVocabHistoryService: ManageVocabHistoryService,
               public memberDictationService: MemberDictationService,
               public translate: TranslateService,
               public alertController: AlertController,
               public toastController: ToastController,
               public componentService: IonicComponentService,
               public socialSharing: SocialSharing) {}
+
+  get sourceType() { return Dictation.Source; }
+  get memberVocabularies() { return this.dictation.vocabs.map(v => v.word).map(w => this.manageVocabHistoryService.findMemberVocabulary(w)); }
 
   highlightRecommend() {
     this.recommendState = 'highlight';
@@ -62,7 +67,7 @@ export class DictationCardComponent {
   async confirmDeleteDictation() {
     const alert = await this.alertController.create({
       header: `${this.translate.instant('Confirm')}!`,
-      message: `${this.translate.instant('Delete this dictation')}?`,
+      message: `${this.translate.instant('Delete this exercise')}?`,
       buttons: [
         {
           text: this.translate.instant('Cancel'),
@@ -104,8 +109,8 @@ export class DictationCardComponent {
   }
 
   failDelete = (err) => {
-    console.warn(`Cannot delete dictation: ${err}`);
-    this.presentAlert(`${this.translate.instant('Error')}!`, this.translate.instant('Fail to delete dictation'));
+    console.warn(`Cannot delete exercise: ${err}`);
+    this.presentAlert(`${this.translate.instant('Error')}!`, this.translate.instant('Fail to delete exercise'));
   }
 
   async presentAlert(header: string, message: string) {
