@@ -61,11 +61,14 @@
               <ion-badge style="background-color: var(--ion-color-secondary); margin-right: 4px;">{{ vocab.word }}</ion-badge>
             </span>
           </div>
-          <ion-list *ngIf="dictation.source === sourceType.Select">
+          <ion-list class="select-vocab-list" *ngIf="dictation.source === sourceType.Select">
             <ion-item *ngFor="let vocab of memberVocabularies; let i = index">
-              <ion-label>
+              <ion-label class="vocab-label">
                 <ion-row>
-                  <ion-col class="heading">{{vocab.id.word}}</ion-col>
+                  <ion-col class="heading">
+                    {{vocab.id.word}}
+                    <ion-badge color="light">{{ 'Learnt' | translate }}</ion-badge>
+                  </ion-col>
                   <ion-col class="ion-text-right">
                     <span class="green-text"><fa-icon [icon]="['fas', 'check']"></fa-icon> {{vocab.correct}}</span>
                     /
@@ -107,7 +110,7 @@
     </ion-row>
     <ion-row>
       <ion-col>
-        <ion-button *ngIf="edit" color="secondary" (click)="navService.editDictation(dictation)"><fa-icon [icon]="['fas', 'edit']"></fa-icon>&nbsp;{{'Edit'|translate}}</ion-button>
+        <ion-button *ngIf="edit && dictation?.source === sourceType.FillIn" color="secondary" (click)="navService.editDictation(dictation)"><fa-icon [icon]="['fas', 'edit']"></fa-icon>&nbsp;{{'Edit'|translate}}</ion-button>
         <ion-button *ngIf="edit" color="danger" (click)="confirmDeleteDictation()"><fa-icon [icon]="['fas', 'trash']"></fa-icon>&nbsp;{{'Delete'|translate}}</ion-button>
       </ion-col>
     </ion-row>

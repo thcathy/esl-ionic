@@ -1,8 +1,8 @@
-import {VocabPractice} from "../entity/voacb-practice";
+import {VocabPractice} from '../entity/voacb-practice';
 
 export interface VocabPracticeHistory {
-  answer?: string,
-  correct?: boolean,
-  question?: VocabPractice,
-  state?: string
+  answer?: string;
+  correct?: boolean;
+  question?: VocabPractice;
+  state?: string;
 }

@@ -11,6 +11,11 @@ import {MemberVocabulary} from '../../entity/member-vocabulary';
 import {Vocab} from '../../entity/vocab';
 import {DictationUtils} from '../../utils/dictation-utils';
 
+export interface CreateDictationHistoryRequest {
+  dictationId?: number;
+  histories?: VocabPracticeHistory[];
+}
+
 @Injectable({ providedIn: 'root' })
 export class VocabPracticeService extends Service {
 
@@ -51,8 +56,11 @@ export class VocabPracticeService extends Service {
     };
   }
 
-  saveHistory(histories: VocabPracticeHistory[]) {
-    return this.http.post<MemberVocabulary[]>(this.saveHistoryUrl, this.trimHistories(histories));
+  saveHistory(histories: VocabPracticeHistory[], dictationId: number) {
+    return this.http.post<MemberVocabulary[]>(this.saveHistoryUrl, {
+      dictationId: dictationId,
+      histories: this.trimHistories(histories)
+    });
   }
 
   getAllHistory() {

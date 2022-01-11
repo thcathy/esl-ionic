@@ -96,7 +96,11 @@ export class DictationCardComponent {
   afterDelete = (d) => {
     console.log(`deleted dictation id: ${d.id}`);
     this.presentToast(this.translate.instant('DeletedDictation', {title: d.title}));
-    this.navService.openMemberHome('dictation');
+    if (d.source === Dictation.Source.Select) {
+      this.navService.openMemberHome('vocabulary');
+    } else {
+      this.navService.openMemberHome('dictation');
+    }
   }
 
   async presentToast(message: string) {

@@ -66,8 +66,8 @@ export class PracticeCompletePage implements OnInit {
       return;
     }
 
-    if (this.dictationService.isGeneratedDictation(this.dictation)) {
-      this.vocabPracticeService.saveHistory(this.histories)
+    if (this.dictationService.isGeneratedDictation(this.dictation) || this.dictationService.isSelectVocabExercise(this.dictation)) {
+      this.vocabPracticeService.saveHistory(this.histories, this.dictation.id)
         .subscribe(results => {
           this.log.info(`update vocab history cache: size: ${results.length}`);
           this.manageVocabHistoryService.classifyVocabulary(results);
@@ -92,6 +92,10 @@ export class PracticeCompletePage implements OnInit {
       this.recommended = true;
       this.dictationCard.highlightRecommend();
     });
+  }
+
+  showRecommendButton() {
+    return this.dictation && !this.historyStored && this.dictation.source === Dictation.Source.FillIn;
   }
 
   recommendBtnText(): string {
@@ -133,7 +137,9 @@ export class PracticeCompletePage implements OnInit {
   }
 
   showOpenMyVocabulary() {
-    return this.dictation && this.dictationService.isGeneratedDictation(this.dictation) && this.authService.isAuthenticated();
+    return this.dictation
+      && this.authService.isAuthenticated()
+      && (this.dictation.source === Dictation.Source.Select || this.dictation.source === Dictation.Source.Generate);
   }
 
 }

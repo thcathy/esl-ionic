@@ -102,7 +102,11 @@ export class DictationService {
   }
 
   isGeneratedDictation(dictation: Dictation): boolean {
-    return dictation != null && dictation.generated;
+    return dictation != null && dictation.source === Dictation.Source.Generate;
+  }
+
+  isSelectVocabExercise(dictation: Dictation): boolean {
+    return dictation != null && dictation.source === Dictation.Source.Select;
   }
 
   search(request: SearchDictationRequest): Observable<Dictation[]> {
