@@ -33,7 +33,7 @@ describe('ManageVocabHistoryService', () => {
       ]
     });
 
-    service = TestBed.get(ManageVocabHistoryService);
+    service = TestBed.inject(ManageVocabHistoryService);
   }));
 
   it('test randomWordsFromBefore with different input, output length', () => {

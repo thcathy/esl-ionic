@@ -67,7 +67,7 @@
                 <ion-row>
                   <ion-col class="heading">
                     {{vocab.id.word}}
-                    <ion-badge color="light">{{ 'Learnt' | translate }}</ion-badge>
+                    <ion-badge color="light" *ngIf="manageVocabHistoryService.isLearnt(vocab)">{{ 'Learnt' | translate }}</ion-badge>
                   </ion-col>
                   <ion-col class="ion-text-right">
                     <span class="green-text"><fa-icon [icon]="['fas', 'check']"></fa-icon> {{vocab.correct}}</span>

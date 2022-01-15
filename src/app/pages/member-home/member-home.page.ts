@@ -14,7 +14,6 @@ import 'rxjs-compat/add/operator/finally';
 import {finalize} from 'rxjs/operators';
 import {ModalController} from '@ionic/angular';
 import {VocabSelectionComponent} from '../../components/vocab-selection/vocab-selection.component';
-import {MemberVocabCardComponent} from '../../components/member-vocab-card/member-vocab-card.component';
 
 @Component({
   selector: 'app-member-home',
@@ -125,13 +124,6 @@ export class MemberHomePage implements OnInit {
     if (data !== undefined && data['dictation'] !== undefined) {
       const dictation = data['dictation'] as Dictation;
       this.navigationService.pushOpenDictation(dictation);
-      // this.modalController.create({
-      //   component: MemberVocabCardComponent,
-      //   componentProps: {
-      //     'dictation': data['dictation'],
-      //     'memberVocabularies': dictation.vocabs.map(v => v.word).map(w => this.manageVocabHistoryService.findMemberVocabulary(w))
-      //   }
-      // }).then(v => v.present());
     }
   }
 }

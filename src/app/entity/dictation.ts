@@ -23,7 +23,6 @@ export class Dictation {
   totalRecommended?: number;
   id?: number;
   suitableStudent?: string;
-  generated?: boolean;
   sentenceLength?: string;
   wordContainSpace?: boolean;
   options?: Dictation.Options;

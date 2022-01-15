@@ -25,7 +25,7 @@ export class VocabPracticeService extends Service {
 
   private getQuestionUrl = environment.apiHost + '/vocab/get/question/';
   private generatePracticeUrl = environment.apiHost + '/vocab/practice/generate/';
-  private saveHistoryUrl = environment.apiHost + '/member/vocab/practice/history/save';
+  private saveHistoryUrl = environment.apiHost + '/member/vocab/practice/history/save/v2';
   private getAllHistoryUrl = environment.apiHost + '/member/vocab/practice/history/getall';
 
   getQuestion(word: string, showImage: boolean): Observable<VocabPractice> {
@@ -52,11 +52,11 @@ export class VocabPracticeService extends Service {
       id: -1,
       showImage: true,
       vocabs: words.map(s => <Vocab>{word: s}),
-      generated: true,
+      source: Dictation.Source.Generate,
     };
   }
 
-  saveHistory(histories: VocabPracticeHistory[], dictationId: number) {
+  saveHistory(histories: VocabPracticeHistory[], dictationId?: number) {
     return this.http.post<MemberVocabulary[]>(this.saveHistoryUrl, {
       dictationId: dictationId,
       histories: this.trimHistories(histories)

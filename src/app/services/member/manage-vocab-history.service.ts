@@ -40,7 +40,7 @@ export class ManageVocabHistoryService extends Service {
     });
   }
 
-  private isLearnt(vocab: MemberVocabulary) {
+  public isLearnt(vocab: MemberVocabulary) {
     return vocab.correct >= environment.learntVocabularyMinimumCorrect;
   }
 
