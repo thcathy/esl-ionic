@@ -5,7 +5,7 @@ import {Service} from '../root.service';
 import {VocabPractice} from '../../entity/voacb-practice';
 import {environment} from '../../../environments/environment';
 import {Observable} from 'rxjs/internal/Observable';
-import {Dictation, PuzzleControls} from '../../entity/dictation';
+import {Dictation, Dictations, PuzzleControls} from '../../entity/dictation';
 import {VocabPracticeHistory} from '../../entity/vocab-practice-history';
 import {MemberVocabulary} from '../../entity/member-vocabulary';
 import {Vocab} from '../../entity/vocab';
@@ -52,7 +52,7 @@ export class VocabPracticeService extends Service {
       id: -1,
       showImage: true,
       vocabs: words.map(s => <Vocab>{word: s}),
-      source: Dictation.Source.Generate,
+      source: Dictations.Source.Generate,
     };
   }
 

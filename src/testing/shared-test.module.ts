@@ -31,6 +31,7 @@ import { SocialSharing } from '@ionic-native/social-sharing/ngx';
 import { Deeplinks } from '@ionic-native/deeplinks/ngx';
 import {FontAwesomeTestingModule} from '@fortawesome/angular-fontawesome/testing';
 import {FontAwesomeIconsModule} from '../app/fontawesome-icons.module';
+import {DictationHelper} from '../app/services/dictation/dictation-helper.service';
 
 @NgModule({
   imports:      [
@@ -66,6 +67,7 @@ export class SharedTestModule {
         { provide: GoogleAnalytics, useValue: GoogleAnalyticsSpy()},
         { provide: NGXLogger, useValue: NGXLoggerSpy()},
         { provide: NavigationService, useValue: NavigationServiceSpy()},
+        DictationHelper,
         AppService,
         NavController,
         Platform,

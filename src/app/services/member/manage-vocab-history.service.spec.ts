@@ -9,6 +9,7 @@ import {
 } from '../../../testing/test-data';
 import {Observable} from 'rxjs';
 import 'rxjs-compat/add/observable/of';
+import {MemberVocabulary} from '../../entity/member-vocabulary';
 
 describe('ManageVocabHistoryService', () => {
   let service: ManageVocabHistoryService;
@@ -48,6 +49,13 @@ describe('ManageVocabHistoryService', () => {
     expect(service.learntVocabs.get('apple').id.word).toBe('apple');
     expect(service.answeredBefore.size).toBe(2);
     expect(service.answeredBefore.get('banana').id.word).toBe('banana');
+  }));
+
+  it('findMemberVocabulary', fakeAsync(() => {
+    service.loadFromServer();
+    tick();
+    expect(service.isLearnt(memberVocabularyMember1Apple())).toBeTruthy();
+    expect(service.isLearnt(memberVocabularyMember1Banana())).toBeFalsy();
   }));
 
   it('classify vocabulary will update the maps', fakeAsync(() => {

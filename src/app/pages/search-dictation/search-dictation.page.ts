@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {Dictation, SuitableStudentOptions} from '../../entity/dictation';
+import {Dictation, Dictations, SuitableStudentOptions} from '../../entity/dictation';
 import {TranslateService} from '@ngx-translate/core';
 import {DictationService} from '../../services/dictation/dictation.service';
 import {ValidationUtils} from '../../utils/validation-utils';
@@ -47,7 +47,7 @@ export class SearchDictationPage implements OnInit {
   get creator() { return this.inputForm.get('creator'); }
   get suitableStudent() { return this.inputForm.get('suitableStudent'); }
   get type() { return this.inputForm.get('type'); }
-  get source() { return Dictation.Source; }
+  get source() { return Dictations.Source; }
 
   createForm() {
     this.inputForm = this.formBuilder.group({

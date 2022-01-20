@@ -5,7 +5,7 @@ import {Name} from '../../entity/name';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {ModalController} from '@ionic/angular';
 import {EditDictationRequest, MemberDictationService} from '../../services/dictation/member-dictation.service';
-import {Dictation} from '../../entity/dictation';
+import {Dictation, Dictations} from '../../entity/dictation';
 import {TranslateService} from '@ngx-translate/core';
 import {IonicComponentService} from '../../services/ionic-component.service';
 
@@ -76,7 +76,7 @@ export class VocabSelectionComponent implements OnInit {
       showImage: true,
       vocabulary: Array.from(this.selectedVocabs.keys()),
       wordContainSpace : true,
-      source : Dictation.Source.Select,
+      source : Dictations.Source.Select,
     }).subscribe(
       dic => this.afterSaved(dic),
       err => this.showError(err)

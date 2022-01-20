@@ -5,13 +5,13 @@ import {EditDictationPage} from './edit-dictation.page';
 import {SharedTestModule} from '../../../testing/shared-test.module';
 import {dictation1} from '../../../testing/test-data';
 import {EditDictationRequest, MemberDictationService} from '../../services/dictation/member-dictation.service';
-import {AuthServiceSpy, NavigationServiceSpy} from '../../../testing/mocks-ionic';
+import {AuthServiceSpy, MemberDictationServiceSpy, NavigationServiceSpy} from '../../../testing/mocks-ionic';
 import {AuthService} from '../../services/auth.service';
 import {of} from 'rxjs';
 import {NavigationService} from '../../services/navigation.service';
 import {ActivatedRouteStub} from '../../../testing/activated-route-stub';
 import {ActivatedRoute} from '@angular/router';
-import {Dictation} from '../../entity/dictation';
+import {Dictation, Dictations} from '../../entity/dictation';
 import {DictationType, EditDictationPageMode} from './edit-dictation-page-enum';
 import {VocabPracticeType} from '../../enum/vocab-practice-type.enum';
 
@@ -30,7 +30,7 @@ describe('EditDictationPage', () => {
   };
 
   beforeEach(async(() => {
-    memberDictationServiceSpy = jasmine.createSpyObj('MemberDictationService', ['createOrAmendDictation']);
+    memberDictationServiceSpy = MemberDictationServiceSpy();
     authServiceSpy = AuthServiceSpy();
     activateRouteStub = new ActivatedRouteStub();
     navigationServiceSpy = NavigationServiceSpy();
@@ -42,7 +42,7 @@ describe('EditDictationPage', () => {
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [
-        { provide: MemberDictationService, useValue: memberDictationServiceSpy},
+        { provide: MemberDictationService, useValue: memberDictationServiceSpy },
         { provide: AuthService, useValue: authServiceSpy },
         { provide: ActivatedRoute, useValue: activateRouteStub },
         { provide: NavigationService, useValue: navigationServiceSpy }
@@ -86,7 +86,7 @@ describe('EditDictationPage', () => {
 
         const request = memberDictationServiceSpy.createOrAmendDictation.calls.mostRecent().args[0] as EditDictationRequest;
         expect(request).toBeDefined();
-        expect(request.source).toEqual(Dictation.Source.FillIn);
+        expect(request.source).toEqual(Dictations.Source.FillIn);
       }));
 
       it('show create dictation in title in edit mode', fakeAsync(() => {
@@ -195,7 +195,7 @@ describe('EditDictationPage', () => {
           const dictation = navigationServiceSpy.startDictation.calls.mostRecent().args[0] as Dictation;
           expect(dictation.sentenceLength).toEqual('Short');
           expect(dictation.article).toEqual('This is a article.');
-          expect(dictation.source).toEqual(Dictation.Source.Generate);
+          expect(dictation.source).toEqual(Dictations.Source.Generate);
         }));
 
         it('start instant dictation by single word will navigate to start dictation page', fakeAsync(() => {
@@ -219,7 +219,7 @@ describe('EditDictationPage', () => {
           expect(dictation.vocabs[1].word).toEqual('banana');
           expect(dictation.vocabs[2].word).toEqual('cup');
           expect(dictation.options.practiceType).toEqual(VocabPracticeType.Puzzle);
-          expect(dictation.source).toEqual(Dictation.Source.Generate);
+          expect(dictation.source).toEqual(Dictations.Source.Generate);
 
           component.question.setValue(` apple , banana,cup`);
           component.wordContainSpace.setValue(false);

@@ -15,9 +15,9 @@
           <ion-row>
             <ion-col style="min-width: 120px;"><fa-icon [icon]="['fas', 'list-ol']"></fa-icon> {{ dictation | dictationQuestions }}</ion-col>
             <ion-col><fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon> {{ dictation.totalAttempt }}</ion-col>
-            <ion-col *ngIf="source !== DictationSource.Select"><fa-icon [icon]="['far', 'thumbs-up']"></fa-icon> {{dictation.totalRecommended}}</ion-col>
+            <ion-col class="recommended-col" *ngIf="source !== DictationSource.Select"><fa-icon [icon]="['far', 'thumbs-up']"></fa-icon> {{dictation.totalRecommended}}</ion-col>
           </ion-row>
-          <ion-row *ngIf="dictation.suitableStudent">
+          <ion-row class="suitable-student-row" *ngIf="dictation.suitableStudent">
             <ion-col class="col-label">{{ 'Suitable' | translate }}: {{ 'SuitableStudent.' + dictation.suitableStudent | translate }}</ion-col>
           </ion-row>
         </ion-label>

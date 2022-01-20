@@ -1,6 +1,6 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {Location} from '@angular/common';
-import {Dictation} from '../../entity/dictation';
+import {Dictation, Dictations} from '../../entity/dictation';
 import {MemberScore} from '../../entity/member-score';
 import {PracticeHistory} from '../../entity/practice-models';
 import {MemberDictationService} from '../../services/dictation/member-dictation.service';
@@ -74,8 +74,8 @@ export class MemberHomePage implements OnInit {
     this.memberDictationService.getAllDictation().pipe(
       finalize(() => this.loadingAllDictations = false),
     ).subscribe(dictations => {
-      this.createdDictations = dictations.filter(d => d.source === Dictation.Source.FillIn);
-      this.createdVocabExercise = dictations.filter(d => d.source === Dictation.Source.Select);
+      this.createdDictations = dictations.filter(d => d.source === Dictations.Source.FillIn);
+      this.createdVocabExercise = dictations.filter(d => d.source === Dictations.Source.Select);
     });
 
     this.manageVocabHistoryService.loadFromServer()
@@ -84,7 +84,7 @@ export class MemberHomePage implements OnInit {
 
   get learntVocabs() { return this.manageVocabHistoryService.learntVocabs; }
   get answeredBeforeVocabs() { return this.manageVocabHistoryService.answeredBefore; }
-  get source() { return Dictation.Source; }
+  get source() { return Dictations.Source; }
 
   private setScores(scores: MemberScore[]) {
     this.log.info(`${scores.length} scores is returned`);

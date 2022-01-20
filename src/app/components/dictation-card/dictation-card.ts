@@ -1,5 +1,5 @@
 import {Component, Input} from '@angular/core';
-import {Dictation} from '../../entity/dictation';
+import {Dictation, Dictations} from '../../entity/dictation';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {TranslateService} from '@ngx-translate/core';
 import {ActionSheetController, AlertController, ToastController} from '@ionic/angular';
@@ -53,7 +53,7 @@ export class DictationCardComponent {
               public componentService: IonicComponentService,
               public socialSharing: SocialSharing) {}
 
-  get sourceType() { return Dictation.Source; }
+  get sourceType() { return Dictations.Source; }
   get memberVocabularies() { return this.dictation.vocabs.map(v => v.word).map(w => this.manageVocabHistoryService.findMemberVocabulary(w)); }
 
   highlightRecommend() {
@@ -96,7 +96,7 @@ export class DictationCardComponent {
   afterDelete = (d) => {
     console.log(`deleted dictation id: ${d.id}`);
     this.presentToast(this.translate.instant('DeletedDictation', {title: d.title}));
-    if (d.source === Dictation.Source.Select) {
+    if (d.source === Dictations.Source.Select) {
       this.navService.openMemberHome('vocabulary');
     } else {
       this.navService.openMemberHome('dictation');

@@ -44,6 +44,7 @@ import {SafariViewController} from '@ionic-native/safari-view-controller/ngx';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import {ShareButtonsModule} from 'ngx-sharebuttons/buttons';
 import {ShareIconsModule} from 'ngx-sharebuttons/icons';
+import {DictationHelper} from './services/dictation/dictation-helper.service';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -87,6 +88,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     TextToSpeech, InAppBrowser, GoogleAnalytics,
     SafariViewController,
     PracticeHistoryService, IonicComponentService,
+    DictationHelper,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: IdTokenInterceptor,

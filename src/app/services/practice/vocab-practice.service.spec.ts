@@ -4,7 +4,7 @@ import {TestBed} from '@angular/core/testing';
 import {VocabPracticeHistory} from '../../entity/vocab-practice-history';
 import {vocab_apple, vocab_banana} from '../../../testing/test-data';
 import {HttpClient} from '@angular/common/http';
-import {Dictation, PuzzleControls} from '../../entity/dictation';
+import {Dictation, Dictations, PuzzleControls} from '../../entity/dictation';
 
 describe('VocabPracticeService', () => {
   let service: VocabPracticeService;
@@ -69,10 +69,11 @@ describe('VocabPracticeService', () => {
   it('generatePracticeFromWords create a vocabulary practice dictation', () => {
     const result = service.generatePracticeFromWords(['test']);
     expect(result.id).toEqual(-1);
-    expect(result.source).toEqual(Dictation.Source.Generate);
+    expect(result.source).toEqual(Dictations.Source.Generate);
     expect(result.showImage).toBeTruthy();
     expect(result.vocabs.length).toEqual(1);
     expect(result.vocabs[0].word).toEqual('test');
+    expect(result.source).toEqual(Dictations.Source.Generate);
   });
 
   it('createPuzzleControls create a new object for new word', () => {

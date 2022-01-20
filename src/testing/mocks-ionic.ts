@@ -1,5 +1,5 @@
 import {Observable} from 'rxjs';
-import {vocab_apple} from './test-data';
+import {memberVocabularyMember1Apple, vocab_apple} from './test-data';
 
 
 export class PlatformMock {
@@ -143,7 +143,7 @@ export const PlatformSpy = () => jasmine.createSpyObj('Platform', { ready: Promi
 export const TextToSpeechSpy = () => jasmine.createSpyObj('TextToSpeech', ['speak']);
 
 export const DictationServiceSpy = () => jasmine.createSpyObj('DictationService',
-  ['createVocabDictationHistory', 'isInstantDictation', 'isGeneratedDictation', 'isSentenceDictation', 'getById']
+  ['createVocabDictationHistory', 'isInstantDictation', 'isSentenceDictation', 'getById']
 );
 
 export const VocabPracticeServiceSpy = () => {
@@ -154,10 +154,23 @@ export const VocabPracticeServiceSpy = () => {
   return spy;
 };
 
-export const ManageVocabHistoryServiceSpy = () => jasmine.createSpyObj('ManageVocabHistoryService', ['classifyVocabulary']);
+export const ManageVocabHistoryServiceSpy = () => {
+  const spy = jasmine.createSpyObj('ManageVocabHistoryService',
+    [
+      'classifyVocabulary', 'findMemberVocabulary', 'isLearnt'
+    ]);
+  spy.findMemberVocabulary.and.returnValue(memberVocabularyMember1Apple());
+  return spy;
+};
 
 export const AppServiceSpy = () => jasmine.createSpyObj('AppService', ['isApp']);
 
 export const SpeechServiceSpy = () => jasmine.createSpyObj('SpeechServiceSpy', ['speak']);
 
 export const IonicComponentServiceSpy = () => jasmine.createSpyObj('IonicComponentServiceSpy', ['presentVocabPracticeTypeActionSheet']);
+
+export const MemberDictationServiceSpy = () => {
+  const spy = jasmine.createSpyObj('MemberDictationService', ['createOrAmendDictation']);
+  spy.createOrAmendDictation.and.returnValue(Observable.of());
+  return spy;
+};

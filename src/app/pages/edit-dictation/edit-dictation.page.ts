@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
-import {Dictation, SentenceLengthOptions, SuitableStudentOptions} from '../../entity/dictation';
+import {Dictation, Dictations, SentenceLengthOptions, SuitableStudentOptions} from '../../entity/dictation';
 import {EditDictationRequest, MemberDictationService} from '../../services/dictation/member-dictation.service';
 import {NavigationService} from '../../services/navigation.service';
 import {AuthService} from '../../services/auth.service';
@@ -16,7 +16,7 @@ import {ArticleDictationService} from '../../services/dictation/article-dictatio
 import {DictationType, EditDictationPageMode} from './edit-dictation-page-enum';
 import {DictationUtils} from '../../utils/dictation-utils';
 import {VocabPracticeType} from '../../enum/vocab-practice-type.enum';
-import Source = Dictation.Source;
+import Source = Dictations.Source;
 
 @Component({
   selector: 'app-edit-dictation',
@@ -210,7 +210,7 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
         suitableStudent: 'Any',
         wordContainSpace: this.wordContainSpace.value,
         options: { 'practiceType' : this.wordPracticeType.value },
-        source: Dictation.Source.Generate,
+        source: Dictations.Source.Generate,
       };
     } else {
       return <Dictation>{
@@ -220,7 +220,7 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
         totalRecommended: 0,
         title: new Date().toDateString(),
         suitableStudent: 'Any',
-        source: Dictation.Source.Generate,
+        source: Dictations.Source.Generate,
       };
     }
   }

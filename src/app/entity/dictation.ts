@@ -25,11 +25,11 @@ export class Dictation {
   suitableStudent?: string;
   sentenceLength?: string;
   wordContainSpace?: boolean;
-  options?: Dictation.Options;
+  options?: Dictations.Options;
   source?: string;
 }
 
-export namespace Dictation {
+export namespace Dictations {
   export enum Source {
     FillIn = 'FillIn',
     Generate = 'Generate',

@@ -101,14 +101,6 @@ export class DictationService {
     return !ValidationUtils.isBlankString(dictation.article);
   }
 
-  isGeneratedDictation(dictation: Dictation): boolean {
-    return dictation != null && dictation.source === Dictation.Source.Generate;
-  }
-
-  isSelectVocabExercise(dictation: Dictation): boolean {
-    return dictation != null && dictation.source === Dictation.Source.Select;
-  }
-
   search(request: SearchDictationRequest): Observable<Dictation[]> {
     return this.http.post<Dictation[]>(this.searchDictationUrl, request);
   }

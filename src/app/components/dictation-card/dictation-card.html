@@ -1,7 +1,7 @@
 <ion-card class="card" *ngIf="dictation" style="margin-top: 8px;">
   <ion-card-header>
-    <div *ngIf="dictation.source === sourceType.FillIn"><fa-icon [icon]="['fas', 'edit']"></fa-icon> {{ 'Dictation' | translate }} - {{ dictation.title }}</div>
-    <div *ngIf="dictation.source === sourceType.Select"><fa-icon [icon]="['fas', 'edit']"></fa-icon> {{ 'Vocabulary Exercise' | translate }} - {{ dictation.title }}</div>
+    <div class="dictation" *ngIf="dictation.source === sourceType.FillIn"><fa-icon [icon]="['fas', 'edit']"></fa-icon> {{ 'Dictation' | translate }} - {{ dictation.title }}</div>
+    <div class="vocabulary" *ngIf="dictation.source === sourceType.Select"><fa-icon [icon]="['fas', 'edit']"></fa-icon> {{ 'Vocabulary Exercise' | translate }} - {{ dictation.title }}</div>
   </ion-card-header>
   <ion-card-content>
     <ion-grid>
@@ -19,11 +19,11 @@
               <td width="125">{{ 'Title' | translate }}</td>
               <td><strong>{{dictation.title}}</strong></td>
             </tr>
-            <tr *ngIf="dictation.source === sourceType.FillIn">
+            <tr class="descriptionTR" *ngIf="dictation.source === sourceType.FillIn">
               <td>{{ 'Description' | translate }}</td>
               <td>{{ dictation.description }}</td>
             </tr>
-            <tr *ngIf="dictation.source === sourceType.FillIn">
+            <tr class="suitableTR" *ngIf="dictation.source === sourceType.FillIn">
               <td>{{ 'Suitable' | translate }}</td>
               <td>{{ 'SuitableStudent.' + dictation.suitableStudent | translate }}</td>
             </tr>
@@ -38,7 +38,7 @@
               <td>{{ 'Each Sentence Length' | translate }}</td>
               <td>{{ 'SentenceLength.' + dictation.sentenceLength | translate }}</td>
             </tr>
-            <tr *ngIf="dictation.source === sourceType.FillIn"
+            <tr class="recommendTR" *ngIf="dictation.source === sourceType.FillIn"
                 [@recommend]="recommendState"
                 (@recommend.done)="recommendAnimationDone($event)">
               <td>{{ 'Recommend' | translate }}</td>
@@ -56,7 +56,7 @@
         </ion-col>
         <ion-col size="12" size-sm="12" size-md="12" size-lg="6" *ngIf="showContent && !dictationService.isSentenceDictation(dictation)">
           <div style="padding-bottom: 4px;" >{{'Vocabulary'|translate}} ({{dictation.vocabs.length}}):</div>
-          <div *ngIf="dictation.source === sourceType.FillIn">
+          <div class="fillin-vocabs" *ngIf="dictation.source === sourceType.FillIn">
             <span *ngFor="let vocab of dictation.vocabs">
               <ion-badge style="background-color: var(--ion-color-secondary); margin-right: 4px;">{{ vocab.word }}</ion-badge>
             </span>
@@ -87,7 +87,7 @@
     </ion-grid>
     <ion-row>
       <ion-col>
-        <ion-button *ngIf="!dictationService.isInstantDictation(dictation) && dictation.source === sourceType.FillIn"
+        <ion-button class="share-button" *ngIf="!dictationService.isInstantDictation(dictation) && dictation.source === sourceType.FillIn"
                     fill="outline" (click)="shareDictation()">
           <fa-icon [icon]="['fas', 'share-square']"></fa-icon>&nbsp;{{'Share'|translate}}
         </ion-button>
@@ -110,7 +110,7 @@
     </ion-row>
     <ion-row>
       <ion-col>
-        <ion-button *ngIf="edit && dictation?.source === sourceType.FillIn" color="secondary" (click)="navService.editDictation(dictation)"><fa-icon [icon]="['fas', 'edit']"></fa-icon>&nbsp;{{'Edit'|translate}}</ion-button>
+        <ion-button class="edit-button" *ngIf="edit && dictation?.source === sourceType.FillIn" color="secondary" (click)="navService.editDictation(dictation)"><fa-icon [icon]="['fas', 'edit']"></fa-icon>&nbsp;{{'Edit'|translate}}</ion-button>
         <ion-button *ngIf="edit" color="danger" (click)="confirmDeleteDictation()"><fa-icon [icon]="['fas', 'trash']"></fa-icon>&nbsp;{{'Delete'|translate}}</ion-button>
       </ion-col>
     </ion-row>

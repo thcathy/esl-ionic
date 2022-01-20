@@ -1,6 +1,6 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {VocabPracticeHistory} from '../../entity/vocab-practice-history';
-import {Dictation} from '../../entity/dictation';
+import {Dictation, Dictations} from '../../entity/dictation';
 import {NavigationService} from '../../services/navigation.service';
 import {DictationService} from '../../services/dictation/dictation.service';
 import {TranslateService} from '@ngx-translate/core';
@@ -11,6 +11,7 @@ import {VocabPracticeService} from '../../services/practice/vocab-practice.servi
 import {ManageVocabHistoryService} from '../../services/member/manage-vocab-history.service';
 import {NGXLogger} from 'ngx-logger';
 import {VocabPracticeType} from '../../enum/vocab-practice-type.enum';
+import {DictationHelper} from '../../services/dictation/dictation-helper.service';
 
 @Component({
   selector: 'app-practice-complete',
@@ -30,6 +31,7 @@ export class PracticeCompletePage implements OnInit {
 
   constructor(
     public dictationService: DictationService,
+    public dictationHelper: DictationHelper,
     public vocabPracticeService: VocabPracticeService,
     public translate: TranslateService,
     public translateService: TranslateService,
@@ -66,14 +68,14 @@ export class PracticeCompletePage implements OnInit {
       return;
     }
 
-    if (this.dictationService.isGeneratedDictation(this.dictation) || this.dictationService.isSelectVocabExercise(this.dictation)) {
+    if (this.dictationHelper.isGeneratedDictation(this.dictation) || this.dictationHelper.isSelectVocabExercise(this.dictation)) {
       this.vocabPracticeService.saveHistory(this.histories, this.dictation.id)
         .subscribe(results => {
           this.log.info(`update vocab history cache: size: ${results.length}`);
           this.manageVocabHistoryService.classifyVocabulary(results);
         });
       return;
-    } else if (this.dictationService.isInstantDictation(this.dictation)) {
+    } else if (this.dictationHelper.isInstantDictation(this.dictation)) {
       return;
     } else {
       this.dictationService.createVocabDictationHistory(this.dictation, this.mark, this.histories)
@@ -95,7 +97,7 @@ export class PracticeCompletePage implements OnInit {
   }
 
   showRecommendButton() {
-    return this.dictation && !this.historyStored && this.dictation.source === Dictation.Source.FillIn;
+    return this.dictation && !this.historyStored && this.dictation.source === Dictations.Source.FillIn;
   }
 
   recommendBtnText(): string {
@@ -107,10 +109,10 @@ export class PracticeCompletePage implements OnInit {
   }
 
   getDictationThenOpen() {
-    if (this.dictationService.isGeneratedDictation(this.dictation)) {
+    if (this.dictationHelper.isGeneratedDictation(this.dictation)) {
       this.navigationService.startDictation(this.dictation);
       return;
-    } else if (this.dictationService.isInstantDictation(this.dictation)) {
+    } else if (this.dictationHelper.isInstantDictation(this.dictation)) {
       this.openDictation(this.dictation);
     } else {
       // this.ionicComponentService.showLoading().then(l => this.loader = l);
@@ -139,7 +141,7 @@ export class PracticeCompletePage implements OnInit {
   showOpenMyVocabulary() {
     return this.dictation
       && this.authService.isAuthenticated()
-      && (this.dictation.source === Dictation.Source.Select || this.dictation.source === Dictation.Source.Generate);
+      && (this.dictation.source === Dictations.Source.Select || this.dictation.source === Dictations.Source.Generate);
   }
 
 }
