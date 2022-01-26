@@ -97,7 +97,7 @@ export class PracticeCompletePage implements OnInit {
   }
 
   showRecommendButton() {
-    return this.dictation && !this.historyStored && this.dictation.source === Dictations.Source.FillIn;
+    return this.dictation && !this.dictationHelper.isInstantDictation(this.dictation) && !this.historyStored && this.dictation.source === Dictations.Source.FillIn;
   }
 
   recommendBtnText(): string {

@@ -210,7 +210,7 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
         suitableStudent: 'Any',
         wordContainSpace: this.wordContainSpace.value,
         options: { 'practiceType' : this.wordPracticeType.value },
-        source: Dictations.Source.Generate,
+        source: Dictations.Source.FillIn,
       };
     } else {
       return <Dictation>{
@@ -220,7 +220,7 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
         totalRecommended: 0,
         title: new Date().toDateString(),
         suitableStudent: 'Any',
-        source: Dictations.Source.Generate,
+        source: Dictations.Source.FillIn,
       };
     }
   }

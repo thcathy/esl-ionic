@@ -12,6 +12,7 @@ import {AppService} from '../../services/app.service';
 import {VocabPracticeType} from '../../enum/vocab-practice-type.enum';
 import {IonicComponentService} from '../../services/ionic-component.service';
 import {ManageVocabHistoryService} from '../../services/member/manage-vocab-history.service';
+import {DictationHelper} from '../../services/dictation/dictation-helper.service';
 
 @Component({
   selector: 'app-dictation-card',
@@ -44,7 +45,7 @@ export class DictationCardComponent {
   constructor(public router: Router,
               public navService: NavigationService,
               public appService: AppService,
-              public dictationService: DictationService,
+              public dictationHelper: DictationHelper,
               public manageVocabHistoryService: ManageVocabHistoryService,
               public memberDictationService: MemberDictationService,
               public translate: TranslateService,
@@ -151,7 +152,7 @@ export class DictationCardComponent {
   }
 
   startDictationOrShowOptions() {
-    if (this.dictationService.isSentenceDictation(this.dictation)) {
+    if (this.dictationHelper.isSentenceDictation(this.dictation)) {
       this.navService.startDictation(this.dictation);
     } else {
       this.componentService.presentVocabPracticeTypeActionSheet()

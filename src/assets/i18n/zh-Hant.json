@@ -205,7 +205,8 @@
   "Fail to create or update vocabulary exercise": "未能建立或更新生字練習",
   "Vocabulary Exercise": "生字練習",
   "Click on vocabulary for review": "點擊需要複習的生字",
-  "SelectedVocabulary": "已選擇 {{ number }} 生字",
+  "SelectedVocabulary": "已選擇 {{ number }} 個生字",
   "Create Review": "建立複習",
-  "Start Review": "開始複習"
+  "Start Review": "開始複習",
+  "No vocabulary selected": "沒有選擇生字"
 }

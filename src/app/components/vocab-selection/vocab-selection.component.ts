@@ -15,7 +15,7 @@ import {IonicComponentService} from '../../services/ionic-component.service';
   styleUrls: ['./vocab-selection.component.scss'],
 })
 export class VocabSelectionComponent implements OnInit {
-  EACH_LOADING_SIZE = 10;
+  EACH_LOADING_SIZE = 100;
 
   @Input() inputVocab: MemberVocabulary[];
   showingVocabs: MemberVocabulary[] = [];
@@ -69,7 +69,14 @@ export class VocabSelectionComponent implements OnInit {
     }
   }
 
+  isValid(): boolean { return this.selectedVocabs.size > 0; }
+
   createExercise() {
+    if (!this.isValid()) {
+      this.ionicComponentService.showAlert(this.translate.instant('No vocabulary selected'));
+      return;
+    }
+
     this.memberDictationService.createOrAmendDictation(<EditDictationRequest>{
       dictationId: -1,
       title: this.title.value,
@@ -96,4 +103,6 @@ export class VocabSelectionComponent implements OnInit {
   clearSelected() {
     this.selectedVocabs.clear();
   }
+
+  vocabTrackById(index, vocab: MemberVocabulary) { return vocab.id.word; }
 }
