@@ -31,7 +31,8 @@
     </ion-row>
     <ion-row style="border-top: 1px solid #c8c7cc;">
       <ion-col class="ion-text-right">
-        <ion-button fill="clear" *ngIf="showReview" (click)="onClick('review')"><fa-icon icon="pencil-alt"></fa-icon>&nbsp;{{ 'Review' | translate }}</ion-button>
+        <ion-button fill="clear" *ngIf="showReview" (click)="onClick('reviewSelected')"><fa-icon icon="pencil-alt"></fa-icon>&nbsp;{{ 'Create Review' | translate }}</ion-button>
+        <ion-button fill="clear" *ngIf="showReview" (click)="onClick('reviewAll')"><fa-icon icon="pencil-alt"></fa-icon>&nbsp;{{ 'Start Review' | translate }}</ion-button>
       </ion-col>
     </ion-row>
   </ion-card-content>

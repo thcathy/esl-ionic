@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 
-import {Dictation} from '../../entity/dictation';
+import {Dictation, Dictations} from '../../entity/dictation';
 import {environment} from '../../../environments/environment';
 import {Observable} from 'rxjs/internal/Observable';
 
@@ -11,10 +11,11 @@ export interface EditDictationRequest {
   description?: string;
   showImage: boolean;
   vocabulary: string[];
-  suitableStudent: string;
-  article: string;
-  sentenceLength: string;
-  wordContainSpace: string;
+  suitableStudent?: string;
+  article?: string;
+  sentenceLength?: string;
+  wordContainSpace?: boolean;
+  source: Dictations.Source;
 }
 
 @Injectable({ providedIn: 'root' })

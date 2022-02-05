@@ -4,7 +4,7 @@ import {TestBed} from '@angular/core/testing';
 import {VocabPracticeHistory} from '../../entity/vocab-practice-history';
 import {vocab_apple, vocab_banana} from '../../../testing/test-data';
 import {HttpClient} from '@angular/common/http';
-import {PuzzleControls} from '../../entity/dictation';
+import {Dictation, Dictations, PuzzleControls} from '../../entity/dictation';
 
 describe('VocabPracticeService', () => {
   let service: VocabPracticeService;
@@ -23,7 +23,7 @@ describe('VocabPracticeService', () => {
       ]
     });
 
-    service = TestBed.get(VocabPracticeService);
+    service = TestBed.inject(VocabPracticeService);
   });
 
   it('isWordEqual ignore space or hyphen', () => {
@@ -59,20 +59,21 @@ describe('VocabPracticeService', () => {
     ];
 
     service.saveHistory(vocabHistories1);
-    const callArg: VocabPracticeHistory[] = httpClientSpy.post.calls.mostRecent().args[1];
-    expect(callArg.length).toEqual(2);
-    expect(callArg[0].question.picsFullPaths.length).toBeLessThan(1);
-    expect(callArg[0].question.picsFullPathsInString.length).toBeLessThan(1);
-    expect(callArg[0].question.grades.length).toBeLessThan(1);
+    const callArg = httpClientSpy.post.calls.mostRecent().args[1];
+    expect(callArg.histories.length).toEqual(2);
+    expect(callArg.histories[0].question.picsFullPaths.length).toBeLessThan(1);
+    expect(callArg.histories[0].question.picsFullPathsInString.length).toBeLessThan(1);
+    expect(callArg.histories[0].question.grades.length).toBeLessThan(1);
   });
 
   it('generatePracticeFromWords create a vocabulary practice dictation', () => {
     const result = service.generatePracticeFromWords(['test']);
     expect(result.id).toEqual(-1);
-    expect(result.generated).toBeTruthy();
+    expect(result.source).toEqual(Dictations.Source.Generate);
     expect(result.showImage).toBeTruthy();
     expect(result.vocabs.length).toEqual(1);
     expect(result.vocabs[0].word).toEqual('test');
+    expect(result.source).toEqual(Dictations.Source.Generate);
   });
 
   it('createPuzzleControls create a new object for new word', () => {

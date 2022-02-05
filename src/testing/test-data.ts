@@ -1,11 +1,52 @@
 import {Member} from '../app/entity/member';
-import {Dictation} from '../app/entity/dictation';
+import {Dictation, Dictations} from '../app/entity/dictation';
 import {Name} from '../app/entity/name';
 import {SentenceHistory} from '../app/entity/sentence-history';
 import {VocabPractice} from '../app/entity/voacb-practice';
 import {MemberVocabulary} from '../app/entity/member-vocabulary';
 import {Vocab} from '../app/entity/vocab';
 
+export const vocabs1 = [
+  <Vocab>{word: 'apple'},
+  <Vocab>{word: 'banana'},
+  <Vocab>{word: 'cat'},
+];
+
+export namespace TestData {
+  class DefaultVocabDictation extends Dictation {
+    id = 1;
+    title = 'test dictation 1';
+    vocabs = vocabs1;
+    showImage = true;
+    options = new Dictations.Options();
+  }
+
+  export function instantDictation() {
+    const d = new DefaultVocabDictation();
+    d.source = Dictations.Source.FillIn;
+    d.id = null;
+    return d;
+  }
+
+  export function fillInDictation() {
+    const d = new DefaultVocabDictation();
+    d.source = Dictations.Source.FillIn;
+    return d;
+  }
+
+  export function selectDictation() {
+    const d = new DefaultVocabDictation();
+    d.source = Dictations.Source.Select;
+    return d;
+  }
+
+  export function generateDictation() {
+    const d = new DefaultVocabDictation();
+    d.source = Dictations.Source.Generate;
+    return d;
+  }
+
+}
 
 export const member1 = new Member(
   1,
@@ -23,7 +64,8 @@ export const member1 = new Member(
 export const dictation1 = <Dictation>{
   id: 1,
   title: 'test dictation 1',
-  article: 'sentence to learn'
+  article: 'sentence to learn',
+  source: Dictations.Source.FillIn
 };
 
 export const dictation1Histories = [

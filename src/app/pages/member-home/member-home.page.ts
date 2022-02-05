@@ -1,18 +1,19 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {Location} from '@angular/common';
-import {Dictation} from '../../entity/dictation';
+import {Dictation, Dictations} from '../../entity/dictation';
 import {MemberScore} from '../../entity/member-score';
 import {PracticeHistory} from '../../entity/practice-models';
 import {MemberDictationService} from '../../services/dictation/member-dictation.service';
 import {PracticeHistoryService} from '../../services/dictation/practice-history.service';
 import {RankingService} from '../../services/ranking/ranking.service';
 import {ManageVocabHistoryService} from '../../services/member/manage-vocab-history.service';
-import {MemberVocabulary} from '../../entity/member-vocabulary';
 import {NavigationService} from '../../services/navigation.service';
 import {ActivatedRoute} from '@angular/router';
 import {NGXLogger} from 'ngx-logger';
 import 'rxjs-compat/add/operator/finally';
-import {delay, finalize} from 'rxjs/operators';
+import {finalize} from 'rxjs/operators';
+import {ModalController} from '@ionic/angular';
+import {VocabSelectionComponent} from '../../components/vocab-selection/vocab-selection.component';
 
 @Component({
   selector: 'app-member-home',
@@ -21,15 +22,14 @@ import {delay, finalize} from 'rxjs/operators';
 })
 export class MemberHomePage implements OnInit {
   createdDictations = [] as Dictation[];
+  createdVocabExercise = [] as Dictation[];
   allTimesScore: MemberScore;
   latestScore = [] as MemberScore[];
   practiceHistories = [] as PracticeHistory[];
   selectedSegment: String;
-  learntVocabs: Map<string, MemberVocabulary> = new Map<string, MemberVocabulary>();
-  answeredBeforeVocabs: Map<string, MemberVocabulary> = new Map<string, MemberVocabulary>();
   @ViewChild('ionSegment', { static: true }) ionSegment;
   loadingAllTimesAndLast6Score: boolean; loadingPracticeHistories: boolean;
-  loadingCreatedDictations: boolean; loadingVocabHistory: boolean;
+  loadingAllDictations: boolean; loadingVocabHistory: boolean;
 
   constructor(
     public memberDictationService: MemberDictationService,
@@ -40,6 +40,7 @@ export class MemberHomePage implements OnInit {
     public navigationService: NavigationService,
     public location: Location,
     private log: NGXLogger,
+    public modalController: ModalController,
   ) { }
 
   ngOnInit() {
@@ -53,17 +54,13 @@ export class MemberHomePage implements OnInit {
       if (params.segment) { this.selectedSegment = params.segment; }
       this.ionSegment.value = this.selectedSegment;
     });
-    // this.createdDictations = [];
-    // this.allTimesScore = null;
-    // this.latestScore = [];
-    // this.practiceHistories = [];
     this.init();
   }
 
   async init() {
     this.loadingAllTimesAndLast6Score = true;
     this.loadingPracticeHistories = true;
-    this.loadingCreatedDictations = true;
+    this.loadingAllDictations = true;
     this.loadingVocabHistory = true;
 
     this.rankingService.allTimesAndLast6Score().pipe(
@@ -75,18 +72,19 @@ export class MemberHomePage implements OnInit {
     ).subscribe(s => this.practiceHistories = s);
 
     this.memberDictationService.getAllDictation().pipe(
-      finalize(() => this.loadingCreatedDictations = false),
+      finalize(() => this.loadingAllDictations = false),
     ).subscribe(dictations => {
-      this.createdDictations = dictations;
+      this.createdDictations = dictations.filter(d => d.source === Dictations.Source.FillIn);
+      this.createdVocabExercise = dictations.filter(d => d.source === Dictations.Source.Select);
     });
 
     this.manageVocabHistoryService.loadFromServer()
-      .finally(() => this.loadingVocabHistory = false)
-      .then(_p => {
-      this.learntVocabs = this.manageVocabHistoryService.learntVocabs;
-      this.answeredBeforeVocabs = this.manageVocabHistoryService.answeredBefore;
-    });
+      .finally(() => this.loadingVocabHistory = false);
   }
+
+  get learntVocabs() { return this.manageVocabHistoryService.learntVocabs; }
+  get answeredBeforeVocabs() { return this.manageVocabHistoryService.answeredBefore; }
+  get source() { return Dictations.Source; }
 
   private setScores(scores: MemberScore[]) {
     this.log.info(`${scores.length} scores is returned`);
@@ -101,10 +99,31 @@ export class MemberHomePage implements OnInit {
   }
 
   onVocabHistoryList(value: string) {
-    if (value === 'review') {
+    if (value === 'reviewAll') {
       this.navigationService.startDictation(
         this.manageVocabHistoryService.generatePracticeFromAnsweredBefore()
       );
+    } else if (value === 'reviewSelected') {
+      this.presentVocabSelectionModal();
+    }
+  }
+
+  async presentVocabSelectionModal() {
+    const modal = await this.modalController.create({
+      component: VocabSelectionComponent,
+      cssClass: 'vocab-selection-class',
+      componentProps: {
+        'inputVocab': Array.from(this.answeredBeforeVocabs.values()),
+      }
+    });
+    await modal.present();
+    modal.onDidDismiss().then(v => this.presentVocabCard(v.data));
+  }
+
+  presentVocabCard(data) {
+    if (data !== undefined && data['dictation'] !== undefined) {
+      const dictation = data['dictation'] as Dictation;
+      this.navigationService.pushOpenDictation(dictation);
     }
   }
 }

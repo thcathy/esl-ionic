@@ -1,12 +1,7 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpParams} from '@angular/common/http';
 import {Service} from '../root.service';
-
-import {VocabPractice} from '../../entity/voacb-practice';
 import {environment} from '../../../environments/environment';
-import {Observable} from 'rxjs/internal/Observable';
 import {Dictation} from '../../entity/dictation';
-import {VocabPracticeHistory} from '../../entity/vocab-practice-history';
 import {MemberVocabulary} from '../../entity/member-vocabulary';
 import {Storage} from '@ionic/storage';
 import {VocabPracticeService} from '../practice/vocab-practice.service';
@@ -40,7 +35,7 @@ export class ManageVocabHistoryService extends Service {
     });
   }
 
-  private isLearnt(vocab: MemberVocabulary) {
+  public isLearnt(vocab: MemberVocabulary) {
     return vocab.correct >= environment.learntVocabularyMinimumCorrect;
   }
 
@@ -58,6 +53,14 @@ export class ManageVocabHistoryService extends Service {
   public randomWordsFromBefore(length: number): string[] {
     const words = Array.from(this.answeredBefore.values()).map(v => v.id.word);
     return CollectionUtils.randomPick(words, length);
+  }
+
+  public findMemberVocabulary(word: string): MemberVocabulary {
+    if (this.learntVocabs.has(word)) {
+      return this.learntVocabs.get(word);
+    } else {
+      return this.answeredBefore.get(word);
+    }
   }
 
   public clearCache() {

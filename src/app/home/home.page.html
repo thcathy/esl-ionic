@@ -65,6 +65,10 @@
                   <ion-label><fa-icon [icon]="['fas', 'spell-check']"></fa-icon> {{ 'Learn' | translate }}</ion-label>
                   <fa-icon slot="end"  [icon]="['fas', 'angle-right']"></fa-icon>
                 </ion-item>
+                <ion-item *ngIf="authService.isAuthenticated()" (click)="navigationService.openMemberHome('vocabulary')">
+                  <ion-label><fa-icon [icon]="['fas', 'list']"></fa-icon> {{ 'My Vocabulary' | translate }}</ion-label>
+                  <fa-icon slot="end"  [icon]="['fas', 'angle-right']"></fa-icon>
+                </ion-item>
               </ion-list>
             </ion-col>
           </ion-row>

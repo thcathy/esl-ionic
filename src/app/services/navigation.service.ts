@@ -4,13 +4,10 @@ import {Dictation} from '../entity/dictation';
 import {DictationService} from './dictation/dictation.service';
 import {NavigationExtras, Router} from '@angular/router';
 import {Storage} from '@ionic/storage';
-import {VocabPracticeHistory} from '../entity/vocab-practice-history';
 import {SentenceHistory} from '../entity/sentence-history';
 import {Location} from '@angular/common';
 import {TranslateService} from '@ngx-translate/core';
 import {EditDictationPageMode} from '../pages/edit-dictation/edit-dictation-page-enum';
-import {VocabPracticeType} from '../enum/vocab-practice-type.enum';
-import {PracticeCompletePageObject} from '../../../e2e/src/page-object/practice-complete.po';
 import {PracticeCompletePageInput} from '../pages/practice-complete/practice-complete.page';
 
 export interface NavigationRequest {

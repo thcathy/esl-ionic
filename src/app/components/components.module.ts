@@ -1,16 +1,16 @@
-import { NgModule } from '@angular/core';
-import { MemberScoreRankingComponent } from './member-score-ranking/member-score-ranking';
-import { DictationStatisticsComponent } from './dictation-statistics/dictation-statistics';
+import {NgModule} from '@angular/core';
+import {MemberScoreRankingComponent} from './member-score-ranking/member-score-ranking';
+import {DictationStatisticsComponent} from './dictation-statistics/dictation-statistics';
 import {TranslateModule} from '@ngx-translate/core';
-import { VocabImageComponent } from './vocab-image/vocab-image';
-import { PracticeHistoryListComponent } from './practice-history-list/practice-history-list';
-import { ScoreComponent } from './score/score';
-import { DictationCardComponent } from './dictation-card/dictation-card';
-import { FooterComponent } from './app-footer/footer';
-import { DictationListComponent } from './dictation-list/dictation-list';
+import {VocabImageComponent} from './vocab-image/vocab-image';
+import {PracticeHistoryListComponent} from './practice-history-list/practice-history-list';
+import {ScoreComponent} from './score/score';
+import {DictationCardComponent} from './dictation-card/dictation-card';
+import {FooterComponent} from './app-footer/footer';
+import {DictationListComponent} from './dictation-list/dictation-list';
 import {PipesModule} from '../pipes/pipes.module';
-import { SentenceHistoriesComponent } from './sentence-histories/sentence-histories';
-import { MemberScoreListComponent } from './member-score-list/member-score-list';
+import {SentenceHistoriesComponent} from './sentence-histories/sentence-histories';
+import {MemberScoreListComponent} from './member-score-list/member-score-list';
 import {MemberPracticeHistoryListComponent} from './member-practice-history-list/member-practice-history-list';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import {IonicModule} from '@ionic/angular';
@@ -22,6 +22,8 @@ import {ShareButtonsModule} from 'ngx-sharebuttons/buttons';
 import {ShareIconsModule} from 'ngx-sharebuttons/icons';
 import {CharacterButtonComponent} from './character-button/character-button.component';
 import {CharacterComponent} from './character/character.component';
+import {VocabSelectionComponent} from './vocab-selection/vocab-selection.component';
+import {ReactiveFormsModule} from '@angular/forms';
 
 @NgModule({
     declarations: [MemberScoreRankingComponent,
@@ -36,7 +38,7 @@ import {CharacterComponent} from './character/character.component';
         MemberScoreListComponent,
         MemberPracticeHistoryListComponent,
         VocabHistoryListComponent,
-        VirtualKeyboardComponent, CharacterButtonComponent, CharacterComponent,
+        VirtualKeyboardComponent, CharacterButtonComponent, CharacterComponent, VocabSelectionComponent
     ],
   imports: [
     IonicModule,
@@ -44,7 +46,7 @@ import {CharacterComponent} from './character/character.component';
     PipesModule,
     FontAwesomeModule,
     CommonModule,
-    HttpClientModule,
+    HttpClientModule, ReactiveFormsModule,
     ShareButtonsModule.withConfig({
       debug: true
     }),
@@ -62,7 +64,7 @@ import {CharacterComponent} from './character/character.component';
         MemberScoreListComponent,
         MemberPracticeHistoryListComponent,
         VocabHistoryListComponent,
-        VirtualKeyboardComponent, CharacterButtonComponent, CharacterComponent,
+        VirtualKeyboardComponent, CharacterButtonComponent, CharacterComponent, VocabSelectionComponent
     ]
 })
 export class ComponentsModule {}

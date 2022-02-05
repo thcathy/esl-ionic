@@ -1,5 +1,5 @@
 import {Component, Input} from '@angular/core';
-import {Dictation} from '../../entity/dictation';
+import {Dictation, Dictations} from '../../entity/dictation';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {TranslateService} from '@ngx-translate/core';
 import {ActionSheetController, AlertController, ToastController} from '@ionic/angular';
@@ -11,6 +11,8 @@ import {SocialSharing} from '@ionic-native/social-sharing/ngx';
 import {AppService} from '../../services/app.service';
 import {VocabPracticeType} from '../../enum/vocab-practice-type.enum';
 import {IonicComponentService} from '../../services/ionic-component.service';
+import {ManageVocabHistoryService} from '../../services/member/manage-vocab-history.service';
+import {DictationHelper} from '../../services/dictation/dictation-helper.service';
 
 @Component({
   selector: 'app-dictation-card',
@@ -43,13 +45,17 @@ export class DictationCardComponent {
   constructor(public router: Router,
               public navService: NavigationService,
               public appService: AppService,
-              public dictationService: DictationService,
+              public dictationHelper: DictationHelper,
+              public manageVocabHistoryService: ManageVocabHistoryService,
               public memberDictationService: MemberDictationService,
               public translate: TranslateService,
               public alertController: AlertController,
               public toastController: ToastController,
               public componentService: IonicComponentService,
               public socialSharing: SocialSharing) {}
+
+  get sourceType() { return Dictations.Source; }
+  get memberVocabularies() { return this.dictation.vocabs.map(v => v.word).map(w => this.manageVocabHistoryService.findMemberVocabulary(w)); }
 
   highlightRecommend() {
     this.recommendState = 'highlight';
@@ -62,7 +68,7 @@ export class DictationCardComponent {
   async confirmDeleteDictation() {
     const alert = await this.alertController.create({
       header: `${this.translate.instant('Confirm')}!`,
-      message: `${this.translate.instant('Delete this dictation')}?`,
+      message: `${this.translate.instant('Delete this exercise')}?`,
       buttons: [
         {
           text: this.translate.instant('Cancel'),
@@ -91,7 +97,11 @@ export class DictationCardComponent {
   afterDelete = (d) => {
     console.log(`deleted dictation id: ${d.id}`);
     this.presentToast(this.translate.instant('DeletedDictation', {title: d.title}));
-    this.navService.openMemberHome('dictation');
+    if (d.source === Dictations.Source.Select) {
+      this.navService.openMemberHome('vocabulary');
+    } else {
+      this.navService.openMemberHome('dictation');
+    }
   }
 
   async presentToast(message: string) {
@@ -104,8 +114,8 @@ export class DictationCardComponent {
   }
 
   failDelete = (err) => {
-    console.warn(`Cannot delete dictation: ${err}`);
-    this.presentAlert(`${this.translate.instant('Error')}!`, this.translate.instant('Fail to delete dictation'));
+    console.warn(`Cannot delete exercise: ${err}`);
+    this.presentAlert(`${this.translate.instant('Error')}!`, this.translate.instant('Fail to delete exercise'));
   }
 
   async presentAlert(header: string, message: string) {
@@ -142,7 +152,7 @@ export class DictationCardComponent {
   }
 
   startDictationOrShowOptions() {
-    if (this.dictationService.isSentenceDictation(this.dictation)) {
+    if (this.dictationHelper.isSentenceDictation(this.dictation)) {
       this.navService.startDictation(this.dictation);
     } else {
       this.componentService.presentVocabPracticeTypeActionSheet()

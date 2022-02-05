@@ -6,3 +6,21 @@
 .info-button:hover {
   color: var(--ion-color-primary-tint) !important;
 }
+
+.dictation-detail td {
+  padding-right: 8px !important;
+}
+
+.select-vocab-list {
+  ion-item {
+    padding-left: 0;
+    line-height: 1;
+    --min-height: 12px;
+  }
+
+  ion-badge {
+    margin-left: 8px;
+    font-weight: 200;
+    font-size: 10px;
+  }
+}

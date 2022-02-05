@@ -1,18 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup} from '@angular/forms';
-import {VocabDifficulty, vocabDifficulties} from '../../entity/voacb-practice';
+import {vocabDifficulties, VocabDifficulty} from '../../entity/voacb-practice';
 import {VocabPracticeService} from '../../services/practice/vocab-practice.service';
 import {NavigationService} from '../../services/navigation.service';
-import {IonicComponentService} from '../../services/ionic-component.service';
 import {ActivatedRoute} from '@angular/router';
-import {switchMap} from 'rxjs-compat/operator/switchMap';
-import {map} from 'rxjs/operators';
 import {AuthService} from '../../services/auth.service';
 import {VocabPracticeType} from '../../enum/vocab-practice-type.enum';
-import {DictationType} from '../edit-dictation/edit-dictation-page-enum';
-import {PracticeCompletePageInput} from '../practice-complete/practice-complete.page';
-import {Dictation, DictationOptions} from '../../entity/dictation';
-import {VocabPracticeHistory} from '../../entity/vocab-practice-history';
 import {Storage} from '@ionic/storage';
 
 @Component({

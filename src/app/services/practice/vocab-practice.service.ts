@@ -5,11 +5,16 @@ import {Service} from '../root.service';
 import {VocabPractice} from '../../entity/voacb-practice';
 import {environment} from '../../../environments/environment';
 import {Observable} from 'rxjs/internal/Observable';
-import {Dictation, PuzzleControls} from '../../entity/dictation';
+import {Dictation, Dictations, PuzzleControls} from '../../entity/dictation';
 import {VocabPracticeHistory} from '../../entity/vocab-practice-history';
 import {MemberVocabulary} from '../../entity/member-vocabulary';
 import {Vocab} from '../../entity/vocab';
 import {DictationUtils} from '../../utils/dictation-utils';
+
+export interface CreateDictationHistoryRequest {
+  dictationId?: number;
+  histories?: VocabPracticeHistory[];
+}
 
 @Injectable({ providedIn: 'root' })
 export class VocabPracticeService extends Service {
@@ -20,7 +25,7 @@ export class VocabPracticeService extends Service {
 
   private getQuestionUrl = environment.apiHost + '/vocab/get/question/';
   private generatePracticeUrl = environment.apiHost + '/vocab/practice/generate/';
-  private saveHistoryUrl = environment.apiHost + '/member/vocab/practice/history/save';
+  private saveHistoryUrl = environment.apiHost + '/member/vocab/practice/history/save/v2';
   private getAllHistoryUrl = environment.apiHost + '/member/vocab/practice/history/getall';
 
   getQuestion(word: string, showImage: boolean): Observable<VocabPractice> {
@@ -47,12 +52,15 @@ export class VocabPracticeService extends Service {
       id: -1,
       showImage: true,
       vocabs: words.map(s => <Vocab>{word: s}),
-      generated: true,
+      source: Dictations.Source.Generate,
     };
   }
 
-  saveHistory(histories: VocabPracticeHistory[]) {
-    return this.http.post<MemberVocabulary[]>(this.saveHistoryUrl, this.trimHistories(histories));
+  saveHistory(histories: VocabPracticeHistory[], dictationId?: number) {
+    return this.http.post<MemberVocabulary[]>(this.saveHistoryUrl, {
+      dictationId: dictationId,
+      histories: this.trimHistories(histories)
+    });
   }
 
   getAllHistory() {

@@ -1,11 +1,11 @@
 import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
-import {Dictation} from '../../entity/dictation';
+import {Dictation, Dictations} from '../../entity/dictation';
 import {NavigationService} from '../../services/navigation.service';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {AppService} from '../../services/app.service';
 
 @Component({
-  selector: 'dictation-list',
+  selector: 'app-dictation-list',
   templateUrl: 'dictation-list.html',
   styleUrls: ['dictation-list.scss'],
   animations: [
@@ -33,6 +33,15 @@ export class DictationListComponent implements OnChanges {
   page: number;
   showOlder: boolean;
   state = 'center';
+
+  get DictationSource() { return Dictations.Source; }
+  get source() {
+    if (this.dictations === undefined || this.dictations.length < 1) {
+      return Dictations.Source.FillIn;
+    } else {
+      return this.dictations[0].source;
+    }
+  }
 
   constructor(
     public navService: NavigationService,

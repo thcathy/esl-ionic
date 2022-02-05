@@ -24,12 +24,12 @@ describe('MemberResolverService', () => {
 
 
   it('should be created', () => {
-    const service: MemberResolverService = TestBed.get(MemberResolverService);
+    const service: MemberResolverService = TestBed.inject(MemberResolverService);
     expect(service).toBeTruthy();
   });
 
   it('error in getProfile will open home page', (done: DoneFn) => {
-    const service: MemberResolverService = TestBed.get(MemberResolverService);
+    const service: MemberResolverService = TestBed.inject(MemberResolverService);
     service.resolve(null, null).subscribe();
     expect(navigationServiceSpy.openHomePage.calls.count()).toBe(1);
     done();
