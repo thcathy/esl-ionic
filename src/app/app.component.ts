@@ -111,6 +111,7 @@ export class AppComponent {
           this.navigationService.navigate(match.$link.path, match.$args);
         },
         (nomatch) => {
+          this.setupDeepLinks();
           if (nomatch.$link.url.includes('com.esl.ionic://thcathy.auth0.com/cordova/com.esl.ionic/callback')) {
             console.log(`auth0 redirect`);
             Auth0Cordova.onRedirectUri(nomatch.$link.url);

@@ -1,10 +1,11 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title *ngIf="selectedVocabs?.size == 0">{{ 'Click on vocabulary for review' | translate }}</ion-title>
-    <ion-button *ngIf="selectedVocabs?.size > 0" fill="clear" (click)="clearSelected()" slot="start"><fa-icon icon="trash"></fa-icon></ion-button>
-    <ion-title *ngIf="selectedVocabs?.size > 0">{{ 'SelectedVocabulary' | translate:{number: selectedVocabs.size} }}</ion-title>
-    <ion-button (click)="createExercise()" slot="end"><fa-icon [icon]="['fas', 'edit']"></fa-icon>&nbsp;{{ 'Create' | translate }}</ion-button>
-    <ion-button fill="clear" slot="end"  (click)="this.modalController.dismiss()"><fa-icon [icon]="['fas', 'times']"></fa-icon></ion-button>
+    <ion-button fill="clear" slot="start" (click)="this.modalController.dismiss()"><fa-icon [icon]="['fas', 'times']"></fa-icon></ion-button>
+
+    <ion-title>{{ 'SelectedVocabulary' | translate:{number: selectedVocabs.size} }}</ion-title>
+
+    <ion-button fill="clear" slot="end" (click)="createExercise()" *ngIf="selectedVocabs?.size > 0"><fa-icon [icon]="['fas', 'check']"></fa-icon></ion-button>
+
   </ion-toolbar>
 </ion-header>
 <ion-content style="height: 100%">
