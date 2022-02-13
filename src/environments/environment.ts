@@ -10,6 +10,7 @@ export const environment = {
     level: NgxLoggerLevel.INFO,
   },
   apiHost: 'https://homeserver.funfunspell.com/esl-rest',
+  staticHost: 'https://friendlyeats-7fa2f.web.app',
   maxSentenceLength: 40,
   learntVocabularyMinimumCorrect: 5,
   vocabPracticeQuestions: 3,
