@@ -147,10 +147,11 @@ export const DictationServiceSpy = () => jasmine.createSpyObj('DictationService'
 );
 
 export const VocabPracticeServiceSpy = () => {
-  const spy = jasmine.createSpyObj('VocabPracticeService', ['saveHistory', 'generatePractice', 'getQuestion']);
+  const spy = jasmine.createSpyObj('VocabPracticeService', ['saveHistory', 'generatePractice', 'getQuestion', 'getImages']);
   spy.saveHistory.and.returnValue(Observable.of(''));
   spy.generatePractice.and.returnValue(Observable.of(''));
-  spy. getQuestion.and.returnValue(Observable.of(vocab_apple));
+  spy.getQuestion.and.returnValue(Observable.of(vocab_apple));
+  spy.getImages.and.callFake((param) => Observable.of(param));
   return spy;
 };
 

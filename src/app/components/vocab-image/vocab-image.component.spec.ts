@@ -31,10 +31,6 @@ describe('VocabImageComponent', () => {
     component.images = [];
     component.ngOnChanges(null);
     expect(component.imageBase64).toEqual(defaultImage[0]);
-
-    component.images = ['dummy', 'dummy'];
-    component.ngOnChanges(null);
-    expect(component.imageBase64).toEqual(defaultImage[0]);
   });
 
 });
