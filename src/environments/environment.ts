@@ -3,16 +3,15 @@
 // `ng build --env=prod` then `environment.prod.ts` will be used instead.
 // The list of which env maps to which file can be found in `.angular-cli.json`.
 import {NgxLoggerLevel} from 'ngx-logger';
+import {baseEnv} from './base-env';
 
 export const environment = {
+  ...baseEnv,
   production: false,
   logging: {
     level: NgxLoggerLevel.INFO,
   },
   apiHost: 'https://homeserver.funfunspell.com/esl-rest',
-  maxSentenceLength: 40,
-  learntVocabularyMinimumCorrect: 5,
-  vocabPracticeQuestions: 3,
 };
 
 /*

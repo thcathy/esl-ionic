@@ -32,6 +32,7 @@ import { Deeplinks } from '@ionic-native/deeplinks/ngx';
 import {FontAwesomeTestingModule} from '@fortawesome/angular-fontawesome/testing';
 import {FontAwesomeIconsModule} from '../app/fontawesome-icons.module';
 import {DictationHelper} from '../app/services/dictation/dictation-helper.service';
+import {PipesModule} from '../app/pipes/pipes.module';
 
 @NgModule({
   imports:      [
@@ -42,14 +43,14 @@ import {DictationHelper} from '../app/services/dictation/dictation-helper.servic
     FormsModule, ReactiveFormsModule, NoopAnimationsModule,
     ComponentsModule,
     IonicModule.forRoot(),
-    FontAwesomeIconsModule,
+    FontAwesomeIconsModule, PipesModule,
   ],
   declarations: [ ],
   exports:      [
     CommonModule, FormsModule, ReactiveFormsModule, NoopAnimationsModule,
     TranslateModule, IonicModule,
     ComponentsModule,
-    FontAwesomeIconsModule,
+    FontAwesomeIconsModule, PipesModule,
   ]
 })
 export class SharedTestModule {

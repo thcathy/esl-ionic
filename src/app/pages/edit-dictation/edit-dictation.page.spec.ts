@@ -195,7 +195,7 @@ describe('EditDictationPage', () => {
           const dictation = navigationServiceSpy.startDictation.calls.mostRecent().args[0] as Dictation;
           expect(dictation.sentenceLength).toEqual('Short');
           expect(dictation.article).toEqual('This is a article.');
-          expect(dictation.source).toEqual(Dictations.Source.Generate);
+          expect(dictation.source).toEqual(Dictations.Source.FillIn);
         }));
 
         it('start instant dictation by single word will navigate to start dictation page', fakeAsync(() => {
@@ -219,7 +219,7 @@ describe('EditDictationPage', () => {
           expect(dictation.vocabs[1].word).toEqual('banana');
           expect(dictation.vocabs[2].word).toEqual('cup');
           expect(dictation.options.practiceType).toEqual(VocabPracticeType.Puzzle);
-          expect(dictation.source).toEqual(Dictations.Source.Generate);
+          expect(dictation.source).toEqual(Dictations.Source.FillIn);
 
           component.question.setValue(` apple , banana,cup`);
           component.wordContainSpace.setValue(false);

@@ -1,5 +1,8 @@
 import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {animate, state, style, transition, trigger} from '@angular/animations';
+import {defaultImage} from '../../entity/dictation';
+import {CollectionUtils} from '../../utils/collection-utils';
+import {DictationUtils} from '../../utils/dictation-utils';
 
 @Component({
   selector: 'vocab-image',
@@ -29,6 +32,10 @@ export class VocabImageComponent implements OnChanges {
   }
 
   ngOnChanges(_changes: SimpleChanges) {
+    if (DictationUtils.notValidImages(this.images)) {
+      this.images = defaultImage;
+    }
+    this.images = CollectionUtils.shuffle(this.images);
     this.index = 0;
     this.imageBase64 = this.images[0];
   }

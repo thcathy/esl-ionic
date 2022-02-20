@@ -34,6 +34,8 @@ describe('VocabSelectionComponent', () => {
   }));
 
   it('createExercise will call createOrAmendDictation', fakeAsync(() => {
+    const memberVocab = memberVocabularyMember1Apple();
+    component.selectedVocabs.set(memberVocab.id.word, memberVocab);
     component.createExercise();
     tick();
     const request: EditDictationRequest = memberDictationServiceSpy.createOrAmendDictation.calls.mostRecent().args[0];

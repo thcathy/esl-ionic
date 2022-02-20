@@ -13,7 +13,7 @@ import {NGXLogger} from 'ngx-logger';
 import {VirtualKeyboardEvent} from '../../components/virtual-keyboard/virtual-keyboard';
 import {VocabPracticeType} from '../../enum/vocab-practice-type.enum';
 import {from, Subject} from 'rxjs';
-import {map, mergeAll} from 'rxjs/operators';
+import {flatMap} from 'rxjs/operators';
 
 @Component({
   selector: 'app-dictation-practice',
@@ -73,8 +73,8 @@ export class DictationPracticePage implements OnInit {
     this.phonics = 'Phonetic';
     from(this.dictation.vocabs)
       .pipe(
-        map(vocab => this.vocabPracticeService.getQuestion(vocab.word, this.dictation.showImage)),
-        mergeAll()
+          flatMap(vocab => this.vocabPracticeService.getQuestion(vocab.word, this.dictation.showImage)),
+          flatMap(vocabPractice => this.vocabPracticeService.getImages(vocabPractice))
       ).subscribe(p => this.receiveVocabPractice(p));
   }
 

@@ -1,0 +1,36 @@
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+
+import {SharedTestModule} from '../../../testing/shared-test.module';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {VocabImageComponent} from './vocab-image';
+import {defaultImage} from '../../entity/dictation';
+
+describe('VocabImageComponent', () => {
+  let component: VocabImageComponent;
+  let fixture: ComponentFixture<VocabImageComponent>;
+
+  beforeEach(async(() => {
+    TestBed.configureTestingModule({
+      declarations: [ VocabImageComponent ],
+      imports: [
+        SharedTestModule.forRoot(),
+        NoopAnimationsModule,
+      ],
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(VocabImageComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  }));
+
+  it('default image if no images input', () => {
+    component.images = null;
+    component.ngOnChanges(null);
+    expect(component.imageBase64).toEqual(defaultImage[0]);
+
+    component.images = [];
+    component.ngOnChanges(null);
+    expect(component.imageBase64).toEqual(defaultImage[0]);
+  });
+
+});

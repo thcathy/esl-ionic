@@ -10,6 +10,8 @@ import {VocabPracticeHistory} from '../../entity/vocab-practice-history';
 import {MemberVocabulary} from '../../entity/member-vocabulary';
 import {Vocab} from '../../entity/vocab';
 import {DictationUtils} from '../../utils/dictation-utils';
+import {catchError, map} from 'rxjs/operators';
+import {of} from 'rxjs';
 
 export interface CreateDictationHistoryRequest {
   dictationId?: number;
@@ -27,12 +29,29 @@ export class VocabPracticeService extends Service {
   private generatePracticeUrl = environment.apiHost + '/vocab/practice/generate/';
   private saveHistoryUrl = environment.apiHost + '/member/vocab/practice/history/save/v2';
   private getAllHistoryUrl = environment.apiHost + '/member/vocab/practice/history/getall';
+  private staticImageUrl = environment.staticHost + '/images/';
 
   getQuestion(word: string, showImage: boolean): Observable<VocabPractice> {
     let params = new HttpParams();
-    params = params.append('image', showImage.toString());
+    params = params.append('image', showImage.toString()).append('includeBase64Image', 'false');
 
     return this.http.get<VocabPractice>(this.getQuestionUrl + word,  {params: params});
+  }
+
+  getImages(vocabPractice: VocabPractice): Observable<VocabPractice> {
+    console.log(`picsFullPaths from server: ${vocabPractice.picsFullPaths}`);
+    if (!DictationUtils.notValidImages(vocabPractice.picsFullPaths)) {
+      return of(vocabPractice);
+    } else {
+      return this.http.get<string[]>(`${this.staticImageUrl}${vocabPractice.word.toLowerCase()}.json`)
+        .pipe(
+          map(images => {
+            vocabPractice.picsFullPaths = images;
+            return vocabPractice;
+          }),
+          catchError(error => of(vocabPractice))
+        );
+    }
   }
 
   isWordEqual(word: string, input: string, includeSpace: boolean = false): boolean {
