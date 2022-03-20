@@ -5,9 +5,10 @@ import {
   HttpEvent,
   HttpInterceptor
 } from '@angular/common/http';
-import {Observable} from 'rxjs/Rx'
-import {Storage} from "@ionic/storage";
+import {Observable} from 'rxjs/Rx';
+import {Storage} from '@ionic/storage';
 import 'rxjs/add/observable/fromPromise';
+import {environment} from '../../environments/environment';
 
 @Injectable()
 export class IdTokenInterceptor implements HttpInterceptor {
@@ -16,7 +17,7 @@ export class IdTokenInterceptor implements HttpInterceptor {
   ) {}
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    //return Observable.fromPromise(this.storage.get('id_token'))
+    // return Observable.fromPromise(this.storage.get('id_token'))
     //  .mergeMap((token: String) => {
     //    if (token != null) {
     //      request = request.clone({
@@ -26,17 +27,20 @@ export class IdTokenInterceptor implements HttpInterceptor {
     //    return next.handle(request);
     //  });
 
-    let idToken = localStorage.getItem('id_token');
+    const idToken = localStorage.getItem('id_token');
 
-    if (idToken) {
+    if (idToken && !this.isStaticHostRequest(request.url)) {
       request = request.clone({
         setHeaders: {
           Authorization: `Bearer ${idToken}`,
-          //UserId: 'google-oauth2|111915626940466766867'
         }
       });
     }
 
     return next.handle(request);
+  }
+
+  isStaticHostRequest(url: String) {
+    return url.indexOf(environment.staticHost) > -1;
   }
 }
