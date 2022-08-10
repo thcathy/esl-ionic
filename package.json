@@ -80,8 +80,7 @@
   },
   "devDependencies": {
     "@angular-builders/custom-webpack": "^9.0.0",
-    "@angular/cli": "^12.2.18",
-    "@angular/cdk": "^9.2.0",
+    "@angular/cli": "^12.2.18",    
     "@angular/compiler": "^12.2.16",
     "@angular/compiler-cli": "^12.2.16",
     "@angular/language-service": "12.2.16",
