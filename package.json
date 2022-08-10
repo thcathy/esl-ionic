@@ -27,7 +27,7 @@
     "@angular/platform-browser-dynamic": "^12.2.16",
     "@angular/router": "^12.2.16",
     "@angular/service-worker": "^12.2.16",
-    "@auth0/cordova": "^0.4.4",
+    "@auth0/cordova": "^0.4.4",    
     "@fortawesome/angular-fontawesome": "^0.10.2",
     "@fortawesome/fontawesome-svg-core": "^1.2.28",
     "@fortawesome/free-brands-svg-icons": "^5.13.0",
