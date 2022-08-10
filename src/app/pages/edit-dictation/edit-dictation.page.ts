@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
+import {AbstractControl, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
 import {Dictation, Dictations, SentenceLengthOptions, SuitableStudentOptions} from '../../entity/dictation';
 import {EditDictationRequest, MemberDictationService} from '../../services/dictation/member-dictation.service';
 import {NavigationService} from '../../services/navigation.service';
@@ -24,7 +24,7 @@ import Source = Dictations.Source;
   styleUrls: ['./edit-dictation.page.scss'],
 })
 export class EditDictationPage implements OnInit, CanComponentDeactivate {
-  inputForm: FormGroup;
+  inputForm: UntypedFormGroup;
   loader: any;
   dictation: Dictation;
   mode: EditDictationPageMode = EditDictationPageMode.Edit;
@@ -35,7 +35,7 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
   questions: string[];
 
   constructor(
-    public formBuilder: FormBuilder,
+    public formBuilder: UntypedFormBuilder,
     public memberDictationService: MemberDictationService,
     public navService: NavigationService,
     public authService: AuthService,
@@ -84,14 +84,14 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
     const controlsConfig = {};
     controlsConfig['showImage'] = true;
     controlsConfig['wordContainSpace'] = false;
-    controlsConfig['question'] = new FormControl('', [Validators.required]);
+    controlsConfig['question'] = new UntypedFormControl('', [Validators.required]);
     controlsConfig['type'] = DictationType.Word;
     controlsConfig['sentenceLength'] = 'Normal';
     controlsConfig['wordPracticeType'] = VocabPracticeType.Spell;
 
     if (this.mode === EditDictationPageMode.Edit) {
-      controlsConfig['title'] = new FormControl('', [Validators.required, Validators.minLength(5),  Validators.maxLength(50)]);
-      controlsConfig['description'] = new FormControl('', [Validators.maxLength(100)]);
+      controlsConfig['title'] = new UntypedFormControl('', [Validators.required, Validators.minLength(5),  Validators.maxLength(50)]);
+      controlsConfig['description'] = new UntypedFormControl('', [Validators.maxLength(100)]);
       controlsConfig['suitableStudent'] = 'Any';
     }
     this.inputForm = this.formBuilder.group(

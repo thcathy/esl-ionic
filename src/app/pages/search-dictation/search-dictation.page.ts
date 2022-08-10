@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
 import {Dictation, Dictations, SuitableStudentOptions} from '../../entity/dictation';
 import {TranslateService} from '@ngx-translate/core';
 import {DictationService} from '../../services/dictation/dictation.service';
@@ -21,7 +21,7 @@ export class SearchDictationPage implements OnInit {
   SEARCH_HISTORY_KEY = 'SEARCH_HISTORY_KEY';
   MAX_HISTORY = 10;
 
-  inputForm: FormGroup;
+  inputForm: UntypedFormGroup;
   moreOptions = false;
   results: Dictation[];
   suitableStudentOptions = SuitableStudentOptions;
@@ -31,7 +31,7 @@ export class SearchDictationPage implements OnInit {
   showHistory = false;
 
   constructor(
-    public formBuilder: FormBuilder,
+    public formBuilder: UntypedFormBuilder,
     public dictationService: DictationService,
     public translateService: TranslateService,
     public storage: Storage,
@@ -51,9 +51,9 @@ export class SearchDictationPage implements OnInit {
 
   createForm() {
     this.inputForm = this.formBuilder.group({
-      'keyword': new FormControl('', [Validators.pattern('.{3,}|[0-9]{1,}'), Validators.maxLength(50)]),
+      'keyword': new UntypedFormControl('', [Validators.pattern('.{3,}|[0-9]{1,}'), Validators.maxLength(50)]),
       'minDate': this.dateOptions[0],
-      'creator': new FormControl('', [Validators.minLength(3), Validators.maxLength(50)]),
+      'creator': new UntypedFormControl('', [Validators.minLength(3), Validators.maxLength(50)]),
       'suitableStudent': 'Any',
       'type': 'Any',
     });

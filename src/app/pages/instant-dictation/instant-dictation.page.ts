@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
 import {NavigationService} from '../../services/navigation.service';
 import {AlertController} from '@ionic/angular';
 import {Storage} from '@ionic/storage';
@@ -18,13 +18,13 @@ export class InstantDictationPage implements OnInit {
   private INSTANT_DICTATION_KEY = 'INSTANT_DICTATION_KEY';
 
   maxVocab = 20;
-  byWordInputForm: FormGroup;
-  bySentenceInputForm: FormGroup;
+  byWordInputForm: UntypedFormGroup;
+  bySentenceInputForm: UntypedFormGroup;
   type = 'byword';
   sentenceLengthOptions = SentenceLengthOptions;
 
   constructor(
-    public formBuilder: FormBuilder,
+    public formBuilder: UntypedFormBuilder,
     public navService: NavigationService,
     public storage: Storage,
     public alertController: AlertController,
@@ -48,18 +48,18 @@ export class InstantDictationPage implements OnInit {
 
     for (let i = 0; i < this.maxVocab; i++) {
       this.vocabs.push(this.formBuilder.group({
-        'word': new FormControl('', [Validators.pattern('([a-zA-Z \\-\']+)?')])
+        'word': new UntypedFormControl('', [Validators.pattern('([a-zA-Z \\-\']+)?')])
       }));
     }
 
     this.bySentenceInputForm = this.formBuilder.group({
-      article: new FormControl('', [Validators.required]),
+      article: new UntypedFormControl('', [Validators.required]),
       sentenceLength: 'Normal',
     });
   }
 
-  get vocabs(): FormArray {
-    return this.byWordInputForm.get('vocabs') as FormArray;
+  get vocabs(): UntypedFormArray {
+    return this.byWordInputForm.get('vocabs') as UntypedFormArray;
   }
 
   getFromLocalStorage() {

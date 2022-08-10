@@ -2,7 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import {MemberVocabulary} from '../../entity/member-vocabulary';
 import {Member} from '../../entity/member';
 import {Name} from '../../entity/name';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
 import {ModalController} from '@ionic/angular';
 import {EditDictationRequest, MemberDictationService} from '../../services/dictation/member-dictation.service';
 import {Dictation, Dictations} from '../../entity/dictation';
@@ -21,10 +21,10 @@ export class VocabSelectionComponent implements OnInit {
   showingVocabs: MemberVocabulary[] = [];
   selectedVocabs: Map<string, MemberVocabulary>;
 
-  inputForm: FormGroup;
+  inputForm: UntypedFormGroup;
 
   constructor(
-    public formBuilder: FormBuilder,
+    public formBuilder: UntypedFormBuilder,
     public modalController: ModalController,
     public memberDictationService: MemberDictationService,
     public translate: TranslateService,
@@ -37,7 +37,7 @@ export class VocabSelectionComponent implements OnInit {
 
   createAndSetupForm() {
     const controlsConfig = {};
-    controlsConfig['title'] = new FormControl('', [Validators.required, Validators.minLength(5),  Validators.maxLength(50)]);
+    controlsConfig['title'] = new UntypedFormControl('', [Validators.required, Validators.minLength(5),  Validators.maxLength(50)]);
     this.inputForm = this.formBuilder.group(controlsConfig);
     this.title.setValue(`My exercise ${new Date().toISOString().split('T')[0]}`);
   }

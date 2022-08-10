@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
 import {vocabDifficulties, VocabDifficulty} from '../../entity/voacb-practice';
 import {VocabPracticeService} from '../../services/practice/vocab-practice.service';
 import {NavigationService} from '../../services/navigation.service';
@@ -15,11 +15,11 @@ import {Storage} from '@ionic/storage';
 })
 export class VocabularyStarterPage implements OnInit {
   inputKey = 'VocabularyStarterPage.vocabularyStarterPageInput';
-  inputForm: FormGroup;
+  inputForm: UntypedFormGroup;
   vocabDifficulties: String[] = vocabDifficulties;
 
   constructor(
-    public formBuilder: FormBuilder,
+    public formBuilder: UntypedFormBuilder,
     public vocabPracticeService: VocabPracticeService,
     public navigationService: NavigationService,
     public route: ActivatedRoute,

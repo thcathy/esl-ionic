@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {TranslateService} from '@ngx-translate/core';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
 import {MemberService, UpdateMemberRequest} from '../../services/member/member.service';
 import {Member} from '../../entity/member';
 import {IonicComponentService} from '../../services/ionic-component.service';
@@ -15,12 +15,12 @@ import {ActivatedRoute} from '@angular/router';
   styleUrls: ['./account.page.scss'],
 })
 export class AccountPage implements OnInit, CanComponentDeactivate {
-  inputForm: FormGroup;
+  inputForm: UntypedFormGroup;
   member: Member;
 
   constructor(
     public memberService: MemberService,
-    public formBuilder: FormBuilder,
+    public formBuilder: UntypedFormBuilder,
     public translate: TranslateService,
     public ionicComponentService: IonicComponentService,
     public route: ActivatedRoute,
@@ -56,12 +56,12 @@ export class AccountPage implements OnInit, CanComponentDeactivate {
 
   createForm() {
     this.inputForm = this.formBuilder.group({
-      'firstName': new FormControl('', [Validators.maxLength(50)]),
-      'lastName': new FormControl('', [Validators.maxLength(50)]),
+      'firstName': new UntypedFormControl('', [Validators.maxLength(50)]),
+      'lastName': new UntypedFormControl('', [Validators.maxLength(50)]),
       'birthday': '',
-      'address': new FormControl('', [Validators.maxLength(200)]),
-      'phoneNumber': new FormControl('', [Validators.maxLength(20), Validators.pattern('^[0-9]*$')]),
-      'school': new FormControl('', [Validators.maxLength(100)]),
+      'address': new UntypedFormControl('', [Validators.maxLength(200)]),
+      'phoneNumber': new UntypedFormControl('', [Validators.maxLength(20), Validators.pattern('^[0-9]*$')]),
+      'school': new UntypedFormControl('', [Validators.maxLength(100)]),
     });
   }
 
