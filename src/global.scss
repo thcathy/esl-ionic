@@ -11,7 +11,7 @@
 @import "~@ionic/angular/css/flex-utils.css";
 @import "~@ionic/angular/css/display.css";
 
-@import '~ngx-sharebuttons/themes/modern/modern-dark-theme';
+@import "../node_modules/ngx-sharebuttons/themes/modern";
 
 .invisible {
   visibility: hidden !important;

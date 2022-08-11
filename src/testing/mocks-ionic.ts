@@ -1,4 +1,4 @@
-import {Observable} from 'rxjs';
+import {of} from 'rxjs';
 import {memberVocabularyMember1Apple, vocab_apple} from './test-data';
 
 
@@ -148,10 +148,10 @@ export const DictationServiceSpy = () => jasmine.createSpyObj('DictationService'
 
 export const VocabPracticeServiceSpy = () => {
   const spy = jasmine.createSpyObj('VocabPracticeService', ['saveHistory', 'generatePractice', 'getQuestion', 'getImages']);
-  spy.saveHistory.and.returnValue(Observable.of(''));
-  spy.generatePractice.and.returnValue(Observable.of(''));
-  spy.getQuestion.and.returnValue(Observable.of(vocab_apple));
-  spy.getImages.and.callFake((param) => Observable.of(param));
+  spy.saveHistory.and.returnValue(of(''));
+  spy.generatePractice.and.returnValue(of(''));
+  spy.getQuestion.and.returnValue(of(vocab_apple));
+  spy.getImages.and.callFake((param) => of(param));
   return spy;
 };
 
@@ -172,6 +172,6 @@ export const IonicComponentServiceSpy = () => jasmine.createSpyObj('IonicCompone
 
 export const MemberDictationServiceSpy = () => {
   const spy = jasmine.createSpyObj('MemberDictationService', ['createOrAmendDictation']);
-  spy.createOrAmendDictation.and.returnValue(Observable.of());
+  spy.createOrAmendDictation.and.returnValue(of());
   return spy;
 };

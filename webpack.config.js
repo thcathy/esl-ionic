@@ -1,5 +1,7 @@
 module.exports = {
-  node: {
-    crypto: true
+  resolve: {
+    fallback: {
+      crypto: false
+    }
   }
 };

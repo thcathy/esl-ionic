@@ -11,7 +11,7 @@ import { LoggerModule} from 'ngx-logger';
 import { FontAwesomeIconsModule } from './fontawesome-icons.module';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
-import {IonicStorageModule} from '@ionic/storage';
+import { IonicStorageModule } from '@ionic/storage-angular';
 import {ComponentsModule} from './components/components.module';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {CommonModule} from '@angular/common';
@@ -61,7 +61,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     ShareButtonsModule.withConfig({
       debug: true
     }),
-    ShareIconsModule.forRoot(),
+    ShareIconsModule,
     PipesModule, ComponentsModule,
     TranslateModule.forRoot({
       loader: {

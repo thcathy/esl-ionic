@@ -5,9 +5,8 @@ import {
   HttpEvent,
   HttpInterceptor
 } from '@angular/common/http';
-import {Observable} from 'rxjs/Rx';
+import {Observable} from 'rxjs';
 import {Storage} from '@ionic/storage';
-import 'rxjs/add/observable/fromPromise';
 import {environment} from '../../environments/environment';
 
 @Injectable()

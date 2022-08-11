@@ -50,7 +50,7 @@ import {ReactiveFormsModule} from '@angular/forms';
     ShareButtonsModule.withConfig({
       debug: true
     }),
-    ShareIconsModule.forRoot()
+    ShareIconsModule
   ],
     exports: [MemberScoreRankingComponent,
         DictationStatisticsComponent,
