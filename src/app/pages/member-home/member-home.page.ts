@@ -10,7 +10,6 @@ import {ManageVocabHistoryService} from '../../services/member/manage-vocab-hist
 import {NavigationService} from '../../services/navigation.service';
 import {ActivatedRoute} from '@angular/router';
 import {NGXLogger} from 'ngx-logger';
-import 'rxjs-compat/add/operator/finally';
 import {finalize} from 'rxjs/operators';
 import {ModalController} from '@ionic/angular';
 import {VocabSelectionComponent} from '../../components/vocab-selection/vocab-selection.component';
