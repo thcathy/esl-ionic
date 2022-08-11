@@ -3,9 +3,9 @@ import {Service} from '../root.service';
 import {environment} from '../../../environments/environment';
 import {Dictation} from '../../entity/dictation';
 import {MemberVocabulary} from '../../entity/member-vocabulary';
-import {Storage} from '@ionic/storage';
 import {VocabPracticeService} from '../practice/vocab-practice.service';
 import {CollectionUtils} from '../../utils/collection-utils';
+import { StorageService } from '../storage.service';
 
 @Injectable({ providedIn: 'root' })
 export class ManageVocabHistoryService extends Service {
@@ -16,12 +16,12 @@ export class ManageVocabHistoryService extends Service {
 
   constructor (
     private vocabPracticeService: VocabPracticeService,
-    private storage: Storage,
+    private storage: StorageService,
   ) {
     super();
-    this.storage.get(this.MEMBER_VOCABULARIES_KEY).then(list => {
-      if (list != null) { this.classifyVocabulary(list); }
-    });
+    // this.storage.get(this.MEMBER_VOCABULARIES_KEY).then(list => {
+    //   if (list != null) { this.classifyVocabulary(list); }
+    // });
   }
 
   public classifyVocabulary(vocabularies: MemberVocabulary[]) {

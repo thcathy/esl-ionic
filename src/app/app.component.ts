@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 
 import { Platform } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
@@ -7,7 +7,6 @@ import { GoogleAnalytics } from '@ionic-native/google-analytics/ngx';
 import {NavigationEnd, Router} from '@angular/router';
 import {AuthService} from './services/auth.service';
 import {TranslateService} from '@ngx-translate/core';
-import { Storage } from '@ionic/storage';
 
 import Auth0Cordova from '@auth0/cordova';
 import {NavigationService} from './services/navigation.service';
@@ -15,6 +14,7 @@ import {AppService} from './services/app.service';
 import {NGXLogger} from 'ngx-logger';
 import {Deeplinks} from '@ionic-native/deeplinks/ngx';
 import {DictationViewPage} from './pages/dictation-view/dictation-view.page';
+import {StorageService} from './services/storage.service';
 
 declare let ga: Function;
 
@@ -33,7 +33,7 @@ export class AppComponent {
     public authService: AuthService,
     public translate: TranslateService,
     public navigationService: NavigationService,
-    public storage: Storage,
+    public storage: StorageService,
     public appService: AppService,
     public googleAnalytics: GoogleAnalytics,
     public deeplinks: Deeplinks,
@@ -41,7 +41,7 @@ export class AppComponent {
   ) {
     this.authService.handleAuthentication();
     this.initializeApp();
-    this.initLanguage();
+
   }
 
   initializeApp() {
@@ -50,7 +50,7 @@ export class AppComponent {
       this.splashScreen.hide();
       this.setupGoogleAnalytics();
       this.setupDeepLinks();
-
+      this.initLanguage();
       // (window as any).handleOpenURL = (url) => {
       //  this.log.info(`url: ${url}`);
       //  Auth0Cordova.onRedirectUri(url);

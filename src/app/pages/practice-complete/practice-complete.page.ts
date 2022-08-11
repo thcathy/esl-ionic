@@ -5,13 +5,13 @@ import {NavigationService} from '../../services/navigation.service';
 import {DictationService} from '../../services/dictation/dictation.service';
 import {TranslateService} from '@ngx-translate/core';
 import {IonicComponentService} from '../../services/ionic-component.service';
-import {Storage} from '@ionic/storage';
 import {AuthService} from '../../services/auth.service';
 import {VocabPracticeService} from '../../services/practice/vocab-practice.service';
 import {ManageVocabHistoryService} from '../../services/member/manage-vocab-history.service';
 import {NGXLogger} from 'ngx-logger';
 import {VocabPracticeType} from '../../enum/vocab-practice-type.enum';
 import {DictationHelper} from '../../services/dictation/dictation-helper.service';
+import { StorageService } from '../../services/storage.service';
 
 @Component({
   selector: 'app-practice-complete',
@@ -36,7 +36,7 @@ export class PracticeCompletePage implements OnInit {
     public translate: TranslateService,
     public translateService: TranslateService,
     public ionicComponentService: IonicComponentService,
-    public storage: Storage,
+    public storage: StorageService,
     public navigationService: NavigationService,
     public authService: AuthService,
     public manageVocabHistoryService: ManageVocabHistoryService,

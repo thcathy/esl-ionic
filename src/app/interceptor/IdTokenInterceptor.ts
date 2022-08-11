@@ -6,14 +6,12 @@ import {
   HttpInterceptor
 } from '@angular/common/http';
 import {Observable} from 'rxjs';
-import {Storage} from '@ionic/storage';
 import {environment} from '../../environments/environment';
 
 @Injectable()
 export class IdTokenInterceptor implements HttpInterceptor {
 
-  constructor(public storage: Storage
-  ) {}
+  constructor() {}
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     // return Observable.fromPromise(this.storage.get('id_token'))

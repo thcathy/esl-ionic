@@ -3,7 +3,7 @@ import {async, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/t
 
 import {DictationPracticePage} from './dictation-practice.page';
 import {SharedTestModule} from '../../../testing/shared-test.module';
-import {Storage} from '@ionic/storage';
+import {Storage} from '@ionic/storage-angular';
 import {NavigationServiceSpy, StorageSpy, VocabPracticeServiceSpy} from '../../../testing/mocks-ionic';
 import {dictation2_vocabDictation} from '../../../testing/test-data';
 import {VocabPracticeType} from '../../enum/vocab-practice-type.enum';

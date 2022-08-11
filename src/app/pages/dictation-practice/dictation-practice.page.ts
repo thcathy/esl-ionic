@@ -6,7 +6,6 @@ import {DictationService} from '../../services/dictation/dictation.service';
 import {VocabPracticeService} from '../../services/practice/vocab-practice.service';
 import {SpeechService} from '../../services/speech.service';
 import {IonicComponentService} from '../../services/ionic-component.service';
-import {Storage} from '@ionic/storage';
 import {NavigationService} from '../../services/navigation.service';
 import {ActivatedRoute} from '@angular/router';
 import {NGXLogger} from 'ngx-logger';
@@ -14,6 +13,7 @@ import {VirtualKeyboardEvent} from '../../components/virtual-keyboard/virtual-ke
 import {VocabPracticeType} from '../../enum/vocab-practice-type.enum';
 import {from, Subject} from 'rxjs';
 import {flatMap} from 'rxjs/operators';
+import { StorageService } from '../../services/storage.service';
 
 @Component({
   selector: 'app-dictation-practice',
@@ -43,7 +43,7 @@ export class DictationPracticePage implements OnInit {
     public speechService: SpeechService,
     public navigationService: NavigationService,
     public ionicComponentService: IonicComponentService,
-    public storage: Storage,
+    public storage: StorageService,
     private log: NGXLogger,
   ) { }
 

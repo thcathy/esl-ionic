@@ -1,6 +1,5 @@
 import {async, fakeAsync, TestBed, tick} from '@angular/core/testing';
 import {ManageVocabHistoryService} from './manage-vocab-history.service';
-import {Storage} from '@ionic/storage';
 import {VocabPracticeService} from '../practice/vocab-practice.service';
 import {
   memberVocabularyMember1Apple,
@@ -10,10 +9,11 @@ import {
 import {Observable} from 'rxjs';
 import 'rxjs-compat/add/observable/of';
 import {MemberVocabulary} from '../../entity/member-vocabulary';
+import { StorageService } from '../storage.service';
 
 describe('ManageVocabHistoryService', () => {
   let service: ManageVocabHistoryService;
-  let storageSpy: Storage;
+  let storageSpy: StorageService;
   let vocabPracticeServiceSpy: VocabPracticeService;
 
   beforeEach(async(() => {

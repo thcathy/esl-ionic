@@ -4,10 +4,10 @@ import {SentenceHistory} from '../../entity/sentence-history';
 import {ArticleDictationService} from '../../services/dictation/article-dictation.service';
 import {SpeechService} from '../../services/speech.service';
 import {NavigationService} from '../../services/navigation.service';
-import {Storage} from '@ionic/storage';
 import {NGXLogger} from 'ngx-logger';
 import {UIOptionsService} from '../../services/ui-options.service';
 import {VirtualKeyboardEvent} from '../../components/virtual-keyboard/virtual-keyboard';
+import { StorageService } from '../../services/storage.service';
 
 @Component({
   selector: 'app-article-dictation',
@@ -27,7 +27,7 @@ export class ArticleDictationPage implements OnInit {
   constructor(
     public articleDictationService: ArticleDictationService,
     public speechService: SpeechService,
-    public storage: Storage,
+    public storage: StorageService,
     public navigationService: NavigationService,
     private log: NGXLogger,
   ) {}

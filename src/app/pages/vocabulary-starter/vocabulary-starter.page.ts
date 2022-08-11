@@ -6,7 +6,7 @@ import {NavigationService} from '../../services/navigation.service';
 import {ActivatedRoute} from '@angular/router';
 import {AuthService} from '../../services/auth.service';
 import {VocabPracticeType} from '../../enum/vocab-practice-type.enum';
-import {Storage} from '@ionic/storage';
+import { StorageService } from '../../services/storage.service';
 
 @Component({
   selector: 'app-vocabulary-starter',
@@ -24,7 +24,7 @@ export class VocabularyStarterPage implements OnInit {
     public navigationService: NavigationService,
     public route: ActivatedRoute,
     public authService: AuthService,
-    public storage: Storage,
+    public storage: StorageService,
   ) { }
 
   ngOnInit() {

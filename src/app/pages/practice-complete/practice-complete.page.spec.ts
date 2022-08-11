@@ -5,7 +5,7 @@ import {PracticeCompletePage, PracticeCompletePageInput} from './practice-comple
 import {dictation1, TestData} from '../../../testing/test-data';
 import {DictationService} from '../../services/dictation/dictation.service';
 import {AuthServiceSpy, DictationServiceSpy, IonicComponentServiceSpy, ManageVocabHistoryServiceSpy, NavigationServiceSpy, StorageSpy, VocabPracticeServiceSpy,} from '../../../testing/mocks-ionic';
-import {Storage} from '@ionic/storage';
+import {Storage} from '@ionic/storage-angular';
 import 'rxjs-compat/add/observable/of';
 import {SharedTestModule} from '../../../testing/shared-test.module';
 import {AuthService} from '../../services/auth.service';

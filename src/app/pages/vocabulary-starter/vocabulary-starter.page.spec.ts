@@ -7,7 +7,7 @@ import {ActivatedRoute} from '@angular/router';
 import {Observable} from 'rxjs';
 import {StorageSpy, VocabPracticeServiceSpy} from '../../../testing/mocks-ionic';
 import {VocabPracticeService} from '../../services/practice/vocab-practice.service';
-import {Storage} from '@ionic/storage';
+import {Storage} from '@ionic/storage-angular';
 import {VocabDifficulty} from '../../entity/voacb-practice';
 import {VocabPracticeType} from '../../enum/vocab-practice-type.enum';
 import {dictation1} from '../../../testing/test-data';

@@ -3,12 +3,12 @@ import {Injectable} from '@angular/core';
 import {Dictation} from '../entity/dictation';
 import {DictationService} from './dictation/dictation.service';
 import {NavigationExtras, Router} from '@angular/router';
-import {Storage} from '@ionic/storage';
 import {SentenceHistory} from '../entity/sentence-history';
 import {Location} from '@angular/common';
 import {TranslateService} from '@ngx-translate/core';
 import {EditDictationPageMode} from '../pages/edit-dictation/edit-dictation-page-enum';
 import {PracticeCompletePageInput} from '../pages/practice-complete/practice-complete.page';
+import { StorageService } from './storage.service';
 
 export interface NavigationRequest {
   destination: any;
@@ -35,7 +35,7 @@ export class NavigationService {
 
   constructor(private router: Router,
               private location: Location,
-              private storage: Storage,
+              private storage: StorageService,
               private dictationService: DictationService,
               private translate: TranslateService) {}
 

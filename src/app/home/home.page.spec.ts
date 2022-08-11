@@ -5,7 +5,7 @@ import { HomePage } from './home.page';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {RouterTestingModule} from '@angular/router/testing';
 import {TranslateModule} from '@ngx-translate/core';
-import {Storage} from '@ionic/storage';
+import {Storage} from '@ionic/storage-angular';
 import {AlertController, Platform} from '@ionic/angular';
 import {SplashScreen} from '@ionic-native/splash-screen/ngx';
 import {StatusBar} from '@ionic-native/status-bar/ngx';

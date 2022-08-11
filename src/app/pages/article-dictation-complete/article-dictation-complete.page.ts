@@ -4,9 +4,9 @@ import {SentenceHistory} from "../../entity/sentence-history";
 import {DictationService} from "../../services/dictation/dictation.service";
 import {NavigationService} from "../../services/navigation.service";
 import {TranslateService} from "@ngx-translate/core";
-import {Storage} from "@ionic/storage";
 import {ActivatedRoute} from "@angular/router";
 import {IonicComponentService} from "../../services/ionic-component.service";
+import { StorageService } from '../../services/storage.service';
 
 @Component({
   selector: 'app-article-dictation-complete',
@@ -31,7 +31,7 @@ export class ArticleDictationCompletePage implements OnInit {
     public translate: TranslateService,
     public translateService: TranslateService,
     public ionicComponentService: IonicComponentService,
-    public storage: Storage,
+    public storage: StorageService,
   ) { }
 
   ngOnInit() {}

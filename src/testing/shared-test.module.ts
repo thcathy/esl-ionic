@@ -13,7 +13,7 @@ import {RouterTestingModule} from '@angular/router/testing';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {StatusBar} from '@ionic-native/status-bar/ngx';
 import {SplashScreen} from '@ionic-native/splash-screen/ngx';
-import {Storage} from '@ionic/storage';
+
 import {
   AlertControllerSpy, GoogleAnalyticsSpy, LoadingControllerSpy, NavigationServiceSpy, NGXLoggerSpy,
   SplashScreenSpy,
@@ -33,6 +33,7 @@ import {FontAwesomeTestingModule} from '@fortawesome/angular-fontawesome/testing
 import {FontAwesomeIconsModule} from '../app/fontawesome-icons.module';
 import {DictationHelper} from '../app/services/dictation/dictation-helper.service';
 import {PipesModule} from '../app/pipes/pipes.module';
+import { StorageService } from '../app/services/storage.service';
 
 @NgModule({
   imports:      [
@@ -60,7 +61,7 @@ export class SharedTestModule {
       providers: [
         { provide: StatusBar, useValue: StatusBarSpy() },
         { provide: SplashScreen, useValue: SplashScreenSpy() },
-        { provide: Storage, useValue: StorageSpy() },
+        { provide: StorageService, useValue: StorageSpy() },
         { provide: AlertController, useValue: AlertControllerSpy()},
         { provide: LoadingController, useValue: LoadingControllerSpy()},
         { provide: ToastController, useValue: ToastControllerSpy()},

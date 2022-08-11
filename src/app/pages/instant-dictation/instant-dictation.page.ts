@@ -2,12 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import {UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
 import {NavigationService} from '../../services/navigation.service';
 import {AlertController} from '@ionic/angular';
-import {Storage} from '@ionic/storage';
 import {TranslateService} from '@ngx-translate/core';
 import {DictationService} from '../../services/dictation/dictation.service';
 import {Dictation, SentenceLengthOptions} from '../../entity/dictation';
 import {Vocab} from '../../entity/vocab';
 import {ValidationUtils} from '../../utils/validation-utils';
+import { StorageService } from '../../services/storage.service';
 
 @Component({
   selector: 'app-instant-dictation',
@@ -26,7 +26,7 @@ export class InstantDictationPage implements OnInit {
   constructor(
     public formBuilder: UntypedFormBuilder,
     public navService: NavigationService,
-    public storage: Storage,
+    public storage: StorageService,
     public alertController: AlertController,
     public translate: TranslateService,
     public dictationService: DictationService,

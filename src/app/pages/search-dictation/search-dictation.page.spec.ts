@@ -4,7 +4,7 @@ import {async, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/t
 import { SearchDictationPage } from './search-dictation.page';
 import {SharedTestModule} from '../../../testing/shared-test.module';
 import {ManageVocabHistoryServiceSpy, StorageSpy} from '../../../testing/mocks-ionic';
-import {Storage} from '@ionic/storage';
+import {Storage} from '@ionic/storage-angular';
 import {ActivatedRoute, convertToParamMap} from '@angular/router';
 import {ManageVocabHistoryService} from '../../services/member/manage-vocab-history.service';
 

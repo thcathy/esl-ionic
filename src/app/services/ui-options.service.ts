@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {Storage} from '@ionic/storage';
+import { StorageService } from './storage.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +13,7 @@ export class UIOptionsService {
   };
 
   constructor(
-    private storage: Storage,
+    private storage: StorageService,
   ) { }
 
   loadOption(key: string): Promise<any> {

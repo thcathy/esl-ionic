@@ -2,7 +2,6 @@ import {Injectable, NgZone} from '@angular/core';
 import Auth0Cordova from '@auth0/cordova';
 import Auth0 from 'auth0-js';
 import {AppService} from './app.service';
-import {Storage} from '@ionic/storage';
 import {TranslateService} from '@ngx-translate/core';
 import * as auth0 from 'auth0-js';
 import {MemberService} from './member/member.service';
@@ -11,6 +10,7 @@ import {Router} from '@angular/router';
 import {ManageVocabHistoryService} from './member/manage-vocab-history.service';
 import {LoadingController} from '@ionic/angular';
 import {NGXLogger} from 'ngx-logger';
+import { StorageService } from './storage.service';
 
 export const tokenTimeoutSecond = 35000;
 export const auth0CordovaConfig = {
@@ -47,7 +47,7 @@ export class AuthService {
 
   constructor(public zone: NgZone,
               protected appService: AppService,
-              public storage: Storage,
+              public storage: StorageService,
               public translate: TranslateService,
               public memberService: MemberService,
               public navigationService: NavigationService,

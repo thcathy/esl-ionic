@@ -5,7 +5,7 @@ import { ArticleDictationCompletePage } from './article-dictation-complete.page'
 import {SharedTestModule} from '../../../testing/shared-test.module';
 import {dictation1, dictation1Histories} from '../../../testing/test-data';
 import {ManageVocabHistoryServiceSpy, StorageSpy} from '../../../testing/mocks-ionic';
-import {Storage} from '@ionic/storage';
+import {Storage} from '@ionic/storage-angular';
 import {DictationService} from '../../services/dictation/dictation.service';
 import {ActivatedRoute, convertToParamMap} from '@angular/router';
 import {ManageVocabHistoryService} from '../../services/member/manage-vocab-history.service';

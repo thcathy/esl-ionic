@@ -5,7 +5,7 @@ import {TranslateService} from '@ngx-translate/core';
 import {DictationService} from '../../services/dictation/dictation.service';
 import {ValidationUtils} from '../../utils/validation-utils';
 import {IonicComponentService} from '../../services/ionic-component.service';
-import {Storage} from '@ionic/storage';
+import { StorageService } from '../../services/storage.service';
 
 export interface DateSearchOption {
   option: string;
@@ -34,7 +34,7 @@ export class SearchDictationPage implements OnInit {
     public formBuilder: UntypedFormBuilder,
     public dictationService: DictationService,
     public translateService: TranslateService,
-    public storage: Storage,
+    public storage: StorageService,
     public ionicComponentService: IonicComponentService,
   ) { }
 
