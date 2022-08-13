@@ -1,18 +1,18 @@
-import {Component, OnInit} from '@angular/core';
-import {Dictation, PuzzleControls} from '../../entity/dictation';
-import {VocabPractice} from '../../entity/voacb-practice';
-import {VocabPracticeHistory} from '../../entity/vocab-practice-history';
-import {DictationService} from '../../services/dictation/dictation.service';
-import {VocabPracticeService} from '../../services/practice/vocab-practice.service';
-import {SpeechService} from '../../services/speech.service';
-import {IonicComponentService} from '../../services/ionic-component.service';
-import {NavigationService} from '../../services/navigation.service';
-import {ActivatedRoute} from '@angular/router';
-import {NGXLogger} from 'ngx-logger';
-import {VirtualKeyboardEvent} from '../../components/virtual-keyboard/virtual-keyboard';
-import {VocabPracticeType} from '../../enum/vocab-practice-type.enum';
-import {from, Subject} from 'rxjs';
-import {flatMap} from 'rxjs/operators';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { NGXLogger } from 'ngx-logger';
+import { from, of, Subject } from 'rxjs';
+import { mergeMap } from 'rxjs/operators';
+import { VirtualKeyboardEvent } from '../../components/virtual-keyboard/virtual-keyboard';
+import { Dictation, PuzzleControls } from '../../entity/dictation';
+import { VocabPractice } from '../../entity/voacb-practice';
+import { VocabPracticeHistory } from '../../entity/vocab-practice-history';
+import { VocabPracticeType } from '../../enum/vocab-practice-type.enum';
+import { DictationService } from '../../services/dictation/dictation.service';
+import { IonicComponentService } from '../../services/ionic-component.service';
+import { NavigationService } from '../../services/navigation.service';
+import { VocabPracticeService } from '../../services/practice/vocab-practice.service';
+import { SpeechService } from '../../services/speech.service';
 import { StorageService } from '../../services/storage.service';
 
 @Component({
@@ -73,8 +73,8 @@ export class DictationPracticePage implements OnInit {
     this.phonics = 'Phonetic';
     from(this.dictation.vocabs)
       .pipe(
-          flatMap(vocab => this.vocabPracticeService.getQuestion(vocab.word, this.dictation.showImage)),
-          flatMap(vocabPractice => this.vocabPracticeService.getImages(vocabPractice))
+          mergeMap(vocab => this.vocabPracticeService.getQuestion(vocab.word, this.dictation.showImage)),
+          mergeMap(vocabPractice => this.dictation.showImage ? this.vocabPracticeService.getImages(vocabPractice) : of(vocabPractice))
       ).subscribe(p => this.receiveVocabPractice(p));
   }
 
