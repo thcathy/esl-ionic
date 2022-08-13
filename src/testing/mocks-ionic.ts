@@ -112,7 +112,7 @@ export const NavigationServiceSpy = () => jasmine.createSpyObj('NavigationServic
 
 export const StorageSpy = () => {
   const storageSpy = jasmine.createSpyObj('StorageService', ['get', 'set', 'remove']);
-  storageSpy.get.and.callFake((param) => Promise.resolve());
+  storageSpy.get.and.callFake((param: any) => Promise.resolve());
   return storageSpy;
 };
 
@@ -151,7 +151,7 @@ export const VocabPracticeServiceSpy = () => {
   spy.saveHistory.and.returnValue(of(''));
   spy.generatePractice.and.returnValue(of(''));
   spy.getQuestion.and.returnValue(of(vocab_apple));
-  spy.getImages.and.callFake((param) => of(param));
+  spy.getImages.and.callFake((param: any) => of(param));
   return spy;
 };
 

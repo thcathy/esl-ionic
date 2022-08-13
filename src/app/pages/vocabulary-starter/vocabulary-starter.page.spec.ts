@@ -4,13 +4,14 @@ import {async, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/t
 import {VocabularyStarterPage, VocabularyStarterPageInput} from './vocabulary-starter.page';
 import {SharedTestModule} from '../../../testing/shared-test.module';
 import {ActivatedRoute} from '@angular/router';
-import {Observable} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {StorageSpy, VocabPracticeServiceSpy} from '../../../testing/mocks-ionic';
 import {VocabPracticeService} from '../../services/practice/vocab-practice.service';
 import {Storage} from '@ionic/storage-angular';
 import {VocabDifficulty} from '../../entity/voacb-practice';
 import {VocabPracticeType} from '../../enum/vocab-practice-type.enum';
 import {dictation1} from '../../../testing/test-data';
+import { StorageService } from '../../services/storage.service';
 
 describe('VocabularyStarterPage', () => {
   let component: VocabularyStarterPage;
@@ -22,7 +23,7 @@ describe('VocabularyStarterPage', () => {
     vocabPracticeServiceSpy = VocabPracticeServiceSpy();
     storageSpy = StorageSpy();
     route = new ActivatedRoute();
-    route.params = Observable.of();
+    route.params = of();
 
     TestBed.configureTestingModule({
       declarations: [ VocabularyStarterPage ],
@@ -33,7 +34,7 @@ describe('VocabularyStarterPage', () => {
       providers: [
         { provide: ActivatedRoute, useValue: route },
         { provide: VocabPracticeService, useValue: vocabPracticeServiceSpy},
-        { provide: Storage, useValue: storageSpy },
+        { provide: StorageService, useValue: storageSpy },
       ],
     })
     .compileComponents();
@@ -43,7 +44,7 @@ describe('VocabularyStarterPage', () => {
     fixture = TestBed.createComponent(VocabularyStarterPage);
     component = fixture.componentInstance;
     fixture.detectChanges();
-    vocabPracticeServiceSpy.generatePractice.and.returnValue(Observable.of(dictation1));
+    vocabPracticeServiceSpy.generatePractice.and.returnValue(of(dictation1));
   });
 
   it('input are stored when submit and load when enter page', fakeAsync(() => {

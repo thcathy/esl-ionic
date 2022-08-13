@@ -3,12 +3,12 @@ import {async, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/t
 
 import {DictationPracticePage} from './dictation-practice.page';
 import {SharedTestModule} from '../../../testing/shared-test.module';
-import {Storage} from '@ionic/storage-angular';
 import {NavigationServiceSpy, StorageSpy, VocabPracticeServiceSpy} from '../../../testing/mocks-ionic';
 import {dictation2_vocabDictation} from '../../../testing/test-data';
 import {VocabPracticeType} from '../../enum/vocab-practice-type.enum';
 import {NavigationService} from '../../services/navigation.service';
 import {VocabPracticeService} from '../../services/practice/vocab-practice.service';
+import { StorageService } from '../../services/storage.service';
 
 describe('DictationPracticePage', () => {
   let component: DictationPracticePage;
@@ -26,7 +26,7 @@ describe('DictationPracticePage', () => {
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [
-        { provide: Storage, useValue: storageSpy },
+        { provide: StorageService, useValue: storageSpy },
         { provide: NavigationService, useValue: navigationServiceSpy },
         { provide: VocabPracticeService, useValue: VocabPracticeServiceSpy() },
       ],
@@ -45,7 +45,7 @@ describe('DictationPracticePage', () => {
       const dictation = dictation2_vocabDictation;
       dictation.options = { 'practiceType': VocabPracticeType.Spell };
       const params = { 'dictation': dictation };
-      storageSpy.get.and.callFake((param) => params[param]);
+      storageSpy.get.and.callFake((param) => Promise.resolve(params[param]));
       let total = 0;
       component.speak$.subscribe(v => total += 1);
 

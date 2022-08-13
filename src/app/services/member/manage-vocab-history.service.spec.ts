@@ -1,15 +1,14 @@
-import {async, fakeAsync, TestBed, tick} from '@angular/core/testing';
-import {ManageVocabHistoryService} from './manage-vocab-history.service';
-import {VocabPracticeService} from '../practice/vocab-practice.service';
+import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { of } from 'rxjs';
+import 'rxjs-compat/add/observable/of';
 import {
   memberVocabularyMember1Apple,
   memberVocabularyMember1Banana,
   memberVocabularyMember1Cat
 } from '../../../testing/test-data';
-import {Observable} from 'rxjs';
-import 'rxjs-compat/add/observable/of';
-import {MemberVocabulary} from '../../entity/member-vocabulary';
+import { VocabPracticeService } from '../practice/vocab-practice.service';
 import { StorageService } from '../storage.service';
+import { ManageVocabHistoryService } from './manage-vocab-history.service';
 
 describe('ManageVocabHistoryService', () => {
   let service: ManageVocabHistoryService;
@@ -22,14 +21,14 @@ describe('ManageVocabHistoryService', () => {
     });
 
     vocabPracticeServiceSpy = jasmine.createSpyObj('VocabPracticeService', {
-      getAllHistory: Observable.of([memberVocabularyMember1Apple(), memberVocabularyMember1Banana(), memberVocabularyMember1Cat()])
+      getAllHistory: of([memberVocabularyMember1Apple(), memberVocabularyMember1Banana(), memberVocabularyMember1Cat()])
     });
 
     TestBed.configureTestingModule({
       imports: [],
       providers: [
         ManageVocabHistoryService,
-        { provide: Storage, useValue: storageSpy},
+        { provide: StorageService, useValue: storageSpy},
         { provide: VocabPracticeService, useValue: vocabPracticeServiceSpy}
       ]
     });
