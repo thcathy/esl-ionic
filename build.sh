@@ -37,13 +37,4 @@ simios() {
  ionic cordova emulate ios -lc
 }
 
-deployWeb() {
-  firebase deploy
-}
-
-buildWebAndDeploy() {
-  buildiWebProd;
-  deployWeb;
-}
-
 "$@"
