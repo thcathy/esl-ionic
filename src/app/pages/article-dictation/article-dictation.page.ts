@@ -1,12 +1,11 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {Dictation} from '../../entity/dictation';
-import {SentenceHistory} from '../../entity/sentence-history';
-import {ArticleDictationService} from '../../services/dictation/article-dictation.service';
-import {SpeechService} from '../../services/speech.service';
-import {NavigationService} from '../../services/navigation.service';
-import {NGXLogger} from 'ngx-logger';
-import {UIOptionsService} from '../../services/ui-options.service';
-import {VirtualKeyboardEvent} from '../../components/virtual-keyboard/virtual-keyboard';
+import { Component, OnInit } from '@angular/core';
+import { NGXLogger } from 'ngx-logger';
+import { VirtualKeyboardEvent } from '../../components/virtual-keyboard/virtual-keyboard';
+import { Dictation } from '../../entity/dictation';
+import { SentenceHistory } from '../../entity/sentence-history';
+import { ArticleDictationService } from '../../services/dictation/article-dictation.service';
+import { NavigationService } from '../../services/navigation.service';
+import { SpeechService } from '../../services/speech.service';
 import { StorageService } from '../../services/storage.service';
 
 @Component({

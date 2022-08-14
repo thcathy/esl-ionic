@@ -37,7 +37,7 @@
           </div>
           <ion-item class="ion-text-left">
             <ion-label>{{'Date of birth'|translate}}</ion-label>
-            <ion-datetime displayFormat="YYYY-MM-DD" max="2015" formControlName="birthday"></ion-datetime>
+            <ion-datetime displayFormat="YYYY-MM-DD" max="2015" formControlName="birthday" presentation="date" [preferWheel]="false"></ion-datetime>
           </ion-item>
           <ion-item>
             <ion-label>{{'Address'|translate}}</ion-label>
