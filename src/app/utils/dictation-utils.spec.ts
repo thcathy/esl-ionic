@@ -49,14 +49,14 @@ describe('DictationUtils', () => {
       expect(vocabs2[2]).toEqual('dog');
     });
 
-    fit('do not create vocabulary without a-z', () => {
-      const vocab = DictationUtils.vocabularyValueToArray(`-- -- -- --- -`, false);
+    it('do not create vocabulary without a-z', () => {
+      const vocab = DictationUtils.vocabularyValueToArray(`-- -- -'- --- - ' ''`, false);
       expect(vocab.length).toEqual(0);
-      const vocab2 = DictationUtils.vocabularyValueToArray(`-- -- -- --- -`, true);
+      const vocab2 = DictationUtils.vocabularyValueToArray(`-- -- -- --''- - ' ''`, true);
       expect(vocab2.length).toEqual(0);
     });
 
-    fit('vocabulary can contain single quote', () => {
+    it('vocabulary can contain single quote', () => {
       const vocab = DictationUtils.vocabularyValueToArray(`charles's bus-stop`, false);
       expect(vocab.length).toEqual(2);
 
