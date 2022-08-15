@@ -48,6 +48,24 @@ describe('DictationUtils', () => {
       expect(vocabs2[1]).toEqual('banana');
       expect(vocabs2[2]).toEqual('dog');
     });
+
+    fit('do not create vocabulary without a-z', () => {
+      const vocab = DictationUtils.vocabularyValueToArray(`-- -- -- --- -`, false);
+      expect(vocab.length).toEqual(0);
+      const vocab2 = DictationUtils.vocabularyValueToArray(`-- -- -- --- -`, true);
+      expect(vocab2.length).toEqual(0);
+    });
+
+    fit('vocabulary can contain single quote', () => {
+      const vocab = DictationUtils.vocabularyValueToArray(`charles's bus-stop`, false);
+      expect(vocab.length).toEqual(2);
+
+      const vocab2 = DictationUtils.vocabularyValueToArray(`
+      charles's
+      bus-stop
+      `, true);
+      expect(vocab2.length).toEqual(2);
+    });
   });
 
 

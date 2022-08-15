@@ -6,11 +6,14 @@ export class DictationUtils {
   static vocabularyValueToArray(input: string, wordContainSpace: boolean = false): string[] {
     let splitter;
     if (wordContainSpace) {
-      splitter = /[^a-zA-Z\- ]+/;
+      splitter = /[^a-zA-Z\- ']+/;
     } else {
-      splitter = /[^a-zA-Z\-]+/;
+      splitter = /[^a-zA-Z\-']+/;
     }
-    return input.split(splitter).map(v => v.trim()).filter(v => !ValidationUtils.isBlankString(v));
+    return input.split(splitter)
+      .map(v => v.trim())
+      .filter(v => v.match(/[a-zA-Z]/))
+      .filter(v => !ValidationUtils.isBlankString(v));
   }
 
   static toCharacterSet(word: string, minCharacters = 8): string[] {
