@@ -35,7 +35,7 @@ export class VocabPracticeService extends Service {
     let params = new HttpParams();
     params = params.append('image', showImage.toString()).append('includeBase64Image', 'false');
 
-    return this.http.get<VocabPractice>(this.getQuestionUrl + word,  {params: params});
+    return this.http.get<VocabPractice>(this.getQuestionUrl + encodeURIComponent(word),  {params: params});
   }
 
   getImages(vocabPractice: VocabPractice): Observable<VocabPractice> {
