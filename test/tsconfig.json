@@ -1,0 +1,15 @@
+{
+    "extends": "../tsconfig.json",
+    "compilerOptions": {
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "esModuleInterop": true,
+        "types": [
+            "node",
+            "webdriverio/async",
+            "@wdio/jasmine-framework",
+            "expect-webdriverio"
+        ],
+        "target": "es2019"
+    }
+}
