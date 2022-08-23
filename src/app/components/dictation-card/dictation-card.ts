@@ -129,7 +129,7 @@ export class DictationCardComponent {
 
   shareDictation() {
     this.dictationUrl = `https://www.funfunspell.com/link/dictation-view/${this.dictation.id}`;
-    if (this.appService.isCordova()) {
+    if (this.appService.isApp()) {
       // this is the complete list of currently supported params you can pass to the plugin (all optional)
       const options = {
         message: `Dictation: ${this.dictation.title}`, // not supported on some apps (Facebook, Instagram)

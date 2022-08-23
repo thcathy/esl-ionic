@@ -12,11 +12,15 @@ export class AppService {
 
   isApp(): boolean {
     this.log.debug(`platforms: ${this.platform.platforms()}, url: ${document.URL}`);
-    if (this.platform.is('pwa') || !this.platform.is('cordova')) {
+    if (this.platform.is('pwa') || !this.platform.is('cordova') || !this.platform.is('capacitor')) {
       return false;
     } else {
       return true;
     }
+  }
+
+  isCapacitor(): boolean {
+    return this.platform.is('capacitor');
   }
 
   isCordova(): boolean {
