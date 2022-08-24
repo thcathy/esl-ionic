@@ -18,8 +18,6 @@ import {CommonModule} from '@angular/common';
 import {VocabHistoryListComponent} from './vocab-history-list/vocab-history-list';
 import {VirtualKeyboardComponent} from './virtual-keyboard/virtual-keyboard';
 import {HttpClientModule} from '@angular/common/http';
-import {ShareButtonsModule} from 'ngx-sharebuttons/buttons';
-import {ShareIconsModule} from 'ngx-sharebuttons/icons';
 import {CharacterButtonComponent} from './character-button/character-button.component';
 import {CharacterComponent} from './character/character.component';
 import {VocabSelectionComponent} from './vocab-selection/vocab-selection.component';
@@ -47,10 +45,6 @@ import {ReactiveFormsModule} from '@angular/forms';
     FontAwesomeModule,
     CommonModule,
     HttpClientModule, ReactiveFormsModule,
-    ShareButtonsModule.withConfig({
-      debug: true
-    }),
-    ShareIconsModule
   ],
     exports: [MemberScoreRankingComponent,
         DictationStatisticsComponent,

@@ -42,8 +42,6 @@ import { Deeplinks } from '@ionic-native/deeplinks/ngx';
 import { SocialSharing } from '@ionic-native/social-sharing/ngx';
 import {SafariViewController} from '@ionic-native/safari-view-controller/ngx';
 import { ServiceWorkerModule } from '@angular/service-worker';
-import {ShareButtonsModule} from 'ngx-sharebuttons/buttons';
-import {ShareIconsModule} from 'ngx-sharebuttons/icons';
 import {DictationHelper} from './services/dictation/dictation-helper.service';
 
 // AoT requires an exported function for factories
@@ -58,18 +56,6 @@ export function HttpLoaderFactory(http: HttpClient) {
     BrowserAnimationsModule, CommonModule, HttpClientModule, HttpClientJsonpModule, ReactiveFormsModule,
     IonicStorageModule.forRoot(),
     FontAwesomeIconsModule,
-    ShareButtonsModule.withConfig({
-      debug: true
-    }),
-    ShareIconsModule,
-    PipesModule, ComponentsModule,
-    TranslateModule.forRoot({
-      loader: {
-        provide: TranslateLoader,
-        useFactory: HttpLoaderFactory,
-        deps: [HttpClient]
-      }
-    }),
     LoggerModule.forRoot(environment.logging),
     MemberHomePageModule,
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
