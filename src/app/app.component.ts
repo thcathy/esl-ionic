@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, NgZone, OnInit} from '@angular/core';
 
 import { Platform } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
@@ -6,7 +6,8 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { GoogleAnalytics } from '@ionic-native/google-analytics/ngx';
 import {NavigationEnd, Router} from '@angular/router';
 import {AuthService} from './services/auth.service';
-import {TranslateService} from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
+import { App, URLOpenListenerEvent } from '@capacitor/app';
 
 import Auth0Cordova from '@auth0/cordova';
 import {NavigationService} from './services/navigation.service';
@@ -38,6 +39,7 @@ export class AppComponent {
     public googleAnalytics: GoogleAnalytics,
     public deeplinks: Deeplinks,
     private log: NGXLogger,
+    private zone: NgZone,
   ) {
     this.authService.handleAuthentication();
     this.initializeApp();
@@ -99,25 +101,22 @@ export class AppComponent {
   private setupDeepLinks() {
     if (!this.appService.isCapacitor()) { return; }
 
-    this.deeplinks.route({
-      '/link/dictation-view': DictationViewPage,
-      '/link/dictation-view/:dictationId': DictationViewPage
-    })
-      .subscribe((match) => {
-          // match.$route - the route we matched, which is the matched entry from the arguments to route()
-          // match.$args - the args passed in the link
-          // match.$link - the full link data
-          // alert(`Successfully matched route ${JSON.stringify(match.$args)}, ${JSON.stringify(match.$link)}`);
-          this.navigationService.navigate(match.$link.path, match.$args);
-        },
-        (nomatch) => {
-          this.setupDeepLinks();
-          if (nomatch.$link.url.includes('com.esl.ionic://thcathy.auth0.com/cordova/com.esl.ionic/callback')) {
-            console.log(`auth0 redirect`);
-            Auth0Cordova.onRedirectUri(nomatch.$link.url);
-          } else {
-            console.error(`Got a deeplink that did not match ${JSON.stringify(nomatch.$link)}`);
-          }
-        });
+    App.addListener('appUrlOpen', (event: URLOpenListenerEvent) => {
+      this.zone.run(() => {
+        if (event.url.includes('com.esl.ionic://thcathy.auth0.com/cordova/com.esl.ionic/callback')) {
+          console.log(`auth0 redirect`);
+          Auth0Cordova.onRedirectUri(event.url);
+        }
+                
+        // Example url: https://beerswift.app/tabs/tab2
+        // slug = /tabs/tab2
+        const slug = event.url.split(".com").pop();
+        if (slug) {
+          this.navigationService.navigate(slug);
+        }
+        // If no match, do nothing - let regular routing
+        // logic take over
+      });
+    });
   }
 }

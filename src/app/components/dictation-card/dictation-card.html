@@ -94,22 +94,10 @@
         <ion-button *ngIf="start" (click)="startDictationOrShowOptions()"><fa-icon [icon]="['fas', 'play']"></fa-icon>&nbsp;{{'Start'|translate}}</ion-button>
       </ion-col>
     </ion-row>
-    <ion-row *ngIf="share">
-      <ion-col>
-        <share-buttons [theme]="'modern-dark'"
-                       [include]="['facebook','twitter','whatsapp','line','messenger','email','copy']"
-                       show="7"
-                       [showText]="false"
-                       size="1"
-                       [autoSetMeta]="false"
-                       [url]="dictationUrl"
-        ></share-buttons>
-      </ion-col>
-    </ion-row>
     <ion-row>
       <ion-col>
         <ion-button class="share-button" *ngIf="!dictationHelper.isInstantDictation(dictation) && dictation.source === sourceType.FillIn"
-                    fill="outline" (click)="shareDictation()">
+                     (click)="shareDictation()">
           <fa-icon [icon]="['fas', 'share-square']"></fa-icon>&nbsp;{{'Share'|translate}}
         </ion-button>
       </ion-col>

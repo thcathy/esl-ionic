@@ -13,6 +13,7 @@ import {VocabPracticeType} from '../../enum/vocab-practice-type.enum';
 import {IonicComponentService} from '../../services/ionic-component.service';
 import {ManageVocabHistoryService} from '../../services/member/manage-vocab-history.service';
 import {DictationHelper} from '../../services/dictation/dictation-helper.service';
+import { ShareService } from 'ngx-sharebuttons';
 
 @Component({
   selector: 'app-dictation-card',
@@ -52,7 +53,7 @@ export class DictationCardComponent {
               public alertController: AlertController,
               public toastController: ToastController,
               public componentService: IonicComponentService,
-              public socialSharing: SocialSharing) {}
+              public shareService: ShareService) {}
 
   get sourceType() { return Dictations.Source; }
   get memberVocabularies() { return this.dictation.vocabs.map(v => v.word).map(w => this.manageVocabHistoryService.findMemberVocabulary(w)); }
@@ -128,27 +129,7 @@ export class DictationCardComponent {
   }
 
   shareDictation() {
-    this.dictationUrl = `https://www.funfunspell.com/link/dictation-view/${this.dictation.id}`;
-    if (this.appService.isApp()) {
-      // this is the complete list of currently supported params you can pass to the plugin (all optional)
-      const options = {
-        message: `Dictation: ${this.dictation.title}`, // not supported on some apps (Facebook, Instagram)
-        url: this.dictationUrl,
-      };
-
-      const onSuccess = function(result) {
-        console.log('Share completed? ' + result.completed); // On Android apps mostly return false even while it's true
-        console.log('Shared to app: ' + result.app); // On Android result.app since plugin version 5.4.0 this is no longer empty. On iOS it's empty when sharing is cancelled (result.completed=false)
-      };
-
-      const onError = function(msg) {
-        console.log('Sharing failed with message: ' + msg);
-      };
-
-      this.socialSharing.shareWithOptions(options).then(onSuccess).catch(onError);
-    } else {
-      this.share = !this.share;
-    }
+    
   }
 
   startDictationOrShowOptions() {
