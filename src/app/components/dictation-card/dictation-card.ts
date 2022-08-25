@@ -1,19 +1,17 @@
-import {Component, Input} from '@angular/core';
-import {Dictation, Dictations} from '../../entity/dictation';
-import {animate, state, style, transition, trigger} from '@angular/animations';
-import {TranslateService} from '@ngx-translate/core';
-import {ActionSheetController, AlertController, ToastController} from '@ionic/angular';
-import {NavigationService} from '../../services/navigation.service';
-import {DictationService} from '../../services/dictation/dictation.service';
-import {MemberDictationService} from '../../services/dictation/member-dictation.service';
-import {Router} from '@angular/router';
-import {SocialSharing} from '@ionic-native/social-sharing/ngx';
-import {AppService} from '../../services/app.service';
-import {VocabPracticeType} from '../../enum/vocab-practice-type.enum';
-import {IonicComponentService} from '../../services/ionic-component.service';
-import {ManageVocabHistoryService} from '../../services/member/manage-vocab-history.service';
-import {DictationHelper} from '../../services/dictation/dictation-helper.service';
-import { ShareService } from 'ngx-sharebuttons';
+import { animate, state, style, transition, trigger } from '@angular/animations';
+import { Component, Input } from '@angular/core';
+import { Router } from '@angular/router';
+import { AlertController, ToastController } from '@ionic/angular';
+import { TranslateService } from '@ngx-translate/core';
+import { Dictation, Dictations } from '../../entity/dictation';
+import { VocabPracticeType } from '../../enum/vocab-practice-type.enum';
+import { AppService } from '../../services/app.service';
+import { DictationHelper } from '../../services/dictation/dictation-helper.service';
+import { MemberDictationService } from '../../services/dictation/member-dictation.service';
+import { IonicComponentService } from '../../services/ionic-component.service';
+import { ManageVocabHistoryService } from '../../services/member/manage-vocab-history.service';
+import { NavigationService } from '../../services/navigation.service';
+import { ShareService } from '../../services/share.service';
 
 @Component({
   selector: 'app-dictation-card',
@@ -129,7 +127,7 @@ export class DictationCardComponent {
   }
 
   shareDictation() {
-    
+    this.shareService.shareDictation(this.dictation);
   }
 
   startDictationOrShowOptions() {
