@@ -1,23 +1,18 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { HomePage } from './home.page';
-import {HttpClientTestingModule} from '@angular/common/http/testing';
-import {RouterTestingModule} from '@angular/router/testing';
-import {TranslateModule} from '@ngx-translate/core';
-import {Storage} from '@ionic/storage-angular';
-import {AlertController, Platform} from '@ionic/angular';
-import {SplashScreen} from '@ionic-native/splash-screen/ngx';
-import {StatusBar} from '@ionic-native/status-bar/ngx';
+import { StatusBar } from '@ionic-native/status-bar/ngx';
+import { AlertController, Platform } from '@ionic/angular';
+import { Storage } from '@ionic/storage-angular';
 import {
   AlertControllerSpy, AppServiceSpy,
   PlatformSpy,
-  SplashScreenSpy,
   StatusBarSpy,
   StorageSpy
 } from '../../testing/mocks-ionic';
-import {SharedTestModule} from '../../testing/shared-test.module';
-import {AppService} from '../services/app.service';
+import { SharedTestModule } from '../../testing/shared-test.module';
+import { AppService } from '../services/app.service';
+import { HomePage } from './home.page';
+
 
 describe('HomePage', () => {
   let component: HomePage;
@@ -31,8 +26,7 @@ describe('HomePage', () => {
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [
-        { provide: StatusBar, useValue: StatusBarSpy() },
-        { provide: SplashScreen, useValue: SplashScreenSpy() },
+        { provide: StatusBar, useValue: StatusBarSpy() },        
         { provide: Platform, useValue: PlatformSpy() },
         { provide: AlertController, useValue: AlertControllerSpy()},
         { provide: Storage, useValue: StorageSpy()},

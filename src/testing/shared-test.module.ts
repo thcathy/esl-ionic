@@ -12,7 +12,7 @@ import {TranslateModule} from '@ngx-translate/core';
 import {RouterTestingModule} from '@angular/router/testing';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {StatusBar} from '@ionic-native/status-bar/ngx';
-import {SplashScreen} from '@ionic-native/splash-screen/ngx';
+import {SplashScreen} from '@capacitor/splash-screen';
 
 import {
   AlertControllerSpy, GoogleAnalyticsSpy, LoadingControllerSpy, NavigationServiceSpy, NGXLoggerSpy,

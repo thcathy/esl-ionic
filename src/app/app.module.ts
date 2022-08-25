@@ -3,7 +3,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy} from '@angular/router';
 
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
-import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 
 import { LoggerModule} from 'ngx-logger';
@@ -34,13 +33,11 @@ import {ArticleDictationService} from './services/dictation/article-dictation.se
 import {IonicComponentService} from './services/ionic-component.service';
 import {IdTokenInterceptor} from './interceptor/IdTokenInterceptor';
 import {TextToSpeech} from '@ionic-native/text-to-speech/ngx';
-import {InAppBrowser} from '@ionic-native/in-app-browser/ngx';
 import {MemberHomePageModule} from './pages/member-home/member-home.module';
 import {GoogleAnalytics} from '@ionic-native/google-analytics/ngx';
 import { environment } from '../environments/environment';
 import { Deeplinks } from '@ionic-native/deeplinks/ngx';
 import { SocialSharing } from '@ionic-native/social-sharing/ngx';
-import {SafariViewController} from '@ionic-native/safari-view-controller/ngx';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import {ShareButtonsModule} from 'ngx-sharebuttons/buttons';
 import {ShareIconsModule} from 'ngx-sharebuttons/icons';
@@ -76,7 +73,6 @@ export function HttpLoaderFactory(http: HttpClient) {
   ],
   providers: [
     StatusBar,
-    SplashScreen,
     Deeplinks, SocialSharing,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     NavigationService, RankingService,
@@ -84,8 +80,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     AuthService,
     ServerService,
     ArticleDictationService,
-    TextToSpeech, InAppBrowser, GoogleAnalytics,
-    SafariViewController,
+    TextToSpeech, GoogleAnalytics,    
     PracticeHistoryService, IonicComponentService,
     DictationHelper,
     {

@@ -1,21 +1,20 @@
-import {Component, NgZone, OnInit} from '@angular/core';
-
-import { Platform } from '@ionic/angular';
-import { SplashScreen } from '@ionic-native/splash-screen/ngx';
-import { StatusBar } from '@ionic-native/status-bar/ngx';
-import { GoogleAnalytics } from '@ionic-native/google-analytics/ngx';
-import {NavigationEnd, Router} from '@angular/router';
-import {AuthService} from './services/auth.service';
-import { TranslateService } from '@ngx-translate/core';
-import { App, URLOpenListenerEvent } from '@capacitor/app';
-
+import { Component, NgZone } from '@angular/core';
+import { NavigationEnd, Router } from '@angular/router';
 import Auth0Cordova from '@auth0/cordova';
-import {NavigationService} from './services/navigation.service';
-import {AppService} from './services/app.service';
-import {NGXLogger} from 'ngx-logger';
-import {Deeplinks} from '@ionic-native/deeplinks/ngx';
-import {DictationViewPage} from './pages/dictation-view/dictation-view.page';
-import {StorageService} from './services/storage.service';
+import { App, URLOpenListenerEvent } from '@capacitor/app';
+import { SplashScreen } from '@capacitor/splash-screen';
+import { Deeplinks } from '@ionic-native/deeplinks/ngx';
+import { GoogleAnalytics } from '@ionic-native/google-analytics/ngx';
+import { StatusBar } from '@ionic-native/status-bar/ngx';
+import { Platform } from '@ionic/angular';
+import { TranslateService } from '@ngx-translate/core';
+import { NGXLogger } from 'ngx-logger';
+import { AppService } from './services/app.service';
+import { AuthService } from './services/auth.service';
+import { NavigationService } from './services/navigation.service';
+import { StorageService } from './services/storage.service';
+
+
 
 declare let ga: Function;
 
@@ -27,8 +26,7 @@ export class AppComponent {
   defaultLanguage = 'en';
 
   constructor(
-    public platform: Platform,
-    public splashScreen: SplashScreen,
+    public platform: Platform,    
     public statusBar: StatusBar,
     public router: Router,
     public authService: AuthService,
@@ -49,7 +47,7 @@ export class AppComponent {
   initializeApp() {
     this.platform.ready().then(() => {
       this.statusBar.styleDefault();
-      this.splashScreen.hide();
+      SplashScreen.hide();
       this.setupGoogleAnalytics();
       this.setupDeepLinks();
       this.initLanguage();
