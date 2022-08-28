@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Dictation} from '../../entity/dictation';
-import {AuthService} from '../../services/auth.service';
+import {FFSAuthService} from '../../services/auth.service';
 import {DictationService} from '../../services/dictation/dictation.service';
 import {IonicComponentService} from '../../services/ionic-component.service';
 import {NavigationService} from '../../services/navigation.service';
@@ -21,7 +21,7 @@ export class DictationViewPage implements OnInit {
     public route: ActivatedRoute,
     public router: Router,
     public dictationService: DictationService,
-    public authService: AuthService,
+    public authService: FFSAuthService,
     public ionicComponentService: IonicComponentService,
     public storage: StorageService,
     public navigationService: NavigationService,

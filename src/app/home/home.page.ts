@@ -9,7 +9,7 @@ import {AlertController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
 import {Router} from '@angular/router';
 import {NavigationService} from '../services/navigation.service';
-import {AuthService} from '../services/auth.service';
+import {FFSAuthService} from '../services/auth.service';
 
 
 @Component({
@@ -29,7 +29,7 @@ export class HomePage implements OnInit {
               public alertController: AlertController,
               public translate: TranslateService,
               public navigationService: NavigationService,
-              public authService: AuthService,
+              public authService: FFSAuthService,
   ) {
   }
 

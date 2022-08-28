@@ -4,7 +4,7 @@ import {vocabDifficulties, VocabDifficulty} from '../../entity/voacb-practice';
 import {VocabPracticeService} from '../../services/practice/vocab-practice.service';
 import {NavigationService} from '../../services/navigation.service';
 import {ActivatedRoute} from '@angular/router';
-import {AuthService} from '../../services/auth.service';
+import {FFSAuthService} from '../../services/auth.service';
 import {VocabPracticeType} from '../../enum/vocab-practice-type.enum';
 import { StorageService } from '../../services/storage.service';
 
@@ -23,7 +23,7 @@ export class VocabularyStarterPage implements OnInit {
     public vocabPracticeService: VocabPracticeService,
     public navigationService: NavigationService,
     public route: ActivatedRoute,
-    public authService: AuthService,
+    public authService: FFSAuthService,
     public storage: StorageService,
   ) { }
 

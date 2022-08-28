@@ -6,7 +6,7 @@ import {SharedTestModule} from '../../../testing/shared-test.module';
 import {dictation1} from '../../../testing/test-data';
 import {EditDictationRequest, MemberDictationService} from '../../services/dictation/member-dictation.service';
 import {AuthServiceSpy, MemberDictationServiceSpy, NavigationServiceSpy} from '../../../testing/mocks-ionic';
-import {AuthService} from '../../services/auth.service';
+import {FFSAuthService} from '../../services/auth.service';
 import {of} from 'rxjs';
 import {NavigationService} from '../../services/navigation.service';
 import {ActivatedRouteStub} from '../../../testing/activated-route-stub';
@@ -43,7 +43,7 @@ describe('EditDictationPage', () => {
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [
         { provide: MemberDictationService, useValue: memberDictationServiceSpy },
-        { provide: AuthService, useValue: authServiceSpy },
+        { provide: FFSAuthService, useValue: authServiceSpy },
         { provide: ActivatedRoute, useValue: activateRouteStub },
         { provide: NavigationService, useValue: navigationServiceSpy }
       ]

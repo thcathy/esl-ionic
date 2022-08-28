@@ -7,7 +7,7 @@ import { AuthServiceSpy, DictationServiceSpy, IonicComponentServiceSpy, ManageVo
 import { SharedTestModule } from '../../../testing/shared-test.module';
 import { dictation1, TestData } from '../../../testing/test-data';
 import { VocabPracticeType } from '../../enum/vocab-practice-type.enum';
-import { AuthService } from '../../services/auth.service';
+import { FFSAuthService } from '../../services/auth.service';
 import { DictationService } from '../../services/dictation/dictation.service';
 import { IonicComponentService } from '../../services/ionic-component.service';
 import { ManageVocabHistoryService } from '../../services/member/manage-vocab-history.service';
@@ -42,7 +42,7 @@ describe('PracticeCompletePage', () => {
         { provide: DictationService, useValue: dictationServiceSpy},
         { provide: VocabPracticeService, useValue: vocabPracticeServiceSpy},
         { provide: StorageService, useValue: storageSpy },
-        { provide: AuthService, useValue: authServiceSpy },
+        { provide: FFSAuthService, useValue: authServiceSpy },
         { provide: NavigationService, useValue: navigationServiceSpy },
         { provide: ManageVocabHistoryService, useValue: manageVocabHistoryServiceSpy },
         { provide: IonicComponentService, useValue: ionicComponentServiceSpy },

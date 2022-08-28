@@ -1,60 +1,54 @@
-import { Component, NgZone } from '@angular/core';
+import { Component, NgZone, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
-import Auth0Cordova from '@auth0/cordova';
 import { App, URLOpenListenerEvent } from '@capacitor/app';
 import { SplashScreen } from '@capacitor/splash-screen';
-import { Deeplinks } from '@ionic-native/deeplinks/ngx';
 import { GoogleAnalytics } from '@ionic-native/google-analytics/ngx';
-import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { Platform } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
+import { environment } from '../environments/environment';
 import { AppService } from './services/app.service';
-import { AuthService } from './services/auth.service';
+import { FFSAuthService } from './services/auth.service';
 import { NavigationService } from './services/navigation.service';
 import { StorageService } from './services/storage.service';
-
-
+import config from '../../capacitor.config';
 
 declare let ga: Function;
+
+const auth0CallbackUri = `${config.appId}://${environment.auth0Host}/capacitor/${config.appId}/callback`;
 
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html'
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   defaultLanguage = 'en';
 
   constructor(
     public platform: Platform,    
-    public statusBar: StatusBar,
     public router: Router,
-    public authService: AuthService,
+    public authService: FFSAuthService,
     public translate: TranslateService,
     public navigationService: NavigationService,
     public storage: StorageService,
     public appService: AppService,
     public googleAnalytics: GoogleAnalytics,
-    public deeplinks: Deeplinks,
     private log: NGXLogger,
     private zone: NgZone,
   ) {
-    this.authService.handleAuthentication();
+    this.authService.handleAuthCallbackWeb();
     this.initializeApp();
+  }
 
+  ngOnInit(): void {
+    this.setupAppUrlOpenListener();
   }
 
   initializeApp() {
     this.platform.ready().then(() => {
-      this.statusBar.styleDefault();
       SplashScreen.hide();
       this.setupGoogleAnalytics();
-      this.setupDeepLinks();
       this.initLanguage();
-      // (window as any).handleOpenURL = (url) => {
-      //  this.log.info(`url: ${url}`);
-      //  Auth0Cordova.onRedirectUri(url);
-      // };
     });
   }
 
@@ -96,14 +90,13 @@ export class AppComponent {
     }
   }
 
-  private setupDeepLinks() {
+  private setupAppUrlOpenListener() {
     if (!this.appService.isCapacitor()) { return; }
 
     App.addListener('appUrlOpen', (event: URLOpenListenerEvent) => {
       this.zone.run(() => {
-        if (event.url.includes('com.esl.ionic://thcathy.auth0.com/cordova/com.esl.ionic/callback')) {
-          console.log(`auth0 redirect`);
-          Auth0Cordova.onRedirectUri(event.url);
+        if (event.url.includes(auth0CallbackUri)) {
+          this.authService.handleAuthCallbackCapacitor(event.url);
         }
                 
         // Example url: https://beerswift.app/tabs/tab2

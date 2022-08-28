@@ -1,5 +1,4 @@
 import {Injectable, NgZone} from '@angular/core';
-import Auth0Cordova from '@auth0/cordova';
 import Auth0 from 'auth0-js';
 import {AppService} from './app.service';
 import {TranslateService} from '@ngx-translate/core';
@@ -11,6 +10,9 @@ import {ManageVocabHistoryService} from './member/manage-vocab-history.service';
 import {LoadingController} from '@ionic/angular';
 import {NGXLogger} from 'ngx-logger';
 import { StorageService } from './storage.service';
+import { AuthService } from '@auth0/auth0-angular';
+import { Browser } from '@capacitor/browser';
+import { mergeMap, tap } from 'rxjs/operators';
 
 export const tokenTimeoutSecond = 35000;
 export const auth0CordovaConfig = {
@@ -25,7 +27,7 @@ export const auth0CordovaConfig = {
 };
 
 @Injectable({ providedIn: 'root' })
-export class AuthService {
+export class FFSAuthService {
   userProfile: any;
   idTokenKey = 'id_token';
   expiresAtKey = 'expires_at';
@@ -55,6 +57,7 @@ export class AuthService {
               public loadingController: LoadingController,
               private router: Router,
               private log: NGXLogger,
+              public auth: AuthService,
   ) {
     try {
       this.userProfile = JSON.parse(localStorage.getItem('profile'));
@@ -91,20 +94,43 @@ export class AuthService {
     }
   }
 
-  public handleAuthentication(): void {
-    this.log.info('handleAuthentication');
+  public handleAuthCallbackCapacitor(url: string) {
+    if (url.includes('state=') && (url.includes('error=') || url.includes('code='))) {
+      // Call handleRedirectCallback and close the browser
+      this.auth
+        .handleRedirectCallback(url)
+        .pipe(
+          tap(this.handleXXX),
+          mergeMap(() => Browser.close())
+        )
+        .subscribe();
+    } else {
+      Browser.close();
+    }
+  }
+
+  private handleXXX(a: any) {
+    console.log(`${JSON.stringify(a)}`);
+  }
+
+  public handleAuthCallbackWeb(): void {
+    this.log.info('handle auth callback: web');
     this.auth0.parseHash((err, authResult) => this.handleAuthResult(this.auth0Cordova, authResult, err));
   }
 
   public loginCordova(signUp = false) {
-    const client = new Auth0Cordova(auth0CordovaConfig);
-    const options = { scope: 'openid profile offline_access email' };
-    options['languageBaseUrl'] = this.getAuth0Language();
-    if (signUp) {
-      options['initialScreen'] = 'signUp';
-    }
+    this.auth
+      .buildAuthorizeUrl()
+      .pipe(mergeMap((url) => Browser.open({ url, windowName: '_self' })))
+      .subscribe();
+    // const client = new Auth0Cordova(auth0CordovaConfig);
+    // const options = { scope: 'openid profile offline_access email' };
+    // options['languageBaseUrl'] = this.getAuth0Language();
+    // if (signUp) {
+    //   options['initialScreen'] = 'signUp';
+    // }
 
-    client.authorize(options, (err, authResult) => this.handleAuthResult(this.auth0Cordova, authResult, err));
+    // client.authorize(options, (err, authResult) => this.handleAuthResult(this.auth0Cordova, authResult, err));
   }
 
   private setSession(authResult): void {

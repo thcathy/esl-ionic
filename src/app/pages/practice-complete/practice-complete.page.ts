@@ -5,7 +5,7 @@ import {NavigationService} from '../../services/navigation.service';
 import {DictationService} from '../../services/dictation/dictation.service';
 import {TranslateService} from '@ngx-translate/core';
 import {IonicComponentService} from '../../services/ionic-component.service';
-import {AuthService} from '../../services/auth.service';
+import {FFSAuthService} from '../../services/auth.service';
 import {VocabPracticeService} from '../../services/practice/vocab-practice.service';
 import {ManageVocabHistoryService} from '../../services/member/manage-vocab-history.service';
 import {NGXLogger} from 'ngx-logger';
@@ -38,7 +38,7 @@ export class PracticeCompletePage implements OnInit {
     public ionicComponentService: IonicComponentService,
     public storage: StorageService,
     public navigationService: NavigationService,
-    public authService: AuthService,
+    public authService: FFSAuthService,
     public manageVocabHistoryService: ManageVocabHistoryService,
     private log: NGXLogger,
   ) { }

@@ -3,7 +3,7 @@ import {AbstractControl, UntypedFormBuilder, UntypedFormControl, UntypedFormGrou
 import {Dictation, Dictations, SentenceLengthOptions, SuitableStudentOptions} from '../../entity/dictation';
 import {EditDictationRequest, MemberDictationService} from '../../services/dictation/member-dictation.service';
 import {NavigationService} from '../../services/navigation.service';
-import {AuthService} from '../../services/auth.service';
+import {FFSAuthService} from '../../services/auth.service';
 import {TranslateService} from '@ngx-translate/core';
 import {DictationService} from '../../services/dictation/dictation.service';
 import {IonicComponentService} from '../../services/ionic-component.service';
@@ -38,7 +38,7 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
     public formBuilder: UntypedFormBuilder,
     public memberDictationService: MemberDictationService,
     public navService: NavigationService,
-    public authService: AuthService,
+    public authService: FFSAuthService,
     public translate: TranslateService,
     public dictationService: DictationService,
     public ionicComponentService: IonicComponentService,
