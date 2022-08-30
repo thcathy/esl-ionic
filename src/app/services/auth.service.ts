@@ -13,6 +13,7 @@ import { StorageService } from './storage.service';
 import { AuthService } from '@auth0/auth0-angular';
 import { Browser } from '@capacitor/browser';
 import { mergeMap, tap } from 'rxjs/operators';
+import { firstValueFrom } from 'rxjs';
 
 export const tokenTimeoutSecond = 35000;
 export const auth0CordovaConfig = {
@@ -66,6 +67,8 @@ export class FFSAuthService {
     } catch (e) {
       localStorage.setItem(this.idTokenKey, null);
     }
+
+    auth.error$.subscribe((error) => console.log(`THC: ${error}`));
   }
 
   public login(redirectRequest?: NavigationRequest): void {
@@ -94,23 +97,39 @@ export class FFSAuthService {
     }
   }
 
-  public handleAuthCallbackCapacitor(url: string) {
+  public async handleAuthCallbackCapacitor(url: string) {
     if (url.includes('state=') && (url.includes('error=') || url.includes('code='))) {
+      console.log(`ok la`);
       // Call handleRedirectCallback and close the browser
-      this.auth
-        .handleRedirectCallback(url)
-        .pipe(
-          tap(this.handleXXX),
-          mergeMap(() => Browser.close())
-        )
-        .subscribe();
+      this.auth.idTokenClaims$.subscribe(t => {
+        console.log(`diu1: ${JSON.stringify(t)}`);
+      });
+      this.auth.user$.subscribe(t => {
+        console.log(`diu2: ${JSON.stringify(t)}`);
+      });
+      await firstValueFrom(this.auth.handleRedirectCallback(url));
+      Browser.close();
+      this.handleXXX();
     } else {
+      console.log(`not ok la`);
       Browser.close();
     }
   }
 
-  private handleXXX(a: any) {
-    console.log(`${JSON.stringify(a)}`);
+  private async handleXXX() {
+    const idToken = await firstValueFrom(this.auth.idTokenClaims$);
+    localStorage.setItem(this.idTokenKey, idToken.__raw);
+    console.log(`idTokenClaim=${idToken}`);
+    const profile = await firstValueFrom(this.auth.user$);
+    localStorage.setItem('profile', JSON.stringify(profile));
+    this.userProfile = profile;
+
+    this.log.info('login session: update session');
+    const expiresAt = JSON.stringify(tokenTimeoutSecond * 1000 + new Date().getTime());
+    this.log.info(`token expiresAt: ${expiresAt}`);
+    localStorage.setItem(this.expiresAtKey, expiresAt);
+
+    this.redirectAfterLogin();
   }
 
   public handleAuthCallbackWeb(): void {

@@ -27,7 +27,7 @@
 			<string>com.esl.ionic</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>ionic</string>
+				<string>com.esl.ionic</string>
 			</array>
 		</dict>
 	</array>

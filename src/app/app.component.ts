@@ -95,8 +95,11 @@ export class AppComponent implements OnInit {
 
     App.addListener('appUrlOpen', (event: URLOpenListenerEvent) => {
       this.zone.run(() => {
+        console.log(`url=${event.url}`)
         if (event.url.includes(auth0CallbackUri)) {
           this.authService.handleAuthCallbackCapacitor(event.url);
+          this.router.navigateByUrl('/home');
+          return;
         }
                 
         // Example url: https://beerswift.app/tabs/tab2
