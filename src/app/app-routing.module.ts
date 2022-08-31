@@ -20,6 +20,7 @@ const routes: Routes = [
   { path: 'edit-dictation/:mode', loadChildren: () => import('./pages/edit-dictation/edit-dictation.module').then(m => m.EditDictationPageModule) },
   { path: 'search-dictation', loadChildren: () => import('./pages/search-dictation/search-dictation.module').then(m => m.SearchDictationPageModule) },
   { path: 'vocabulary-starter', loadChildren: () => import('./pages/vocabulary-starter/vocabulary-starter.module').then(m => m.VocabularyStarterPageModule) },
+  { path: 'auth0-callback', redirectTo: 'home' },
 ];
 
 @NgModule({

@@ -98,7 +98,6 @@ export class AppComponent implements OnInit {
         console.log(`url=${event.url}`)
         if (event.url.includes(auth0CallbackUri)) {
           this.authService.handleAuthCallbackCapacitor(event.url);
-          this.router.navigateByUrl('/home');
           return;
         }
                 
@@ -108,8 +107,6 @@ export class AppComponent implements OnInit {
         if (slug) {
           this.navigationService.navigate(slug);
         }
-        // If no match, do nothing - let regular routing
-        // logic take over
       });
     });
   }

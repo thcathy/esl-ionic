@@ -54,7 +54,6 @@
     "@jcesarmobile/ssl-skip": "^0.1.0",
     "@ngx-translate/core": "^14.0.0",
     "@ngx-translate/http-loader": "^7.0.0",
-    "auth0-js": "^9.13.2",
     "cordova": "^11.0.0",
     "cordova-android": "^11.0.0",
     "cordova-browser": "^6.0.0",

@@ -58,6 +58,7 @@ const auth0RedirectUri = `${config.appId}://${environment.auth0Host}/capacitor/$
       scope: 'openid profile email',
       cacheLocation: 'localstorage',
       redirectUri: auth0RedirectUri,
+      skipRedirectCallback: true
       //useRefreshTokens: true,
     }),
     TranslateModule.forRoot({
