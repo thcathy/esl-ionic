@@ -23,10 +23,6 @@ export class AppService {
     return this.platform.is('capacitor');
   }
 
-  isCordova(): boolean {
-    return this.platform.is('cordova');
-  }
-
   isIOS(): boolean {
     return this.platform.is('ios');
   }

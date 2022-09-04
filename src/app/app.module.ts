@@ -11,7 +11,7 @@ import { HttpClient, HttpClientJsonpModule, HttpClientModule, HTTP_INTERCEPTORS 
 import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ServiceWorkerModule } from '@angular/service-worker';
-import { GoogleAnalytics } from '@ionic-native/google-analytics/ngx';
+import { GoogleAnalytics } from '@awesome-cordova-plugins/google-analytics/ngx';
 import { IonicStorageModule } from '@ionic/storage-angular';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { environment } from '../environments/environment';

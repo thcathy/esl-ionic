@@ -91,6 +91,7 @@ export class DictationPracticePage implements OnInit {
 
   speak() {
     const word = this.currentQuestion().word;
+    debugger;
     if (this.audio.get(word) != null) {
       this.audio.get(word).play();
       this.audio.set(word, new Audio(this.currentQuestion().activePronounceLink));

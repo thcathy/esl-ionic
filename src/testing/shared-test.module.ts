@@ -14,7 +14,7 @@ import {
 import { TranslateModule } from '@ngx-translate/core';
 
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { GoogleAnalytics } from '@ionic-native/google-analytics/ngx';
+import { GoogleAnalytics } from '@awesome-cordova-plugins/google-analytics';
 import { NGXLogger } from 'ngx-logger';
 import { ComponentsModule } from '../app/components/components.module';
 import { FontAwesomeIconsModule } from '../app/fontawesome-icons.module';

@@ -78,13 +78,13 @@ export class FFSAuthService {
   public async handleAuthCallbackCapacitor(url: string) {
     if (url.includes('state=') && (url.includes('error=') || url.includes('code='))) {
       console.log(`handle auth callback by capacitor`);
+      debugger;
       await firstValueFrom(this.auth.handleRedirectCallback(url));
-      const idToken = await firstValueFrom(this.auth.idTokenClaims$);
-      const profile = await firstValueFrom(this.auth.user$);
-      const accessToken = await firstValueFrom(this.auth.getAccessTokenSilently());
-      this.setSession(accessToken, idToken.__raw);
-      localStorage.setItem('profile', JSON.stringify(profile));
+      this.idToken = (await firstValueFrom(this.auth.idTokenClaims$)).__raw;
+      this.userProfile = await firstValueFrom(this.auth.user$);
+      this.accessToken = await firstValueFrom(this.auth.getAccessTokenSilently());
       
+      this.setSession(this.accessToken, this.idToken, this.userProfile);
       this.closeBrowserIfNeeded();
       this.redirectAfterLogin();
     } else {
@@ -116,7 +116,7 @@ export class FFSAuthService {
       .subscribe();
   }
 
-  private setSession(accessToken: string, idToken: string) {
+  private setSession(accessToken: string, idToken: string, userProfile: any) {
     this.log.info('login session: update session');
     const expiresAt = JSON.stringify(tokenTimeoutSecond * 1000 + new Date().getTime());
     localStorage.setItem(this.expiresAtKey, expiresAt);
@@ -124,6 +124,7 @@ export class FFSAuthService {
 
     localStorage.setItem(this.accessTokenKey, accessToken);
     localStorage.setItem(this.idTokenKey, idToken);
+    localStorage.setItem('profile', JSON.stringify(userProfile));
   }
 
   public logout(): void {

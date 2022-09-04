@@ -2,7 +2,6 @@ import { Component, NgZone, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { App, URLOpenListenerEvent } from '@capacitor/app';
 import { SplashScreen } from '@capacitor/splash-screen';
-import { GoogleAnalytics } from '@ionic-native/google-analytics/ngx';
 import { Platform } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
@@ -11,6 +10,7 @@ import { AppService } from './services/app.service';
 import { FFSAuthService } from './services/auth.service';
 import { NavigationService } from './services/navigation.service';
 import { StorageService } from './services/storage.service';
+import { GoogleAnalytics } from '@awesome-cordova-plugins/google-analytics/ngx';
 import config from '../../capacitor.config';
 
 declare let ga: Function;
@@ -47,7 +47,7 @@ export class AppComponent implements OnInit {
   initializeApp() {
     this.platform.ready().then(() => {
       SplashScreen.hide();
-      this.setupGoogleAnalytics();
+      // this.setupGoogleAnalytics();
       this.initLanguage();
     });
   }
