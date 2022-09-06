@@ -14,7 +14,6 @@ import {
 import { TranslateModule } from '@ngx-translate/core';
 
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { GoogleAnalytics } from '@awesome-cordova-plugins/google-analytics';
 import { NGXLogger } from 'ngx-logger';
 import { ComponentsModule } from '../app/components/components.module';
 import { FontAwesomeIconsModule } from '../app/fontawesome-icons.module';
@@ -24,7 +23,7 @@ import { DictationHelper } from '../app/services/dictation/dictation-helper.serv
 import { NavigationService } from '../app/services/navigation.service';
 import { StorageService } from '../app/services/storage.service';
 import {
-  AlertControllerSpy, GoogleAnalyticsSpy, LoadingControllerSpy, NavigationServiceSpy, NGXLoggerSpy,
+  AlertControllerSpy, LoadingControllerSpy, NavigationServiceSpy, NGXLoggerSpy,
   SplashScreenSpy,
   StorageSpy, ToastControllerSpy
 } from './mocks-ionic';
@@ -58,7 +57,6 @@ export class SharedTestModule {
         { provide: AlertController, useValue: AlertControllerSpy()},
         { provide: LoadingController, useValue: LoadingControllerSpy()},
         { provide: ToastController, useValue: ToastControllerSpy()},
-        { provide: GoogleAnalytics, useValue: GoogleAnalyticsSpy()},
         { provide: NGXLogger, useValue: NGXLoggerSpy()},
         { provide: NavigationService, useValue: NavigationServiceSpy()},
         DictationHelper,

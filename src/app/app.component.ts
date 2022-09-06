@@ -10,10 +10,10 @@ import { AppService } from './services/app.service';
 import { FFSAuthService } from './services/auth.service';
 import { NavigationService } from './services/navigation.service';
 import { StorageService } from './services/storage.service';
-import { GoogleAnalytics } from '@awesome-cordova-plugins/google-analytics/ngx';
 import config from '../../capacitor.config';
+import { filter } from 'rxjs';
 
-declare let ga: Function;
+declare let gtag: Function;
 
 const auth0CallbackUri = `${config.appId}://${environment.auth0Host}/capacitor/${config.appId}/callback`;
 
@@ -32,7 +32,6 @@ export class AppComponent implements OnInit {
     public navigationService: NavigationService,
     public storage: StorageService,
     public appService: AppService,
-    public googleAnalytics: GoogleAnalytics,
     private log: NGXLogger,
     private zone: NgZone,
   ) {
@@ -47,7 +46,7 @@ export class AppComponent implements OnInit {
   initializeApp() {
     this.platform.ready().then(() => {
       SplashScreen.hide();
-      // this.setupGoogleAnalytics();
+      this.setupGoogleAnalytics();
       this.initLanguage();
     });
   }
@@ -61,33 +60,42 @@ export class AppComponent implements OnInit {
   }
 
   private setupGoogleAnalytics() {
-    if (!this.appService.isCapacitor()) {
-      (function(i, s, o, g, r, a, m) {i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function() {
-        (i[r].q = i[r].q || []).push(arguments); }, i[r].l = 1 * new Date().getMilliseconds(); a = s.createElement(o),
-        m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m);
-      })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
-
-      ga('create', 'UA-114755687-2', 'auto');
-
-      this.router.events.subscribe(event => {
-        if (event instanceof NavigationEnd) {
-          ga('set', 'page', event.urlAfterRedirects);
-          ga('send', 'pageview');
-        }
+    this.router.events.pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe((event: NavigationEnd) => {
+          gtag('config', 'G-T0NL87GWKB',
+              {
+                  page_path: event.urlAfterRedirects
+              }
+          );
       });
-    } else {
-      this.googleAnalytics.startTrackerWithId('UA-114755687-1')
-        .then(() => {
-          this.log.info('Google analytics is ready now');
-          this.router.events.subscribe(event => {
-            if (event instanceof NavigationEnd) {
-              this.log.info(`google analytics track view ${event.urlAfterRedirects}`);
-              this.googleAnalytics.trackView(event.urlAfterRedirects);
-            }
-          });
-        })
-        .catch(e => this.log.error('Error starting GoogleAnalytics', e));
-    }
+
+    //if (!this.appService.isCapacitor()) {
+      // (function(i, s, o, g, r, a, m) {i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function() {
+      //   (i[r].q = i[r].q || []).push(arguments); }, i[r].l = 1 * new Date().getMilliseconds(); a = s.createElement(o),
+      //   m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m);
+      // })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+      // ga('create', 'UA-114755687-2', 'auto');
+
+      // this.router.events.subscribe(event => {
+      //   if (event instanceof NavigationEnd) {
+      //     ga('set', 'page', event.urlAfterRedirects);
+      //     ga('send', 'pageview');
+      //   }
+      // });
+    // } else {
+    //   this.googleAnalytics.startTrackerWithId('UA-114755687-1')
+    //     .then(() => {
+    //       this.log.info('Google analytics is ready now');
+    //       this.router.events.subscribe(event => {
+    //         if (event instanceof NavigationEnd) {
+    //           this.log.info(`google analytics track view ${event.urlAfterRedirects}`);
+    //           this.googleAnalytics.trackView(event.urlAfterRedirects);
+    //         }
+    //       });
+    //     })
+    //     .catch(e => this.log.error('Error starting GoogleAnalytics', e));
+    // }
   }
 
   private setupAppUrlOpenListener() {
