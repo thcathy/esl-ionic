@@ -43,20 +43,26 @@ export class MemberHomePage implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.log.info(`${this.selectedSegment}`);
   }
 
   ionViewDidEnter() {
-    this.log.info(`${this.selectedSegment}`);
-    this.ionSegment.value = this.selectedSegment;
-    this.route.params.subscribe(params => {
-      if (params.segment) { this.selectedSegment = params.segment; }
-      this.ionSegment.value = this.selectedSegment;
-    });
     this.init();
   }
 
   async init() {
+    this.selectedSegment = this.route.snapshot.queryParamMap?.get('segment');
+    this.log.info(`${this.selectedSegment}`);
+    this.ionSegment.value = this.selectedSegment;
+
+    window.history.replaceState({}, '', `/member-home?segment=${this.selectedSegment}`);
+
+    if (this.route.snapshot.queryParamMap?.get('refresh') === 'refresh') {
+      this.loadDictationAndHistory();
+    }
+  }
+
+  loadDictationAndHistory() {
+    console.log(`start loading dictation and history`);
     this.loadingAllTimesAndLast6Score = true;
     this.loadingPracticeHistories = true;
     this.loadingAllDictations = true;
@@ -94,7 +100,7 @@ export class MemberHomePage implements OnInit {
 
   segmentChanged(ev: any) {
     this.selectedSegment = ev.detail.value;
-    this.location.go(`/member-home/${ev.detail.value}`);
+    this.location.go(`/member-home?segment=${ev.detail.value}`);
   }
 
   onVocabHistoryList(value: string) {

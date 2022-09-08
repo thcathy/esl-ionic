@@ -15,7 +15,7 @@ const routes: Routes = [
   { path: 'dictation-view/:dictationId', loadChildren: () => import('./pages/dictation-view/dictation-view.module').then(m => m.DictationViewPageModule) },
   { path: 'link/dictation-view/:dictationId', loadChildren: () => import('./pages/dictation-view/dictation-view.module').then(m => m.DictationViewPageModule) },
   { path: 'account', loadChildren: () => import('./pages/account/account.module').then(m => m.AccountPageModule) },
-  { path: 'member-home/:segment', loadChildren: () => import('./pages/member-home/member-home.module').then(m => m.MemberHomePageModule) },
+  { path: 'member-home', loadChildren: () => import('./pages/member-home/member-home.module').then(m => m.MemberHomePageModule) },
   { path: 'edit-dictation', loadChildren: () => import('./pages/edit-dictation/edit-dictation.module').then(m => m.EditDictationPageModule) },
   { path: 'edit-dictation/:mode', loadChildren: () => import('./pages/edit-dictation/edit-dictation.module').then(m => m.EditDictationPageModule) },
   { path: 'search-dictation', loadChildren: () => import('./pages/search-dictation/search-dictation.module').then(m => m.SearchDictationPageModule) },

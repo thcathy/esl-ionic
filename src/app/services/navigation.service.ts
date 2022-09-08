@@ -75,13 +75,15 @@ export class NavigationService {
     }
   }
 
-  openMemberHome(segment: String = 'dictation') {
-    this.navigate(`/member-home/${segment}`);
+  openMemberHome(segment: String = 'dictation', refresh: boolean = true) {
+    this.navigate('/member-home', {
+      segment: segment,
+      refresh: refresh ? 'refresh' : ''
+    });
   }
 
   retryDictation(dictation: Dictation) {
     if (this.dictationService.isInstantDictation(dictation)) {
-      // this.openInstantDictation();
       this.editDictation(dictation, EditDictationPageMode.Start);
     } else {
       this.startDictation(dictation);

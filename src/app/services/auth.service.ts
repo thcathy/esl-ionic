@@ -78,7 +78,6 @@ export class FFSAuthService {
   public async handleAuthCallbackCapacitor(url: string) {
     if (url.includes('state=') && (url.includes('error=') || url.includes('code='))) {
       console.log(`handle auth callback by capacitor`);
-      debugger;
       await firstValueFrom(this.auth.handleRedirectCallback(url));
       this.idToken = (await firstValueFrom(this.auth.idTokenClaims$)).__raw;
       this.userProfile = await firstValueFrom(this.auth.user$);
