@@ -1,6 +1,5 @@
 import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { of } from 'rxjs';
-import 'rxjs-compat/add/observable/of';
 import {
   memberVocabularyMember1Apple,
   memberVocabularyMember1Banana,

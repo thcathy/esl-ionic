@@ -2,8 +2,7 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 
 import { of } from 'rxjs';
-import 'rxjs-compat/add/observable/of';
-import { AuthServiceSpy, DictationServiceSpy, IonicComponentServiceSpy, ManageVocabHistoryServiceSpy, NavigationServiceSpy, StorageSpy, VocabPracticeServiceSpy } from '../../../testing/mocks-ionic';
+import { FFSAuthServiceSpy, DictationServiceSpy, IonicComponentServiceSpy, ManageVocabHistoryServiceSpy, NavigationServiceSpy, StorageSpy, VocabPracticeServiceSpy } from '../../../testing/mocks-ionic';
 import { SharedTestModule } from '../../../testing/shared-test.module';
 import { dictation1, TestData } from '../../../testing/test-data';
 import { VocabPracticeType } from '../../enum/vocab-practice-type.enum';
@@ -27,7 +26,7 @@ describe('PracticeCompletePage', () => {
     vocabPracticeServiceSpy = VocabPracticeServiceSpy();
     dictationServiceSpy = DictationServiceSpy();
     storageSpy = StorageSpy();
-    authServiceSpy = AuthServiceSpy();
+    authServiceSpy = FFSAuthServiceSpy();
     navigationServiceSpy = NavigationServiceSpy();
     manageVocabHistoryServiceSpy = ManageVocabHistoryServiceSpy();
     ionicComponentServiceSpy = IonicComponentServiceSpy();

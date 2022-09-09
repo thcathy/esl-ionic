@@ -1,21 +1,21 @@
-import {Component, OnInit} from '@angular/core';
-import {AbstractControl, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
-import {Dictation, Dictations, SentenceLengthOptions, SuitableStudentOptions} from '../../entity/dictation';
-import {EditDictationRequest, MemberDictationService} from '../../services/dictation/member-dictation.service';
-import {NavigationService} from '../../services/navigation.service';
-import {FFSAuthService} from '../../services/auth.service';
-import {TranslateService} from '@ngx-translate/core';
-import {DictationService} from '../../services/dictation/dictation.service';
-import {IonicComponentService} from '../../services/ionic-component.service';
-import {CanComponentDeactivate} from '../../guards/can-deactivate.guard';
-import {Observable} from 'rxjs';
-import {ActivatedRoute} from '@angular/router';
-import {Vocab} from '../../entity/vocab';
-import {AlertController} from '@ionic/angular';
-import {ArticleDictationService} from '../../services/dictation/article-dictation.service';
-import {DictationType, EditDictationPageMode} from './edit-dictation-page-enum';
-import {DictationUtils} from '../../utils/dictation-utils';
-import {VocabPracticeType} from '../../enum/vocab-practice-type.enum';
+import { Component, OnInit } from '@angular/core';
+import { AbstractControl, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
+import { AlertController } from '@ionic/angular';
+import { TranslateService } from '@ngx-translate/core';
+import { Observable } from 'rxjs';
+import { Dictation, Dictations, SentenceLengthOptions, SuitableStudentOptions } from '../../entity/dictation';
+import { Vocab } from '../../entity/vocab';
+import { VocabPracticeType } from '../../enum/vocab-practice-type.enum';
+import { CanComponentDeactivate } from '../../guards/can-deactivate.guard';
+import { FFSAuthService } from '../../services/auth.service';
+import { ArticleDictationService } from '../../services/dictation/article-dictation.service';
+import { DictationService } from '../../services/dictation/dictation.service';
+import { EditDictationRequest, MemberDictationService } from '../../services/dictation/member-dictation.service';
+import { IonicComponentService } from '../../services/ionic-component.service';
+import { NavigationService } from '../../services/navigation.service';
+import { DictationUtils } from '../../utils/dictation-utils';
+import { DictationType, EditDictationPageMode } from './edit-dictation-page-enum';
 import Source = Dictations.Source;
 
 @Component({
@@ -55,7 +55,7 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
     this.init();
   }
 
-  getTitle(): String {
+  getTitle(): string {
     if (this.mode === EditDictationPageMode.Start) {
       return 'Start Dictation';
     } else {

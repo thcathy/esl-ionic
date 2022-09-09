@@ -124,13 +124,11 @@ export const LoadingControllerSpy = () => {
 
 export const AlertControllerSpy = () => jasmine.createSpyObj('AlertController', ['create']);
 
-export const AuthServiceSpy = () => jasmine.createSpyObj('AuthService', ['requireAuthenticated', 'isAuthenticated']);
+export const FFSAuthServiceSpy = () => jasmine.createSpyObj('FFSAuthService', ['requireAuthenticated', 'isAuthenticated', 'handleAuthCallbackWeb']);
 
 export const PopoverControllerSpy = () => jasmine.createSpyObj('PopoverController', ['create']);
 
 export const ToastControllerSpy = () => jasmine.createSpyObj('ToastController', ['create']);
-
-export const StatusBarSpy = () => jasmine.createSpyObj('StatusBar', ['styleDefault']);
 
 export const SplashScreenSpy = () => jasmine.createSpyObj('SplashScreen', ['hide']);
 

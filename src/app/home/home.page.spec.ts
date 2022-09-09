@@ -1,12 +1,10 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { AlertController, Platform } from '@ionic/angular';
 import { Storage } from '@ionic/storage-angular';
 import {
   AlertControllerSpy, AppServiceSpy,
   PlatformSpy,
-  StatusBarSpy,
   StorageSpy
 } from '../../testing/mocks-ionic';
 import { SharedTestModule } from '../../testing/shared-test.module';
@@ -25,8 +23,7 @@ describe('HomePage', () => {
         SharedTestModule.forRoot(),
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
-      providers: [
-        { provide: StatusBar, useValue: StatusBarSpy() },        
+      providers: [          
         { provide: Platform, useValue: PlatformSpy() },
         { provide: AlertController, useValue: AlertControllerSpy()},
         { provide: Storage, useValue: StorageSpy()},

@@ -3,6 +3,7 @@ import {MemberVocabulary} from '../../entity/member-vocabulary';
 import {AlertController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
 import {animate, state, style, transition, trigger} from '@angular/animations';
+import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
 
 @Component({
   selector: 'app-vocab-history-list',
@@ -26,7 +27,7 @@ export class VocabHistoryListComponent implements OnChanges {
 
   @Input() vocabs: Map<string, MemberVocabulary>;
   @Input() title: string;
-  @Input() icon: string;
+  @Input() icon: IconDefinition;
   @Input() showReview: boolean;
   @Input() infoText: string;
   @Input() loading: boolean;

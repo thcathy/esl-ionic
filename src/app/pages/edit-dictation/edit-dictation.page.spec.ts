@@ -5,7 +5,7 @@ import {EditDictationPage} from './edit-dictation.page';
 import {SharedTestModule} from '../../../testing/shared-test.module';
 import {dictation1} from '../../../testing/test-data';
 import {EditDictationRequest, MemberDictationService} from '../../services/dictation/member-dictation.service';
-import {AuthServiceSpy, MemberDictationServiceSpy, NavigationServiceSpy} from '../../../testing/mocks-ionic';
+import {FFSAuthServiceSpy, MemberDictationServiceSpy, NavigationServiceSpy} from '../../../testing/mocks-ionic';
 import {FFSAuthService} from '../../services/auth.service';
 import {of} from 'rxjs';
 import {NavigationService} from '../../services/navigation.service';
@@ -31,7 +31,7 @@ describe('EditDictationPage', () => {
 
   beforeEach(async(() => {
     memberDictationServiceSpy = MemberDictationServiceSpy();
-    authServiceSpy = AuthServiceSpy();
+    authServiceSpy = FFSAuthServiceSpy();
     activateRouteStub = new ActivatedRouteStub();
     navigationServiceSpy = NavigationServiceSpy();
 

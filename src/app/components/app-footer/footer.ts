@@ -2,8 +2,7 @@ import { Component } from '@angular/core';
 import {AppService} from '../../services/app.service';
 import {NavigationService} from '../../services/navigation.service';
 import {FFSAuthService} from '../../services/auth.service';
-import {Environment} from '@angular/compiler-cli/src/ngtsc/typecheck/src/environment';
-import {environment} from '../../../environments/environment';
+import packageJson from '../../../../package.json';
 
 @Component({
   selector: 'app-footer',
@@ -20,6 +19,6 @@ export class FooterComponent {
     public authService: FFSAuthService) {
   }
 
-  get version() { return environment.version; }
+  get version() { return packageJson.version; }
 
 }

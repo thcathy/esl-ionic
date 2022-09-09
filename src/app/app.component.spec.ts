@@ -6,7 +6,7 @@ import {SharedTestModule} from '../testing/shared-test.module';
 
 describe('AppComponent', () => {
 
-  let statusBarSpy, splashScreenSpy, platformReadySpy;
+  let splashScreenSpy, platformReadySpy;
 
   beforeEach(async(() => {
     splashScreenSpy = jasmine.createSpyObj('SplashScreen', ['hide']);
@@ -26,12 +26,6 @@ describe('AppComponent', () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.debugElement.componentInstance;
     expect(app).toBeTruthy();
-  });
-
-  it('should initialize the app', async () => {
-    TestBed.createComponent(AppComponent);
-    await platformReadySpy;
-    expect(splashScreenSpy.hide).toHaveBeenCalled();
   });
 
 });

@@ -18,7 +18,7 @@ import {VocabPracticeHistory} from '../../entity/vocab-practice-history';
   ]
 })
 export class ScoreComponent {
-  @Input() total: VocabPracticeHistory[];
+  @Input() total: number;
   _mark: number;
   state: string;
 

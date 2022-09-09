@@ -25,8 +25,10 @@ import { StorageService } from '../app/services/storage.service';
 import {
   AlertControllerSpy, LoadingControllerSpy, NavigationServiceSpy, NGXLoggerSpy,
   SplashScreenSpy,
-  StorageSpy, ToastControllerSpy
+  StorageSpy, ToastControllerSpy, FFSAuthServiceSpy
 } from './mocks-ionic';
+import { AuthService } from '@auth0/auth0-angular';
+import { FFSAuthService } from '../app/services/auth.service';
 
 @NgModule({
   imports:      [
@@ -57,6 +59,7 @@ export class SharedTestModule {
         { provide: AlertController, useValue: AlertControllerSpy()},
         { provide: LoadingController, useValue: LoadingControllerSpy()},
         { provide: ToastController, useValue: ToastControllerSpy()},
+        { provide: FFSAuthService, useValue: FFSAuthServiceSpy()},
         { provide: NGXLogger, useValue: NGXLoggerSpy()},
         { provide: NavigationService, useValue: NavigationServiceSpy()},
         DictationHelper,

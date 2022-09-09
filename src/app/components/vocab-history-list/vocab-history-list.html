@@ -1,6 +1,6 @@
 <ion-card class="card vocab-history-list" style="margin-top: 12px;" *ngIf="vocabs">
   <ion-card-header>
-    <fa-icon icon="{{icon}}"></fa-icon> {{ title | translate }}
+    <fa-icon [icon]="icon"></fa-icon> {{ title | translate }}
     <span *ngIf="infoText"><sup><fa-icon (click)="openInfo()" [icon]="['fas', 'info-circle']"></fa-icon></sup></span>
     ({{'Total'|translate}}: {{vocabs.size}})
   </ion-card-header>

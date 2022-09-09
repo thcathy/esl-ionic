@@ -13,6 +13,7 @@ import {NGXLogger} from 'ngx-logger';
 import {finalize} from 'rxjs/operators';
 import {ModalController} from '@ionic/angular';
 import {VocabSelectionComponent} from '../../components/vocab-selection/vocab-selection.component';
+import { faCheckCircle, faTimesCircle } from '@fortawesome/free-regular-svg-icons';
 
 @Component({
   selector: 'app-member-home',
@@ -29,6 +30,9 @@ export class MemberHomePage implements OnInit {
   @ViewChild('ionSegment', { static: true }) ionSegment;
   loadingAllTimesAndLast6Score: boolean; loadingPracticeHistories: boolean;
   loadingAllDictations: boolean; loadingVocabHistory: boolean;
+
+  faTimesCircle = faTimesCircle;
+  faCheckCircle = faCheckCircle;
 
   constructor(
     public memberDictationService: MemberDictationService,

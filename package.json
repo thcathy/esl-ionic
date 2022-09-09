@@ -1,6 +1,6 @@
 {
   "name": "FunFunSpell",
-  "version": "6.1.0",
+  "version": "9.0.0",
   "author": "thcathy",
   "homepage": "https://www.funfunspell.com",
   "scripts": {
@@ -13,8 +13,7 @@
     "lint": "ng lint",
     "e2e": "ng e2e --configuration=test",
     "e2e-ci": "ng e2e --configuration=test --protractor-config=e2e/protractor-ci.conf.js",
-    "uat": "protractor e2e/protractor.conf.js",
-    "postinstall": "patch-package"
+    "uat": "protractor e2e/protractor.conf.js"
   },
   "private": true,
   "dependencies": {
@@ -91,7 +90,6 @@
     "karma-jasmine": "^5.1.0",
     "karma-jasmine-html-reporter": "^2.0.0",
     "karma-junit-reporter": "^2.0.1",
-    "patch-package": "^6.4.7",
     "protractor": "~7.0.0",
     "rxjs-marbles": "^7.0.1",
     "ts-node": "^8.8.1",
