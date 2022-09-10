@@ -31,6 +31,7 @@ buildAndroidAab() {
   ionic cap build android --prod --no-open
   cd android
   sed -i ''  "s/versionName \".*\"/versionName \"$VERSION\"/g" app/build.gradle
+  sed -i ''  "s/versionCode .*/versionCode $ANDROID_VERSION/g" app/build.gradle
   ./gradlew bundle
   cd ..
   jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore my-release-key.jks -storepass funfunspell android/app/build/outputs/bundle/release/app-release.aab esl-dictation
@@ -42,7 +43,8 @@ simios() {
 
 setVersion() {
   VERSION=`cat package.json | python3 -c "import sys, json; print(json.load(sys.stdin)['version'])"`
-  echo "set version=$VERSION"
+  ANDROID_VERSION=`echo $VERSION | tr . 0`
+  echo "set version=$VERSION, android versionCode=$ANDROID_VERSION"
 }
 
 "$@"
