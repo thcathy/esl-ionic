@@ -1,12 +1,12 @@
 {
-  "name": "FunFunSpell",
-  "version": "9.0.0",
+  "name": "esl-ionic",
+  "version": "9.0.2",
   "author": "thcathy",
   "homepage": "https://www.funfunspell.com",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng bui`ld",
+    "build": "ng build",
     "test": "ng test --browsers=ChromeWithAutoplay",
     "test-ci": "ng test --watch=false --browsers=ChromeHeadlessCI",
     "test-dev": "ng test --browsers=ChromeHeadlessCI",
