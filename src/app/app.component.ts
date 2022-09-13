@@ -12,6 +12,7 @@ import { NavigationService } from './services/navigation.service';
 import { StorageService } from './services/storage.service';
 import config from '../../capacitor.config';
 import { filter } from 'rxjs';
+import packageJson from '../../package.json';
 
 declare let gtag: Function;
 
@@ -60,42 +61,19 @@ export class AppComponent implements OnInit {
   }
 
   private setupGoogleAnalytics() {
+    gtag('config', 'G-T0NL87GWKB', {
+      'page_title': packageJson.name,
+    });
+    
     this.router.events.pipe(filter(event => event instanceof NavigationEnd))
       .subscribe((event: NavigationEnd) => {
-          gtag('config', 'G-T0NL87GWKB',
-              {
-                  page_path: event.urlAfterRedirects
-              }
-          );
+        console.log(`${JSON.stringify(event)}`);
+        gtag('event', 'screen_view', {
+          'app_name': packageJson.name,
+          'app_version': packageJson.version,
+          'screen_name': event.urlAfterRedirects
+        });
       });
-
-    //if (!this.appService.isCapacitor()) {
-      // (function(i, s, o, g, r, a, m) {i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function() {
-      //   (i[r].q = i[r].q || []).push(arguments); }, i[r].l = 1 * new Date().getMilliseconds(); a = s.createElement(o),
-      //   m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m);
-      // })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
-
-      // ga('create', 'UA-114755687-2', 'auto');
-
-      // this.router.events.subscribe(event => {
-      //   if (event instanceof NavigationEnd) {
-      //     ga('set', 'page', event.urlAfterRedirects);
-      //     ga('send', 'pageview');
-      //   }
-      // });
-    // } else {
-    //   this.googleAnalytics.startTrackerWithId('UA-114755687-1')
-    //     .then(() => {
-    //       this.log.info('Google analytics is ready now');
-    //       this.router.events.subscribe(event => {
-    //         if (event instanceof NavigationEnd) {
-    //           this.log.info(`google analytics track view ${event.urlAfterRedirects}`);
-    //           this.googleAnalytics.trackView(event.urlAfterRedirects);
-    //         }
-    //       });
-    //     })
-    //     .catch(e => this.log.error('Error starting GoogleAnalytics', e));
-    // }
   }
 
   private setupAppUrlOpenListener() {
