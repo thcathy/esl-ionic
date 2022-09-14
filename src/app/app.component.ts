@@ -61,6 +61,8 @@ export class AppComponent implements OnInit {
   }
 
   private setupGoogleAnalytics() {
+    if (!environment.production) return;
+
     gtag('config', 'G-T0NL87GWKB', {
       'page_title': packageJson.name,
     });
