@@ -4,9 +4,7 @@
     "target": {
       "namespace": "android_app",
       "package_name": "com.esl.ionic",
-      "sha256_cert_fingerprints": [
-        "3A:66:40:55:61:83:97:61:E6:BA:E2:39:C7:1C:B7:0C:8F:F4:D1:4A:39:36:71:E0:AF:77:6D:15:D4:5C:FF:36"
-      ]
+      "sha256_cert_fingerprints": ["7D:E7:24:5E:A7:17:D9:E2:03:AA:AB:09:AA:3F:89:37:41:3C:DA:46:7E:ED:32:38:E1:04:97:14:D0:51:22:F2"]
     }
   }
 ]
