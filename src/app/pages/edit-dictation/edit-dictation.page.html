@@ -96,27 +96,28 @@
                 </ion-radio-group>
               </div>
               <div class="word-options-all" *ngIf="type.value === dictationType.Word">
-                <ion-item >
+                <ion-item>
                   <ion-label>
                     <fa-icon [icon]="['far', 'images']"></fa-icon> {{'Show Image'|translate}}</ion-label>
                   <ion-toggle style="padding-right: 30px;" formControlName="showImage"></ion-toggle>
                 </ion-item>
-                <ion-item *ngIf="type.value === dictationType.Word">
+                <ion-item>
                   <ion-label>
                     <fa-icon [icon]="['fas', 'window-minimize']"></fa-icon> {{'Words Contain Space'|translate}}</ion-label>
                   <ion-toggle style="padding-right: 30px;" formControlName="wordContainSpace"></ion-toggle>
                 </ion-item>
               </div>
 
-              <ion-item *ngIf="type.value === dictationType.Sentence">
-                <ion-label>
-                  <fa-icon [icon]="['fas', 'ruler']"></fa-icon> {{'Each Sentence Length'|translate}}
-                </ion-label>
-                <ion-select style="padding-right: 30px;" formControlName="sentenceLength" interface="popover">
-                  <ion-select-option *ngFor="let state of sentenceLengthOptions"
-                                     [value]="state">{{'SentenceLength.' + state|translate}}</ion-select-option>
-                </ion-select>
-              </ion-item>
+              <div *ngIf="type.value === dictationType.Sentence">
+                <ion-item>
+                  <ion-label><fa-icon [icon]="['fas', 'ruler']"></fa-icon> {{'Each Sentence Length'|translate}}</ion-label>
+                  <ion-select style="padding-right: 30px;" formControlName="sentenceLength" interface="popover">
+                    <ion-select-option *ngFor="let state of sentenceLengthOptions" [value]="state">{{'SentenceLength.' + state|translate}}</ion-select-option>
+                  </ion-select>
+                </ion-item>
+                <app-article-dictation-options #articleDictationOptions></app-article-dictation-options>
+              </div>
+
             </ion-col>
 
             <ion-col id="ion-col-textarea" size="12" size-sm="12" size-md="12" size-lg="6">

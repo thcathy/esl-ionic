@@ -1,0 +1,12 @@
+<ion-list>
+  <ion-item>
+    <ion-label><fa-icon [icon]="['fas', 'font']"></fa-icon> {{'Case Sensitive'|translate}}</ion-label>
+    <ion-toggle #caseSensitive (ionChange)="optionChanged($event, caseSensitiveKey)"
+                style="padding-right: 30px;"></ion-toggle>
+  </ion-item>
+  <ion-item>
+    <ion-label><fa-icon [icon]="['fas', 'question']"></fa-icon> {{'Include Punctuation'|translate}}</ion-label>
+    <ion-toggle #includePunctuation (ionChange)="optionChanged($event, includePunctuationKey)"
+                style="padding-right: 30px;"></ion-toggle>
+  </ion-item>
+</ion-list>

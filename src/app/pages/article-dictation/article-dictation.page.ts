@@ -68,12 +68,19 @@ export class ArticleDictationPage implements OnInit {
   }
 
   speak() {
-    this.speechService.speak(this.sentences[this.currentSentence], this.speakingRate);
+    this.speechService.speak(
+      this.dictation.options?.includePunctuation ? this.articleDictationService.replacePunctuationToWord(this.sentences[this.currentSentence]) : this.sentences[this.currentSentence], 
+      this.speakingRate);
   }
 
   submitAnswer() {
     this.histories.unshift(
-      this.articleDictationService.checkAnswer(this.sentences[this.currentSentence], this.answer)
+      this.articleDictationService.checkAnswer(
+        this.sentences[this.currentSentence], this.answer, {
+          caseSensitive: this.dictation?.options?.caseSensitiveSentence,
+          includePunctuation: this.dictation?.options?.includePunctuation,
+        }
+      )
     );
 
     this.currentSentence++;

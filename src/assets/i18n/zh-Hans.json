@@ -208,5 +208,11 @@
   "SelectedVocabulary": "已选择 {{ number }} 个生字",
   "Create Review": "建立复习",
   "Start Review": "开始复习",
-  "No vocabulary selected": "没有选择生字"
+  "No vocabulary selected": "没有选择生字",
+  "incorrect only": "仅不正确",
+  "Retry All": "重试全部",
+  "Retry Incorrect": "重试不正确",
+  "Case Sensitive": "区分大小写",
+  "Include Punctuation": "包括标点符号",
+  "Sentence practice options": "句子练习选项"
 }

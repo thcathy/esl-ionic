@@ -6,6 +6,14 @@ import {ValidationUtils} from '../../utils/validation-utils';
 import {NGXLogger} from 'ngx-logger';
 import {SentenceLengthOptions} from '../../entity/dictation';
 
+namespace ArticleDictationService {
+  export interface CheckAnswerOptions {
+    caseSensitive?: boolean;
+    includePunctuation?: boolean;
+  }
+
+}
+
 @Injectable(
   { providedIn: 'root' }
 )
@@ -80,11 +88,21 @@ export class ArticleDictationService {
     }
   }
 
-  checkAnswer(question: string, answer: string): SentenceHistory {
+  splitSentence(sentence: string): string[] { return sentence.split(/\b/).filter(s => !ValidationUtils.isBlankString(s)); }
+
+  extractCharacters(input: string, options: ArticleDictationService.CheckAnswerOptions): string {
+    if (ValidationUtils.noAlphabet(input)) {
+      return options.includePunctuation ? ValidationUtils.punctuationOnly(input) : '';
+    } else {
+      return options.caseSensitive ? ValidationUtils.alphabetOnly(input) : ValidationUtils.alphabetOnlyToLowerCase(input);
+    }
+  }
+
+  checkAnswer(question: string, answer: string, options: ArticleDictationService.CheckAnswerOptions): SentenceHistory {
     this.log.debug(`check question [${question}] with answer [${answer}]`);
-    const questionSegments = question.split(' ');
-    const answerSegments = answer.split(' ');
-    const isCorrect: boolean[] = [];
+    const questionSegments = this.splitSentence(question);
+    const answerSegments = this.splitSentence(answer);
+    const isCorrect: boolean[] =   [];
 
     let answerPosition = 0;
     for (let questionPosition = 0; questionPosition < questionSegments.length; questionPosition++) {
@@ -95,15 +113,14 @@ export class ArticleDictationService {
         continue;
       }
 
-      const questionSegment = questionSegments[questionPosition];
-      const questionAlphabet = ValidationUtils.alphabetOnly(questionSegment);
-      const answerAlphabet = ValidationUtils.alphabetOnly(answerSegments[answerPosition]);
-
+      let questionAlphabet = this.extractCharacters(questionSegments[questionPosition], options);
+      let answerAlphabet = this.extractCharacters(answerSegments[answerPosition], options);
+      
       if (ValidationUtils.isBlankString(questionAlphabet)) {
         correct = true;
       } else {
         for (let i = answerPosition; i < answerSegments.length; i++) {
-          const subAnswerAlphabet = ValidationUtils.alphabetOnly(answerSegments[i]);
+          const subAnswerAlphabet = this.extractCharacters(answerSegments[i], options);
           if (ValidationUtils.wordEqual(questionAlphabet, subAnswerAlphabet)) {
             correct = true;
             answerPosition = i - 1;
@@ -143,5 +160,24 @@ export class ArticleDictationService {
 
   private answerSizeLeftIsSmaller(questionPosition: number, questionSize: number, answerPosition: number, ansSize: number): boolean {
     return (ansSize - answerPosition) < (questionSize - questionPosition);
+  }
+
+  public replacePunctuationToWord(input: string): string {
+    input = input.replace(/\,/g, ', comma,');
+    input = input.replace(/\.{3,}|…/g, ', ellipsis,');
+    input = input.replace(/\./g, ', full stop,');
+    input = input.replace(/\?/g, ', question mark,');
+    input = input.replace(/\!/g, ', exclamation mark,');
+    input = input.replace(/\:/g, ', colon,');
+    input = input.replace(/\;/g, ', semicolon,');
+    input = input.replace(/\-|—/g, ', hyphen,');
+    input = input.replace(/\(/g, ', open round bracket,');
+    input = input.replace(/\)/g, ', close round bracket,');
+    input = input.replace(/\[/g, ', open square bracket,');
+    input = input.replace(/\]/g, ', close square bracket,');
+    input = input.replace(/\//g, ', slash,');
+    input = input.replace(/\'|’|‘/g, ', apostrophe,');
+    input = input.replace(/"|“|”/g, ', double quote,');
+    return input;
   }
 }

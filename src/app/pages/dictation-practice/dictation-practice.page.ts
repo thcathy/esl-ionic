@@ -2,12 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NGXLogger } from 'ngx-logger';
 import { from, of, Subject } from 'rxjs';
-import { mergeMap } from 'rxjs/operators';
+import { map, mergeMap } from 'rxjs/operators';
 import { VirtualKeyboardEvent } from '../../components/virtual-keyboard/virtual-keyboard';
 import { Dictation, PuzzleControls } from '../../entity/dictation';
 import { VocabPractice } from '../../entity/voacb-practice';
 import { VocabPracticeHistory } from '../../entity/vocab-practice-history';
 import { VocabPracticeType } from '../../enum/vocab-practice-type.enum';
+import { DictationHelper } from '../../services/dictation/dictation-helper.service';
 import { DictationService } from '../../services/dictation/dictation.service';
 import { IonicComponentService } from '../../services/ionic-component.service';
 import { NavigationService } from '../../services/navigation.service';
@@ -44,6 +45,7 @@ export class DictationPracticePage implements OnInit {
     public navigationService: NavigationService,
     public ionicComponentService: IonicComponentService,
     public storage: StorageService,
+    public dictationHelper: DictationHelper,
     private log: NGXLogger,
   ) { }
 
@@ -71,9 +73,9 @@ export class DictationPracticePage implements OnInit {
     this.questionIndex = 0;
     this.mark = 0;
     this.phonics = 'Phonetic';
-    from(this.dictation.vocabs)
+    this.dictationHelper.wordsToPractice(this.dictation)
       .pipe(
-          mergeMap(vocab => this.vocabPracticeService.getQuestion(vocab.word, this.dictation.showImage)),
+          mergeMap(word => this.vocabPracticeService.getQuestion(word, this.dictation.showImage)),
           mergeMap(vocabPractice => this.dictation.showImage ? this.vocabPracticeService.getImages(vocabPractice) : of(vocabPractice))
       ).subscribe(p => this.receiveVocabPractice(p));
   }

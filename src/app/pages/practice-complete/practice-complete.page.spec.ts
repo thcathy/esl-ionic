@@ -2,9 +2,10 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 
 import { of } from 'rxjs';
-import { FFSAuthServiceSpy, DictationServiceSpy, IonicComponentServiceSpy, ManageVocabHistoryServiceSpy, NavigationServiceSpy, StorageSpy, VocabPracticeServiceSpy } from '../../../testing/mocks-ionic';
+import { DictationServiceSpy, FFSAuthServiceSpy, IonicComponentServiceSpy, ManageVocabHistoryServiceSpy, NavigationServiceSpy, StorageSpy, VocabPracticeServiceSpy } from '../../../testing/mocks-ionic';
 import { SharedTestModule } from '../../../testing/shared-test.module';
-import { dictation1, TestData } from '../../../testing/test-data';
+import { TestData } from '../../../testing/test-data';
+import { Dictation } from '../../entity/dictation';
 import { VocabPracticeType } from '../../enum/vocab-practice-type.enum';
 import { FFSAuthService } from '../../services/auth.service';
 import { DictationService } from '../../services/dictation/dictation.service';
@@ -58,7 +59,8 @@ describe('PracticeCompletePage', () => {
     dictation.options = { 'practiceType': VocabPracticeType.Puzzle };
     defaultInput = <PracticeCompletePageInput>{
       dictation: dictation,
-      histories: [],
+      mark: dictation.vocabs.length - 1,
+      histories: TestData.vocabPracticeHistories,
       historyStored: false,
     };
   });
@@ -89,34 +91,77 @@ describe('PracticeCompletePage', () => {
     expect(dictationServiceSpy.createVocabDictationHistory.calls.count()).toEqual(0);
   }));
 
-  describe('test retry', () => {
-    it('retry generated dictation will go to vocabulary starter with correct vocabulary practice type', fakeAsync(() => {
+  describe('generate dictation', () => {
+    beforeEach(fakeAsync(() => {
       defaultInput.dictation = TestData.generateDictation();
+      defaultInput.dictation = defaultInput.dictation.withRetryWrongWordOptions();
       defaultInput.dictation.options.practiceType = VocabPracticeType.Puzzle;
       const params = { 'practiceCompletePageInput': defaultInput };
       storageSpy.get.and.callFake((param) => params[param]);
       component.ionViewWillEnter();
       tick();
       fixture.detectChanges();
-      component.getDictationThenOpen();
-
-      expect(navigationServiceSpy.startDictation.calls.count()).toEqual(1);
-      expect(navigationServiceSpy.startDictation.calls.mostRecent().args[0].options.practiceType).toEqual(VocabPracticeType.Puzzle);
     }));
 
-    it('show vocabulary practice type options for saved vocabulary dictation', fakeAsync(() => {
-      dictationServiceSpy.getById.and.returnValue(of(dictation1));
-      ionicComponentServiceSpy.presentVocabPracticeTypeActionSheet.and.returnValue(Promise.resolve(VocabPracticeType.Puzzle));
+    it('retry all will go to vocabulary starter with correct vocabulary practice type', fakeAsync(() => {
+      component.getDictationThenOpen(false);
+
+      expect(navigationServiceSpy.retryDictation.calls.count()).toEqual(1);
+      const dictationInParam = <Dictation>navigationServiceSpy.retryDictation.calls.mostRecent().args[0];
+      expect(dictationInParam.options.practiceType).toEqual(defaultInput.dictation.options.practiceType);
+      expect(dictationInParam.options.retryWrongWord).toBeFalse();
+      expect(dictationInParam.options.vocabPracticeHistories?.length).toEqual(0);
+    }));
+
+    it('do not show retry wrong word', fakeAsync(() => {
+      expect(component.showRetryIncorrect()).toBeFalse();
+    }));
+  });
+
+  describe('fill in (saved) dictation', () => {
+    let dictation = TestData.fillInDictation();
+
+    beforeEach(fakeAsync(() => {
+      dictation = dictation.withRetryWrongWordOptions();
+      dictation.options.practiceType = VocabPracticeType.Spell;
+      dictation.id = 999;
+      dictationServiceSpy.getById.and.returnValue(of(dictation));
+      ionicComponentServiceSpy.presentVocabPracticeTypeActionSheet.and.returnValue(Promise.resolve(dictation.options.practiceType));
+      defaultInput.mark = 1;  // not fully correct
       const params = { 'practiceCompletePageInput': defaultInput };
       storageSpy.get.and.callFake((param) => params[param]);
       component.ionViewWillEnter();
       tick();
       fixture.detectChanges();
-      component.getDictationThenOpen();
+    }));
 
+    it('retry will show vocabulary practice type options for saved vocabulary dictation', fakeAsync(() => {
+      component.getDictationThenOpen(false);
       expect(navigationServiceSpy.startDictation.calls.count()).toEqual(0);
       expect(ionicComponentServiceSpy.presentVocabPracticeTypeActionSheet.calls.count()).toEqual(1);
     }));
+
+    it('show retry wrong word', fakeAsync(() => {
+      expect(component.showRetryIncorrect()).toBeTrue();
+    }));
+
+    it('show vocabulary practice type options for saved vocabulary dictation', fakeAsync(() => {
+      component.getDictationThenOpen(true);
+      expect(navigationServiceSpy.startDictation.calls.count()).toEqual(0);
+      expect(ionicComponentServiceSpy.presentVocabPracticeTypeActionSheet.calls.count()).toEqual(1);
+    }));
+
+    it('retry wrong word only will set options', fakeAsync(() => {
+      component.getDictationThenOpen(true);
+      tick();
+      expect(navigationServiceSpy.retryDictation.calls.count()).toEqual(1);
+      const dictationInParam = <Dictation>navigationServiceSpy.retryDictation.calls.mostRecent().args[0];
+      console.log(`${JSON.stringify(dictationInParam.options)}`);
+      expect(dictationInParam.options.practiceType).toEqual(dictation.options.practiceType);
+      expect(dictationInParam.options.retryWrongWord).toBeTrue();
+      expect(dictationInParam.options.vocabPracticeHistories?.length).toEqual(2);
+    }));
+
   });
 
   describe('test createHistory', () => {

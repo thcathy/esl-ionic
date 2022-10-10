@@ -5,83 +5,14 @@ import {SentenceHistory} from '../app/entity/sentence-history';
 import {VocabPractice} from '../app/entity/voacb-practice';
 import {MemberVocabulary} from '../app/entity/member-vocabulary';
 import {Vocab} from '../app/entity/vocab';
+import { VocabPracticeHistory } from '../app/entity/vocab-practice-history';
+import { VocabPracticeType } from '../app/enum/vocab-practice-type.enum';
 
 export const vocabs1 = [
   <Vocab>{word: 'apple'},
   <Vocab>{word: 'banana'},
   <Vocab>{word: 'cat'},
 ];
-
-export namespace TestData {
-  class DefaultVocabDictation extends Dictation {
-    id = 1;
-    title = 'test dictation 1';
-    vocabs = vocabs1;
-    showImage = true;
-    options = new Dictations.Options();
-  }
-
-  export function instantDictation() {
-    const d = new DefaultVocabDictation();
-    d.source = Dictations.Source.FillIn;
-    d.id = null;
-    return d;
-  }
-
-  export function fillInDictation() {
-    const d = new DefaultVocabDictation();
-    d.source = Dictations.Source.FillIn;
-    return d;
-  }
-
-  export function selectDictation() {
-    const d = new DefaultVocabDictation();
-    d.source = Dictations.Source.Select;
-    return d;
-  }
-
-  export function generateDictation() {
-    const d = new DefaultVocabDictation();
-    d.source = Dictations.Source.Generate;
-    return d;
-  }
-
-}
-
-export const member1 = new Member(
-  1,
-  'tester1',
-  new Name('Tester', 'A'),
-  new Date('1980-03-02'),
-  'address',
-  '43420024',
-  'A school name',
-  20,
-  'tester@gmail.com',
-  null,
-  new Date('2008-01-01'));
-
-export const dictation1 = <Dictation>{
-  id: 1,
-  title: 'test dictation 1',
-  article: 'sentence to learn',
-  source: Dictations.Source.FillIn
-};
-
-export const dictation1Histories = [
-  <SentenceHistory>{question: 'sentence to learn', answer: 'sentence to learn', questionSegments: [''], isCorrect: [true]}
-];
-
-export const dictation2_vocabDictation = <Dictation>{
-  id: 2,
-  title: 'test dictation 2',
-  vocabs: [
-    <Vocab>{word: 'apple'},
-    <Vocab>{word: 'banana'},
-    <Vocab>{word: 'cat'},
-  ],
-  showImage: true
-};
 
 export const vocab_apple = <VocabPractice>{
   id: 1,
@@ -125,6 +56,87 @@ export const vocab_banana = <VocabPractice>{
   suffledWord: 'aaanbn'
 };
 
+export namespace TestData {
+  class DefaultVocabDictation extends Dictation {
+    id = 1;
+    title = 'test dictation 1';
+    vocabs = vocabs1;
+    showImage = true;
+    options = new Dictations.Options();
+
+    withRetryWrongWordOptions() {
+      this.options.retryWrongWord = true;
+      this.options.vocabPracticeHistories = vocabPracticeHistories;
+      return this;
+    }
+  }
+
+  export function instantDictation() {
+    const d = new DefaultVocabDictation();
+    d.source = Dictations.Source.FillIn;
+    d.id = null;
+    return d;
+  }
+
+  export function fillInDictation() {
+    const d = new DefaultVocabDictation();
+    d.source = Dictations.Source.FillIn;
+    return d;
+  }
+
+  export function selectDictation() {
+    const d = new DefaultVocabDictation();
+    d.source = Dictations.Source.Select;
+    return d;
+  }
+
+  export function generateDictation() {
+    const d = new DefaultVocabDictation();
+    d.source = Dictations.Source.Generate;
+    return d;
+  }
+  
+  export const vocabPracticeHistories: VocabPracticeHistory[] = [
+    <VocabPracticeHistory>{question: vocab_apple, correct: true},
+    <VocabPracticeHistory>{question: vocab_banana, correct: false}
+  ] as VocabPracticeHistory[];
+}
+
+export const member1 = new Member(
+  1,
+  'tester1',
+  new Name('Tester', 'A'),
+  new Date('1980-03-02'),
+  'address',
+  '43420024',
+  'A school name',
+  20,
+  'tester@gmail.com',
+  null,
+  new Date('2008-01-01'));
+
+export const dictation1 = <Dictation>{
+  id: 1,
+  title: 'test dictation 1',
+  article: 'sentence to learn',
+  source: Dictations.Source.FillIn
+};
+
+export const dictation1Histories = [
+  <SentenceHistory>{question: 'sentence to learn', answer: 'sentence to learn', questionSegments: [''], isCorrect: [true]}
+];
+
+export const dictation2_vocabDictation = <Dictation>{
+  id: 2,
+  title: 'test dictation 2',
+  vocabs: [
+    <Vocab>{word: 'apple'},
+    <Vocab>{word: 'banana'},
+    <Vocab>{word: 'cat'},
+  ],
+  showImage: true
+};
+
 export const memberVocabularyMember1Apple = () => <MemberVocabulary>{
   id: {
     word: 'apple',
@@ -151,6 +163,8 @@ export const memberVocabularyMember1Cat = () => <MemberVocabulary>{
   correct: 0,
   wrong: 1,
 };
+
+
 
 
 

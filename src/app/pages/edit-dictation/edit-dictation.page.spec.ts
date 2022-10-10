@@ -14,6 +14,7 @@ import {ActivatedRoute} from '@angular/router';
 import {Dictation, Dictations} from '../../entity/dictation';
 import {DictationType, EditDictationPageMode} from './edit-dictation-page-enum';
 import {VocabPracticeType} from '../../enum/vocab-practice-type.enum';
+import exp from 'constants';
 
 describe('EditDictationPage', () => {
   let component: EditDictationPage;
@@ -190,12 +191,16 @@ describe('EditDictationPage', () => {
           component.question.setValue(`This is a article.`);
           component.sentenceLength.setValue('Short');
           component.type.setValue(DictationType.Sentence);
+          component.caseSensitive.setValue(true);
+          component.includePunctuation.setValue(true);
           component.startDictationNow();
 
           const dictation = navigationServiceSpy.startDictation.calls.mostRecent().args[0] as Dictation;
           expect(dictation.sentenceLength).toEqual('Short');
           expect(dictation.article).toEqual('This is a article.');
           expect(dictation.source).toEqual(Dictations.Source.FillIn);
+          expect(dictation.options.caseSensitiveSentence).toBeTrue();
+          expect(dictation.options.includePunctuation).toBeTrue();
         }));
 
         it('start instant dictation by single word will navigate to start dictation page', fakeAsync(() => {

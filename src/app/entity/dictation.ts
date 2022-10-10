@@ -1,6 +1,7 @@
 import {Member} from './member';
 import {Vocab} from './vocab';
 import {VocabPracticeType} from '../enum/vocab-practice-type.enum';
+import { VocabPracticeHistory } from './vocab-practice-history';
 
 export class Dictation {
   title?: string;
@@ -38,6 +39,10 @@ export namespace Dictations {
 
   export class Options {
     practiceType?: VocabPracticeType;
+    retryWrongWord?: boolean = false;
+    vocabPracticeHistories?: VocabPracticeHistory[];
+    caseSensitiveSentence?: boolean = false;
+    includePunctuation?: boolean = false;
   }
 }
 

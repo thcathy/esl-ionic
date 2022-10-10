@@ -9,6 +9,7 @@ import {TranslateService} from '@ngx-translate/core';
 import {EditDictationPageMode} from '../pages/edit-dictation/edit-dictation-page-enum';
 import {PracticeCompletePageInput} from '../pages/practice-complete/practice-complete.page';
 import { StorageService } from './storage.service';
+import { DictationHelper } from './dictation/dictation-helper.service';
 
 export interface NavigationRequest {
   destination: any;
@@ -37,6 +38,7 @@ export class NavigationService {
               private location: Location,
               private storage: StorageService,
               private dictationService: DictationService,
+              private dictationHelper: DictationHelper,
               private translate: TranslateService) {}
 
 
@@ -83,7 +85,7 @@ export class NavigationService {
   }
 
   retryDictation(dictation: Dictation) {
-    if (this.dictationService.isInstantDictation(dictation)) {
+    if (this.dictationService.isInstantDictation(dictation) && !this.dictationHelper.isGeneratedDictation(dictation)) {
       this.editDictation(dictation, EditDictationPageMode.Start);
     } else {
       this.startDictation(dictation);

@@ -108,27 +108,30 @@ export class PracticeCompletePage implements OnInit {
     }
   }
 
-  getDictationThenOpen() {
-    if (this.dictationHelper.isGeneratedDictation(this.dictation)) {
-      this.navigationService.startDictation(this.dictation);
-      return;
-    } else if (this.dictationHelper.isInstantDictation(this.dictation)) {
-      this.openDictation(this.dictation);
+  getDictationThenOpen(retryWrongWord: boolean) {
+    if (this.dictationHelper.isGeneratedDictation(this.dictation)
+    || this.dictationHelper.isInstantDictation(this.dictation)) {
+      this.openDictation(this.dictation, this.dictation.options?.practiceType, retryWrongWord);
     } else {
       // this.ionicComponentService.showLoading().then(l => this.loader = l);
       this.ionicComponentService.presentVocabPracticeTypeActionSheet()
         .then(type => {
+          console.log(`${type}`);
           this.dictationService.getById(this.dictation.id)
             .toPromise()
-            .then(d => this.openDictation(d, type))
+            .then(d => this.openDictation(d, type, retryWrongWord))
             .catch(e => this.showCannotGetDictation(e));
         });
     }
   }
 
-  openDictation(d: Dictation, type: VocabPracticeType = VocabPracticeType.Spell) {
+  openDictation(d: Dictation, type: VocabPracticeType, retryWrongWord: boolean) {
     if (this.loader) { this.loader.dismiss(); }
-    d.options = { 'practiceType' : type };
+    d.options = { 
+      practiceType : type,
+      retryWrongWord: retryWrongWord,
+      vocabPracticeHistories: retryWrongWord ? this.histories : [],
+    };
     this.navigationService.retryDictation(d);
   }
 
@@ -143,6 +146,13 @@ export class PracticeCompletePage implements OnInit {
       && this.authService.isAuthenticated()
       && (this.dictation.source === Dictations.Source.Select || this.dictation.source === Dictations.Source.Generate);
   }
+
+  showRetryIncorrect() {
+    return this.mark < this.histories.length && 
+      (this.dictationHelper.isGeneratedDictation(this.dictation) || !this.dictationHelper.isInstantDictation(this.dictation));
+  }
+
+  get showDictationContent() { return this.dictation?.options?.retryWrongWord; }
 
 }
 
