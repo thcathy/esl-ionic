@@ -5,8 +5,13 @@
                 style="padding-right: 30px;"></ion-toggle>
   </ion-item>
   <ion-item>
-    <ion-label><fa-icon [icon]="['fas', 'question']"></fa-icon> {{'Include Punctuation'|translate}}</ion-label>
-    <ion-toggle #includePunctuation (ionChange)="optionChanged($event, includePunctuationKey)"
+    <ion-label><fa-icon [icon]="['fas', 'question']"></fa-icon> {{'Check Punctuation'|translate}}</ion-label>
+    <ion-toggle #checkPunctuation (ionChange)="optionChanged($event, checkPunctuationKey)"
+                style="padding-right: 30px;"></ion-toggle>
+  </ion-item>
+  <ion-item>
+    <ion-label><fa-icon [icon]="['fas', 'volume-low']"></fa-icon> {{'Speak Punctuation'|translate}}</ion-label>
+    <ion-toggle #speakPunctuation (ionChange)="optionChanged($event, speakPunctuationKey)"
                 style="padding-right: 30px;"></ion-toggle>
   </ion-item>
 </ion-list>

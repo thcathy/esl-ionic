@@ -139,7 +139,8 @@ export class DictationCardComponent {
     this.articleDictationOptionsModal.dismiss();
     this.dictation.options = this.dictation.options || new Dictations.Options();
     this.dictation.options.caseSensitiveSentence = this.articleDictationOptions.caseSensitive.checked;
-    this.dictation.options.includePunctuation = this.articleDictationOptions.includePunctuation.checked;
+    this.dictation.options.checkPunctuation = this.articleDictationOptions.checkPunctuation.checked;
+    this.dictation.options.speakPunctuation= this.articleDictationOptions.speakPunctuation.checked;
     this.navService.startDictation(this.dictation);
   }
 

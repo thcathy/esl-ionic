@@ -42,7 +42,8 @@ export namespace Dictations {
     retryWrongWord?: boolean = false;
     vocabPracticeHistories?: VocabPracticeHistory[];
     caseSensitiveSentence?: boolean = false;
-    includePunctuation?: boolean = false;
+    checkPunctuation?: boolean = false;
+    speakPunctuation?: boolean = false;
   }
 }
 

@@ -2,7 +2,7 @@ import {ArticleDictationService} from './article-dictation.service';
 import {ValidationUtils} from '../../utils/validation-utils';
 import {NGXLoggerSpy} from '../../../testing/mocks-ionic';
 
-fdescribe('ArticleDictationService', () => {
+describe('ArticleDictationService', () => {
   let service: ArticleDictationService;
 
   beforeEach(() => {
@@ -150,7 +150,7 @@ From a UI perspective, Alerts can be thought of as`;
     expect(allIsNotEmpty).toBe(true);
   });
 
-  fdescribe('checkAnswer', () => {
+  describe('checkAnswer', () => {
     it('case insensitive', () => {
       const question = `Jane described Tweddle-Taylor, 51, as a "well-loved member" and "wonderful friend".`;
       const testcases = [
@@ -164,6 +164,7 @@ From a UI perspective, Alerts can be thought of as`;
         },
         {
           answer: `Tweddle-Taylor`,
+
           result: [false, false, true, true, true, true, true, true, false, false, true, false, true, false, false, true, false, true, false, false, true]
         },
         {
@@ -179,7 +180,7 @@ From a UI perspective, Alerts can be thought of as`;
           result: [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true]
         }
       ];
-  
+
       testcases.forEach((t) => {
         const history = service.checkAnswer(question, t.answer, {});
         console.log(`expected result=${t.result}`);
@@ -200,7 +201,7 @@ From a UI perspective, Alerts can be thought of as`;
           result: [false, true, false, true, false, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true]
         },
       ];
-  
+
       testcases.forEach((t) => {
         const history = service.checkAnswer(question, t.answer, { caseSensitive: true });
         console.log(t.result);
@@ -209,19 +210,19 @@ From a UI perspective, Alerts can be thought of as`;
       });
     });
 
-    it('include punctuation', () => {
-      expect(service.checkAnswer(`time, all`, `time is all`,  { includePunctuation: true }).isCorrect).toEqual([true, false, true]);
-      expect(service.checkAnswer(`time, all`, `time all`,  { includePunctuation: true }).isCorrect).toEqual([true, false, true]);
-      expect(service.checkAnswer(`time, all`, `time is, all`,  { includePunctuation: true }).isCorrect).toEqual([true, true, true]);
-      expect(service.checkAnswer(`footnotes 5,6 and 7.`, `foot notes 5,6 and 7.`,  { includePunctuation: true }).isCorrect).toEqual([false, true, true, true, true, true, true]);
-      expect(service.checkAnswer(`(Code: CG1)`, `Code CG1`,  { includePunctuation: true }).isCorrect).toEqual([false, true, false, true, false]);
-      expect(service.checkAnswer(`(Code: CG1)`, `Code - CG1`,  { includePunctuation: true }).isCorrect).toEqual([false, true, false, true, false]);
-      expect(service.checkAnswer(`(Code: CG1)`, `(x:y)`,  { includePunctuation: true }).isCorrect).toEqual([true, false, true, false, true]);
+    it('check punctuation', () => {
+      expect(service.checkAnswer(`time, all`, `time is all`,  { checkPunctuation: true }).isCorrect).toEqual([true, false, true]);
+      expect(service.checkAnswer(`time, all`, `time all`,  { checkPunctuation: true }).isCorrect).toEqual([true, false, true]);
+      expect(service.checkAnswer(`time, all`, `time is, all`,  { checkPunctuation: true }).isCorrect).toEqual([true, true, true]);
+      expect(service.checkAnswer(`footnotes 5,6 and 7.`, `foot notes 5,6 and 7.`,  { checkPunctuation: true }).isCorrect).toEqual([false, true, true, true, true, true, true]);
+      expect(service.checkAnswer(`(Code: CG1)`, `Code CG1`,  { checkPunctuation: true }).isCorrect).toEqual([false, true, false, true, false]);
+      expect(service.checkAnswer(`(Code: CG1)`, `Code - CG1`,  { checkPunctuation: true }).isCorrect).toEqual([false, true, false, true, false]);
+      expect(service.checkAnswer(`(Code: CG1)`, `(x:y)`,  { checkPunctuation: true }).isCorrect).toEqual([true, false, true, false, true]);
     });
 
     it('get punctuation characters', () => {
       expect(ValidationUtils.punctuationOnly('punctuations ...  : .?" and () [!,;-]/\'"…')).toEqual('...:.?"()[!,;-]/\'"…');
     });
   })
-  
+
 });

@@ -213,6 +213,9 @@
   "Retry All": "重試全部",
   "Retry Incorrect": "重試不正確",
   "Case Sensitive": "區分大小寫",
-  "Include Punctuation": "包括標點符號",
+  "Case Insensitive": "不分大小寫",
+  "Check Punctuation": "檢查標點符號",
+  "No Punctuation": "不需標點符號",
+  "Speak Punctuation": "讀出標點符號",
   "Sentence practice options": "句子練習選項"
 }

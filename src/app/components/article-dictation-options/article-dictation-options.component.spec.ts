@@ -1,7 +1,8 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { IonicModule } from '@ionic/angular';
+import {IonicModule, IonToggle} from '@ionic/angular';
 
 import { ArticleDictationOptionsComponent } from './article-dictation-options.component';
+import {SharedTestModule} from "../../../testing/shared-test.module";
 
 describe('ArticleDictationOptionsComponent', () => {
   let component: ArticleDictationOptionsComponent;
@@ -9,8 +10,10 @@ describe('ArticleDictationOptionsComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ ArticleDictationOptionsComponent ],
-      imports: [IonicModule.forRoot()]
+      declarations: [ ArticleDictationOptionsComponent, IonToggle ],
+      imports: [
+        SharedTestModule.forRoot(),
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ArticleDictationOptionsComponent);

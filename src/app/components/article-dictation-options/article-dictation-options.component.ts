@@ -9,16 +9,19 @@ import {UIOptionsService} from "../../services/ui-options.service";
 })
 export class ArticleDictationOptionsComponent implements OnInit {
   @ViewChild('caseSensitive') caseSensitive: IonToggle;
-  @ViewChild('includePunctuation') includePunctuation: IonToggle;
+  @ViewChild('checkPunctuation') checkPunctuation: IonToggle;
+  @ViewChild('speakPunctuation') speakPunctuation: IonToggle;
 
   caseSensitiveKey = 'ArticleDictationOptionsComponent.caseSensitive';
-  includePunctuationKey = 'ArticleDictationOptionsComponent.includePunctuationKey';
+  checkPunctuationKey = 'ArticleDictationOptionsComponent.checkPunctuationKey';
+  speakPunctuationKey = 'ArticleDictationOptionsComponent.speakPunctuationKey';
 
   constructor(public uiOptionsService: UIOptionsService) { }
 
   ngOnInit() {
     this.uiOptionsService.loadOption(this.caseSensitiveKey).then(v => this.caseSensitive.checked = v);
-    this.uiOptionsService.loadOption(this.includePunctuationKey).then(v => this.includePunctuation.checked = v);
+    this.uiOptionsService.loadOption(this.checkPunctuationKey).then(v => this.checkPunctuation.checked = v);
+    this.uiOptionsService.loadOption(this.speakPunctuationKey).then(v => this.speakPunctuation.checked = v);
   }
 
   optionChanged($event, key: string) {

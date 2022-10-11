@@ -218,6 +218,7 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
         source: Dictations.Source.FillIn,
       };
     } else {
+      debugger;
       return <Dictation>{
         id: -1,
         sentenceLength: this.sentenceLength.value,
@@ -228,7 +229,8 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
         source: Dictations.Source.FillIn,
         options: {
           caseSensitiveSentence : this.articleDictationOptions.caseSensitive.checked,
-          includePunctuation: this.articleDictationOptions.includePunctuation.checked,
+          checkPunctuation: this.articleDictationOptions.checkPunctuation.checked,
+          speakPunctuation: this.articleDictationOptions.speakPunctuation.checked,
         },
       };
     }

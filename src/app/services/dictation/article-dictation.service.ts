@@ -9,7 +9,7 @@ import {SentenceLengthOptions} from '../../entity/dictation';
 namespace ArticleDictationService {
   export interface CheckAnswerOptions {
     caseSensitive?: boolean;
-    includePunctuation?: boolean;
+    checkPunctuation?: boolean;
   }
 
 }
@@ -92,7 +92,7 @@ export class ArticleDictationService {
 
   extractCharacters(input: string, options: ArticleDictationService.CheckAnswerOptions): string {
     if (ValidationUtils.noAlphabet(input)) {
-      return options.includePunctuation ? ValidationUtils.punctuationOnly(input) : '';
+      return options.checkPunctuation? ValidationUtils.punctuationOnly(input) : '';
     } else {
       return options.caseSensitive ? ValidationUtils.alphabetOnly(input) : ValidationUtils.alphabetOnlyToLowerCase(input);
     }
@@ -115,7 +115,7 @@ export class ArticleDictationService {
 
       let questionAlphabet = this.extractCharacters(questionSegments[questionPosition], options);
       let answerAlphabet = this.extractCharacters(answerSegments[answerPosition], options);
-      
+
       if (ValidationUtils.isBlankString(questionAlphabet)) {
         correct = true;
       } else {

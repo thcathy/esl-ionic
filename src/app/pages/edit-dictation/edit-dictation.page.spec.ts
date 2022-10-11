@@ -1,5 +1,5 @@
 import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
-import {async, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
+import {ComponentFixture, fakeAsync, TestBed, tick, flush} from '@angular/core/testing';
 
 import {EditDictationPage} from './edit-dictation.page';
 import {SharedTestModule} from '../../../testing/shared-test.module';
@@ -15,6 +15,12 @@ import {Dictation, Dictations} from '../../entity/dictation';
 import {DictationType, EditDictationPageMode} from './edit-dictation-page-enum';
 import {VocabPracticeType} from '../../enum/vocab-practice-type.enum';
 import exp from 'constants';
+import {
+  ArticleDictationOptionsComponent
+} from "../../components/article-dictation-options/article-dictation-options.component";
+import {IonToggle} from "@ionic/angular";
+import {Storage} from "@ionic/storage-angular";
+import {defaultGatherDiagnostics} from "@angular/compiler-cli";
 
 describe('EditDictationPage', () => {
   let component: EditDictationPage;
@@ -30,7 +36,7 @@ describe('EditDictationPage', () => {
     suitableStudent: 'Any',
   };
 
-  beforeEach(async(() => {
+  beforeEach(fakeAsync(() => {
     memberDictationServiceSpy = MemberDictationServiceSpy();
     authServiceSpy = FFSAuthServiceSpy();
     activateRouteStub = new ActivatedRouteStub();
@@ -46,7 +52,7 @@ describe('EditDictationPage', () => {
         { provide: MemberDictationService, useValue: memberDictationServiceSpy },
         { provide: FFSAuthService, useValue: authServiceSpy },
         { provide: ActivatedRoute, useValue: activateRouteStub },
-        { provide: NavigationService, useValue: navigationServiceSpy }
+        { provide: NavigationService, useValue: navigationServiceSpy },
       ]
     })
     .compileComponents();
@@ -58,21 +64,24 @@ describe('EditDictationPage', () => {
     fixture.detectChanges();
   }
 
-  beforeEach(() => {
+  beforeEach(fakeAsync(() => {
     fixture = TestBed.createComponent(EditDictationPage);
     component = fixture.componentInstance;
+    component.articleDictationOptions = TestBed.createComponent(ArticleDictationOptionsComponent).componentInstance;
     fixture.detectChanges();
-  });
+    flush();
+    console.log(`2. ${component.articleDictationOptions}`);
+  }));
 
   describe('logined', () => {
-    beforeEach(() => {
+    beforeEach(fakeAsync(() => {
       authServiceSpy.isAuthenticated.and.returnValue(true);
-    });
+    }));
 
     describe('edit mode', () => {
-      beforeEach(() => {
+      beforeEach(fakeAsync(() => {
         activateRouteStub.setParamMap({mode: EditDictationPageMode.Edit});
-      });
+      }));
 
       it('open dictation page if dictation is saved', fakeAsync(() => {
         memberDictationServiceSpy.createOrAmendDictation.and.returnValue(of(dictation1));
@@ -126,14 +135,14 @@ describe('EditDictationPage', () => {
   });
 
   describe('without login', () => {
-    beforeEach(() => {
+    beforeEach(fakeAsync(() => {
       authServiceSpy.isAuthenticated.and.returnValue(false);
-    });
+    }));
 
     describe('instant dictation without login', () => {
-      beforeEach(() => {
+      beforeEach(fakeAsync(() => {
         activateRouteStub.setParamMap({ mode: EditDictationPageMode.Start });
-      });
+      }));
 
       it('show start dictation in title', fakeAsync(() => {
         componentViewWillEnter();
@@ -185,22 +194,27 @@ describe('EditDictationPage', () => {
       }));
 
       describe('start instant dictation', () => {
-        beforeEach(fakeAsync(() => { componentViewWillEnter(); }));
+        beforeEach(fakeAsync(() => {
+          console.log(`1. ${component.articleDictationOptions}`);
+          componentViewWillEnter();
+          component.articleDictationOptions = TestBed.createComponent(ArticleDictationOptionsComponent).componentInstance;
+          component.articleDictationOptions.caseSensitive = TestBed.createComponent(IonToggle).componentInstance;
+          component.articleDictationOptions.checkPunctuation = TestBed.createComponent(IonToggle).componentInstance;
+          component.articleDictationOptions.speakPunctuation = TestBed.createComponent(IonToggle).componentInstance;
+          fixture.detectChanges();
+          flush();
+        }));
 
         it('start by article will navigate to start dictation page', fakeAsync(() => {
           component.question.setValue(`This is a article.`);
           component.sentenceLength.setValue('Short');
           component.type.setValue(DictationType.Sentence);
-          component.caseSensitive.setValue(true);
-          component.includePunctuation.setValue(true);
           component.startDictationNow();
 
           const dictation = navigationServiceSpy.startDictation.calls.mostRecent().args[0] as Dictation;
           expect(dictation.sentenceLength).toEqual('Short');
           expect(dictation.article).toEqual('This is a article.');
           expect(dictation.source).toEqual(Dictations.Source.FillIn);
-          expect(dictation.options.caseSensitiveSentence).toBeTrue();
-          expect(dictation.options.includePunctuation).toBeTrue();
         }));
 
         it('start instant dictation by single word will navigate to start dictation page', fakeAsync(() => {

@@ -30,8 +30,8 @@
           <ion-row>
             <ion-col>
               <ion-item class="answerInput">
-                <ion-label position="floating">{{'Answer'|translate}}</ion-label>
-                <ion-input #answerElement [(ngModel)]="answer" type="text" inputmode="verbatim" maxlength="255" (keyup.enter)="submitAnswer()"
+                <ion-label position="floating">{{'Answer'|translate}} <span style="color: #999">({{caseSensitiveText|translate}}, {{checkPunctuationText|translate}})</span></ion-label>
+                <ion-input [(ngModel)]="answer" type="text" inputmode="verbatim" maxlength="255" (keyup.enter)="submitAnswer()"
                            autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></ion-input>
               </ion-item>
             </ion-col>
