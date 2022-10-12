@@ -25,6 +25,8 @@ export class ArticleDictationOptionsComponent implements OnInit {
   }
 
   optionChanged($event, key: string) {
-   this.uiOptionsService.saveOption(key, $event.detail.checked);
+    if ($event?.detail?.checked !== undefined) {
+      this.uiOptionsService.saveOption(key, $event.detail.checked);
+    }
   }
 }

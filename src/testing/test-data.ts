@@ -57,6 +57,13 @@ export const vocab_banana = <VocabPractice>{
 };
 
 export namespace TestData {
+  export class DefaultSentenceDictation extends Dictation {
+    id = 1;
+    title = 'test sentence dictation 1';
+    article = 'testing';
+    options = new Dictations.Options();
+  }
+
   class DefaultVocabDictation extends Dictation {
     id = 1;
     title = 'test dictation 1';
@@ -95,7 +102,7 @@ export namespace TestData {
     d.source = Dictations.Source.Generate;
     return d;
   }
-  
+
   export const vocabPracticeHistories: VocabPracticeHistory[] = [
     <VocabPracticeHistory>{question: vocab_apple, correct: true},
     <VocabPracticeHistory>{question: vocab_banana, correct: false}
