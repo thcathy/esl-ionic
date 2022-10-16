@@ -14,7 +14,7 @@
       <ion-card-header style="font-size: 1.2rem;">{{ 'Completed dictation' | translate }}</ion-card-header>
       <ion-row class="ion-no-padding">
         <ion-col>
-          <ion-button (click)="getDictationThenOpen()"><fa-icon [icon]="['fas', 'redo']"></fa-icon>&nbsp;{{'Retry'|translate}}</ion-button>
+          <ion-button (click)="showOptionsOrStart()"><fa-icon [icon]="['fas', 'redo']"></fa-icon>&nbsp;{{'Retry'|translate}}</ion-button>
         </ion-col>
         <ion-col class="ion-text-right">
           <ion-button *ngIf="dictation && dictation.id > 0 && !historyStored" color="secondary" class="save-button" (click)="recommend()" [disabled]="recommended">
@@ -34,5 +34,27 @@
     </ion-card>
 
   </div>
+
+  <ion-modal #articleOptionsModal trigger="open-modal">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>{{'Options' | translate}}</ion-title>
+          <ion-buttons slot="start">
+            <ion-button color="primary" (click)="articleOptionsModal.dismiss()"><fa-icon icon="xmark"></fa-icon></ion-button>
+          </ion-buttons>
+          <ion-buttons slot="end">
+            <ion-button fill="clear" color="primary" (click)="getDictationThenOpen()">{{'Retry'|translate}}</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="article-options-content">
+        <app-article-dictation-options #articleDictationOptions></app-article-dictation-options>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
   <app-footer></app-footer>
 </ion-content>
+
+

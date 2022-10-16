@@ -7,6 +7,10 @@ import {TranslateService} from "@ngx-translate/core";
 import {ActivatedRoute} from "@angular/router";
 import {IonicComponentService} from "../../services/ionic-component.service";
 import { StorageService } from '../../services/storage.service';
+import {IonModal} from "@ionic/angular";
+import {
+  ArticleDictationOptionsComponent
+} from "../../components/article-dictation-options/article-dictation-options.component";
 
 @Component({
   selector: 'app-article-dictation-complete',
@@ -15,6 +19,8 @@ import { StorageService } from '../../services/storage.service';
 })
 export class ArticleDictationCompletePage implements OnInit {
   @ViewChild('dictationCard', { static: true }) dictationCard;
+  @ViewChild('articleOptionsModal') articleDictationOptionsModal: IonModal;
+  @ViewChild('articleDictationOptions') articleDictationOptions: ArticleDictationOptionsComponent;
 
   dictation: Dictation;
   histories: SentenceHistory[];
@@ -79,7 +85,16 @@ export class ArticleDictationCompletePage implements OnInit {
       return this.translate.instant('Recommend');
   }
 
+  showOptionsOrStart() {
+    if (this.dictationService.isInstantDictation(this.dictation)) {
+      this.openDictation(this.dictation);
+    } else {
+      this.articleDictationOptionsModal.present();
+    }
+  }
+
   async getDictationThenOpen() {
+    this.articleDictationOptionsModal.dismiss();
     if (this.dictationService.isInstantDictation(this.dictation)) {
       this.openDictation(this.dictation);
     } else {

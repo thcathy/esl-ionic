@@ -107,16 +107,18 @@
 
 <ion-modal #articleOptionsModal trigger="open-modal">
   <ng-template>
-    <ion-content class="article-options-content">
+    <ion-header >
       <ion-toolbar>
-        <ion-title>{{'Sentence practice options' | translate}}</ion-title>
+        <ion-title>{{'Options' | translate}}</ion-title>
         <ion-buttons slot="start">
-          <ion-button color="primary" (click)="articleOptionsModal.dismiss()"><fa-icon icon="window-close"></fa-icon></ion-button>
+          <ion-button color="primary" (click)="articleOptionsModal.dismiss()"><fa-icon icon="xmark"></fa-icon></ion-button>
         </ion-buttons>
         <ion-buttons slot="end">
-          <ion-button fill="outline" color="primary" (click)="startArticleDictation()">Start</ion-button>
+          <ion-button fill="clear" color="primary" (click)="startArticleDictation()">{{'Start'|translate}}</ion-button>
         </ion-buttons>
       </ion-toolbar>
+    </ion-header>
+    <ion-content class="article-options-content">
       <app-article-dictation-options #articleDictationOptions></app-article-dictation-options>
     </ion-content>
   </ng-template>
