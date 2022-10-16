@@ -11,10 +11,11 @@
 <ion-content>
   <div class="inner-content">
     <ion-card class="card">
-      <ion-card-header style="font-size: 1.2rem;">{{ 'Completed dictation' | translate }}</ion-card-header>
+      <ion-card-header style="font-size: 1.2rem;">{{ 'Completed dictation' | translate }} <span *ngIf="dictation?.options?.retryWrongWord">({{'incorrect only'|translate}})</span></ion-card-header>
       <ion-row class="ion-no-padding">
         <ion-col>
-          <ion-button (click)="getDictationThenOpen()"><fa-icon [icon]="['fas', 'redo']"></fa-icon>&nbsp;{{'Retry'|translate}}</ion-button>
+          <ion-button (click)="getDictationThenOpen(false)"><fa-icon [icon]="['fas', 'redo']"></fa-icon>&nbsp;{{'Retry All'|translate}}</ion-button>
+          <ion-button *ngIf="showRetryIncorrect()" (click)="getDictationThenOpen(true)"><fa-icon [icon]="['fas', 'clock-rotate-left']"></fa-icon>&nbsp;{{'Retry Incorrect'|translate}}</ion-button>
           <ion-button *ngIf="dictation && dictationHelper.isGeneratedDictation(dictation)" (click)="navigationService.openVocabularyStarter()">
             <fa-icon icon="sliders-h"></fa-icon>&nbsp;{{'Select Difficulty'|translate}}
           </ion-button>
@@ -36,7 +37,7 @@
       </ion-row>
     </ion-card>
 
-    <app-dictation-card *ngIf="!dictationHelper.isGeneratedDictation(dictation)" #dictationCard [dictation]="dictation" [showContent]="false"></app-dictation-card>
+    <app-dictation-card *ngIf="!dictationHelper.isGeneratedDictation(dictation)" #dictationCard [dictation]="dictation" [showContent]="showDictationContent"></app-dictation-card>
     <practice-history-list [histories]="histories" [mark]="mark" ></practice-history-list>
   </div>
   <app-footer></app-footer>

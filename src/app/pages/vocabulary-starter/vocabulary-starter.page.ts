@@ -47,8 +47,8 @@ export class VocabularyStarterPage implements OnInit {
 
   createForm() {
     this.inputForm = this.formBuilder.group({
-      'difficulty': '',
-      'type': '',
+      difficulty: '',
+      type: '',
     });
     this.difficulty.setValue(VocabDifficulty.Beginner);
     this.type.setValue(VocabPracticeType.Spell);
@@ -58,7 +58,7 @@ export class VocabularyStarterPage implements OnInit {
     this.saveInput();
     this.vocabPracticeService.generatePractice(this.difficulty.value)
       .subscribe(d => {
-        d.options = { 'practiceType': this.type.value ?? VocabPracticeType.Spell };
+        d.options = { practiceType: this.type.value ?? VocabPracticeType.Spell };
         this.navigationService.startDictation(d);
       });
   }

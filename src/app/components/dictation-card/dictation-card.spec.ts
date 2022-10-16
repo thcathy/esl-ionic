@@ -1,5 +1,5 @@
 import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
-import {async, ComponentFixture, fakeAsync, TestBed} from '@angular/core/testing';
+import {ComponentFixture, fakeAsync, TestBed, tick, waitForAsync} from '@angular/core/testing';
 
 import {SharedTestModule} from '../../../testing/shared-test.module';
 import {DictationCardComponent} from './dictation-card';
@@ -12,7 +12,7 @@ describe('DictationCardComponent', () => {
   let fixture: ComponentFixture<DictationCardComponent>;
   let manageVocabHistoryServiceSpy;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     manageVocabHistoryServiceSpy = ManageVocabHistoryServiceSpy();
 
     TestBed.configureTestingModule({
@@ -72,6 +72,19 @@ describe('DictationCardComponent', () => {
       component.dictation = TestData.selectDictation();
       fixture.detectChanges();
       expect(fixture.nativeElement.querySelector('.select-vocab-list ion-badge')).toBeTruthy();
+    }));
+  });
+
+  describe('sentence dictation', () => {
+    beforeEach(() => {
+      component.dictation = new TestData.DefaultSentenceDictation();
+      fixture.detectChanges();
+    });
+
+    it('show options', fakeAsync(() => {
+      component.articleDictationOptionsModal = jasmine.createSpyObj('NGXLogger', ['present']);
+      component.showDictationOptions();
+      expect(component.articleDictationOptionsModal.present).toHaveBeenCalled();
     }));
   });
 

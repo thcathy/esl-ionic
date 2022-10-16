@@ -23,6 +23,14 @@ export class ArticleDictationPage implements OnInit {
   histories: SentenceHistory[] = [];
   isKeyboardActive: boolean;
 
+  get caseSensitiveText() {
+    return this?.dictation?.options?.caseSensitiveSentence ? 'Case Sensitive' : 'Case Insensitive';
+  }
+
+  get checkPunctuationText() {
+    return this?.dictation?.options?.checkPunctuation ? 'Check Punctuation' : 'No Punctuation';
+  }
+
   constructor(
     public articleDictationService: ArticleDictationService,
     public speechService: SpeechService,
@@ -68,12 +76,19 @@ export class ArticleDictationPage implements OnInit {
   }
 
   speak() {
-    this.speechService.speak(this.sentences[this.currentSentence], this.speakingRate);
+    this.speechService.speak(
+      this.dictation.options?.speakPunctuation ? this.articleDictationService.replacePunctuationToWord(this.sentences[this.currentSentence]) : this.sentences[this.currentSentence],
+      this.speakingRate);
   }
 
   submitAnswer() {
     this.histories.unshift(
-      this.articleDictationService.checkAnswer(this.sentences[this.currentSentence], this.answer)
+      this.articleDictationService.checkAnswer(
+        this.sentences[this.currentSentence], this.answer, {
+          caseSensitive: this.dictation?.options?.caseSensitiveSentence,
+          checkPunctuation: this.dictation?.options?.checkPunctuation,
+        }
+      )
     );
 
     this.currentSentence++;

@@ -64,18 +64,8 @@ export class AppComponent implements OnInit {
     if (!environment.production) return;
 
     gtag('config', 'G-T0NL87GWKB', {
-      'page_title': packageJson.name,
-    });
-    
-    this.router.events.pipe(filter(event => event instanceof NavigationEnd))
-      .subscribe((event: NavigationEnd) => {
-        console.log(`${JSON.stringify(event)}`);
-        gtag('event', 'screen_view', {
-          'app_name': packageJson.name,
-          'app_version': packageJson.version,
-          'screen_name': event.urlAfterRedirects
-        });
-      });
+      page_title: packageJson.name,
+    });    
   }
 
   private setupAppUrlOpenListener() {

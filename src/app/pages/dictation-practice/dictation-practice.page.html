@@ -9,7 +9,7 @@
   <div style="padding: 16px;">
     <ion-card class="card" *ngIf="currentQuestion()">
       <ion-card-header>
-        {{'Question'|translate}} {{ questionIndex + 1 }}
+        {{'Question'|translate}} {{ questionIndex + 1 }} <span *ngIf="dictation?.options?.retryWrongWord">({{'incorrect only'|translate}})</span>
         <score class="ion-float-right" [mark]="mark"></score>
       </ion-card-header>
 

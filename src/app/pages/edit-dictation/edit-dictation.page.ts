@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { AlertController } from '@ionic/angular';
+import {AlertController, IonToggle} from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { Dictation, Dictations, SentenceLengthOptions, SuitableStudentOptions } from '../../entity/dictation';
@@ -17,6 +17,9 @@ import { NavigationService } from '../../services/navigation.service';
 import { DictationUtils } from '../../utils/dictation-utils';
 import { DictationType, EditDictationPageMode } from './edit-dictation-page-enum';
 import Source = Dictations.Source;
+import {
+  ArticleDictationOptionsComponent
+} from "../../components/article-dictation-options/article-dictation-options.component";
 
 @Component({
   selector: 'app-edit-dictation',
@@ -33,6 +36,8 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
   sentenceLengthOptions = SentenceLengthOptions;
   isPreview = false;
   questions: string[];
+
+  @ViewChild('articleDictationOptions') articleDictationOptions: ArticleDictationOptionsComponent;
 
   constructor(
     public formBuilder: UntypedFormBuilder,
@@ -209,10 +214,11 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
         title: new Date().toDateString(),
         suitableStudent: 'Any',
         wordContainSpace: this.wordContainSpace.value,
-        options: { 'practiceType' : this.wordPracticeType.value },
+        options: { practiceType : this.wordPracticeType.value },
         source: Dictations.Source.FillIn,
       };
     } else {
+      debugger;
       return <Dictation>{
         id: -1,
         sentenceLength: this.sentenceLength.value,
@@ -221,6 +227,11 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
         title: new Date().toDateString(),
         suitableStudent: 'Any',
         source: Dictations.Source.FillIn,
+        options: {
+          caseSensitiveSentence : this.articleDictationOptions.caseSensitive.checked,
+          checkPunctuation: this.articleDictationOptions.checkPunctuation.checked,
+          speakPunctuation: this.articleDictationOptions.speakPunctuation.checked,
+        },
       };
     }
   }

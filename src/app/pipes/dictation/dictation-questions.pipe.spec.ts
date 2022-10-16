@@ -1,9 +1,9 @@
+import { NGXLoggerSpy } from '../../../testing/mocks-ionic';
+import { dictation1 } from '../../../testing/test-data';
+import { Dictation } from '../../entity/dictation';
+import { Vocab } from '../../entity/vocab';
+import { ArticleDictationService } from '../../services/dictation/article-dictation.service';
 import { DictationQuestionsPipe } from './dictation-questions.pipe';
-import {TranslateService} from '@ngx-translate/core';
-import {ArticleDictationService} from '../../services/dictation/article-dictation.service';
-import {NGXLoggerSpy} from '../../../testing/mocks-ionic';
-import {dictation1} from '../../../testing/test-data';
-import {Dictation} from '../../entity/dictation';
 
 describe('DictationQuestionsPipe', () => {
   let translateServiceSpy;
@@ -28,7 +28,11 @@ describe('DictationQuestionsPipe', () => {
 
     const pipe = new DictationQuestionsPipe(dictationServiceSpy, new ArticleDictationService(NGXLoggerSpy()), translateServiceSpy);
     const dictation = <Dictation>{
-      vocabs: ['a', 'b', 'c']
+      vocabs: [
+        <Vocab>{word: 'apple'},
+        <Vocab>{word: 'banana'},
+        <Vocab>{word: 'cat'},
+      ]
     };
 
     expect(pipe.transform(dictation)).toBe('3 Vocab(s)');

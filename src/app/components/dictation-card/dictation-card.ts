@@ -1,7 +1,7 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { Component, Input } from '@angular/core';
+import {Component, Input, ViewChild} from '@angular/core';
 import { Router } from '@angular/router';
-import { AlertController, ToastController } from '@ionic/angular';
+import {AlertController, IonModal, IonToggle, ToastController} from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { Dictation, Dictations } from '../../entity/dictation';
 import { VocabPracticeType } from '../../enum/vocab-practice-type.enum';
@@ -12,6 +12,7 @@ import { IonicComponentService } from '../../services/ionic-component.service';
 import { ManageVocabHistoryService } from '../../services/member/manage-vocab-history.service';
 import { NavigationService } from '../../services/navigation.service';
 import { ShareService } from '../../services/share.service';
+import {ArticleDictationOptionsComponent} from "../article-dictation-options/article-dictation-options.component";
 
 @Component({
   selector: 'app-dictation-card',
@@ -37,6 +38,10 @@ export class DictationCardComponent {
   @Input() start = false;
   @Input() edit = false;
   @Input() showContent = true;
+
+  @ViewChild('articleOptionsModal') articleDictationOptionsModal: IonModal;
+  @ViewChild('articleDictationOptions') articleDictationOptions: ArticleDictationOptionsComponent;
+
   recommendState = 'normal';
   share = false;
   dictationUrl: string;
@@ -130,9 +135,18 @@ export class DictationCardComponent {
     this.shareService.shareDictation(this.dictation);
   }
 
-  startDictationOrShowOptions() {
+  startArticleDictation() {
+    this.articleDictationOptionsModal.dismiss();
+    this.dictation.options = this.dictation.options || new Dictations.Options();
+    this.dictation.options.caseSensitiveSentence = this.articleDictationOptions.caseSensitive.checked;
+    this.dictation.options.checkPunctuation = this.articleDictationOptions.checkPunctuation.checked;
+    this.dictation.options.speakPunctuation= this.articleDictationOptions.speakPunctuation.checked;
+    this.navService.startDictation(this.dictation);
+  }
+
+  showDictationOptions() {
     if (this.dictationHelper.isSentenceDictation(this.dictation)) {
-      this.navService.startDictation(this.dictation);
+      this.articleDictationOptionsModal.present();
     } else {
       this.componentService.presentVocabPracticeTypeActionSheet()
         .then(type => this.startVocabDictation(type));

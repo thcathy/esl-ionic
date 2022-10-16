@@ -91,7 +91,7 @@
         <ion-button *ngIf="edit" color="danger" (click)="confirmDeleteDictation()"><fa-icon [icon]="['fas', 'trash']"></fa-icon>&nbsp;{{'Delete'|translate}}</ion-button>
       </ion-col>
       <ion-col class="ion-text-right">
-        <ion-button *ngIf="start" (click)="startDictationOrShowOptions()"><fa-icon [icon]="['fas', 'play']"></fa-icon>&nbsp;{{'Start'|translate}}</ion-button>
+        <ion-button *ngIf="start" (click)="showDictationOptions()"><fa-icon [icon]="['fas', 'play']"></fa-icon>&nbsp;{{'Start'|translate}}</ion-button>
       </ion-col>
     </ion-row>
     <ion-row>
@@ -104,3 +104,22 @@
     </ion-row>
   </ion-card-content>
 </ion-card>
+
+<ion-modal #articleOptionsModal trigger="open-modal">
+  <ng-template>
+    <ion-header >
+      <ion-toolbar>
+        <ion-title>{{'Options' | translate}}</ion-title>
+        <ion-buttons slot="start">
+          <ion-button color="primary" (click)="articleOptionsModal.dismiss()"><fa-icon icon="xmark"></fa-icon></ion-button>
+        </ion-buttons>
+        <ion-buttons slot="end">
+          <ion-button fill="clear" color="primary" (click)="startArticleDictation()">{{'Start'|translate}}</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="article-options-content">
+      <app-article-dictation-options #articleDictationOptions></app-article-dictation-options>
+    </ion-content>
+  </ng-template>
+</ion-modal>

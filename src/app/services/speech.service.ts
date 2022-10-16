@@ -3,6 +3,7 @@ import {Injectable} from '@angular/core';
 import {AppService} from './app.service';
 import { TextToSpeech } from '@capacitor-community/text-to-speech';
 import {NGXLogger} from 'ngx-logger';
+import { debug } from 'console';
 
 @Injectable({ providedIn: 'root' })
 export class SpeechService {
@@ -19,7 +20,7 @@ export class SpeechService {
 
     if (this.appService.isApp()) {
       if (this.appService.isIOS()) { rate = rate * 2; }
-
+      
       TextToSpeech.speak({
         text: text,
         lang: 'en-US',
