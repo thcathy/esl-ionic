@@ -21,18 +21,24 @@
             "value": "max-age=0, no-cache"
           }
         ]
-      }, {
+      },
+      {
         "source": "**/*.@(jpg|jpeg|gif|png)",
-        "headers": [ {
-          "key": "Cache-Control",
-          "value": "public, max-age=31536000"
-        } ]
-      }, {
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "public, max-age=31536000"
+          }
+        ]
+      },
+      {
         "source": "**/*.@(js|css)",
-        "headers": [ {
-          "key": "Cache-Control",
-          "value": "public, max-age=31536000"
-        } ]
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "public, max-age=31536000"
+          }
+        ]
       }
     ]
   }
