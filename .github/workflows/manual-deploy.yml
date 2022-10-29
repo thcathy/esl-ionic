@@ -1,4 +1,4 @@
-name: deploy to [${{ github.event.inputs.my_value }}]
+name: deploy to deployment
 
 on:
   workflow_dispatch:
