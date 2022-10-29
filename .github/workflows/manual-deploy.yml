@@ -1,4 +1,4 @@
-name: deploy production
+name: deploy to [${{ github.event.inputs.my_value }}]
 
 on:
   workflow_dispatch:
