@@ -7,6 +7,7 @@ import { debug } from 'console';
 
 @Injectable({ providedIn: 'root' })
 export class SpeechService {
+  lang = 'en-US';
   synth: any;
 
   constructor(
@@ -20,10 +21,10 @@ export class SpeechService {
 
     if (this.appService.isApp()) {
       if (this.appService.isIOS()) { rate = rate * 2; }
-      
+
       TextToSpeech.speak({
         text: text,
-        lang: 'en-US',
+        lang: this.lang,
         rate: rate,
       })
       .then(() => this.log.debug(`Speak by tts: ${text}`))
@@ -33,6 +34,7 @@ export class SpeechService {
       this.synth = window.speechSynthesis;
       const utterance1 = new SpeechSynthesisUtterance(text);
       utterance1.rate = rate;
+      utterance1.lang = this.lang;
       this.synth.speak(utterance1);
       this.log.info(`speak by web api: ${text}`);
     }
