@@ -33,7 +33,7 @@ export class VocabPracticeService extends Service {
 
   getQuestion(word: string, showImage: boolean): Observable<VocabPractice> {
     let params = new HttpParams();
-    params = params.append('image', showImage.toString()).append('includeBase64Image', 'false');
+    params = params.append('image', showImage.toString());
 
     return this.http.get<VocabPractice>(this.getQuestionUrl + encodeURIComponent(word),  {params: params});
   }
