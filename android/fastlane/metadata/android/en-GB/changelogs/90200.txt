@@ -1,0 +1,4 @@
+- support new options for sentence dictation 
+ - check letter case
+ - check punctuation
+ - speak punctuation
