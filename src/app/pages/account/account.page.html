@@ -62,8 +62,13 @@
             <div *ngIf="school.errors.maxlength">{{'School'|translate}}{{'CharactersTooLong'|translate:{length: '100'} }}</div>
           </div>
 
-          <ion-button class="ion-float-right" (click)="save()" style="margin: 16px;" [disabled]="inputForm.invalid">
+          <ion-button  (click)="save()" style="margin: 16px;" [disabled]="inputForm.invalid">
             <fa-icon [icon]="['fas', 'save']"></fa-icon>&nbsp;{{'Save'|translate}}
+          </ion-button>
+
+          <ion-button (click)="presentDeleteAccountAlert()" class="ion-float-right"
+                      style="margin: 16px;" fill="outline" color="danger">
+            <fa-icon [icon]="['fas', 'trash']"></fa-icon>&nbsp;{{'Delete Account'|translate}}
           </ion-button>
 
         </form>

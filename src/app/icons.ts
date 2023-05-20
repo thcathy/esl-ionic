@@ -27,11 +27,13 @@ import {faBook} from '@fortawesome/free-solid-svg-icons/faBook';
 import {faCoffee} from '@fortawesome/free-solid-svg-icons/faCoffee';
 import {faLightbulb} from '@fortawesome/free-solid-svg-icons/faLightbulb';
 import {faInfo} from '@fortawesome/free-solid-svg-icons/faInfo';
+import {faTrash, faTrashAlt} from "@fortawesome/free-solid-svg-icons";
 
 const icons = [
   faFacebookF, faTwitter, faLinkedinIn, faGooglePlusG, faPinterestP, faRedditAlien, faTumblr,
   faWhatsapp, faVk, faFacebookMessenger, faTelegramPlane, faMix, faXing, faCommentAlt, faBook, faLine,
-  faEnvelope, faCheck, faPrint, faExclamation, faLink, faEllipsisH, faMinus, faLightbulb, faCoffee, faInfo
+  faEnvelope, faCheck, faPrint, faExclamation, faLink, faEllipsisH, faMinus, faLightbulb, faCoffee, faInfo,
+  faTrash, faTrashAlt
 ];
 
 library.add(...icons);

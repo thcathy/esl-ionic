@@ -11,7 +11,7 @@ export const environment = {
   logging: {
     level: NgxLoggerLevel.INFO,
   },
-  apiHost: 'https://homeserver.funfunspell.com/esl-rest',
+  apiHost: 'https://esl-rest-uat.funfunspell.com/esl-rest',
 };
 
 /*

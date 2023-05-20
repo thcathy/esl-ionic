@@ -22,6 +22,7 @@ export class MemberService {
 
   private getMemberUrl = environment.apiHost + '/member/profile/get';
   private updateMemberUrl = environment.apiHost + '/member/profile/update';
+  private deleteMemberUrl = environment.apiHost + '/member/profile/delete';
 
   getProfile(): Observable<Member> {
     return this.http.get<Member>(this.getMemberUrl);
@@ -29,6 +30,10 @@ export class MemberService {
 
   update(request: UpdateMemberRequest): Observable<Member> {
     return this.http.post<Member>(this.updateMemberUrl, request);
+  }
+
+  delete() {
+    return this.http.delete(this.deleteMemberUrl);
   }
 
 }

@@ -217,5 +217,11 @@
   "Check Punctuation": "检查标点符号",
   "No Punctuation": "不需标点符号",
   "Speak Punctuation": "读出标点符号",
-  "Sentence practice options": "句子练习选项"
+  "Sentence practice options": "句子练习选项",
+  "Account deleted": "帐户已删除",
+  "Error when deleting account": "删除帐户时出错",
+  "Wrong year input": "年份输入错误",
+  "Delete Account": "删除帐户",
+  "All record will be removed! No recovery afterward!": "所有记录都将被删除！无法恢复！",
+  "Type this year to confirm": "输入今年年份以确认"
 }

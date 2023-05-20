@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {TranslateService} from '@ngx-translate/core';
 import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
 import {MemberService, UpdateMemberRequest} from '../../services/member/member.service';
@@ -8,6 +8,8 @@ import {NGXLogger} from 'ngx-logger';
 import {Observable} from 'rxjs';
 import {CanComponentDeactivate} from '../../guards/can-deactivate.guard';
 import {ActivatedRoute} from '@angular/router';
+import {AlertController} from "@ionic/angular";
+import {FFSAuthService} from "../../services/auth.service";
 
 @Component({
   selector: 'app-account',
@@ -25,6 +27,8 @@ export class AccountPage implements OnInit, CanComponentDeactivate {
     public ionicComponentService: IonicComponentService,
     public route: ActivatedRoute,
     private log: NGXLogger,
+    public alertController: AlertController,
+    public authService: FFSAuthService,
   ) { }
 
   ngOnInit() {
@@ -91,5 +95,52 @@ export class AccountPage implements OnInit, CanComponentDeactivate {
       return true;
     }
     return this.ionicComponentService.confirmExit();
+  }
+
+  async showDeleteComfirmationAlert(message: string) {
+    const alert = await this.alertController.create({
+      header: this.translate.instant(message),
+      buttons: [this.translate.instant('OK')],
+    });
+    await alert.present();
+  }
+
+  afterAccountDeleted() {
+    this.authService.logout();
+    this.showDeleteComfirmationAlert('Account deleted');
+  }
+
+  async confirmDeleteAccount(value: any) {
+    if (value.yearInput == new Date().getFullYear()) {
+      this.memberService.delete().subscribe({
+        next: () => this.afterAccountDeleted(),
+        error: () => this.showDeleteComfirmationAlert('Error when deleting account'),
+      });
+    } else {
+      await this.showDeleteComfirmationAlert('Wrong year input');
+    }
+  }
+
+  async presentDeleteAccountAlert() {
+    const alert = await this.alertController.create({
+      header: this.translate.instant('Delete account'),
+      message: this.translate.instant('All record will be removed! No recovery afterward!'),
+      buttons: [
+        this.translate.instant('Cancel'),
+        {
+          text: this.translate.instant('Delete'),
+          cssClass: 'alert-delete-button',
+          handler: (value) => this.confirmDeleteAccount(value),
+        }],
+      inputs: [
+        {
+          name: 'yearInput',
+          placeholder: this.translate.instant('Type this year to confirm') + ': ' + new Date().getFullYear().toString(),
+          attributes: { maxlength: 4 },
+        }
+      ],
+    });
+
+    await alert.present();
   }
 }
