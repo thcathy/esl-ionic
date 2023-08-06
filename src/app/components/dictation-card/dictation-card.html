@@ -32,6 +32,7 @@
               <td>
                 <fa-icon [icon]="['fas', 'check']" *ngIf="dictation.showImage"></fa-icon>
                 <fa-icon [icon]="['fas', 'times']" *ngIf="!dictation.showImage"></fa-icon>
+                ({{ ( dictation.includeAIImage ? 'Include AI Generated Image' : 'Not Include AI Generated Image' ) | translate }})
               </td>
             </tr>
             <tr *ngIf="dictationHelper.isSentenceDictation(dictation)">

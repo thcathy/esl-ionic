@@ -98,6 +98,7 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
       controlsConfig['title'] = new UntypedFormControl('', [Validators.required, Validators.minLength(5),  Validators.maxLength(50)]);
       controlsConfig['description'] = new UntypedFormControl('', [Validators.maxLength(100)]);
       controlsConfig['suitableStudent'] = 'Any';
+      controlsConfig['includeAIImage'] = false;
     }
     this.inputForm = this.formBuilder.group(
       controlsConfig,
@@ -123,6 +124,7 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
   get type() { return this.inputForm.get('type'); }
   get wordContainSpace() { return this.inputForm.get('wordContainSpace'); }
   get wordPracticeType() { return this.inputForm.get('wordPracticeType'); }
+  get includeAIImage() { return this.inputForm.get('includeAIImage'); }
 
   get practiceType() { return VocabPracticeType; }
   get pageMode() { return EditDictationPageMode; }
@@ -147,6 +149,7 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
       this.title.setValue(dictation.title);
       this.description.setValue(dictation.description);
       this.suitableStudent.setValue(dictation.suitableStudent);
+      this.includeAIImage.setValue(dictation.includeAIImage);
     }
   }
 
@@ -157,6 +160,7 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
       title: this.title.value,
       description: this.description.value,
       showImage: this.showImage.value,
+      includeAIImage: this.includeAIImage.value,
       vocabulary: this.type.value === DictationType.Word ?  DictationUtils.vocabularyValueToArray(this.question.value, this.wordContainSpace.value) : [],
       article: this.type.value === DictationType.Sentence ? this.question.value : '',
       suitableStudent: this.suitableStudent.value,
@@ -254,6 +258,13 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
     }
   }
 
+  async showAIImageTooltip() {
+    const alert = await this.alertController.create({
+      message: this.translate.instant('Please login then create exercise'),
+      buttons: [this.translate.instant('OK')]
+    });
+    await alert.present();
+  }
 }
 
 function maxVocabularyValidator(max: number, typeName: string, questionName: string, wordContainSpaceName: string): ValidatorFn {

@@ -40,3 +40,8 @@ Thumbs.db
 UserInterfaceState.xcuserstate
 
 *.iml
+
+# Firebase
+.firebase
+*-debug.log
+.runtimeconfig.json

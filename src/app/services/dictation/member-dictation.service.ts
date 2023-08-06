@@ -10,6 +10,7 @@ export interface EditDictationRequest {
   title: string;
   description?: string;
   showImage: boolean;
+  includeAIImage: boolean;
   vocabulary: string[];
   suitableStudent?: string;
   article?: string;

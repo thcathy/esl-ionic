@@ -44,12 +44,12 @@ export function createTranslateLoader(http: HttpClient) {
 const auth0RedirectUri = `${config.appId}://${environment.auth0Host}/capacitor/${config.appId}/callback`;
 
 @NgModule({
-  declarations: [AppComponent],  
+  declarations: [AppComponent],
   imports: [
     BrowserModule, IonicModule.forRoot(), AppRoutingModule,
     BrowserAnimationsModule, CommonModule, HttpClientModule, HttpClientJsonpModule, ReactiveFormsModule,
     IonicStorageModule.forRoot(),
-    FontAwesomeIconsModule, 
+    FontAwesomeIconsModule,
     AuthModule.forRoot({
       domain: "thcathy.auth0.com",
       clientId: "Q2x3VfMKsuKtmXuBbuwuTw3ARDZ1xpBS",

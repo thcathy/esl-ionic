@@ -3,7 +3,7 @@ import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {SharedTestModule} from '../../../testing/shared-test.module';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {VocabImageComponent} from './vocab-image';
-import {defaultImage} from '../../entity/dictation';
+import {AILoadingImage, defaultImage} from '../../entity/dictation';
 
 describe('VocabImageComponent', () => {
   let component: VocabImageComponent;
@@ -27,6 +27,17 @@ describe('VocabImageComponent', () => {
     component.images = null;
     component.ngOnChanges(null);
     expect(component.imageBase64).toEqual(defaultImage[0]);
+
+    component.images = [];
+    component.ngOnChanges(null);
+    expect(component.imageBase64).toEqual(defaultImage[0]);
+  });
+
+  it('AI loading image if no images input', () => {
+    component.AIImage = true;
+    component.images = null;
+    component.ngOnChanges(null);
+    expect(component.imageBase64).toEqual(AILoadingImage[0]);
 
     component.images = [];
     component.ngOnChanges(null);

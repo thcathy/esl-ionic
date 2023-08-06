@@ -223,5 +223,9 @@
   "Wrong year input": "年份輸入錯誤",
   "Delete Account": "刪除帳戶",
   "All record will be removed! No recovery afterward!": "所有記錄都將被刪除！無法恢復！",
-  "Type this year to confirm": "輸入今年以確認"
+  "Type this year to confirm": "輸入今年以確認",
+  "Include AI Generated Image": "包括AI生成的圖像",
+  "Include AI Image": "包括AI生成的圖像",
+  "Not Include AI Generated Image": "不包括AI生成的圖像",
+  "Please login then create exercise": "需要登入並建立聽寫練習"
 }

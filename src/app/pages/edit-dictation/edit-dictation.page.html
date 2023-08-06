@@ -36,7 +36,7 @@
               </div>
               <ion-item class="suitableAge" *ngIf="mode === editDictationPageMode.Edit">
                 <ion-label style="margin: inherit;">{{'Suitable'|translate}} ({{'Age'|translate}})</ion-label>
-                <ion-select style="padding-right: 30px;" formControlName="suitableStudent" interface="popover">
+                <ion-select style="" formControlName="suitableStudent" interface="popover">
                   <ion-select-option *ngFor="let state of suitableStudentOptions"
                                      [value]="state">{{'SuitableStudent.' + state|translate}}</ion-select-option>
                 </ion-select>
@@ -96,25 +96,48 @@
                 </ion-radio-group>
               </div>
               <div class="word-options-all" *ngIf="type.value === dictationType.Word">
-                <ion-item>
-                  <ion-label>
-                    <fa-icon [icon]="['far', 'images']"></fa-icon> {{'Show Image'|translate}}</ion-label>
-                  <ion-toggle style="padding-right: 30px;" formControlName="showImage"></ion-toggle>
-                </ion-item>
+                <ion-row>
+                  <ion-col>
+                    <ion-item>
+                      <ion-label>
+                        <fa-icon [icon]="['far', 'images']"></fa-icon> {{'Show Image'|translate}}</ion-label>
+                      <ion-toggle style="" formControlName="showImage"></ion-toggle>
+                    </ion-item>
+                  </ion-col>
+                  <ion-col>
+                    <ion-item>
+                      <ion-label>
+                        <fa-icon [icon]="['fas', 'robot']"></fa-icon>{{'Include AI Image'|translate}}
+                      </ion-label>
+                      <ion-toggle *ngIf="mode === editDictationPageMode.Edit && type.value === dictationType.Word" class="include-ai-image-toggle" style="" formControlName="includeAIImage"></ion-toggle>
+                      <fa-icon *ngIf="mode !== editDictationPageMode.Edit" class="include-ai-image-tooltip-icon" (click)="showAIImageTooltip()" [icon]="['fas', 'info-circle']"></fa-icon>
+                    </ion-item>
+                  </ion-col>
+                </ion-row>
+
                 <ion-item>
                   <ion-label>
                     <fa-icon [icon]="['fas', 'window-minimize']"></fa-icon> {{'Words Contain Space'|translate}}</ion-label>
-                  <ion-toggle style="padding-right: 30px;" formControlName="wordContainSpace"></ion-toggle>
+                  <ion-toggle style="" formControlName="wordContainSpace"></ion-toggle>
                 </ion-item>
               </div>
 
               <div *ngIf="type.value === dictationType.Sentence">
                 <ion-item>
-                  <ion-label><fa-icon [icon]="['fas', 'ruler']"></fa-icon> {{'Each Sentence Length'|translate}}</ion-label>
-                  <ion-select style="padding-right: 30px;" formControlName="sentenceLength" interface="popover">
+                  <ion-label>
+                    <fa-icon [icon]="['fas', 'ruler']"></fa-icon> {{'Each Sentence Length'|translate}}
+                  </ion-label>
+                  <ion-select style="" formControlName="sentenceLength" interface="popover">
                     <ion-select-option *ngFor="let state of sentenceLengthOptions" [value]="state">{{'SentenceLength.' + state|translate}}</ion-select-option>
                   </ion-select>
                 </ion-item>
+<!--                <ion-item>-->
+<!--                  <ion-label>-->
+<!--                    <fa-icon [icon]="['fas', 'robot']"></fa-icon>{{'Include AI Image'|translate}}-->
+<!--                  </ion-label>-->
+<!--                  <fa-icon *ngIf="type.value == dictationType.Sentence" class="include-ai-image-tooltip-icon" (click)="showAIImageTooltip()" [icon]="['fas', 'info-circle']"></fa-icon>-->
+<!--                </ion-item>-->
+
                 <app-article-dictation-options #articleDictationOptions></app-article-dictation-options>
               </div>
 

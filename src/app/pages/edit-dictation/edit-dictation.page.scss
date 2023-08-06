@@ -51,3 +51,12 @@ fa-icon {
   color: #ccc;
 }
 
+.include-ai-image-tooltip-icon {
+  color: var(--ion-color-primary);
+}
+
+.include-ai-image-tooltip-icon:hover {
+  cursor: pointer;
+  color: var(--ion-color-primary-shade);
+}
+

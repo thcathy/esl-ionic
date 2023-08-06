@@ -87,6 +87,10 @@ describe('VocabPracticeService', () => {
     expect(result.answers.filter(a => a === '?').length).toEqual(5);
   });
 
+  it('imageUrl can create correct url', () => {
+    expect(service.imageUrl('i am ok')).toContain('images%2Fi-%2Fi-am-ok.json?alt=media');
+  });
+
   describe('test receiveAnswer', () => {
     let controls: PuzzleControls;
 
@@ -114,6 +118,5 @@ describe('VocabPracticeService', () => {
       expect(controls.isComplete()).toBeTrue();
       expect(controls.buttonCorrects.every(v => !v)).toBeTrue();
     });
-
   });
 });

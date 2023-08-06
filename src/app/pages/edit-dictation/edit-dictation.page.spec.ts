@@ -1,5 +1,5 @@
 import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
-import {ComponentFixture, fakeAsync, TestBed, tick, flush} from '@angular/core/testing';
+import {ComponentFixture, fakeAsync, flush, TestBed, tick} from '@angular/core/testing';
 
 import {EditDictationPage} from './edit-dictation.page';
 import {SharedTestModule} from '../../../testing/shared-test.module';
@@ -14,13 +14,10 @@ import {ActivatedRoute} from '@angular/router';
 import {Dictation, Dictations} from '../../entity/dictation';
 import {DictationType, EditDictationPageMode} from './edit-dictation-page-enum';
 import {VocabPracticeType} from '../../enum/vocab-practice-type.enum';
-import exp from 'constants';
 import {
   ArticleDictationOptionsComponent
 } from "../../components/article-dictation-options/article-dictation-options.component";
 import {IonToggle} from "@ionic/angular";
-import {Storage} from "@ionic/storage-angular";
-import {defaultGatherDiagnostics} from "@angular/compiler-cli";
 
 describe('EditDictationPage', () => {
   let component: EditDictationPage;
@@ -81,27 +78,30 @@ describe('EditDictationPage', () => {
     describe('edit mode', () => {
       beforeEach(fakeAsync(() => {
         activateRouteStub.setParamMap({mode: EditDictationPageMode.Edit});
-      }));
-
-      it('open dictation page if dictation is saved', fakeAsync(() => {
-        memberDictationServiceSpy.createOrAmendDictation.and.returnValue(of(dictation1));
         componentViewWillEnter();
-
-        component.question.setValue('apple');
-        component.saveDictation();
-        tick();
-
-        expect(component.isSaved).toBeTruthy();
-        expect(component.canDeactivate()).toBeTruthy();
-
-        const request = memberDictationServiceSpy.createOrAmendDictation.calls.mostRecent().args[0] as EditDictationRequest;
-        expect(request).toBeDefined();
-        expect(request.source).toEqual(Dictations.Source.FillIn);
       }));
+
+      describe('save dictation', () => {
+        it('submit request then open dictation page if dictation is saved', fakeAsync(() => {
+          memberDictationServiceSpy.createOrAmendDictation.and.returnValue(of(dictation1));
+          componentViewWillEnter();
+
+          component.question.setValue('apple');
+          component.includeAIImage.setValue(true);
+          component.saveDictation();
+          tick();
+
+          expect(component.isSaved).toBeTruthy();
+          expect(component.canDeactivate()).toBeTruthy();
+
+          const request = memberDictationServiceSpy.createOrAmendDictation.calls.mostRecent().args[0] as EditDictationRequest;
+          expect(request).toBeDefined();
+          expect(request.source).toEqual(Dictations.Source.FillIn);
+          expect(request.includeAIImage).toBeTrue();
+        }));
+      });
 
       it('show create dictation in title in edit mode', fakeAsync(() => {
-        componentViewWillEnter();
-
         expect(component.getTitle()).toEqual('Create Dictation');
 
         navigationServiceSpy.getParam.and.returnValue(dictation1);
@@ -111,25 +111,33 @@ describe('EditDictationPage', () => {
       }));
 
       it('show some of the elements in Edit mode', fakeAsync(() => {
-        componentViewWillEnter();
-
         expect(fixture.nativeElement.querySelector('.input-form .title')).toBeTruthy();
         expect(fixture.nativeElement.querySelector('.input-form .description')).toBeTruthy();
         expect(fixture.nativeElement.querySelector('.input-form .suitableAge')).toBeTruthy();
       }));
 
       it('create form controls required', fakeAsync(() => {
-        componentViewWillEnter();
-
         expect(component.title).toBeDefined();
         expect(component.description).toBeDefined();
         expect(component.suitableStudent).toBeDefined();
       }));
 
       it('do not show options for word', fakeAsync(() => {
-        componentViewWillEnter();
         component.type.setValue(DictationType.Word);
         expect(fixture.nativeElement.querySelector('.word-options-instant')).toBeNull();
+      }));
+
+      it('show ai image toggle for word', fakeAsync(() => {
+        component.type.setValue(DictationType.Word);
+        expect(fixture.nativeElement.querySelector('.include-ai-image-tooltip-icon')).toBeNull();
+        expect(fixture.nativeElement.querySelector('.include-ai-image-toggle')).toBeDefined();
+      }));
+
+      it('disable ai image toggle for sentence', fakeAsync(() => {
+        component.type.setValue(DictationType.Sentence);
+        componentViewWillEnter();
+        expect(fixture.nativeElement.querySelector('.include-ai-image-tooltip-icon')).toBeDefined();
+        expect(fixture.nativeElement.querySelector('.include-ai-image-toggle')).toBeNull();
       }));
     });
   });
@@ -254,6 +262,11 @@ describe('EditDictationPage', () => {
           component.type.setValue(DictationType.Word);
           expect(fixture.nativeElement.querySelector('.word-options-instant')).toBeDefined();
           expect(fixture.nativeElement.querySelector('.word-options-all')).toBeDefined();
+        }));
+
+        it('for include AI image. show info button, not show toggle', fakeAsync(() => {
+          expect(fixture.nativeElement.querySelector('.include-ai-image-tooltip-icon')).toBeDefined();
+          expect(fixture.nativeElement.querySelector('.include-ai-image-toggle')).toBeNull();
         }));
       });
 

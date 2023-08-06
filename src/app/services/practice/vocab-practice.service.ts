@@ -12,6 +12,7 @@ import {Vocab} from '../../entity/vocab';
 import {DictationUtils} from '../../utils/dictation-utils';
 import {catchError, map} from 'rxjs/operators';
 import {of} from 'rxjs';
+import {ImagesObject} from "../../entity/images-object";
 
 export interface CreateDictationHistoryRequest {
   dictationId?: number;
@@ -29,29 +30,43 @@ export class VocabPracticeService extends Service {
   private generatePracticeUrl = environment.apiHost + '/vocab/practice/generate/';
   private saveHistoryUrl = environment.apiHost + '/member/vocab/practice/history/save/v2';
   private getAllHistoryUrl = environment.apiHost + '/member/vocab/practice/history/getall';
-  private staticImageUrl = environment.staticHost + '/images/';
+  private staticImageUrl = environment.imagesHost;
 
   getQuestion(word: string, showImage: boolean): Observable<VocabPractice> {
     let params = new HttpParams();
-    params = params.append('image', showImage.toString());
+    params = params.append('image', false);
 
     return this.http.get<VocabPractice>(this.getQuestionUrl + encodeURIComponent(word),  {params: params});
   }
 
-  getImages(vocabPractice: VocabPractice): Observable<VocabPractice> {
+  getImages(vocabPractice: VocabPractice, verified: boolean = true): Observable<VocabPractice> {
     console.log(`picsFullPaths from server: ${vocabPractice.picsFullPaths}`);
     if (!DictationUtils.notValidImages(vocabPractice.picsFullPaths)) {
       return of(vocabPractice);
     } else {
-      return this.http.get<string[]>(`${this.staticImageUrl}${vocabPractice.word.toLowerCase()}.json`)
+      return this.http.get<ImagesObject>(this.imageUrl(vocabPractice.word))
         .pipe(
-          map(images => {
-            vocabPractice.picsFullPaths = images;
+          map(imagesObject => {
+            console.log(`imagesObject verified=${imagesObject.isVerify}`);
+            vocabPractice.picsFullPaths = !verified || imagesObject.isVerify ? imagesObject.images : null;
             return vocabPractice;
           }),
-          catchError(error => of(vocabPractice))
+          catchError(error => {
+            vocabPractice.picsFullPaths = null;
+            return of(vocabPractice);
+          })
         );
     }
+  }
+
+  imageUrl(phrase: string): string {
+    let filename = phrase.toLowerCase();
+    filename = filename.replace(/[^a-zA-Z]/g, '-') + '.json';
+    const folder = filename.length < 2 ? filename : filename.slice(0, 2);
+    const url = `${this.staticImageUrl}%2F${folder}%2F${filename}?alt=media`;
+
+    console.info(`'${phrase}' imageUrl = ${url}`);
+    return url;
   }
 
   isWordEqual(word: string, input: string, includeSpace: boolean = false): boolean {

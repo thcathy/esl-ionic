@@ -26,7 +26,7 @@ export class IdTokenInterceptor implements HttpInterceptor {
 
     const idToken = localStorage.getItem('id_token');
 
-    if (idToken && !this.isStaticHostRequest(request.url)) {
+    if (idToken && !this.isImageHostRequest(request.url)) {
       request = request.clone({
         setHeaders: {
           Authorization: `Bearer ${idToken}`,
@@ -37,7 +37,7 @@ export class IdTokenInterceptor implements HttpInterceptor {
     return next.handle(request);
   }
 
-  isStaticHostRequest(url: String) {
-    return url.indexOf(environment.staticHost) > -1;
+  isImageHostRequest(url: String) {
+    return url.indexOf(environment.imagesHost) > -1;
   }
 }

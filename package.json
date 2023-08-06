@@ -55,7 +55,7 @@
     "cordova-browser": "^6.0.0",
     "cordova-ios": "^6.2.0",
     "core-js": "^3.6.4",
-    "firebase-tools": "^8.0.0",
+    "firebase-tools": "^12.4.4",
     "g": "^2.0.1",
     "help": "3.0.2",
     "native-run": "^1.7.0",

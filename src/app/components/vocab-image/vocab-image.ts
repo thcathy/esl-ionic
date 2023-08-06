@@ -1,6 +1,6 @@
 import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {animate, state, style, transition, trigger} from '@angular/animations';
-import {defaultImage} from '../../entity/dictation';
+import {AILoadingImage, defaultImage} from '../../entity/dictation';
 import {CollectionUtils} from '../../utils/collection-utils';
 import {DictationUtils} from '../../utils/dictation-utils';
 
@@ -22,7 +22,8 @@ import {DictationUtils} from '../../utils/dictation-utils';
   ],
 })
 export class VocabImageComponent implements OnChanges {
-  @Input() images: string[];
+  @Input() images: string[]
+  @Input() AIImage: boolean = false;
   index: number;
   state = 'center';
   imageBase64 = '';
@@ -33,7 +34,11 @@ export class VocabImageComponent implements OnChanges {
 
   ngOnChanges(_changes: SimpleChanges) {
     if (DictationUtils.notValidImages(this.images)) {
-      this.images = defaultImage;
+      if (this.images == null) {
+        this.images = this.AIImage ? AILoadingImage : defaultImage;
+      } else {
+        this.images = defaultImage;
+      }
     }
     this.images = CollectionUtils.shuffle(this.images);
     this.index = 0;
