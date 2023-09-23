@@ -39,7 +39,7 @@ export class VocabPracticeService extends Service {
     return this.http.get<VocabPractice>(this.getQuestionUrl + encodeURIComponent(word),  {params: params});
   }
 
-  getImages(vocabPractice: VocabPractice, verified: boolean = true): Observable<VocabPractice> {
+  getImages(vocabPractice: VocabPractice, includeAIImage: boolean = true): Observable<VocabPractice> {
     console.log(`picsFullPaths from server: ${vocabPractice.picsFullPaths}`);
     if (!DictationUtils.notValidImages(vocabPractice.picsFullPaths)) {
       return of(vocabPractice);
@@ -48,7 +48,7 @@ export class VocabPracticeService extends Service {
         .pipe(
           map(imagesObject => {
             console.log(`imagesObject verified=${imagesObject.isVerify}`);
-            vocabPractice.picsFullPaths = !verified || imagesObject.isVerify ? imagesObject.images : null;
+            vocabPractice.picsFullPaths = (includeAIImage || imagesObject.isVerify) ? imagesObject.images : null;
             return vocabPractice;
           }),
           catchError(error => {

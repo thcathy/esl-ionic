@@ -76,7 +76,7 @@ export class DictationPracticePage implements OnInit {
     this.dictationHelper.wordsToPractice(this.dictation)
       .pipe(
           mergeMap(word => this.vocabPracticeService.getQuestion(word, this.dictation.showImage)),
-          mergeMap(vocabPractice => this.dictation.showImage ? this.vocabPracticeService.getImages(vocabPractice, !this.dictation.includeAIImage) : of(vocabPractice))
+          mergeMap(vocabPractice => this.dictation.showImage ? this.vocabPracticeService.getImages(vocabPractice, this.dictation.includeAIImage) : of(vocabPractice))
       ).subscribe(p => this.receiveVocabPractice(p));
   }
 
