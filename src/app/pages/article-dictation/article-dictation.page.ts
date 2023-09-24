@@ -61,7 +61,7 @@ export class ArticleDictationPage implements OnInit {
       this.dictation.article,
       this.articleDictationService.sentenceLengthOptionsToValue(this.dictation.sentenceLength)
     );
-    this.log.debug(`divided into ${this.sentences.length} sentences`);
+    console.debug(`divided into ${this.sentences.length} sentences`);
     this.speak();
   }
 

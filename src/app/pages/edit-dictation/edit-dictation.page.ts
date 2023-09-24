@@ -222,7 +222,6 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
         source: Dictations.Source.FillIn,
       };
     } else {
-      debugger;
       return <Dictation>{
         id: -1,
         sentenceLength: this.sentenceLength.value,

@@ -79,10 +79,6 @@ buildAndroidAab() {
   fastlane supply -f ${AAB_PATH} --track "production" --skip_upload_images --skip_upload_screenshots --skip_upload_metadata --release_status "draft" --json_key ${GCLOUD_SERVICE_ACCOUNT_KEY}
 }
 
-simios() {
- ionic cordova emulate ios -lc
-}
-
 setVersion() {
   VERSION=`cat package.json | python3 -c "import sys, json; print(json.load(sys.stdin)['version'])"`
   ANDROID_VERSION=`echo $VERSION | tr . 0`
