@@ -1,18 +1,18 @@
 set -e
 
-deployWebUAT() {
+release_web_uat() {
   firebase deploy -P batch4-161201
 }
 
-deployWebProd() {
+release_web_prod() {
   firebase deploy -P funfunspell-firebase
 }
 
-buildFirebase() {
+build_firebase() {
   ionic build --prod
 }
 
-buildios() {
+release_ios() {
   XCARCHIVE_PATH="ESL.xcarchive"
   EXPORT_PATH="./tmp"
 
@@ -37,7 +37,7 @@ buildios() {
   rm -Rf ${EXPORT_PATH}
 }
 
-testios() {
+test_ios() {
   setVersion
   sed -i '' "s/MARKETING_VERSION = .*;/MARKETING_VERSION = $VERSION;/g" ios/App/App.xcodeproj/project.pbxproj
   ionic capacitor build ios --prod
@@ -56,7 +56,7 @@ buildAndroidApk() {
   cp esl-dictation.apk ~/Google\ Drive/apk/
 }
 
-buildAndroidAab() {
+release_android() {
   AAB_PATH="app/build/outputs/bundle/release/app-release.aab"
 
   if [ -z "$ESL_IONIC_KEYSTORE_PASSWORD" ]; then
