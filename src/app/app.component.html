@@ -73,4 +73,8 @@
   </ion-menu>
 
   <ion-router-outlet id="main" [swipeGesture]="false"></ion-router-outlet>
+
+  <ion-alert trigger="present-alert"
+             header="Connection Error | translate" subHeader="Important message"
+             [buttons]="alertButtons"></ion-alert>
 </ion-app>

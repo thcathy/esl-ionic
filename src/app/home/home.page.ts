@@ -25,8 +25,6 @@ export class HomePage implements OnInit {
               public router: Router,
               public rankingService: RankingService,
               public dictationService: DictationService,
-              public serverService: ServerService,
-              public alertController: AlertController,
               public translate: TranslateService,
               public navigationService: NavigationService,
               public authService: FFSAuthService,
@@ -34,22 +32,9 @@ export class HomePage implements OnInit {
   }
 
   ngOnInit() {
-    this.serverService.healthCheck().subscribe(_data => {}, _e => {
-      this.showConnectionErrorAlert();
-    });
-
     this.rankingService.randomTopScore().subscribe(rank => this.memberScoreRanking = rank, _e => {});
     this.dictationService.randomDictationStatistics().subscribe(stat => {
       this.dictationStat = stat, _e => {};
     });
-  }
-
-  async showConnectionErrorAlert() {
-    const alert = await this.alertController.create({
-      header: `${this.translate.instant('Connection Error')}!`,
-      subHeader: this.translate.instant('Please connect to network or Try again later'),
-      buttons: [this.translate.instant('OK')]
-    });
-    alert.present();
   }
 }

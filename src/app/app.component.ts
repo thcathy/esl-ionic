@@ -2,7 +2,7 @@ import { Component, NgZone, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { App, URLOpenListenerEvent } from '@capacitor/app';
 import { SplashScreen } from '@capacitor/splash-screen';
-import { Platform } from '@ionic/angular';
+import {AlertController, Platform} from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
 import { environment } from '../environments/environment';
@@ -13,6 +13,7 @@ import { StorageService } from './services/storage.service';
 import config from '../../capacitor.config';
 import { filter } from 'rxjs';
 import packageJson from '../../package.json';
+import {ServerService} from "./services/server.service";
 
 declare let gtag: Function;
 
@@ -24,15 +25,18 @@ const auth0CallbackUri = `${config.appId}://${environment.auth0Host}/capacitor/$
 })
 export class AppComponent implements OnInit {
   defaultLanguage = 'en';
+  public alertButtons = ['OK'];
 
   constructor(
-    public platform: Platform,    
+    public platform: Platform,
     public router: Router,
     public authService: FFSAuthService,
     public translate: TranslateService,
     public navigationService: NavigationService,
     public storage: StorageService,
     public appService: AppService,
+    public serverService: ServerService,
+    public alertController: AlertController,
     private log: NGXLogger,
     private zone: NgZone,
   ) {
@@ -49,7 +53,29 @@ export class AppComponent implements OnInit {
       SplashScreen.hide();
       this.setupGoogleAnalytics();
       this.initLanguage();
+
+      App.addListener('appStateChange', ({ isActive }) => {
+        console.log('App state changed. Is active?', isActive);
+        if (isActive) {
+          this.showConnectionErrorAlert();
+          // this.serverService.healthCheck().subscribe({
+          //   next: null,
+          //   error: () => this.showConnectionErrorAlert(),
+          // });
+        }
+      });
     });
+  }
+
+  async showConnectionErrorAlert() {
+    if (this.alert == null || !this.alert.active) {
+      this.alert = await this.alertController.create({
+        header: `${this.translate.instant('Connection Error')}!`,
+        subHeader: this.translate.instant('Please connect to network or Try again later'),
+        buttons: [this.translate.instant('OK')]
+      });
+      this.alert.present();
+    }
   }
 
   private initLanguage() {
@@ -65,7 +91,7 @@ export class AppComponent implements OnInit {
 
     gtag('config', 'G-T0NL87GWKB', {
       page_title: packageJson.name,
-    });    
+    });
   }
 
   private setupAppUrlOpenListener() {
@@ -78,7 +104,7 @@ export class AppComponent implements OnInit {
           this.authService.handleAuthCallbackCapacitor(event.url);
           return;
         }
-                
+
         // Example url: https://beerswift.app/tabs/tab2
         // slug = /tabs/tab2
         const slug = event.url.split(".com").pop();
