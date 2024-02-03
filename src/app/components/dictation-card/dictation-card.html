@@ -1,7 +1,9 @@
 <ion-card class="card" *ngIf="dictation" style="margin-top: 8px;">
   <ion-card-header>
-    <div class="dictation" *ngIf="dictation.source === sourceType.FillIn"><fa-icon [icon]="['fas', 'edit']"></fa-icon> {{ 'Dictation' | translate }}</div>
-    <div class="vocabulary" *ngIf="dictation.source === sourceType.Select"><fa-icon [icon]="['fas', 'edit']"></fa-icon> {{ 'Vocabulary Exercise' | translate }}</div>
+    <ion-card-title>
+      <div class="dictation" *ngIf="dictation.source === sourceType.FillIn"><fa-icon [icon]="['fas', 'edit']"></fa-icon> {{ 'Dictation' | translate }}</div>
+      <div class="vocabulary" *ngIf="dictation.source === sourceType.Select"><fa-icon [icon]="['fas', 'edit']"></fa-icon> {{ 'Vocabulary Exercise' | translate }}</div>
+    </ion-card-title>
   </ion-card-header>
   <ion-card-content>
     <ion-grid>

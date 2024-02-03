@@ -74,7 +74,9 @@
 
   <ion-router-outlet id="main" [swipeGesture]="false"></ion-router-outlet>
 
-  <ion-alert trigger="present-alert"
-             header="Connection Error | translate" subHeader="Important message"
-             [buttons]="alertButtons"></ion-alert>
+  <ion-alert [isOpen]="networkAlertConfig.showAlert"
+             header="{{'Connection Error' | translate}}"
+             subHeader="{{'Please connect to network or Try again later' | translate}}"
+             [buttons]="networkAlertConfig.buttons"
+             (didDismiss)="closeNetworkAlert()"></ion-alert>
 </ion-app>

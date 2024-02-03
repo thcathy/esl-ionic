@@ -9,7 +9,7 @@
   <div class="inner-content">
     <ion-card class="card">
       <ion-card-header>
-        <fa-icon icon="address-card"></fa-icon>&nbsp;{{'Personal Information'|translate}}
+        <ion-card-title><fa-icon icon="address-card"></fa-icon>&nbsp;{{'Personal Information'|translate}}</ion-card-title>
       </ion-card-header>
       <ion-card-content>
         <form class="input-form" [formGroup]="inputForm" novalidate>
@@ -37,7 +37,7 @@
           </div>
           <ion-item class="ion-text-left">
             <ion-label>{{'Date of birth'|translate}}</ion-label>
-            <ion-datetime displayFormat="YYYY-MM-DD" formControlName="birthday" presentation="date" [preferWheel]="false"></ion-datetime>
+            <ion-datetime formControlName="birthday" presentation="date" [preferWheel]="false"></ion-datetime>
           </ion-item>
           <ion-item>
             <ion-label>{{'Address'|translate}}</ion-label>

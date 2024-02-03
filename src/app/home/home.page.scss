@@ -5,11 +5,14 @@
   width: 100%;
 
   ion-card-header {
-    color: white;
-    font-size: 2.8rem;
-    text-align: center;
     padding: 8px;
     background-color: var(--ion-color-primary);
+
+    ion-card-title {
+      color: white;
+      font-size: 2.5rem;
+      text-align: center;
+    }
   }
 
   ion-card-content {

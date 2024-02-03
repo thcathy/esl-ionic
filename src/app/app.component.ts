@@ -1,17 +1,16 @@
-import { Component, NgZone, OnInit } from '@angular/core';
-import { NavigationEnd, Router } from '@angular/router';
-import { App, URLOpenListenerEvent } from '@capacitor/app';
-import { SplashScreen } from '@capacitor/splash-screen';
-import {AlertController, Platform} from '@ionic/angular';
-import { TranslateService } from '@ngx-translate/core';
-import { NGXLogger } from 'ngx-logger';
-import { environment } from '../environments/environment';
-import { AppService } from './services/app.service';
-import { FFSAuthService } from './services/auth.service';
-import { NavigationService } from './services/navigation.service';
-import { StorageService } from './services/storage.service';
+import {Component, NgZone, OnInit} from '@angular/core';
+import {Router} from '@angular/router';
+import {App, URLOpenListenerEvent} from '@capacitor/app';
+import {SplashScreen} from '@capacitor/splash-screen';
+import {Platform} from '@ionic/angular';
+import {TranslateService} from '@ngx-translate/core';
+import {NGXLogger} from 'ngx-logger';
+import {environment} from '../environments/environment';
+import {AppService} from './services/app.service';
+import {FFSAuthService} from './services/auth.service';
+import {NavigationService} from './services/navigation.service';
+import {StorageService} from './services/storage.service';
 import config from '../../capacitor.config';
-import { filter } from 'rxjs';
 import packageJson from '../../package.json';
 import {ServerService} from "./services/server.service";
 
@@ -25,7 +24,10 @@ const auth0CallbackUri = `${config.appId}://${environment.auth0Host}/capacitor/$
 })
 export class AppComponent implements OnInit {
   defaultLanguage = 'en';
-  public alertButtons = ['OK'];
+  networkAlertConfig = {
+    showAlert: false,
+    buttons: ['OK']
+  }
 
   constructor(
     public platform: Platform,
@@ -36,7 +38,6 @@ export class AppComponent implements OnInit {
     public storage: StorageService,
     public appService: AppService,
     public serverService: ServerService,
-    public alertController: AlertController,
     private log: NGXLogger,
     private zone: NgZone,
   ) {
@@ -45,7 +46,8 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.setupAppUrlOpenListener();
+    this.setupAppUrlOpenListener(); // would it be put in initializeApp or platform ready?
+    this.healthCheck(); // execute when first started
   }
 
   initializeApp() {
@@ -57,25 +59,23 @@ export class AppComponent implements OnInit {
       App.addListener('appStateChange', ({ isActive }) => {
         console.log('App state changed. Is active?', isActive);
         if (isActive) {
-          this.showConnectionErrorAlert();
-          // this.serverService.healthCheck().subscribe({
-          //   next: null,
-          //   error: () => this.showConnectionErrorAlert(),
-          // });
+          this.healthCheck();
         }
       });
     });
   }
 
-  async showConnectionErrorAlert() {
-    if (this.alert == null || !this.alert.active) {
-      this.alert = await this.alertController.create({
-        header: `${this.translate.instant('Connection Error')}!`,
-        subHeader: this.translate.instant('Please connect to network or Try again later'),
-        buttons: [this.translate.instant('OK')]
-      });
-      this.alert.present();
-    }
+  healthCheck() {
+    if (this.networkAlertConfig.showAlert) return;
+
+    this.serverService.healthCheck()
+      .subscribe({
+        next: () =>  this.networkAlertConfig.showAlert = false,
+        error: (err) => {
+          console.error(`health failed: ${JSON.stringify(err)}`);
+          this.networkAlertConfig.showAlert = true;
+        }
+    });
   }
 
   private initLanguage() {
@@ -113,5 +113,11 @@ export class AppComponent implements OnInit {
         }
       });
     });
+  }
+
+  closeNetworkAlert() {
+    this.networkAlertConfig.showAlert = false;
+    this.navigationService.openHomePage();
+    setTimeout(() => this.healthCheck(), 5000); // 5 seconds
   }
 }

@@ -11,7 +11,9 @@
 <ion-content>
   <div class="inner-content">
     <ion-card class="card">
-      <ion-card-header style="font-size: 1.2rem;">{{ 'Completed dictation' | translate }}</ion-card-header>
+      <ion-card-header style="font-size: 1.2rem;">
+        <ion-card-title>{{ 'Completed dictation' | translate }}</ion-card-title>
+      </ion-card-header>
       <ion-row class="ion-no-padding">
         <ion-col>
           <ion-button (click)="showOptionsOrStart()"><fa-icon [icon]="['fas', 'redo']"></fa-icon>&nbsp;{{'Retry'|translate}}</ion-button>

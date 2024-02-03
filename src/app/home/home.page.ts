@@ -4,8 +4,6 @@ import {DictationStatistics} from '../entity/dictation-statistics';
 import {AppService} from '../services/app.service';
 import {RankingService} from '../services/ranking/ranking.service';
 import {DictationService} from '../services/dictation/dictation.service';
-import {ServerService} from '../services/server.service';
-import {AlertController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
 import {Router} from '@angular/router';
 import {NavigationService} from '../services/navigation.service';
@@ -32,9 +30,13 @@ export class HomePage implements OnInit {
   }
 
   ngOnInit() {
-    this.rankingService.randomTopScore().subscribe(rank => this.memberScoreRanking = rank, _e => {});
-    this.dictationService.randomDictationStatistics().subscribe(stat => {
-      this.dictationStat = stat, _e => {};
+    this.rankingService.randomTopScore().subscribe({
+      next: rank => this.memberScoreRanking = rank,
+      error: _e => {}
+    });
+    this.dictationService.randomDictationStatistics().subscribe({
+      next: stat => this.dictationStat = stat,
+      error: _e => {}
     });
   }
 }

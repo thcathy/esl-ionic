@@ -1,6 +1,9 @@
 <ion-card class="card dictation-list" style="margin-top: 12px;" *ngIf="dictations">
   <ion-card-header>
-    <fa-icon [icon]="['fas', 'edit']"></fa-icon> {{ title | translate }}
+    <ion-card-title>
+      <fa-icon [icon]="['fas', 'edit']"></fa-icon>
+      {{ title | translate }}
+    </ion-card-title>
   </ion-card-header>
   <ion-card-content>
     <ion-progress-bar *ngIf="loading" type="indeterminate"></ion-progress-bar>

@@ -1,6 +1,4 @@
-<ion-button fill="outline" size="large"
-            (click)="onClick()">
-  <span style="text-transform:none!important;"
-        [@change]="state">{{character}}</span>
+<ion-button fill="outline" (click)="onClick()">
+  <span style="text-transform:none!important;" [@change]="state">{{character}}</span>
   <ion-ripple-effect></ion-ripple-effect>
 </ion-button>

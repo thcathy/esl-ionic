@@ -1,25 +1,33 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import { AbstractControl, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
-import {AlertController, IonToggle} from '@ionic/angular';
-import { TranslateService } from '@ngx-translate/core';
-import { Observable } from 'rxjs';
-import { Dictation, Dictations, SentenceLengthOptions, SuitableStudentOptions } from '../../entity/dictation';
-import { Vocab } from '../../entity/vocab';
-import { VocabPracticeType } from '../../enum/vocab-practice-type.enum';
-import { CanComponentDeactivate } from '../../guards/can-deactivate.guard';
-import { FFSAuthService } from '../../services/auth.service';
-import { ArticleDictationService } from '../../services/dictation/article-dictation.service';
-import { DictationService } from '../../services/dictation/dictation.service';
-import { EditDictationRequest, MemberDictationService } from '../../services/dictation/member-dictation.service';
-import { IonicComponentService } from '../../services/ionic-component.service';
-import { NavigationService } from '../../services/navigation.service';
-import { DictationUtils } from '../../utils/dictation-utils';
-import { DictationType, EditDictationPageMode } from './edit-dictation-page-enum';
-import Source = Dictations.Source;
+import {
+  AbstractControl,
+  UntypedFormBuilder,
+  UntypedFormControl,
+  UntypedFormGroup,
+  ValidationErrors,
+  ValidatorFn,
+  Validators
+} from '@angular/forms';
+import {ActivatedRoute} from '@angular/router';
+import {AlertController} from '@ionic/angular';
+import {TranslateService} from '@ngx-translate/core';
+import {Observable} from 'rxjs';
+import {Dictation, Dictations, SentenceLengthOptions, SuitableStudentOptions} from '../../entity/dictation';
+import {Vocab} from '../../entity/vocab';
+import {VocabPracticeType} from '../../enum/vocab-practice-type.enum';
+import {CanComponentDeactivate} from '../../guards/can-deactivate.guard';
+import {FFSAuthService} from '../../services/auth.service';
+import {ArticleDictationService} from '../../services/dictation/article-dictation.service';
+import {DictationService} from '../../services/dictation/dictation.service';
+import {EditDictationRequest, MemberDictationService} from '../../services/dictation/member-dictation.service';
+import {IonicComponentService} from '../../services/ionic-component.service';
+import {NavigationService} from '../../services/navigation.service';
+import {DictationUtils} from '../../utils/dictation-utils';
+import {DictationType, EditDictationPageMode} from './edit-dictation-page-enum';
 import {
   ArticleDictationOptionsComponent
 } from "../../components/article-dictation-options/article-dictation-options.component";
+import Source = Dictations.Source;
 
 @Component({
   selector: 'app-edit-dictation',
@@ -255,14 +263,6 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
       this.isPreview = false;
       document.getElementById('ion-col-textarea')?.scrollIntoView();
     }
-  }
-
-  async showAIImageTooltip() {
-    const alert = await this.alertController.create({
-      message: this.translate.instant('Please login then create exercise'),
-      buttons: [this.translate.instant('OK')]
-    });
-    await alert.present();
   }
 }
 

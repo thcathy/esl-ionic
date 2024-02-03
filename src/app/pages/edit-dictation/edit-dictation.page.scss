@@ -3,8 +3,8 @@
 }
 
 .input-form {
-  ::placeholder {
-    color: #BBBBBB;
+  ion-input {
+    --placeholder-color: #A0A0A0;
   }
 
   ion-label {
