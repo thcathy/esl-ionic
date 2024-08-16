@@ -19,30 +19,27 @@
             <div *ngIf="keyword.errors.maxlength">{{'CharactersTooLong'|translate:{length: '50'} }}</div>
           </div>
           <ion-item *ngIf="moreOptions">
-            <ion-label style="padding-right: 16px;">{{'Created By'|translate}}</ion-label>
-            <ion-input type="text" formControlName="creator"></ion-input>
+            <ion-input type="text" label="{{'Created By'|translate}}" formControlName="creator"></ion-input>
           </ion-item>
           <div *ngIf="creator.invalid && (creator.dirty || creator.touched)" class="error-text">
             <div *ngIf="creator.errors.minlength">{{'CharactersTooShort'|translate:{length: '3'} }}</div>
             <div *ngIf="creator.errors.maxlength">{{'CharactersTooLong'|translate:{length: '50'} }}</div>
           </div>
           <ion-item *ngIf="moreOptions">
-            <ion-label style="margin: inherit;">{{'Suitable'|translate}} ({{'Age'|translate}})</ion-label>
-            <ion-select style="padding-right: 30px;" formControlName="suitableStudent" interface="popover">
+            <ion-select formControlName="suitableStudent" interface="popover"
+              label="{{'Suitable'|translate}} ({{'Age'|translate}})">
               <ion-select-option *ngFor="let state of suitableStudentOptions" [value]="state">{{'SuitableStudent.' + state|translate}}</ion-select-option>
             </ion-select>
           </ion-item>
           <ion-item *ngIf="moreOptions">
-            <ion-label style="margin: inherit;">{{'Type'|translate}}</ion-label>
-            <ion-select style="padding-right: 30px;" formControlName="type" interface="popover">
+            <ion-select label="{{'Type'|translate}}" formControlName="type" interface="popover">
               <ion-select-option value="Any">{{'Any'|translate}}</ion-select-option>
               <ion-select-option value="Vocab">{{'Word'|translate}}</ion-select-option>
               <ion-select-option value="Article">{{'Sentence'|translate}}</ion-select-option>
             </ion-select>
           </ion-item>
           <ion-item *ngIf="moreOptions">
-            <ion-label style="margin: inherit;">{{'Date'|translate}}</ion-label>
-            <ion-select style="padding-right: 30px;" formControlName="minDate" interface="popover">
+            <ion-select label="{{'Date'|translate}}" formControlName="minDate" interface="popover">
               <ion-select-option *ngFor="let option of dateOptions" [value]="option">{{option.option|translate}}</ion-select-option>
             </ion-select>
           </ion-item>

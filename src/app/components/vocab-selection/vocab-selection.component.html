@@ -12,8 +12,7 @@
   <form *ngIf="inputForm" [formGroup]="inputForm" novalidate>
     <ion-list>
       <ion-item>
-        <ion-label>{{'Title'|translate}}:</ion-label>
-        <ion-input type="text" formControlName="title"></ion-input>
+        <ion-input type="text" label="{{'Title'|translate}}:" formControlName="title"></ion-input>
       </ion-item>
       <ion-item *ngIf="title.invalid && (title.dirty || title.touched)" class="error-text">
         <ion-label *ngIf="title.errors.required">{{'Title is required'|translate}}</ion-label>

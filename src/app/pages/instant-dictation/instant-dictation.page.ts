@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
 import {NavigationService} from '../../services/navigation.service';
 import {AlertController} from '@ionic/angular';
@@ -7,8 +7,9 @@ import {DictationService} from '../../services/dictation/dictation.service';
 import {Dictation, SentenceLengthOptions} from '../../entity/dictation';
 import {Vocab} from '../../entity/vocab';
 import {ValidationUtils} from '../../utils/validation-utils';
-import { StorageService } from '../../services/storage.service';
+import {StorageService} from '../../services/storage.service';
 
+// Deprecated
 @Component({
   selector: 'app-instant-dictation',
   templateUrl: './instant-dictation.page.html',

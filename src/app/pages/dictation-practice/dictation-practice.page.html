@@ -30,8 +30,8 @@
               </ion-row>
               <div *ngIf="practiceType === type.Spell" class="spell-input-div">
                 <ion-item class="answerInput">
-                  <ion-label position="floating">{{'Answer'|translate}}</ion-label>
                   <ion-input [(ngModel)]="answer" type="text" inputmode="text" maxlength="30" (keyup.enter)="submitSpellingAnswer()"
+                             label="{{'Answer'|translate}}" labelPlacement="floating"
                              autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></ion-input>
                 </ion-item>
                 <div>

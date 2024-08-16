@@ -24,9 +24,9 @@
                     <ion-row class="radio">
                       <ion-col>
                         <ion-item>
-                          <ion-label [class.deselected]="type.value === practiceType.Spell">
-                            {{'Spelling'|translate}}</ion-label>
-                          <ion-radio value="Spell"></ion-radio>
+                          <ion-radio value="Spell">
+                            <span [class.deselected]="type.value === practiceType.Puzzle">{{'Spelling'|translate}}</span>
+                          </ion-radio>
                         </ion-item>
                         <div class="type-example" [class.deselected]="type.value !== practiceType.Spell" style="padding-top: 6px;">
                           <fa-icon icon="apple-alt"></fa-icon>&nbsp;<span class="spell">apple</span>
@@ -34,9 +34,9 @@
                       </ion-col>
                       <ion-col>
                         <ion-item>
-                          <ion-label [class.deselected]="type.value === practiceType.Puzzle">
-                            {{'Puzzle'|translate}}</ion-label>
-                          <ion-radio value="Puzzle"></ion-radio>
+                          <ion-radio value="Puzzle">
+                            <span [class.deselected]="type.value === practiceType.Spell">{{'Puzzle'|translate}}</span>
+                          </ion-radio>
                         </ion-item>
                         <div class="type-example puzzle" [class.deselected]="type.value !== practiceType.Puzzle">
                           <fa-icon icon="apple-alt"></fa-icon>
@@ -47,9 +47,9 @@
                   </ion-radio-group>
 
                   <ion-item>
-                    <ion-label><fa-icon icon="sliders-h"></fa-icon> {{'Select Difficulty'|translate}}</ion-label>
                     <ion-select formControlName="difficulty" interface="popover">
-                      <ion-select-option *ngFor="let d of vocabDifficulties" [value]="d">{{'VocabDifficulty.' + d|translate}}</ion-select-option>
+                      <div slot="label"><fa-icon icon="sliders-h"></fa-icon> {{'Select Difficulty'|translate}}</div>
+                      <ion-select-option *ngFor="let d of vocabDifficulties" [value]="d">{{'VocabDifficulty.' + d | translate}}</ion-select-option>
                     </ion-select>
                   </ion-item>
 

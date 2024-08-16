@@ -14,23 +14,19 @@
       <ion-card-content>
         <form class="input-form" [formGroup]="inputForm" novalidate>
           <ion-item>
-            <ion-label>{{'User Id'|translate}}</ion-label>
-            <ion-input id="userIdInput" type="text" value="{{member?.userId}}" disabled="true"></ion-input>
+            <ion-input id="userIdInput" label="{{'User Id'|translate}}" type="text" value="{{member?.userId}}" disabled="true"></ion-input>
           </ion-item>
           <ion-item>
-            <ion-label>{{'Email'|translate}}</ion-label>
-            <ion-input type="text" value="{{member?.emailAddress}}" disabled="true"></ion-input>
+            <ion-input type="text" label="{{'Email'|translate}}" value="{{member?.emailAddress}}" disabled="true"></ion-input>
           </ion-item>
           <ion-item>
-            <ion-label>{{'First Name'|translate}}</ion-label>
-            <ion-input type="text" formControlName="firstName"></ion-input>
+            <ion-input type="text" label="{{'First Name'|translate}}" formControlName="firstName"></ion-input>
           </ion-item>
           <div *ngIf="firstName.invalid && (firstName.dirty || firstName.touched)" class="error-text">
             <div *ngIf="firstName.errors.maxlength">{{'First Name' | translate}}{{'CharactersTooLong'|translate:{length: '50'} }}</div>
           </div>
           <ion-item>
-            <ion-label>{{'Last Name'|translate}}</ion-label>
-            <ion-input type="text" formControlName="lastName"></ion-input>
+            <ion-input type="text" label="{{'Last Name'|translate}}" formControlName="lastName"></ion-input>
           </ion-item>
           <div *ngIf="lastName.invalid && (lastName.dirty || lastName.touched)" class="error-text">
             <div *ngIf="lastName.errors.maxlength">{{'Last Name'|translate}}{{'CharactersTooLong'|translate:{length: '50'} }}</div>
@@ -40,23 +36,20 @@
             <ion-datetime formControlName="birthday" presentation="date" [preferWheel]="false"></ion-datetime>
           </ion-item>
           <ion-item>
-            <ion-label>{{'Address'|translate}}</ion-label>
-            <ion-input type="text" formControlName="address"></ion-input>
+            <ion-input type="text" label="{{'Address'|translate}}" formControlName="address"></ion-input>
           </ion-item>
           <div *ngIf="address.invalid && (address.dirty || address.touched)" class="error-text">
             <div *ngIf="address.errors.maxlength">{{'Address'|translate}}{{'CharactersTooLong'|translate:{length: '200'} }}</div>
           </div>
           <ion-item>
-            <ion-label>{{'Phone'|translate}}</ion-label>
-            <ion-input type="text" formControlName="phoneNumber"></ion-input>
+            <ion-input type="text" label="{{'Phone'|translate}}" formControlName="phoneNumber"></ion-input>
           </ion-item>
           <div *ngIf="phoneNumber.invalid && (phoneNumber.dirty || phoneNumber.touched)" class="error-text">
             <div *ngIf="phoneNumber.errors.maxlength">{{'Phone'|translate}}{{'CharactersTooLong'|translate:{length: '20'} }}</div>
             <div *ngIf="phoneNumber.errors.pattern">{{'Allow numbers input only'|translate}}</div>
           </div>
           <ion-item>
-            <ion-label stacked>{{'School'|translate}}</ion-label>
-            <ion-input type="text" formControlName="school"></ion-input>
+            <ion-input type="text" label="{{'School'|translate}}" formControlName="school"></ion-input>
           </ion-item>
           <div *ngIf="school.invalid && (school.dirty || school.touched)" class="error-text">
             <div *ngIf="school.errors.maxlength">{{'School'|translate}}{{'CharactersTooLong'|translate:{length: '100'} }}</div>
