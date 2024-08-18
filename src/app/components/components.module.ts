@@ -21,45 +21,48 @@ import {HttpClientModule} from '@angular/common/http';
 import {CharacterButtonComponent} from './character-button/character-button.component';
 import {CharacterComponent} from './character/character.component';
 import {VocabSelectionComponent} from './vocab-selection/vocab-selection.component';
-import {ReactiveFormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ArticleDictationOptionsComponent} from "./article-dictation-options/article-dictation-options.component";
+import {TextInterpretationComponent} from "./text-interpretation/text-interpretation.component";
 
 @NgModule({
-    declarations: [MemberScoreRankingComponent,
-        DictationStatisticsComponent,
-        VocabImageComponent,
-        PracticeHistoryListComponent,
-        ScoreComponent,
-        DictationCardComponent,
-        FooterComponent,
-        DictationListComponent,
-        SentenceHistoriesComponent,
-        MemberScoreListComponent,
-        MemberPracticeHistoryListComponent,
-        VocabHistoryListComponent,
-        VirtualKeyboardComponent, CharacterButtonComponent, CharacterComponent, VocabSelectionComponent, ArticleDictationOptionsComponent
-    ],
-  imports: [
-    IonicModule,
-    TranslateModule,
-    PipesModule,
-    FontAwesomeModule,
-    CommonModule,
-    HttpClientModule, ReactiveFormsModule,
+  declarations: [MemberScoreRankingComponent,
+    DictationStatisticsComponent,
+    VocabImageComponent,
+    PracticeHistoryListComponent,
+    ScoreComponent,
+    DictationCardComponent,
+    FooterComponent,
+    DictationListComponent,
+    SentenceHistoriesComponent,
+    MemberScoreListComponent,
+    MemberPracticeHistoryListComponent,
+    VocabHistoryListComponent,
+    TextInterpretationComponent,
+    VirtualKeyboardComponent, CharacterButtonComponent, CharacterComponent, VocabSelectionComponent, ArticleDictationOptionsComponent
   ],
-    exports: [MemberScoreRankingComponent,
-        DictationStatisticsComponent,
-        VocabImageComponent,
-        PracticeHistoryListComponent,
-        ScoreComponent,
-        DictationCardComponent,
-        FooterComponent,
-        DictationListComponent,
-        SentenceHistoriesComponent,
-        MemberScoreListComponent,
-        MemberPracticeHistoryListComponent,
-        VocabHistoryListComponent,
-        VirtualKeyboardComponent, CharacterButtonComponent, CharacterComponent, VocabSelectionComponent, ArticleDictationOptionsComponent
-    ]
+    imports: [
+        IonicModule,
+        TranslateModule,
+        PipesModule,
+        FontAwesomeModule,
+        CommonModule,
+        HttpClientModule, ReactiveFormsModule, FormsModule,
+    ],
+  exports: [MemberScoreRankingComponent,
+    DictationStatisticsComponent,
+    VocabImageComponent,
+    PracticeHistoryListComponent,
+    ScoreComponent,
+    DictationCardComponent,
+    FooterComponent,
+    DictationListComponent,
+    SentenceHistoriesComponent,
+    MemberScoreListComponent,
+    MemberPracticeHistoryListComponent,
+    VocabHistoryListComponent,
+    TextInterpretationComponent,
+    VirtualKeyboardComponent, CharacterButtonComponent, CharacterComponent, VocabSelectionComponent, ArticleDictationOptionsComponent
+  ]
 })
 export class ComponentsModule {}

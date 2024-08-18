@@ -6,7 +6,8 @@ import {NavigationService} from '../../services/navigation.service';
 import {ActivatedRoute} from '@angular/router';
 import {FFSAuthService} from '../../services/auth.service';
 import {VocabPracticeType} from '../../enum/vocab-practice-type.enum';
-import { StorageService } from '../../services/storage.service';
+import {StorageService} from '../../services/storage.service';
+import {TranslateService} from "@ngx-translate/core";
 
 @Component({
   selector: 'app-vocabulary-starter',
@@ -25,6 +26,7 @@ export class VocabularyStarterPage implements OnInit {
     public route: ActivatedRoute,
     public authService: FFSAuthService,
     public storage: StorageService,
+    public translate: TranslateService,
   ) { }
 
   ngOnInit() {

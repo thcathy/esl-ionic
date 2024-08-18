@@ -1,20 +1,21 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { NGXLogger } from 'ngx-logger';
-import { from, of, Subject } from 'rxjs';
-import { map, mergeMap } from 'rxjs/operators';
-import { VirtualKeyboardEvent } from '../../components/virtual-keyboard/virtual-keyboard';
-import { Dictation, PuzzleControls } from '../../entity/dictation';
-import { VocabPractice } from '../../entity/voacb-practice';
-import { VocabPracticeHistory } from '../../entity/vocab-practice-history';
-import { VocabPracticeType } from '../../enum/vocab-practice-type.enum';
-import { DictationHelper } from '../../services/dictation/dictation-helper.service';
-import { DictationService } from '../../services/dictation/dictation.service';
-import { IonicComponentService } from '../../services/ionic-component.service';
-import { NavigationService } from '../../services/navigation.service';
-import { VocabPracticeService } from '../../services/practice/vocab-practice.service';
-import { SpeechService } from '../../services/speech.service';
-import { StorageService } from '../../services/storage.service';
+import {Component, OnInit} from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
+import {NGXLogger} from 'ngx-logger';
+import {of, Subject} from 'rxjs';
+import {mergeMap} from 'rxjs/operators';
+import {VirtualKeyboardEvent} from '../../components/virtual-keyboard/virtual-keyboard';
+import {Dictation, PuzzleControls} from '../../entity/dictation';
+import {VocabPractice} from '../../entity/voacb-practice';
+import {VocabPracticeHistory} from '../../entity/vocab-practice-history';
+import {VocabPracticeType} from '../../enum/vocab-practice-type.enum';
+import {DictationHelper} from '../../services/dictation/dictation-helper.service';
+import {DictationService} from '../../services/dictation/dictation.service';
+import {IonicComponentService} from '../../services/ionic-component.service';
+import {NavigationService} from '../../services/navigation.service';
+import {VocabPracticeService} from '../../services/practice/vocab-practice.service';
+import {SpeechService} from '../../services/speech.service';
+import {StorageService} from '../../services/storage.service';
+import {TranslateService} from "@ngx-translate/core";
 
 @Component({
   selector: 'app-dictation-practice',
@@ -46,6 +47,7 @@ export class DictationPracticePage implements OnInit {
     public ionicComponentService: IonicComponentService,
     public storage: StorageService,
     public dictationHelper: DictationHelper,
+    public translate: TranslateService,
     private log: NGXLogger,
   ) { }
 

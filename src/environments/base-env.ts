@@ -5,4 +5,7 @@ export const baseEnv = {
   maxSentenceLength: 40,
   learntVocabularyMinimumCorrect: 5,
   vocabPracticeQuestions: 10,
+  interpretation: {
+    translateApiUrl: 'https://arm-s1.funfunspell.com/libretranslate/translate',
+  }
 };

@@ -1,12 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { NGXLogger } from 'ngx-logger';
-import { VirtualKeyboardEvent } from '../../components/virtual-keyboard/virtual-keyboard';
-import { Dictation } from '../../entity/dictation';
-import { SentenceHistory } from '../../entity/sentence-history';
-import { ArticleDictationService } from '../../services/dictation/article-dictation.service';
-import { NavigationService } from '../../services/navigation.service';
-import { SpeechService } from '../../services/speech.service';
-import { StorageService } from '../../services/storage.service';
+import {Component, OnInit} from '@angular/core';
+import {NGXLogger} from 'ngx-logger';
+import {VirtualKeyboardEvent} from '../../components/virtual-keyboard/virtual-keyboard';
+import {Dictation} from '../../entity/dictation';
+import {SentenceHistory} from '../../entity/sentence-history';
+import {ArticleDictationService} from '../../services/dictation/article-dictation.service';
+import {NavigationService} from '../../services/navigation.service';
+import {SpeechService} from '../../services/speech.service';
+import {StorageService} from '../../services/storage.service';
 
 @Component({
   selector: 'app-article-dictation',
@@ -17,7 +17,7 @@ export class ArticleDictationPage implements OnInit {
   dictation: Dictation;
   sentences: string[];
   speakingRate = 0.7;
-  currentSentence = 0;
+  currentIndex = 0;
   mark = 0;
   answer = '';
   histories: SentenceHistory[] = [];
@@ -31,6 +31,10 @@ export class ArticleDictationPage implements OnInit {
     return this?.dictation?.options?.checkPunctuation ? 'Check Punctuation' : 'No Punctuation';
   }
 
+  get currentSentence() {
+    return this.sentences?.length > this.currentIndex ? this.sentences[this.currentIndex] : '';
+  }
+
   constructor(
     public articleDictationService: ArticleDictationService,
     public speechService: SpeechService,
@@ -42,7 +46,7 @@ export class ArticleDictationPage implements OnInit {
   ngOnInit() {}
 
   clearVariables() {
-    this.currentSentence = 0;
+    this.currentIndex = 0;
     this.mark = 0;
     this.answer = '';
     this.sentences = [];
@@ -77,24 +81,24 @@ export class ArticleDictationPage implements OnInit {
 
   speak() {
     this.speechService.speak(
-      this.dictation.options?.speakPunctuation ? this.articleDictationService.replacePunctuationToWord(this.sentences[this.currentSentence]) : this.sentences[this.currentSentence],
+      this.dictation.options?.speakPunctuation ? this.articleDictationService.replacePunctuationToWord(this.sentences[this.currentIndex]) : this.sentences[this.currentIndex],
       this.speakingRate);
   }
 
   submitAnswer() {
     this.histories.unshift(
       this.articleDictationService.checkAnswer(
-        this.sentences[this.currentSentence], this.answer, {
+        this.sentences[this.currentIndex], this.answer, {
           caseSensitive: this.dictation?.options?.caseSensitiveSentence,
           checkPunctuation: this.dictation?.options?.checkPunctuation,
         }
       )
     );
 
-    this.currentSentence++;
+    this.currentIndex++;
     this.answer = '';
 
-    if (this.currentSentence >= this.sentences.length) {
+    if (this.currentIndex >= this.sentences.length) {
       this.navigationService.articleDictationComplete(this.dictation, this.histories.reverse());
     } else {
       this.speak();

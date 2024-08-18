@@ -9,7 +9,7 @@
   <div class="inner-content">
     <ion-card class="card">
       <ion-card-header>
-        <ion-card-title>{{'Sentence'|translate}} {{ currentSentence + 1 }}/{{sentences?.length}}</ion-card-title>
+        <ion-card-title>{{'Sentence'|translate}} {{ currentIndex + 1 }}/{{sentences?.length}}</ion-card-title>
       </ion-card-header>
 
       <ion-card-content>
@@ -27,6 +27,9 @@
               </ion-button>
             </ion-col>
           </ion-row>
+          <div *ngIf="true">
+            <app-text-interpretation [text]="currentSentence" />
+          </div>
           <ion-row>
             <ion-col>
               <ion-item class="answerInput">

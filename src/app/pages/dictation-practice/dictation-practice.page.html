@@ -28,10 +28,13 @@
                   <ion-button shape="round" class="phonicsButton" (click)="showPhonics()">{{phonics|translate}}</ion-button>
                 </ion-col>
               </ion-row>
+              <div *ngIf="translate.currentLang !== 'en'">
+                <app-text-interpretation [text]="currentQuestion().word" />
+              </div>
               <div *ngIf="practiceType === type.Spell" class="spell-input-div">
                 <ion-item class="answerInput">
                   <ion-input [(ngModel)]="answer" type="text" inputmode="text" maxlength="30" (keyup.enter)="submitSpellingAnswer()"
-                             label="{{'Answer'|translate}}" labelPlacement="floating"
+                             label="{{'Answer'|translate}}: " labelPlacement="floating"
                              autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></ion-input>
                 </ion-item>
                 <div>
