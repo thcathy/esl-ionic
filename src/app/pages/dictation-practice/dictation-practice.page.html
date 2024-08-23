@@ -28,7 +28,7 @@
                   <ion-button shape="round" class="phonicsButton" (click)="showPhonics()">{{phonics|translate}}</ion-button>
                 </ion-col>
               </ion-row>
-              <div *ngIf="translate.currentLang !== 'en'">
+              <div>
                 <app-text-interpretation [text]="currentQuestion().word" />
               </div>
               <div *ngIf="practiceType === type.Spell" class="spell-input-div">

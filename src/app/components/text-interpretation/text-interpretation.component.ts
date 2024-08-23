@@ -4,8 +4,8 @@ import {InterpretationService} from "../../services/practice/interpretation.serv
 @Component({
   selector: 'app-text-interpretation',
   template: `
-    <ion-item>
-      <span style="margin-right: 8px;"><ion-toggle [(ngModel)]="enabled" /></span>{{ 'AI translate'|translate }}:&nbsp;<span>{{ enabled ? translatedText : '-' }}</span>
+    <ion-item style="display: flex; align-items: flex-start; margin-top: 8px;">
+      <span style="margin-right: 8px;"><ion-toggle [(ngModel)]="enabled" /></span><span *ngIf="!interpretationService.isEN()">{{ 'AI translate'|translate }}</span><span *ngIf="interpretationService.isEN()">Meaning</span>:&nbsp;<span>{{ enabled ? translatedText : '-' }}</span>
       <span *ngIf="translatedText === ''">
         <span class="dot">.</span><span class="dot">.</span><span class="dot">.</span><span class="dot">.</span><span class="dot">.</span>
       </span>
@@ -18,7 +18,7 @@ export class TextInterpretationComponent  implements OnInit, OnChanges {
   translatedText: string = '';
   enabled: boolean = true;
 
-  constructor(private interpretationService: InterpretationService) {}
+  constructor(protected interpretationService: InterpretationService) {}
 
   ngOnInit() {}
 

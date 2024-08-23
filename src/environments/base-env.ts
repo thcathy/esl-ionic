@@ -7,5 +7,6 @@ export const baseEnv = {
   vocabPracticeQuestions: 10,
   interpretation: {
     translateApiUrl: 'https://arm-s1.funfunspell.com/libretranslate/translate',
+    googleDictionaryUrl: 'https://arm-s1.funfunspell.com/web-parser-rest/rest/dictionary/google',
   }
 };

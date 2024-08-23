@@ -7,6 +7,7 @@ import {ArticleDictationService} from '../../services/dictation/article-dictatio
 import {NavigationService} from '../../services/navigation.service';
 import {SpeechService} from '../../services/speech.service';
 import {StorageService} from '../../services/storage.service';
+import {TranslateService} from "@ngx-translate/core";
 
 @Component({
   selector: 'app-article-dictation',
@@ -40,6 +41,7 @@ export class ArticleDictationPage implements OnInit {
     public speechService: SpeechService,
     public storage: StorageService,
     public navigationService: NavigationService,
+    protected translate: TranslateService,
     private log: NGXLogger,
   ) {}
 
