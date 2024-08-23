@@ -24,6 +24,7 @@ export class TextInterpretationComponent  implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.text) {
+      this.translatedText = '';
       this.translateText();
     }
   }
