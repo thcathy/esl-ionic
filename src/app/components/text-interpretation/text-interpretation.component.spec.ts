@@ -13,7 +13,7 @@ describe('TextInterpretationComponent', () => {
   let interpretationService: jasmine.SpyObj<InterpretationService>;
 
   beforeEach(async () => {
-    const interpretSpy = jasmine.createSpyObj('InterpretationService', ['interpret']);
+    const interpretSpy = jasmine.createSpyObj('InterpretationService', ['interpret', 'isEN']);
 
     await TestBed.configureTestingModule({
       declarations: [TextInterpretationComponent],

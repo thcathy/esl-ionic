@@ -27,7 +27,7 @@
               </ion-button>
             </ion-col>
           </ion-row>
-          <div *ngIf="translate.currentLang !== 'en'">
+          <div *ngIf="translate.currentLang != null && translate.currentLang !== 'en'">
             <app-text-interpretation [text]="currentSentence" />
           </div>
           <ion-row>
