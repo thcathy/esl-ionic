@@ -85,7 +85,7 @@ export class AppComponent implements OnInit {
       if (locale != null) { 
         this.translate.use(locale); 
       } else {
-        this.translate.use(this.translate.getBrowserLang());
+        this.translate.use(this.translate.getBrowserLang() || this.defaultLanguage);
       }
     });
   }
