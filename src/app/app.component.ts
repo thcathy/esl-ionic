@@ -82,7 +82,11 @@ export class AppComponent implements OnInit {
     this.translate.addLangs(['en', 'zh-Hans', 'zh-Hant']);
     this.translate.setDefaultLang(this.defaultLanguage);
     this.storage.get(NavigationService.storageKeys.language).then(locale => {
-      if (locale != null) { this.translate.use(locale); }
+      if (locale != null) { 
+        this.translate.use(locale); 
+      } else {
+        this.translate.use(this.translate.getBrowserLang());
+      }
     });
   }
 
