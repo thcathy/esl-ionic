@@ -5,15 +5,6 @@ import {TranslateService} from "@ngx-translate/core";
 import {environment} from "../../../environments/environment";
 import {catchError, map} from "rxjs/operators";
 
-export interface DictionaryResult {
-  word: string;
-  pronunciationUrl?: string | null;
-  pronunciationLang?: string;
-  IPA?: string;
-  definition?: string;
-  meanings?: string[];
-}
-
 @Injectable({
   providedIn: 'root'
 })
@@ -27,7 +18,7 @@ export class InterpretationService {
               private translate: TranslateService) {}
 
   private aiTranslateUrl = environment.interpretation.translateApiUrl;
-  private googleDictionaryUrl = environment.interpretation.googleDictionaryUrl;
+  private englishMeaningUrl = environment.interpretation.englishMeaningUrl;
 
   isEN() {
     return this.translate.currentLang.startsWith('en');
@@ -62,25 +53,14 @@ export class InterpretationService {
   mapTargetLanguage = (lang: string) => InterpretationService.languageMap[lang?.toLowerCase()] || lang?.toLowerCase();
 
   getMeaning(text: string) {
-    const url = `${this.googleDictionaryUrl}/${text}`;
+    const encodedText = encodeURIComponent(text);
+    const url = `${this.englishMeaningUrl}/${encodedText}`;
 
-    return this.http.get<DictionaryResult>(url).pipe(
-      map(response => this.getRandomMeaning(response.meanings, text)),
+    return this.http.get(url, { responseType: 'text' }).pipe(
       catchError(error => {
         console.error('Error fetching meaning:', error);
         return of('');
       })
     );
-  }
-
-  private getRandomMeaning(meanings: string[], inputText: string): string {
-    const filteredMeanings = meanings.filter(meaning => !meaning.includes(inputText));
-
-    if (filteredMeanings.length > 0) {
-      const randomIndex = Math.floor(Math.random() * filteredMeanings.length);
-      return filteredMeanings[randomIndex];
-    }
-
-    return '';
   }
 }

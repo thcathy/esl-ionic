@@ -11,7 +11,7 @@ export const environment = {
   logging: {
     level: NgxLoggerLevel.INFO,
   },
-  apiHost: 'https://esl-rest2.funfunspell.com/esl-rest',
+  apiHost: 'https://esl-rest.funfunspell.com/esl-rest',
   // apiHost: 'http://localhost:8080',
 };
 
