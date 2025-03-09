@@ -17,7 +17,7 @@ import {IonicModule} from '@ionic/angular';
 import {CommonModule} from '@angular/common';
 import {VocabHistoryListComponent} from './vocab-history-list/vocab-history-list';
 import {VirtualKeyboardComponent} from './virtual-keyboard/virtual-keyboard';
-import {HttpClientModule} from '@angular/common/http';
+import {provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
 import {CharacterButtonComponent} from './character-button/character-button.component';
 import {CharacterComponent} from './character/character.component';
 import {VocabSelectionComponent} from './vocab-selection/vocab-selection.component';
@@ -25,44 +25,39 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ArticleDictationOptionsComponent} from "./article-dictation-options/article-dictation-options.component";
 import {TextInterpretationComponent} from "./text-interpretation/text-interpretation.component";
 
-@NgModule({
-  declarations: [MemberScoreRankingComponent,
-    DictationStatisticsComponent,
-    VocabImageComponent,
-    PracticeHistoryListComponent,
-    ScoreComponent,
-    DictationCardComponent,
-    FooterComponent,
-    DictationListComponent,
-    SentenceHistoriesComponent,
-    MemberScoreListComponent,
-    MemberPracticeHistoryListComponent,
-    VocabHistoryListComponent,
-    TextInterpretationComponent,
-    VirtualKeyboardComponent, CharacterButtonComponent, CharacterComponent, VocabSelectionComponent, ArticleDictationOptionsComponent
-  ],
-    imports: [
-        IonicModule,
+@NgModule({ declarations: [MemberScoreRankingComponent,
+        DictationStatisticsComponent,
+        VocabImageComponent,
+        PracticeHistoryListComponent,
+        ScoreComponent,
+        DictationCardComponent,
+        FooterComponent,
+        DictationListComponent,
+        SentenceHistoriesComponent,
+        MemberScoreListComponent,
+        MemberPracticeHistoryListComponent,
+        VocabHistoryListComponent,
+        TextInterpretationComponent,
+        VirtualKeyboardComponent, CharacterButtonComponent, CharacterComponent, VocabSelectionComponent, ArticleDictationOptionsComponent
+    ],
+    exports: [MemberScoreRankingComponent,
+        DictationStatisticsComponent,
+        VocabImageComponent,
+        PracticeHistoryListComponent,
+        ScoreComponent,
+        DictationCardComponent,
+        FooterComponent,
+        DictationListComponent,
+        SentenceHistoriesComponent,
+        MemberScoreListComponent,
+        MemberPracticeHistoryListComponent,
+        VocabHistoryListComponent,
+        TextInterpretationComponent,
+        VirtualKeyboardComponent, CharacterButtonComponent, CharacterComponent, VocabSelectionComponent, ArticleDictationOptionsComponent
+    ], imports: [IonicModule,
         TranslateModule,
         PipesModule,
         FontAwesomeModule,
         CommonModule,
-        HttpClientModule, ReactiveFormsModule, FormsModule,
-    ],
-  exports: [MemberScoreRankingComponent,
-    DictationStatisticsComponent,
-    VocabImageComponent,
-    PracticeHistoryListComponent,
-    ScoreComponent,
-    DictationCardComponent,
-    FooterComponent,
-    DictationListComponent,
-    SentenceHistoriesComponent,
-    MemberScoreListComponent,
-    MemberPracticeHistoryListComponent,
-    VocabHistoryListComponent,
-    TextInterpretationComponent,
-    VirtualKeyboardComponent, CharacterButtonComponent, CharacterComponent, VocabSelectionComponent, ArticleDictationOptionsComponent
-  ]
-})
+        ReactiveFormsModule, FormsModule], providers: [provideHttpClient(withInterceptorsFromDi())] })
 export class ComponentsModule {}

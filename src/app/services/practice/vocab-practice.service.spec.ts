@@ -1,10 +1,10 @@
 import {VocabPracticeService} from './vocab-practice.service';
-import {HttpClientTestingModule} from '@angular/common/http/testing';
+import {provideHttpClientTesting} from '@angular/common/http/testing';
 import {TestBed} from '@angular/core/testing';
 import {VocabPracticeHistory} from '../../entity/vocab-practice-history';
 import {vocab_apple, vocab_banana} from '../../../testing/test-data';
-import {HttpClient} from '@angular/common/http';
-import {Dictation, Dictations, PuzzleControls} from '../../entity/dictation';
+import {HttpClient, provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
+import {Dictations, PuzzleControls} from '../../entity/dictation';
 
 describe('VocabPracticeService', () => {
   let service: VocabPracticeService;
@@ -14,14 +14,14 @@ describe('VocabPracticeService', () => {
     httpClientSpy = jasmine.createSpyObj('HttpClient', ['post']);
 
     TestBed.configureTestingModule({
-      imports: [
-        HttpClientTestingModule
-      ],
-      providers: [
+    imports: [],
+    providers: [
         VocabPracticeService,
-        { provide: HttpClient, useValue: httpClientSpy},
-      ]
-    });
+        { provide: HttpClient, useValue: httpClientSpy },
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
+});
 
     service = TestBed.inject(VocabPracticeService);
   });

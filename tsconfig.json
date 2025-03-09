@@ -4,7 +4,7 @@
     "outDir": "./dist/out-tsc",
     "sourceMap": true,
     "declaration": false,
-    "downlevelIteration": true,
+    "esModuleInterop": true,
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
@@ -16,7 +16,6 @@
       "dom"
     ],
     "resolveJsonModule": true,
-    "allowSyntheticDefaultImports": true,
     "useDefineForClassFields": false
   },
   "angularCompilerOptions": {

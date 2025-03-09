@@ -2,7 +2,8 @@ import {TestBed} from '@angular/core/testing';
 
 import {InterpretationService} from './interpretation.service';
 import {TranslateService} from "@ngx-translate/core";
-import {HttpClientTestingModule, HttpTestingController} from "@angular/common/http/testing";
+import {HttpTestingController, provideHttpClientTesting} from "@angular/common/http/testing";
+import {provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
 
 describe('InterpretationService', () => {
   let service: InterpretationService;
@@ -13,12 +14,14 @@ describe('InterpretationService', () => {
     translateServiceMock = jasmine.createSpyObj('TranslateService', ['currentLang']);
 
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      providers: [
+    imports: [],
+    providers: [
         InterpretationService,
         { provide: TranslateService, useValue: translateServiceMock },
-      ],
-    });
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
+});
     service = TestBed.inject(InterpretationService);
     httpMock = TestBed.inject(HttpTestingController);
   });

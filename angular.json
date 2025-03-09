@@ -10,12 +10,15 @@
       "schematics": {},
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "www",
+            "outputPath": {
+              "base": "www"
+            },
             "index": "src/index.html",
-            "main": "src/main.ts",
-            "polyfills": "src/polyfills.ts",
+            "polyfills": [
+              "src/polyfills.ts"
+            ],
             "tsConfig": "src/tsconfig.app.json",
             "assets": [
               {
@@ -48,9 +51,8 @@
             "sourceMap": true,
             "optimization": false,
             "aot": false,
-            "vendorChunk": true,
-            "buildOptimizer": false,
-            "namedChunks": true
+            "namedChunks": true,
+            "browser": "src/main.ts"
           },
           "configurations": {
             "production": {
@@ -66,10 +68,7 @@
               "namedChunks": false,
               "aot": true,
               "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-              "serviceWorker": true,
-              "ngswConfigPath": "src/ngsw-config.json"
+              "serviceWorker": "src/ngsw-config.json"
             },
             "test": {
               "fileReplacements": [
