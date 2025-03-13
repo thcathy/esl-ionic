@@ -5,21 +5,22 @@ import {CollectionUtils} from '../../utils/collection-utils';
 import {DictationUtils} from '../../utils/dictation-utils';
 
 @Component({
-  selector: 'vocab-image',
-  templateUrl: 'vocab-image.html',
-  styleUrls: ['vocab-image.scss'],
-  animations: [
-    trigger('move', [
-      state('center', style({ transform: 'translateX(0%)' })),
-      state('left', style({ transform: 'translateX(-200%)' })),
-      state('right', style({ transform: 'translateX(200%)' })),
-      state('left-end', style({ transform: 'translateX(-200%)' })),
-      state('right-end', style({ transform: 'translateX(200%)' })),
-      transition('center <=> *', [
-        animate(200)
-      ])
-    ])
-  ],
+    selector: 'vocab-image',
+    templateUrl: 'vocab-image.html',
+    styleUrls: ['vocab-image.scss'],
+    animations: [
+        trigger('move', [
+            state('center', style({ transform: 'translateX(0%)' })),
+            state('left', style({ transform: 'translateX(-200%)' })),
+            state('right', style({ transform: 'translateX(200%)' })),
+            state('left-end', style({ transform: 'translateX(-200%)' })),
+            state('right-end', style({ transform: 'translateX(200%)' })),
+            transition('center <=> *', [
+                animate(200)
+            ])
+        ])
+    ],
+    standalone: false
 })
 export class VocabImageComponent implements OnChanges {
   @Input() images: string[]

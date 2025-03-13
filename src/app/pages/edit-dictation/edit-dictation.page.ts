@@ -24,15 +24,14 @@ import {IonicComponentService} from '../../services/ionic-component.service';
 import {NavigationService} from '../../services/navigation.service';
 import {DictationUtils} from '../../utils/dictation-utils';
 import {DictationType, EditDictationPageMode} from './edit-dictation-page-enum';
-import {
-  ArticleDictationOptionsComponent
-} from "../../components/article-dictation-options/article-dictation-options.component";
+import {ArticleDictationOptionsComponent} from "../../components/article-dictation-options/article-dictation-options.component";
 import Source = Dictations.Source;
 
 @Component({
-  selector: 'app-edit-dictation',
-  templateUrl: './edit-dictation.page.html',
-  styleUrls: ['./edit-dictation.page.scss'],
+    selector: 'app-edit-dictation',
+    templateUrl: './edit-dictation.page.html',
+    styleUrls: ['./edit-dictation.page.scss'],
+    standalone: false
 })
 export class EditDictationPage implements OnInit, CanComponentDeactivate {
   inputForm: UntypedFormGroup;

@@ -3,9 +3,10 @@ import {IonToggle} from "@ionic/angular";
 import {UIOptionsService} from "../../services/ui-options.service";
 
 @Component({
-  selector: 'app-article-dictation-options',
-  templateUrl: './article-dictation-options.component.html',
-  styleUrls: ['./article-dictation-options.component.scss'],
+    selector: 'app-article-dictation-options',
+    templateUrl: './article-dictation-options.component.html',
+    styleUrls: ['./article-dictation-options.component.scss'],
+    standalone: false
 })
 export class ArticleDictationOptionsComponent implements OnInit {
   @ViewChild('caseSensitive') caseSensitive: IonToggle;

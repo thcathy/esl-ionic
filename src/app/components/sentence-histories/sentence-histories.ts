@@ -3,9 +3,10 @@ import {SentenceHistory} from "../../entity/sentence-history";
 import {SpeechService} from "../../services/speech.service";
 
 @Component({
-  selector: 'sentence-histories',
-  templateUrl: 'sentence-histories.html',
-  styleUrls: ['sentence-histories.scss'],
+    selector: 'sentence-histories',
+    templateUrl: 'sentence-histories.html',
+    styleUrls: ['sentence-histories.scss'],
+    standalone: false
 })
 export class SentenceHistoriesComponent {
   @Input() histories: SentenceHistory[];

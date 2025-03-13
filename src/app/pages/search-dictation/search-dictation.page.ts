@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
 import {Dictation, Dictations, SuitableStudentOptions} from '../../entity/dictation';
 import {TranslateService} from '@ngx-translate/core';
 import {DictationService} from '../../services/dictation/dictation.service';
 import {ValidationUtils} from '../../utils/validation-utils';
 import {IonicComponentService} from '../../services/ionic-component.service';
-import { StorageService } from '../../services/storage.service';
+import {StorageService} from '../../services/storage.service';
 
 export interface DateSearchOption {
   option: string;
@@ -13,9 +13,10 @@ export interface DateSearchOption {
 }
 
 @Component({
-  selector: 'app-search-dictation',
-  templateUrl: './search-dictation.page.html',
-  styleUrls: ['./search-dictation.page.scss'],
+    selector: 'app-search-dictation',
+    templateUrl: './search-dictation.page.html',
+    styleUrls: ['./search-dictation.page.scss'],
+    standalone: false
 })
 export class SearchDictationPage implements OnInit {
   SEARCH_HISTORY_KEY = 'SEARCH_HISTORY_KEY';

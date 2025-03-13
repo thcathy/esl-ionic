@@ -2,8 +2,8 @@ import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core'
 import {InterpretationService} from "../../services/practice/interpretation.service";
 
 @Component({
-  selector: 'app-text-interpretation',
-  template: `
+    selector: 'app-text-interpretation',
+    template: `
     <ion-item style="display: flex; align-items: flex-start; margin-top: 8px;">
       <span style="margin-right: 8px;">
         <ion-toggle [(ngModel)]="enabled" />
@@ -18,7 +18,8 @@ import {InterpretationService} from "../../services/practice/interpretation.serv
       </span>
     </ion-item>
   `,
-  styleUrls: ['./text-interpretation.component.scss'],
+    styleUrls: ['./text-interpretation.component.scss'],
+    standalone: false
 })
 export class TextInterpretationComponent  implements OnInit, OnChanges {
   @Input() text: string = '';

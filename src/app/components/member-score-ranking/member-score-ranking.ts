@@ -1,10 +1,11 @@
-import { Component, Input } from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {MemberScoreRanking} from '../../entity/member-score-ranking';
 
 @Component({
-  selector: 'member-score-ranking',
-  templateUrl: 'member-score-ranking.html',
-  styleUrls: ['member-score-ranking.scss'],
+    selector: 'member-score-ranking',
+    templateUrl: 'member-score-ranking.html',
+    styleUrls: ['member-score-ranking.scss'],
+    standalone: false
 })
 export class MemberScoreRankingComponent {
   @Input() ranking: MemberScoreRanking;

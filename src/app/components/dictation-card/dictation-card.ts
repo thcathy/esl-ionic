@@ -1,37 +1,36 @@
-import { animate, state, style, transition, trigger } from '@angular/animations';
+import {animate, state, style, transition, trigger} from '@angular/animations';
 import {Component, Input, ViewChild} from '@angular/core';
-import { Router } from '@angular/router';
-import {AlertController, IonModal, IonToggle, ToastController} from '@ionic/angular';
-import { TranslateService } from '@ngx-translate/core';
-import { Dictation, Dictations } from '../../entity/dictation';
-import { VocabPracticeType } from '../../enum/vocab-practice-type.enum';
-import { AppService } from '../../services/app.service';
-import { DictationHelper } from '../../services/dictation/dictation-helper.service';
-import { MemberDictationService } from '../../services/dictation/member-dictation.service';
-import { IonicComponentService } from '../../services/ionic-component.service';
-import { ManageVocabHistoryService } from '../../services/member/manage-vocab-history.service';
-import { NavigationService } from '../../services/navigation.service';
-import { ShareService } from '../../services/share.service';
+import {Router} from '@angular/router';
+import {AlertController, IonModal, ToastController} from '@ionic/angular';
+import {TranslateService} from '@ngx-translate/core';
+import {Dictation, Dictations} from '../../entity/dictation';
+import {VocabPracticeType} from '../../enum/vocab-practice-type.enum';
+import {AppService} from '../../services/app.service';
+import {DictationHelper} from '../../services/dictation/dictation-helper.service';
+import {MemberDictationService} from '../../services/dictation/member-dictation.service';
+import {IonicComponentService} from '../../services/ionic-component.service';
+import {ManageVocabHistoryService} from '../../services/member/manage-vocab-history.service';
+import {NavigationService} from '../../services/navigation.service';
+import {ShareService} from '../../services/share.service';
 import {ArticleDictationOptionsComponent} from "../article-dictation-options/article-dictation-options.component";
 
 @Component({
-  selector: 'app-dictation-card',
-  templateUrl: 'dictation-card.html',
-  styleUrls: ['dictation-card.scss'],
-  animations: [
-    trigger('recommend', [
-      state('highlight', style({backgroundColor: 'transparent'})),
-      transition('normal => highlight', [
-        animate('1s ease-out',
-          style({
-            backgroundColor: '#A7C713',
-            color: '#ffffff'
-          })
-        ),
-        animate('1s ease-in', style({backgroundColor: '#ffffff'}))
-      ])
-    ])
-  ]
+    selector: 'app-dictation-card',
+    templateUrl: 'dictation-card.html',
+    styleUrls: ['dictation-card.scss'],
+    animations: [
+        trigger('recommend', [
+            state('highlight', style({ backgroundColor: 'transparent' })),
+            transition('normal => highlight', [
+                animate('1s ease-out', style({
+                    backgroundColor: '#A7C713',
+                    color: '#ffffff'
+                })),
+                animate('1s ease-in', style({ backgroundColor: '#ffffff' }))
+            ])
+        ])
+    ],
+    standalone: false
 })
 export class DictationCardComponent {
   @Input() dictation: Dictation;

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Platform} from '@ionic/angular';
 import {NGXLogger} from 'ngx-logger';
 
@@ -11,16 +11,14 @@ export class AppService {
   ) { }
 
   isApp(): boolean {
-    this.log.debug(`platforms: ${this.platform.platforms()}, url: ${document.URL}`);
-    if (this.platform.is('pwa') || !this.platform.is('cordova') || !this.platform.is('capacitor')) {
-      return false;
-    } else {
-      return true;
-    }
+    // this.log.info(`platforms: ${this.platform.platforms()}, url: ${document.URL}`);
+    let isAppPlatform = this.platform.is('cordova') || this.platform.is('capacitor');
+    let isPWA = this.platform.is('pwa');
+    return isAppPlatform && !isPWA;
   }
 
   isCapacitor(): boolean {
-    return this.platform.is('capacitor');
+    return this.platform.is('capacitor') || this.platform.is('cordova');
   }
 
   isIOS(): boolean {

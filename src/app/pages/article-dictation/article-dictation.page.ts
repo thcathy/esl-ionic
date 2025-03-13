@@ -10,9 +10,10 @@ import {StorageService} from '../../services/storage.service';
 import {TranslateService} from "@ngx-translate/core";
 
 @Component({
-  selector: 'app-article-dictation',
-  templateUrl: './article-dictation.page.html',
-  styleUrls: ['./article-dictation.page.scss'],
+    selector: 'app-article-dictation',
+    templateUrl: './article-dictation.page.html',
+    styleUrls: ['./article-dictation.page.scss'],
+    standalone: false
 })
 export class ArticleDictationPage implements OnInit {
   dictation: Dictation;

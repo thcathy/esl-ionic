@@ -1,36 +1,33 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {animate, state, style, transition, trigger} from '@angular/animations';
+import {animate, style, transition, trigger} from '@angular/animations';
 
 @Component({
-  selector: 'app-character-button',
-  templateUrl: './character-button.component.html',
-  styleUrls: ['./character-button.component.scss'],
-  animations: [
-    trigger('change', [
-      transition('* => wrong', [
-        animate('500ms ease-out',
-          style({
-            color: '#FF4500',
-            transform: 'scale(1.3) translateY(-5%)',
-          })
-        ),
-        animate('500ms ease-in', style({
-          transform: 'scale(1)'
-        }))
-      ]),
-      transition('* => correct', [
-        animate('500ms ease-out',
-          style({
-            color: '#00FF00',
-            transform: 'scale(1.3) translateY(-5%)',
-          })
-        ),
-        animate('500ms ease-in', style({
-          transform: 'scale(1)'
-        }))
-      ]),
-    ])
-  ]
+    selector: 'app-character-button',
+    templateUrl: './character-button.component.html',
+    styleUrls: ['./character-button.component.scss'],
+    animations: [
+        trigger('change', [
+            transition('* => wrong', [
+                animate('500ms ease-out', style({
+                    color: '#FF4500',
+                    transform: 'scale(1.3) translateY(-5%)',
+                })),
+                animate('500ms ease-in', style({
+                    transform: 'scale(1)'
+                }))
+            ]),
+            transition('* => correct', [
+                animate('500ms ease-out', style({
+                    color: '#00FF00',
+                    transform: 'scale(1.3) translateY(-5%)',
+                })),
+                animate('500ms ease-in', style({
+                    transform: 'scale(1)'
+                }))
+            ]),
+        ])
+    ],
+    standalone: false
 })
 export class CharacterButtonComponent implements OnInit {
   @Input() character: string;

@@ -1,13 +1,14 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {AppService} from '../../services/app.service';
 import {NavigationService} from '../../services/navigation.service';
 import {FFSAuthService} from '../../services/auth.service';
 import packageJson from '../../../../package.json';
 
 @Component({
-  selector: 'app-footer',
-  templateUrl: 'footer.html',
-  styleUrls: ['footer.scss'],
+    selector: 'app-footer',
+    templateUrl: 'footer.html',
+    styleUrls: ['footer.scss'],
+    standalone: false
 })
 export class FooterComponent {
 

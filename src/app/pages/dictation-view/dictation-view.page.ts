@@ -5,12 +5,13 @@ import {DictationService} from '../../services/dictation/dictation.service';
 import {IonicComponentService} from '../../services/ionic-component.service';
 import {NavigationService} from '../../services/navigation.service';
 import {ActivatedRoute, Router} from '@angular/router';
-import { StorageService } from '../../services/storage.service';
+import {StorageService} from '../../services/storage.service';
 
 @Component({
-  selector: 'app-dictation-view',
-  templateUrl: './dictation-view.page.html',
-  styleUrls: ['./dictation-view.page.scss'],
+    selector: 'app-dictation-view',
+    templateUrl: './dictation-view.page.html',
+    styleUrls: ['./dictation-view.page.scss'],
+    standalone: false
 })
 export class DictationViewPage implements OnInit {
   dictation: Dictation;

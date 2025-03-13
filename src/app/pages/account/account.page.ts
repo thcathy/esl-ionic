@@ -12,9 +12,10 @@ import {AlertController} from "@ionic/angular";
 import {FFSAuthService} from "../../services/auth.service";
 
 @Component({
-  selector: 'app-account',
-  templateUrl: './account.page.html',
-  styleUrls: ['./account.page.scss'],
+    selector: 'app-account',
+    templateUrl: './account.page.html',
+    styleUrls: ['./account.page.scss'],
+    standalone: false
 })
 export class AccountPage implements OnInit, CanComponentDeactivate {
   inputForm: UntypedFormGroup;

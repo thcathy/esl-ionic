@@ -74,10 +74,10 @@ release_android() {
   cd android
   sed -i ''  "s/versionName \".*\"/versionName \"$VERSION\"/g" app/build.gradle
   sed -i ''  "s/versionCode .*/versionCode $ANDROID_VERSION/g" app/build.gradle
-  export JAVA_HOME=`/usr/libexec/java_home -v 17`
+#  export JAVA_HOME=`/usr/libexec/java_home -v 17`
   ./gradlew bundle
   jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore ../my-release-key.jks -storepass ${ESL_IONIC_KEYSTORE_PASSWORD} ${AAB_PATH} esl-dictation
-  fastlane supply -f ${AAB_PATH} --track "production" --skip_upload_images --skip_upload_screenshots --skip_upload_metadata --release_status "draft" --json_key ${GCLOUD_SERVICE_ACCOUNT_KEY}
+  fastlane supply -f ${AAB_PATH} --package_name "com.esl.ionic" --track "production" --skip_upload_images --skip_upload_screenshots --skip_upload_metadata --release_status "draft" --json_key ${GCLOUD_SERVICE_ACCOUNT_KEY}
 }
 
 setVersion() {

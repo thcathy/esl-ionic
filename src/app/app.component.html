@@ -62,7 +62,7 @@
               <ion-label>{{'Contact Us'|translate}}</ion-label>
               <fa-icon class="ion-float-end" [icon]="['fas', 'external-link-alt']"></fa-icon>
             </ion-item>
-            <ion-item *ngIf="platform.is('cordova')" (click)="navigationService.openFunFunSpell()">
+            <ion-item *ngIf="platform.is('cordova') || platform.is('capacitor')" (click)="navigationService.openFunFunSpell()">
               <ion-label>{{'More Exercises at'|translate}}<br/>funfunspell.com</ion-label>
               <fa-icon class="ion-float-end" [icon]="['fas', 'external-link-alt']"></fa-icon>
             </ion-item>

@@ -13,7 +13,8 @@
           "builder": "@angular-devkit/build-angular:application",
           "options": {
             "outputPath": {
-              "base": "www"
+              "base": "www",
+              "browser": ""
             },
             "index": "src/index.html",
             "polyfills": [
@@ -39,17 +40,10 @@
                 "output": ".well-known"
               }
             ],
-            "styles": [
-              {
-                "input": "src/theme/variables.scss"
-              },
-              {
-                "input": "src/global.scss"
-              }
-            ],
+            "styles": ["src/global.scss", "src/theme/variables.scss"],
             "scripts": [],
             "sourceMap": true,
-            "optimization": false,
+            "optimization": true,
             "aot": false,
             "namedChunks": true,
             "browser": "src/main.ts"

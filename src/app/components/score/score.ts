@@ -1,21 +1,19 @@
-import { Component, Input} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {animate, state, style, transition, trigger} from '@angular/animations';
-import {VocabPracticeHistory} from '../../entity/vocab-practice-history';
 
 @Component({
-  selector: 'score',
-  templateUrl: 'score.html',
-  styleUrls: ['score.scss'],
-  animations: [
-    trigger('change', [
-      state('highlight', style({backgroundColor: 'transparent'})),
-      transition('* => highlight', [
-        animate('750ms ease-out',
-          style({ transform: 'scale(1.2)' })
-        ),
-      ])
-    ])
-  ]
+    selector: 'score',
+    templateUrl: 'score.html',
+    styleUrls: ['score.scss'],
+    animations: [
+        trigger('change', [
+            state('highlight', style({ backgroundColor: 'transparent' })),
+            transition('* => highlight', [
+                animate('750ms ease-out', style({ transform: 'scale(1.2)' })),
+            ])
+        ])
+    ],
+    standalone: false
 })
 export class ScoreComponent {
   @Input() total: number;

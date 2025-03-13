@@ -11,12 +11,13 @@ import {ManageVocabHistoryService} from '../../services/member/manage-vocab-hist
 import {NGXLogger} from 'ngx-logger';
 import {VocabPracticeType} from '../../enum/vocab-practice-type.enum';
 import {DictationHelper} from '../../services/dictation/dictation-helper.service';
-import { StorageService } from '../../services/storage.service';
+import {StorageService} from '../../services/storage.service';
 
 @Component({
-  selector: 'app-practice-complete',
-  templateUrl: './practice-complete.page.html',
-  styleUrls: ['./practice-complete.page.scss'],
+    selector: 'app-practice-complete',
+    templateUrl: './practice-complete.page.html',
+    styleUrls: ['./practice-complete.page.scss'],
+    standalone: false
 })
 export class PracticeCompletePage implements OnInit {
   @ViewChild('dictationCard') dictationCard;
@@ -127,7 +128,7 @@ export class PracticeCompletePage implements OnInit {
 
   openDictation(d: Dictation, type: VocabPracticeType, retryWrongWord: boolean) {
     if (this.loader) { this.loader.dismiss(); }
-    d.options = { 
+    d.options = {
       practiceType : type,
       retryWrongWord: retryWrongWord,
       vocabPracticeHistories: retryWrongWord ? this.histories : [],
@@ -148,7 +149,7 @@ export class PracticeCompletePage implements OnInit {
   }
 
   showRetryIncorrect() {
-    return this.mark < this.histories.length && 
+    return this.mark < this.histories.length &&
       (this.dictationHelper.isGeneratedDictation(this.dictation) || !this.dictationHelper.isInstantDictation(this.dictation));
   }
 

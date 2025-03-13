@@ -1,7 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {MemberVocabulary} from '../../entity/member-vocabulary';
-import {Member} from '../../entity/member';
-import {Name} from '../../entity/name';
 import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
 import {ModalController} from '@ionic/angular';
 import {EditDictationRequest, MemberDictationService} from '../../services/dictation/member-dictation.service';
@@ -10,9 +8,10 @@ import {TranslateService} from '@ngx-translate/core';
 import {IonicComponentService} from '../../services/ionic-component.service';
 
 @Component({
-  selector: 'app-vocab-selection',
-  templateUrl: './vocab-selection.component.html',
-  styleUrls: ['./vocab-selection.component.scss'],
+    selector: 'app-vocab-selection',
+    templateUrl: './vocab-selection.component.html',
+    styleUrls: ['./vocab-selection.component.scss'],
+    standalone: false
 })
 export class VocabSelectionComponent implements OnInit {
   EACH_LOADING_SIZE = 100;

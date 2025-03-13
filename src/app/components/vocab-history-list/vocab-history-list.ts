@@ -3,24 +3,25 @@ import {MemberVocabulary} from '../../entity/member-vocabulary';
 import {AlertController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
 import {animate, state, style, transition, trigger} from '@angular/animations';
-import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
+import {IconDefinition} from '@fortawesome/free-regular-svg-icons';
 
 @Component({
-  selector: 'app-vocab-history-list',
-  templateUrl: 'vocab-history-list.html',
-  styleUrls: ['vocab-history-list.scss'],
-  animations: [
-    trigger('move', [
-      state('center', style({ transform: 'translateX(0%)' })),
-      state('left', style({ transform: 'translateX(-200%)' })),
-      state('right', style({ transform: 'translateX(200%)' })),
-      state('left-end', style({ transform: 'translateX(-200%)' })),
-      state('right-end', style({ transform: 'translateX(200%)' })),
-      transition('center <=> *', [
-        animate(250)
-      ])
-    ])
-  ]
+    selector: 'app-vocab-history-list',
+    templateUrl: 'vocab-history-list.html',
+    styleUrls: ['vocab-history-list.scss'],
+    animations: [
+        trigger('move', [
+            state('center', style({ transform: 'translateX(0%)' })),
+            state('left', style({ transform: 'translateX(-200%)' })),
+            state('right', style({ transform: 'translateX(200%)' })),
+            state('left-end', style({ transform: 'translateX(-200%)' })),
+            state('right-end', style({ transform: 'translateX(200%)' })),
+            transition('center <=> *', [
+                animate(250)
+            ])
+        ])
+    ],
+    standalone: false
 })
 export class VocabHistoryListComponent implements OnChanges {
   private vocabPerPage = 10;

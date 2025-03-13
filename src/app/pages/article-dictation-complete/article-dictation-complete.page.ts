@@ -6,16 +6,15 @@ import {NavigationService} from "../../services/navigation.service";
 import {TranslateService} from "@ngx-translate/core";
 import {ActivatedRoute} from "@angular/router";
 import {IonicComponentService} from "../../services/ionic-component.service";
-import { StorageService } from '../../services/storage.service';
+import {StorageService} from '../../services/storage.service';
 import {IonModal} from "@ionic/angular";
-import {
-  ArticleDictationOptionsComponent
-} from "../../components/article-dictation-options/article-dictation-options.component";
+import {ArticleDictationOptionsComponent} from "../../components/article-dictation-options/article-dictation-options.component";
 
 @Component({
-  selector: 'app-article-dictation-complete',
-  templateUrl: './article-dictation-complete.page.html',
-  styleUrls: ['./article-dictation-complete.page.scss'],
+    selector: 'app-article-dictation-complete',
+    templateUrl: './article-dictation-complete.page.html',
+    styleUrls: ['./article-dictation-complete.page.scss'],
+    standalone: false
 })
 export class ArticleDictationCompletePage implements OnInit {
   @ViewChild('dictationCard', { static: true }) dictationCard;

@@ -1,17 +1,16 @@
-import { Injectable, NgZone } from '@angular/core';
-import { Router } from '@angular/router';
-import { AuthService } from '@auth0/auth0-angular';
-import { Browser } from '@capacitor/browser';
-import { LoadingController } from '@ionic/angular';
-import { TranslateService } from '@ngx-translate/core';
-import { NGXLogger } from 'ngx-logger';
-import { firstValueFrom } from 'rxjs';
-import { mergeMap } from 'rxjs/operators';
-import { AppService } from './app.service';
-import { ManageVocabHistoryService } from './member/manage-vocab-history.service';
-import { MemberService } from './member/member.service';
-import { NavigationRequest, NavigationService } from './navigation.service';
-import { StorageService } from './storage.service';
+import {Injectable, NgZone} from '@angular/core';
+import {Router} from '@angular/router';
+import {AuthService} from '@auth0/auth0-angular';
+import {Browser} from '@capacitor/browser';
+import {LoadingController} from '@ionic/angular';
+import {TranslateService} from '@ngx-translate/core';
+import {NGXLogger} from 'ngx-logger';
+import {firstValueFrom} from 'rxjs';
+import {AppService} from './app.service';
+import {ManageVocabHistoryService} from './member/manage-vocab-history.service';
+import {MemberService} from './member/member.service';
+import {NavigationRequest, NavigationService} from './navigation.service';
+import {StorageService} from './storage.service';
 
 const tokenTimeoutSecond = 35000;
 const auth0CallbackUri = '/auth0-callback';
@@ -45,7 +44,7 @@ export class FFSAuthService {
     } catch (e) {
       localStorage.setItem(this.idTokenKey, null);
     }
-    
+
     auth.error$.subscribe((error) => console.log(`Auth: ${error}`));
   }
 
@@ -61,9 +60,11 @@ export class FFSAuthService {
 
   private loginWeb(signUp=false) {
     this.auth.loginWithRedirect({
-      ui_locales: this.getAuth0Language(),
-      screen_hint: signUp ? 'signup' : 'login',
-      redirect_uri: window.location.origin + auth0CallbackUri,
+      authorizationParams: {
+        ui_locales: this.getAuth0Language(),
+        screen_hint: signUp ? 'signup' : 'login',
+        redirect_uri: window.location.origin + auth0CallbackUri,
+      },
     });
   }
 
@@ -77,12 +78,14 @@ export class FFSAuthService {
 
   public async handleAuthCallbackCapacitor(url: string) {
     if (url.includes('state=') && (url.includes('error=') || url.includes('code='))) {
-      console.log(`handle auth callback by capacitor`);
-      await firstValueFrom(this.auth.handleRedirectCallback(url));
+      if (this.appService.isApp()) {
+        console.log(`handle auth callback by capacitor`);
+        await firstValueFrom(this.auth.handleRedirectCallback(url));
+      }
       this.idToken = (await firstValueFrom(this.auth.idTokenClaims$)).__raw;
       this.userProfile = await firstValueFrom(this.auth.user$);
       this.accessToken = await firstValueFrom(this.auth.getAccessTokenSilently());
-      
+
       this.setSession(this.accessToken, this.idToken, this.userProfile);
       this.closeBrowserIfNeeded();
       this.redirectAfterLogin();
@@ -107,11 +110,15 @@ export class FFSAuthService {
 
   public loginCapacitor(signUp = false) {
     this.auth
-      .buildAuthorizeUrl({
-        ui_locales: this.getAuth0Language(),
-        screen_hint: signUp ? 'signup' : 'login'
+      .loginWithRedirect({
+        authorizationParams: {
+          ui_locales: this.getAuth0Language(),
+          screen_hint: signUp ? 'signup' : 'login',
+        },
+        async openUrl(url: string) {
+          await Browser.open({ url, windowName: '_self' });
+        }
       })
-      .pipe(mergeMap((url) => Browser.open({ url, windowName: '_self' })))
       .subscribe();
   }
 

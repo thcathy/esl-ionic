@@ -5,21 +5,22 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
 import {AppService} from '../../services/app.service';
 
 @Component({
-  selector: 'app-dictation-list',
-  templateUrl: 'dictation-list.html',
-  styleUrls: ['dictation-list.scss'],
-  animations: [
-    trigger('move', [
-      state('center', style({ transform: 'translateX(0%)' })),
-      state('left', style({ transform: 'translateX(-200%)' })),
-      state('right', style({ transform: 'translateX(200%)' })),
-      state('left-end', style({ transform: 'translateX(-200%)' })),
-      state('right-end', style({ transform: 'translateX(200%)' })),
-      transition('center <=> *', [
-        animate(250)
-      ])
-    ])
-  ]
+    selector: 'app-dictation-list',
+    templateUrl: 'dictation-list.html',
+    styleUrls: ['dictation-list.scss'],
+    animations: [
+        trigger('move', [
+            state('center', style({ transform: 'translateX(0%)' })),
+            state('left', style({ transform: 'translateX(-200%)' })),
+            state('right', style({ transform: 'translateX(200%)' })),
+            state('left-end', style({ transform: 'translateX(-200%)' })),
+            state('right-end', style({ transform: 'translateX(200%)' })),
+            transition('center <=> *', [
+                animate(250)
+            ])
+        ])
+    ],
+    standalone: false
 })
 export class DictationListComponent implements OnChanges {
   private dictationPerPage = 5;

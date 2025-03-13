@@ -105,8 +105,9 @@
                   </ion-col>
                   <ion-col>
                     <ion-item>
-                      <ion-label><fa-icon [icon]="['fas', 'robot']"></fa-icon>{{'Include AI Image'|translate}}</ion-label>
-                      <ion-toggle legacy="true" *ngIf="mode === editDictationPageMode.Edit && type.value === dictationType.Word" class="include-ai-image-toggle" formControlName="includeAIImage" />
+                      <ion-toggle *ngIf="mode === editDictationPageMode.Edit && type.value === dictationType.Word" class="include-ai-image-toggle" formControlName="includeAIImage">
+                        <fa-icon [icon]="['fas', 'robot']"></fa-icon>{{'Include AI Image'|translate}}
+                      </ion-toggle>
                       <fa-icon id="ai-image-popover-trigger" *ngIf="mode !== editDictationPageMode.Edit" class="include-ai-image-tooltip-icon" [icon]="['fas', 'info-circle']"></fa-icon>
                       <ion-popover *ngIf="mode !== editDictationPageMode.Edit" trigger="ai-image-popover-trigger" triggerAction="click">
                         <ng-template>

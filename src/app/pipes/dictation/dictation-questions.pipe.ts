@@ -1,12 +1,12 @@
-import { Pipe, PipeTransform } from '@angular/core';
+import {Pipe, PipeTransform} from '@angular/core';
 import {Dictation} from '../../entity/dictation';
-import {DictationService} from '../../services/dictation/dictation.service';
 import {ArticleDictationService} from '../../services/dictation/article-dictation.service';
 import {TranslateService} from '@ngx-translate/core';
 import {DictationHelper} from '../../services/dictation/dictation-helper.service';
 
 @Pipe({
-  name: 'dictationQuestions'
+    name: 'dictationQuestions',
+    standalone: false
 })
 export class DictationQuestionsPipe implements PipeTransform {
 

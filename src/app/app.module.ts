@@ -51,12 +51,13 @@ const auth0RedirectUri = `${config.appId}://${environment.auth0Host}/capacitor/$
         AuthModule.forRoot({
             domain: "thcathy.auth0.com",
             clientId: "Q2x3VfMKsuKtmXuBbuwuTw3ARDZ1xpBS",
-            //audience: 'https://thcathy.auth0.com/userinfo',
-            scope: 'openid profile email',
+            authorizationParams: {
+              redirect_uri: auth0RedirectUri,
+              scope: 'openid profile email',
+            },
+            useRefreshTokens: true,
+            useRefreshTokensFallback: false,
             cacheLocation: 'localstorage',
-            redirectUri: auth0RedirectUri,
-            skipRedirectCallback: true
-            //useRefreshTokens: true,
         }),
         TranslateModule.forRoot({
             loader: {

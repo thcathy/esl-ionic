@@ -18,9 +18,10 @@ import {StorageService} from '../../services/storage.service';
 import {TranslateService} from "@ngx-translate/core";
 
 @Component({
-  selector: 'app-dictation-practice',
-  templateUrl: './dictation-practice.page.html',
-  styleUrls: ['./dictation-practice.page.scss'],
+    selector: 'app-dictation-practice',
+    templateUrl: './dictation-practice.page.html',
+    styleUrls: ['./dictation-practice.page.scss'],
+    standalone: false
 })
 export class DictationPracticePage implements OnInit {
 

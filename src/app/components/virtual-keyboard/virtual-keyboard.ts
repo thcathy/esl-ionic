@@ -15,9 +15,10 @@ export enum VirtualKeyboardType {
 }
 
 @Component({
-  selector: 'virtual-keyboard',
-  templateUrl: 'virtual-keyboard.html',
-  styleUrls: ['virtual-keyboard.scss'],
+    selector: 'virtual-keyboard',
+    templateUrl: 'virtual-keyboard.html',
+    styleUrls: ['virtual-keyboard.scss'],
+    standalone: false
 })
 export class VirtualKeyboardComponent {
   @Input() disabled = false;

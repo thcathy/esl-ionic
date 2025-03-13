@@ -11,9 +11,10 @@ import {StorageService} from '../../services/storage.service';
 
 // Deprecated
 @Component({
-  selector: 'app-instant-dictation',
-  templateUrl: './instant-dictation.page.html',
-  styleUrls: ['./instant-dictation.page.scss'],
+    selector: 'app-instant-dictation',
+    templateUrl: './instant-dictation.page.html',
+    styleUrls: ['./instant-dictation.page.scss'],
+    standalone: false
 })
 export class InstantDictationPage implements OnInit {
   private INSTANT_DICTATION_KEY = 'INSTANT_DICTATION_KEY';

@@ -10,9 +10,10 @@ import {StorageService} from '../../services/storage.service';
 import {TranslateService} from "@ngx-translate/core";
 
 @Component({
-  selector: 'app-vocabulary-starter',
-  templateUrl: './vocabulary-starter.page.html',
-  styleUrls: ['./vocabulary-starter.page.scss'],
+    selector: 'app-vocabulary-starter',
+    templateUrl: './vocabulary-starter.page.html',
+    styleUrls: ['./vocabulary-starter.page.scss'],
+    standalone: false
 })
 export class VocabularyStarterPage implements OnInit {
   inputKey = 'VocabularyStarterPage.vocabularyStarterPageInput';

@@ -1,8 +1,9 @@
-import { Pipe, PipeTransform } from '@angular/core';
+import {Pipe, PipeTransform} from '@angular/core';
 import {Member} from '../../entity/member';
 
 @Pipe({
-  name: 'memberName'
+    name: 'memberName',
+    standalone: false
 })
 export class MemberNamePipe implements PipeTransform {
 

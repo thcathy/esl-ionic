@@ -13,12 +13,13 @@ import {NGXLogger} from 'ngx-logger';
 import {finalize} from 'rxjs/operators';
 import {ModalController} from '@ionic/angular';
 import {VocabSelectionComponent} from '../../components/vocab-selection/vocab-selection.component';
-import { faCheckCircle, faTimesCircle } from '@fortawesome/free-regular-svg-icons';
+import {faCheckCircle, faTimesCircle} from '@fortawesome/free-regular-svg-icons';
 
 @Component({
-  selector: 'app-member-home',
-  templateUrl: './member-home.page.html',
-  styleUrls: ['./member-home.page.scss'],
+    selector: 'app-member-home',
+    templateUrl: './member-home.page.html',
+    styleUrls: ['./member-home.page.scss'],
+    standalone: false
 })
 export class MemberHomePage implements OnInit {
   createdDictations = [] as Dictation[];

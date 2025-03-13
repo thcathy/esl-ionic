@@ -6,9 +6,10 @@ import {DictationService} from '../../services/dictation/dictation.service';
 import {Router} from '@angular/router';
 
 @Component({
-  selector: 'member-practice-history-list',
-  templateUrl: 'member-practice-history-list.html',
-  styleUrls: ['member-practice-history-list.scss'],
+    selector: 'member-practice-history-list',
+    templateUrl: 'member-practice-history-list.html',
+    styleUrls: ['member-practice-history-list.scss'],
+    standalone: false
 })
 export class MemberPracticeHistoryListComponent {
   @Input() histories: PracticeHistory[];
