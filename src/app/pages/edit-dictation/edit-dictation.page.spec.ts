@@ -1,4 +1,4 @@
-import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
+import {CUSTOM_ELEMENTS_SCHEMA, importProvidersFrom} from '@angular/core';
 import {ComponentFixture, fakeAsync, flush, TestBed, tick} from '@angular/core/testing';
 
 import {EditDictationPage} from './edit-dictation.page';
@@ -14,10 +14,8 @@ import {ActivatedRoute} from '@angular/router';
 import {Dictation, Dictations} from '../../entity/dictation';
 import {DictationType, EditDictationPageMode} from './edit-dictation-page-enum';
 import {VocabPracticeType} from '../../enum/vocab-practice-type.enum';
-import {
-  ArticleDictationOptionsComponent
-} from "../../components/article-dictation-options/article-dictation-options.component";
-import {IonToggle} from "@ionic/angular";
+import {ArticleDictationOptionsComponent} from "../../components/article-dictation-options/article-dictation-options.component";
+import {IonicModule, IonToggle} from "@ionic/angular";
 
 describe('EditDictationPage', () => {
   let component: EditDictationPage;
@@ -50,6 +48,7 @@ describe('EditDictationPage', () => {
         { provide: FFSAuthService, useValue: authServiceSpy },
         { provide: ActivatedRoute, useValue: activateRouteStub },
         { provide: NavigationService, useValue: navigationServiceSpy },
+        importProvidersFrom(IonicModule.forRoot({}))
       ]
     })
     .compileComponents();
