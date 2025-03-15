@@ -9,10 +9,9 @@ import {InterpretationService} from "../../services/practice/interpretation.serv
         <ion-toggle [(ngModel)]="enabled" />
       </span>
       <span>
-        <span *ngIf="!interpretationService.isEN()">{{ 'AI translate'|translate }}</span>
-        <span *ngIf="interpretationService.isEN()">Meaning by AI</span>:&nbsp;<span>{{ enabled ? translatedText : '-' }}
-        </span>
-        <span *ngIf="translatedText === ''">
+        <span>{{ 'AI translate'|translate }}: </span>
+        <span id="meaning">{{ enabled ? translatedText : '-' }}</span>
+        <span *ngIf="enabled && translatedText === ''">
           <span class="dot">.</span><span class="dot">.</span><span class="dot">.</span><span class="dot">.</span><span class="dot">.</span>
         </span>
       </span>

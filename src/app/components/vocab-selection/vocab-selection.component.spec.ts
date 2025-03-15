@@ -1,4 +1,4 @@
-import {async, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
+import {ComponentFixture, fakeAsync, TestBed, tick, waitForAsync} from '@angular/core/testing';
 
 import {VocabSelectionComponent} from './vocab-selection.component';
 import {SharedTestModule} from '../../../testing/shared-test.module';
@@ -13,7 +13,7 @@ describe('VocabSelectionComponent', () => {
   let fixture: ComponentFixture<VocabSelectionComponent>;
   let memberDictationServiceSpy;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     memberDictationServiceSpy = MemberDictationServiceSpy();
 
     TestBed.configureTestingModule({

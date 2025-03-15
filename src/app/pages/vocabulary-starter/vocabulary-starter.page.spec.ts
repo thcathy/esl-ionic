@@ -1,5 +1,5 @@
 import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
-import {async, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
+import {ComponentFixture, fakeAsync, TestBed, tick, waitForAsync} from '@angular/core/testing';
 
 import {VocabularyStarterPage, VocabularyStarterPageInput} from './vocabulary-starter.page';
 import {SharedTestModule} from '../../../testing/shared-test.module';
@@ -18,7 +18,7 @@ describe('VocabularyStarterPage', () => {
   let route: ActivatedRoute;
   let vocabPracticeServiceSpy, storageSpy;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     vocabPracticeServiceSpy = VocabPracticeServiceSpy();
     storageSpy = StorageSpy();
     route = new ActivatedRoute();

@@ -1,7 +1,7 @@
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import {async, ComponentFixture, fakeAsync, TestBed} from '@angular/core/testing';
+import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
+import {ComponentFixture, fakeAsync, TestBed, waitForAsync} from '@angular/core/testing';
 
-import { AccountPage } from './account.page';
+import {AccountPage} from './account.page';
 import {member1} from '../../../testing/test-data';
 import {SharedTestModule} from '../../../testing/shared-test.module';
 import {of} from 'rxjs';
@@ -12,7 +12,7 @@ describe('AccountPage', () => {
   let fixture: ComponentFixture<AccountPage>;
   let pageElement: HTMLElement;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     const activatedRoute = jasmine.createSpyObj('ActivatedRoute', ['']);
     activatedRoute.data = of({member: member1});
 

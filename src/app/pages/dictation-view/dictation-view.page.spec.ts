@@ -1,5 +1,5 @@
 import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
-import {async, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
+import {ComponentFixture, fakeAsync, TestBed, tick, waitForAsync} from '@angular/core/testing';
 
 import {DictationViewPage} from './dictation-view.page';
 import {SharedTestModule} from '../../../testing/shared-test.module';
@@ -16,7 +16,7 @@ describe('DictationViewPage', () => {
   let activateRouteStub;
   let routerSpy;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     dictationServiceSpy = jasmine.createSpyObj('DictationService', ['getById']);
     dictationServiceSpy.getById.and.returnValue(of(dictation1));
     activateRouteStub = new ActivatedRouteStub();

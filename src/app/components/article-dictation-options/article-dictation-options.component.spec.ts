@@ -1,10 +1,11 @@
 import {ComponentFixture, fakeAsync, TestBed, waitForAsync} from '@angular/core/testing';
-import {IonToggle} from '@ionic/angular';
+import {IonicModule} from '@ionic/angular';
 
 import {ArticleDictationOptionsComponent} from './article-dictation-options.component';
 import {SharedTestModule} from "../../../testing/shared-test.module";
 import {StorageSpy} from "../../../testing/mocks-ionic";
 import {UIOptionsService} from "../../services/ui-options.service";
+import {importProvidersFrom} from "@angular/core";
 
 describe('ArticleDictationOptionsComponent', () => {
   let component: ArticleDictationOptionsComponent;
@@ -15,12 +16,13 @@ describe('ArticleDictationOptionsComponent', () => {
     storageSpy = StorageSpy();
 
     TestBed.configureTestingModule({
-      declarations: [ ArticleDictationOptionsComponent, IonToggle ],
+      declarations: [ ArticleDictationOptionsComponent ],
       imports: [
         SharedTestModule.forRoot(),
       ],
       providers: [
         { provide: UIOptionsService, useValue: new UIOptionsService(storageSpy) },
+        importProvidersFrom(IonicModule.forRoot({}))
       ],
     }).compileComponents();
 

@@ -1,5 +1,5 @@
 import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
-import {async, ComponentFixture, fakeAsync, TestBed} from '@angular/core/testing';
+import {ComponentFixture, fakeAsync, TestBed, waitForAsync} from '@angular/core/testing';
 
 import {SharedTestModule} from '../../../testing/shared-test.module';
 import {TestData} from '../../../testing/test-data';
@@ -9,7 +9,7 @@ describe('DictationListComponent', () => {
   let component: DictationListComponent;
   let fixture: ComponentFixture<DictationListComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ DictationListComponent ],
       imports: [

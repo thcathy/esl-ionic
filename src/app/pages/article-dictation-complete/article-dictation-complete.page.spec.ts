@@ -1,21 +1,21 @@
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import {async, ComponentFixture, fakeAsync, TestBed} from '@angular/core/testing';
+import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
+import {ComponentFixture, fakeAsync, TestBed, waitForAsync} from '@angular/core/testing';
 
-import { ArticleDictationCompletePage } from './article-dictation-complete.page';
+import {ArticleDictationCompletePage} from './article-dictation-complete.page';
 import {SharedTestModule} from '../../../testing/shared-test.module';
 import {dictation1, dictation1Histories} from '../../../testing/test-data';
 import {ManageVocabHistoryServiceSpy, StorageSpy} from '../../../testing/mocks-ionic';
 import {DictationService} from '../../services/dictation/dictation.service';
 import {ActivatedRoute, convertToParamMap} from '@angular/router';
 import {ManageVocabHistoryService} from '../../services/member/manage-vocab-history.service';
-import { StorageService } from '../../services/storage.service';
+import {StorageService} from '../../services/storage.service';
 
 describe('ArticleDictationCompletePage', () => {
   let component: ArticleDictationCompletePage;
   let fixture: ComponentFixture<ArticleDictationCompletePage>;
   let dictationServiceSpy;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     dictationServiceSpy = jasmine.createSpyObj('DictationService', ['createSentenceDictationHistory', 'isInstantDictation']);
     dictationServiceSpy.isInstantDictation.and.returnValue(false);
 

@@ -1,4 +1,4 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 
 import {SharedTestModule} from '../../../testing/shared-test.module';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
@@ -9,7 +9,7 @@ describe('VocabImageComponent', () => {
   let component: VocabImageComponent;
   let fixture: ComponentFixture<VocabImageComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ VocabImageComponent ],
       imports: [

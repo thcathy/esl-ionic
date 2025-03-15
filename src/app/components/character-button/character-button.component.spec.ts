@@ -1,7 +1,6 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { IonicModule } from '@ionic/angular';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 
-import { CharacterButtonComponent } from './character-button.component';
+import {CharacterButtonComponent} from './character-button.component';
 import {SharedTestModule} from '../../../testing/shared-test.module';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 
@@ -9,7 +8,7 @@ describe('CharacterButtonComponent', () => {
   let component: CharacterButtonComponent;
   let fixture: ComponentFixture<CharacterButtonComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ CharacterButtonComponent ],
       imports: [

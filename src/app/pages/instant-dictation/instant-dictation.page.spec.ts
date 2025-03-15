@@ -1,14 +1,14 @@
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 
-import { InstantDictationPage } from './instant-dictation.page';
+import {InstantDictationPage} from './instant-dictation.page';
 import {SharedTestModule} from "../../../testing/shared-test.module";
 
 describe('InstantDictationPage', () => {
   let component: InstantDictationPage;
   let fixture: ComponentFixture<InstantDictationPage>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ InstantDictationPage ],
       imports: [

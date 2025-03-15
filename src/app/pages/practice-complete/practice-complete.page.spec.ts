@@ -1,20 +1,28 @@
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { async, ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
+import {ComponentFixture, fakeAsync, TestBed, tick, waitForAsync} from '@angular/core/testing';
 
-import { of } from 'rxjs';
-import { DictationServiceSpy, FFSAuthServiceSpy, IonicComponentServiceSpy, ManageVocabHistoryServiceSpy, NavigationServiceSpy, StorageSpy, VocabPracticeServiceSpy } from '../../../testing/mocks-ionic';
-import { SharedTestModule } from '../../../testing/shared-test.module';
-import { TestData } from '../../../testing/test-data';
-import { Dictation } from '../../entity/dictation';
-import { VocabPracticeType } from '../../enum/vocab-practice-type.enum';
-import { FFSAuthService } from '../../services/auth.service';
-import { DictationService } from '../../services/dictation/dictation.service';
-import { IonicComponentService } from '../../services/ionic-component.service';
-import { ManageVocabHistoryService } from '../../services/member/manage-vocab-history.service';
-import { NavigationService } from '../../services/navigation.service';
-import { VocabPracticeService } from '../../services/practice/vocab-practice.service';
-import { StorageService } from '../../services/storage.service';
-import { PracticeCompletePage, PracticeCompletePageInput } from './practice-complete.page';
+import {of} from 'rxjs';
+import {
+  DictationServiceSpy,
+  FFSAuthServiceSpy,
+  IonicComponentServiceSpy,
+  ManageVocabHistoryServiceSpy,
+  NavigationServiceSpy,
+  StorageSpy,
+  VocabPracticeServiceSpy
+} from '../../../testing/mocks-ionic';
+import {SharedTestModule} from '../../../testing/shared-test.module';
+import {TestData} from '../../../testing/test-data';
+import {Dictation} from '../../entity/dictation';
+import {VocabPracticeType} from '../../enum/vocab-practice-type.enum';
+import {FFSAuthService} from '../../services/auth.service';
+import {DictationService} from '../../services/dictation/dictation.service';
+import {IonicComponentService} from '../../services/ionic-component.service';
+import {ManageVocabHistoryService} from '../../services/member/manage-vocab-history.service';
+import {NavigationService} from '../../services/navigation.service';
+import {VocabPracticeService} from '../../services/practice/vocab-practice.service';
+import {StorageService} from '../../services/storage.service';
+import {PracticeCompletePage, PracticeCompletePageInput} from './practice-complete.page';
 
 describe('PracticeCompletePage', () => {
   let component: PracticeCompletePage;
@@ -23,7 +31,7 @@ describe('PracticeCompletePage', () => {
     authServiceSpy, navigationServiceSpy, manageVocabHistoryServiceSpy, ionicComponentServiceSpy;
   let defaultInput;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     vocabPracticeServiceSpy = VocabPracticeServiceSpy();
     dictationServiceSpy = DictationServiceSpy();
     storageSpy = StorageSpy();

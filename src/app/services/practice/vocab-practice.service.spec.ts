@@ -1,9 +1,8 @@
 import {VocabPracticeService} from './vocab-practice.service';
-import {provideHttpClientTesting} from '@angular/common/http/testing';
 import {TestBed} from '@angular/core/testing';
 import {VocabPracticeHistory} from '../../entity/vocab-practice-history';
 import {vocab_apple, vocab_banana} from '../../../testing/test-data';
-import {HttpClient, provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 import {Dictations, PuzzleControls} from '../../entity/dictation';
 
 describe('VocabPracticeService', () => {
@@ -18,8 +17,6 @@ describe('VocabPracticeService', () => {
     providers: [
         VocabPracticeService,
         { provide: HttpClient, useValue: httpClientSpy },
-        provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting(),
     ]
 });
 

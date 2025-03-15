@@ -1,20 +1,16 @@
-import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
-import { of } from 'rxjs';
-import {
-  memberVocabularyMember1Apple,
-  memberVocabularyMember1Banana,
-  memberVocabularyMember1Cat
-} from '../../../testing/test-data';
-import { VocabPracticeService } from '../practice/vocab-practice.service';
-import { StorageService } from '../storage.service';
-import { ManageVocabHistoryService } from './manage-vocab-history.service';
+import {fakeAsync, TestBed, tick, waitForAsync} from '@angular/core/testing';
+import {of} from 'rxjs';
+import {memberVocabularyMember1Apple, memberVocabularyMember1Banana, memberVocabularyMember1Cat} from '../../../testing/test-data';
+import {VocabPracticeService} from '../practice/vocab-practice.service';
+import {StorageService} from '../storage.service';
+import {ManageVocabHistoryService} from './manage-vocab-history.service';
 
 describe('ManageVocabHistoryService', () => {
   let service: ManageVocabHistoryService;
   let storageSpy: StorageService;
   let vocabPracticeServiceSpy: VocabPracticeService;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     storageSpy = jasmine.createSpyObj('Storage', {
       get: Promise.resolve()
     });

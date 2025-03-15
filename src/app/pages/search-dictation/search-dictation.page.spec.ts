@@ -1,19 +1,18 @@
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import {async, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
+import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
+import {ComponentFixture, fakeAsync, TestBed, tick, waitForAsync} from '@angular/core/testing';
 
-import { SearchDictationPage } from './search-dictation.page';
+import {SearchDictationPage} from './search-dictation.page';
 import {SharedTestModule} from '../../../testing/shared-test.module';
 import {ManageVocabHistoryServiceSpy, StorageSpy} from '../../../testing/mocks-ionic';
-import {ActivatedRoute, convertToParamMap} from '@angular/router';
 import {ManageVocabHistoryService} from '../../services/member/manage-vocab-history.service';
-import { StorageService } from '../../services/storage.service';
+import {StorageService} from '../../services/storage.service';
 
 describe('SearchDictationPage', () => {
   let component: SearchDictationPage;
   let fixture: ComponentFixture<SearchDictationPage>;
   let storageSpy;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     storageSpy = StorageSpy();
     storageSpy.get.and.returnValue(Promise.resolve(['old search history']));
 

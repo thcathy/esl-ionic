@@ -1,5 +1,5 @@
 import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
-import {async, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
+import {ComponentFixture, fakeAsync, TestBed, tick, waitForAsync} from '@angular/core/testing';
 
 import {DictationPracticePage} from './dictation-practice.page';
 import {SharedTestModule} from '../../../testing/shared-test.module';
@@ -8,14 +8,14 @@ import {dictation2_vocabDictation} from '../../../testing/test-data';
 import {VocabPracticeType} from '../../enum/vocab-practice-type.enum';
 import {NavigationService} from '../../services/navigation.service';
 import {VocabPracticeService} from '../../services/practice/vocab-practice.service';
-import { StorageService } from '../../services/storage.service';
+import {StorageService} from '../../services/storage.service';
 
 describe('DictationPracticePage', () => {
   let component: DictationPracticePage;
   let fixture: ComponentFixture<DictationPracticePage>;
   let storageSpy, navigationServiceSpy;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     storageSpy = StorageSpy();
     navigationServiceSpy = NavigationServiceSpy();
 

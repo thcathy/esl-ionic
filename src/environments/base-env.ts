@@ -1,6 +1,6 @@
 export const baseEnv = {
   auth0Host: 'thcathy.auth0.com',
-  version: 'v9.7.0',
+  version: 'v9.7.2',
   imagesHost: 'https://firebasestorage.googleapis.com/v0/b/friendlyeats-7fa2f.appspot.com/o/images',
   maxSentenceLength: 40,
   learntVocabularyMinimumCorrect: 5,

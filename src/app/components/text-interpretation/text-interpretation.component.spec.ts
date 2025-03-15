@@ -44,7 +44,7 @@ describe('TextInterpretationComponent', () => {
     fixture.detectChanges(); // Update the view
 
     expect(component.translatedText).toBe(translatedText); // Check the updated translation
-    const displayedText = fixture.debugElement.query(By.css('span:last-child')).nativeElement.textContent.trim();
+    const displayedText = fixture.debugElement.query(By.css('#meaning')).nativeElement.textContent.trim();
     expect(displayedText).toBe(translatedText); // Verify the displayed text
   });
 
@@ -53,7 +53,7 @@ describe('TextInterpretationComponent', () => {
     component.translatedText = 'hello'; // Ensure translatedText is empty
     fixture.detectChanges(); // Update the view
 
-    const displayedText = fixture.debugElement.query(By.css('span:last-child')).nativeElement.textContent.trim();
+    const displayedText = fixture.debugElement.query(By.css('#meaning')).nativeElement.textContent.trim();
     expect(displayedText).toBe('-'); // Verify the displayed text is '-'
   });
 });
