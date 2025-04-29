@@ -85,7 +85,7 @@
     "karma-junit-reporter": "^2.0.1",
     "protractor": "~7.0.0",
     "rxjs-marbles": "^7.0.1",
-    "ts-node": "^8.8.1",
+    "ts-node": "^10.9.2",
     "typescript": "^5.5.4"
   },
   "description": "FunFunSpell dictation"
