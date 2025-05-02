@@ -31,7 +31,7 @@ jobs:
          path: www
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action@v2
-        if: always()
+        if: github.ref == 'refs/heads/master'
         with:
           junit_files: junit/*.xml
   deploy:
