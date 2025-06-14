@@ -1,6 +1,6 @@
 {
   "name": "esl-ionic",
-  "version": "9.7.2",
+  "version": "9.7.4",
   "author": "thcathy",
   "homepage": "https://www.funfunspell.com",
   "scripts": {
@@ -60,7 +60,7 @@
     "zone.js": "^0.15.0"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^20.0.1",
+    "@angular-devkit/build-angular": "^19.2.10",
     "@angular/cli": "^19.2.1",
     "@angular/compiler": "^19.2.9",
     "@angular/compiler-cli": "^19.2.1",

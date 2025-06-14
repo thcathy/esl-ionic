@@ -29,6 +29,7 @@ export class DictationPracticePage implements OnInit {
   dictationId: number;
   vocabPractices: VocabPractice[] = [];
   questionIndex: number;
+  totalQuestions: number = 0;
   phonics: string;
   answer: string;
   mark = 0;
@@ -65,6 +66,7 @@ export class DictationPracticePage implements OnInit {
     this.dictationId = null;
     this.vocabPractices = [];
     this.questionIndex = 0;
+    this.totalQuestions = 0;
     this.mark = 0;
     this.answer = '';
     this.puzzleControls = null;
@@ -74,11 +76,15 @@ export class DictationPracticePage implements OnInit {
     this.loading = await this.ionicComponentService.showLoading();
     this.dictation = await this.storage.get(NavigationService.storageKeys.dictation);
     this.questionIndex = 0;
+    this.totalQuestions = 0;
     this.mark = 0;
     this.phonics = 'Phonetic';
     this.dictationHelper.wordsToPractice(this.dictation)
       .pipe(
-          mergeMap(word => this.vocabPracticeService.getQuestion(word, this.dictation.showImage)),
+          mergeMap(word => {
+            this.totalQuestions++;
+            return this.vocabPracticeService.getQuestion(word, this.dictation.showImage);
+          }),
           mergeMap(vocabPractice => this.dictation.showImage ? this.vocabPracticeService.getImages(vocabPractice, this.dictation.includeAIImage) : of(vocabPractice))
       ).subscribe(p => this.receiveVocabPractice(p));
   }
@@ -127,7 +133,6 @@ export class DictationPracticePage implements OnInit {
   }
 
   nextQuestion() {
-    this.questionIndex++;
     if (this.end()) {
       this.navigationService.practiceComplete({
         dictation : this.dictation, histories: this.histories, mark: this.mark
@@ -147,7 +152,7 @@ export class DictationPracticePage implements OnInit {
     }
   }
 
-  end = (): boolean => this.questionIndex >= this.vocabPractices.length;
+  end = (): boolean => this.questionIndex + 1 >= this.totalQuestions;
 
   onKeyPress = (key: string) => this.answer += key;
 
@@ -200,18 +205,18 @@ export class DictationPracticePage implements OnInit {
   }
 
   async waitForNextQuestion() {
-    if (this.questionIndex >= this.vocabPractices.length && this.questionIndex < this.dictation.vocabs.length) {
-      this.ionicComponentService.showLoading().then(l => this.loading = l);
+    const nextQuestionIndex = this.questionIndex + 1;
+    const waitingNeeded = nextQuestionIndex >= this.vocabPractices.length && nextQuestionIndex < this.totalQuestions;
+    if (waitingNeeded) {
+      this.loading = await this.ionicComponentService.showLoading();
 
-      let count = 0;
-      while (count < 100 && this.questionIndex >= this.vocabPractices.length) {
-        this.log.debug(`waiting for question api return`);
+      for (let count = 0; count < 100 && nextQuestionIndex >= this.vocabPractices.length; count++) {
+        this.log.debug('waiting for question api return');
         await this.sleep(500);
-        count++;
       }
-
-      this.loading.dismiss();
     }
+    this.questionIndex = nextQuestionIndex;
+    this.loading.dismiss();
   }
 
   sleep(ms = 0) { return new Promise(r => setTimeout(r, ms)); }
