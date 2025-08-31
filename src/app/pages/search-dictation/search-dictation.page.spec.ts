@@ -57,19 +57,21 @@ describe('SearchDictationPage', () => {
     expect(component.creator.errors.maxlength).toBeDefined();
   });
 
-  it('date options are pre-set', fakeAsync(() => {
-    const thisMonth = new Date().getMonth();
-    const options = component.createDateOptions();
+  it('should create date options with controlled time', fakeAsync(() => {
+    jasmine.clock().install();
+    const baseTime = new Date(2023, 5, 15); // June 15, 2023
+    jasmine.clock().mockDate(baseTime);
 
-    expect(options[0].option).toBe('Any');
-    expect(options[0].date).not.toBeDefined();
+    const options = component.createDateOptions();
     expect(options[1].option).toBe('Within 1 Month');
-    expect([1, -11]).toContain(thisMonth - options[1].date.getMonth());
+    expect(options[1].date.getMonth()).toBe(4); // May
     expect(options[2].option).toBe('Within 3 Month');
-    expect([3, -9]).toContain(thisMonth - options[2].date.getMonth());
+    expect(options[2].date.getMonth()).toBe(2); // March
     expect(options[3].option).toBe('Within Half Year');
-    expect([6, -6]).toContain(thisMonth - options[3].date.getMonth());
+    expect(options[3].date.getMonth()).toBe(11); // December of previous year
+    jasmine.clock().uninstall();
   }));
+
 
   it('history is loaded from storage when init, and updated when search', fakeAsync(() => {
     component.ionViewDidLoad();
