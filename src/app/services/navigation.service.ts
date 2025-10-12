@@ -8,8 +8,8 @@ import {Location} from '@angular/common';
 import {TranslateService} from '@ngx-translate/core';
 import {EditDictationPageMode} from '../pages/edit-dictation/edit-dictation-page-enum';
 import {PracticeCompletePageInput} from '../pages/practice-complete/practice-complete.page';
-import { StorageService } from './storage.service';
-import { DictationHelper } from './dictation/dictation-helper.service';
+import {StorageService} from './storage.service';
+import {DictationHelper} from './dictation/dictation-helper.service';
 
 export interface NavigationRequest {
   destination: any;
@@ -77,6 +77,11 @@ export class NavigationService {
     }
   }
 
+  /**
+   * Opens the member home page with a specific segment tab.
+   * @param segment - The segment to display ('dictation' or 'vocabulary')
+   * @param refresh - @deprecated This parameter is not used effectively. Data is always refreshed on every navigation.
+   */
   openMemberHome(segment: String = 'dictation', refresh: boolean = true) {
     this.navigate('/member-home', {
       segment: segment,

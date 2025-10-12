@@ -172,6 +172,27 @@ export class FFSAuthService {
     return true;
   }
 
+  /**
+   * Checks authentication and redirects to login with preserved navigation context if not authenticated.
+   * @param destination - The page path to return to after login (e.g., '/member-home')
+   * @param queryParams - Optional query parameters to preserve (e.g., { segment: 'vocabulary' })
+   * @returns true if authenticated, false if redirecting to login
+   */
+  public requireAuthenticationWithRedirect(
+    destination: string,
+    queryParams: { [key: string]: any } = {}
+  ): boolean {
+    if (!this.isAuthenticated()) {
+      this.log.info(`${destination} requires authentication, redirecting to login`);
+      this.login({
+        destination: destination,
+        params: queryParams
+      });
+      return false;
+    }
+    return true;
+  }
+
   private getAuth0Language() {
     const locale = this.translate.currentLang;
     let result = 'en';

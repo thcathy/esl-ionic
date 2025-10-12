@@ -14,6 +14,7 @@ import {finalize} from 'rxjs/operators';
 import {ModalController} from '@ionic/angular';
 import {VocabSelectionComponent} from '../../components/vocab-selection/vocab-selection.component';
 import {faCheckCircle, faTimesCircle} from '@fortawesome/free-regular-svg-icons';
+import {FFSAuthService} from '../../services/auth.service';
 
 @Component({
     selector: 'app-member-home',
@@ -45,6 +46,7 @@ export class MemberHomePage implements OnInit {
     public location: Location,
     private log: NGXLogger,
     public modalController: ModalController,
+    public authService: FFSAuthService,
   ) { }
 
   ngOnInit() {
@@ -55,15 +57,18 @@ export class MemberHomePage implements OnInit {
   }
 
   async init() {
-    this.selectedSegment = this.route.snapshot.queryParamMap?.get('segment');
+    this.selectedSegment = this.route.snapshot.queryParamMap?.get('segment') || 'dictation';
+    if (!this.authService.requireAuthenticationWithRedirect('/member-home', { segment: this.selectedSegment })) {
+      return;
+    }
+
     this.log.info(`${this.selectedSegment}`);
     this.ionSegment.value = this.selectedSegment;
-
     window.history.replaceState({}, '', `/member-home?segment=${this.selectedSegment}`);
 
-    if (this.route.snapshot.queryParamMap?.get('refresh') === 'refresh') {
+    // if (this.route.snapshot.queryParamMap?.get('refresh') === 'refresh') {
       this.loadDictationAndHistory();
-    }
+    // }
   }
 
   loadDictationAndHistory() {
