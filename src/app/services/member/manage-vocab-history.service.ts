@@ -5,7 +5,7 @@ import {Dictation} from '../../entity/dictation';
 import {MemberVocabulary} from '../../entity/member-vocabulary';
 import {VocabPracticeService} from '../practice/vocab-practice.service';
 import {CollectionUtils} from '../../utils/collection-utils';
-import { StorageService } from '../storage.service';
+import {StorageService} from '../storage.service';
 
 @Injectable({ providedIn: 'root' })
 export class ManageVocabHistoryService extends Service {
@@ -25,14 +25,19 @@ export class ManageVocabHistoryService extends Service {
   }
 
   public classifyVocabulary(vocabularies: MemberVocabulary[]) {
+    const newLearntVocabs = new Map<string, MemberVocabulary>();
+    const newAnsweredBefore = new Map<string, MemberVocabulary>();
+
     vocabularies.forEach(vocab => {
       if (this.isLearnt(vocab)) {
-        this.learntVocabs.set(vocab.id.word, vocab);
-        this.answeredBefore.delete(vocab.id.word);
+        newLearntVocabs.set(vocab.id.word, vocab);
       } else {
-        this.answeredBefore.set(vocab.id.word, vocab);
+        newAnsweredBefore.set(vocab.id.word, vocab);
       }
     });
+
+    this.learntVocabs = newLearntVocabs;
+    this.answeredBefore = newAnsweredBefore;
   }
 
   public isLearnt(vocab: MemberVocabulary) {

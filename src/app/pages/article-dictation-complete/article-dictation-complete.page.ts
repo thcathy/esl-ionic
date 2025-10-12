@@ -9,6 +9,7 @@ import {IonicComponentService} from "../../services/ionic-component.service";
 import {StorageService} from '../../services/storage.service';
 import {IonModal} from "@ionic/angular";
 import {ArticleDictationOptionsComponent} from "../../components/article-dictation-options/article-dictation-options.component";
+import {FFSAuthService} from '../../services/auth.service';
 
 @Component({
     selector: 'app-article-dictation-complete',
@@ -37,6 +38,7 @@ export class ArticleDictationCompletePage implements OnInit {
     public translateService: TranslateService,
     public ionicComponentService: IonicComponentService,
     public storage: StorageService,
+    public authService: FFSAuthService,
   ) { }
 
   ngOnInit() {}
@@ -48,7 +50,7 @@ export class ArticleDictationCompletePage implements OnInit {
   async init() {
     await this.getInputParameters();
     this.calculateCorrect(this.histories);
-    if (!this.dictationService.isInstantDictation(this.dictation) && !this.historyStored) {
+    if (!this.dictationService.isInstantDictation(this.dictation) && !this.historyStored && this.authService.isAuthenticated()) {
       this.dictationService.createSentenceDictationHistory(this.dictation, this.totalCorrect, this.totalWrong, this.histories)
         .subscribe(d => { this.dictation = d; });
     }

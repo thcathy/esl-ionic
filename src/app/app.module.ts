@@ -18,6 +18,7 @@ import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {FontAwesomeIconsModule} from './fontawesome-icons.module';
 import {IdTokenInterceptor} from './interceptor/IdTokenInterceptor';
+import {AuthErrorInterceptor} from './interceptor/AuthErrorInterceptor';
 import {MemberHomePageModule} from './pages/member-home/member-home.module';
 import {FFSAuthService} from './services/auth.service';
 import {ArticleDictationService} from './services/dictation/article-dictation.service';
@@ -80,6 +81,11 @@ const auth0RedirectUri = `${config.appId}://${environment.auth0Host}/capacitor/$
         {
             provide: HTTP_INTERCEPTORS,
             useClass: IdTokenInterceptor,
+            multi: true
+        },
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: AuthErrorInterceptor,
             multi: true
         },
         provideHttpClient(withInterceptorsFromDi(), withJsonpSupport()),
