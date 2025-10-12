@@ -12,14 +12,12 @@ import {MemberService} from './member/member.service';
 import {NavigationRequest, NavigationService} from './navigation.service';
 import {StorageService} from './storage.service';
 
-const tokenTimeoutSecond = 35000;
 const auth0CallbackUri = '/auth0-callback';
 
 @Injectable({ providedIn: 'root' })
 export class FFSAuthService {
   userProfile: any;
   idTokenKey = 'id_token';
-  expiresAtKey = 'expires_at';
   accessTokenKey = 'access_token';
   navigationRequestKey = 'navigation_request';
   accessToken: string;
@@ -124,20 +122,28 @@ export class FFSAuthService {
 
   private setSession(accessToken: string, idToken: string, userProfile: any) {
     this.log.info('login session: update session');
-    const expiresAt = JSON.stringify(tokenTimeoutSecond * 1000 + new Date().getTime());
-    localStorage.setItem(this.expiresAtKey, expiresAt);
-    this.log.info(`token expiresAt: ${expiresAt}`);
-
     localStorage.setItem(this.accessTokenKey, accessToken);
     localStorage.setItem(this.idTokenKey, idToken);
     localStorage.setItem('profile', JSON.stringify(userProfile));
   }
 
+  private getTokenExpiration(token: string): number {
+    try {
+      const parts = token.split('.'); // JWT has 3 parts separated by dots: header.payload.signature
+      if (parts.length !== 3) return 0;
+
+      return JSON.parse(atob(parts[1])).exp || 0;
+    } catch (e) {
+      console.error('Error decoding token:', e);
+      return 0;
+    }
+  }
+
+
   public logout(): void {
-    // Remove tokens and expiry time from localStorage
+    // Remove tokens from localStorage
     localStorage.removeItem('access_token');
     localStorage.removeItem('id_token');
-    localStorage.removeItem('expires_at');
 
     this.accessToken = null;
     this.userProfile = null;
@@ -147,10 +153,13 @@ export class FFSAuthService {
   }
 
   public isAuthenticated(): boolean {
-    // Check whether the current time is past the
-    // access token's expiry time
-    const expiresAt = JSON.parse(localStorage.getItem('expires_at'));
-    return Date.now() < expiresAt;
+    try {
+      const idToken = localStorage.getItem(this.idTokenKey);
+      const expiresAt = idToken ? this.getTokenExpiration(idToken) * 1000 : 0;
+      return Date.now() < expiresAt;
+    } catch (e) {
+      return false;
+    }
   }
 
   public requireAuthenticated(): boolean {
