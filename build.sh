@@ -50,10 +50,13 @@ buildAndroidApk() {
   fi
 
   ionic cap build android --prod --no-open
+  cd android
+  ./gradlew assembleRelease
+  cd ..
   jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore my-release-key.jks -storepass ${ESL_IONIC_KEYSTORE_PASSWORD} android/app/build/outputs/apk/release/app-release-unsigned.apk esl-dictation
   rm -f esl-dictation.apk
-  /Users/thcathy/Library/Android/sdk/build-tools/28.0.3/zipalign -v 4 platforms/android/app/build/outputs/apk/release/app-release-unsigned.apk esl-dictation.apk
-  cp esl-dictation.apk ~/Google\ Drive/apk/
+  /Users/thcathy/Library/Android/sdk/build-tools/35.0.0/zipalign -v 4 android/app/build/outputs/apk/release/app-release-unsigned.apk esl-dictation.apk
+  cp esl-dictation.apk ~/Google\ Drive/My\ Drive/apk/
 }
 
 release_android() {
