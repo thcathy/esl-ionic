@@ -9,8 +9,6 @@ import {StorageService} from '../storage.service';
 
 @Injectable({ providedIn: 'root' })
 export class ManageVocabHistoryService extends Service {
-  private MEMBER_VOCABULARIES_KEY = 'ManageVocabHistoryService.MEMBER_VOCABULARIES_KEY';
-
   learntVocabs: Map<string, MemberVocabulary> = new Map<string, MemberVocabulary>();
   answeredBefore: Map<string, MemberVocabulary> = new Map<string, MemberVocabulary>();
 
@@ -19,25 +17,20 @@ export class ManageVocabHistoryService extends Service {
     private storage: StorageService,
   ) {
     super();
-    this.storage.get(this.MEMBER_VOCABULARIES_KEY).then(list => {
-      if (list != null) { this.classifyVocabulary(list); }
-    });
   }
 
   public classifyVocabulary(vocabularies: MemberVocabulary[]) {
-    const newLearntVocabs = new Map<string, MemberVocabulary>();
-    const newAnsweredBefore = new Map<string, MemberVocabulary>();
-
     vocabularies.forEach(vocab => {
       if (this.isLearnt(vocab)) {
-        newLearntVocabs.set(vocab.id.word, vocab);
+        this.learntVocabs.set(vocab.id.word, vocab);
+        this.answeredBefore.delete(vocab.id.word);
       } else {
-        newAnsweredBefore.set(vocab.id.word, vocab);
+        this.answeredBefore.set(vocab.id.word, vocab);
       }
     });
 
-    this.learntVocabs = newLearntVocabs;
-    this.answeredBefore = newAnsweredBefore;
+    this.learntVocabs = new Map(this.learntVocabs);
+    this.answeredBefore = new Map(this.answeredBefore);
   }
 
   public isLearnt(vocab: MemberVocabulary) {
