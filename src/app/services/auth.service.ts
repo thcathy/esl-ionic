@@ -132,7 +132,12 @@ export class FFSAuthService {
       const parts = token.split('.'); // JWT has 3 parts separated by dots: header.payload.signature
       if (parts.length !== 3) return 0;
 
-      return JSON.parse(atob(parts[1])).exp || 0;
+      // Convert base64url to base64 (JWT uses base64url encoding)
+      let base64 = parts[1].replace(/-/g, '+').replace(/_/g, '/');
+      while (base64.length % 4) {
+        base64 += '=';
+      }
+      return JSON.parse(atob(base64)).exp || 0;
     } catch (e) {
       console.error('Error decoding token:', e);
       return 0;
