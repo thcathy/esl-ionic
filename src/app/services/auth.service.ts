@@ -5,7 +5,7 @@ import {Browser} from '@capacitor/browser';
 import {LoadingController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
 import {NGXLogger} from 'ngx-logger';
-import {firstValueFrom} from 'rxjs';
+import {BehaviorSubject, firstValueFrom, Observable} from 'rxjs';
 import {AppService} from './app.service';
 import {ManageVocabHistoryService} from './member/manage-vocab-history.service';
 import {MemberService} from './member/member.service';
@@ -23,6 +23,11 @@ export class FFSAuthService {
   accessToken: string;
   idToken: string;
 
+  private _isAuthenticatedCache: boolean = false;
+  private _isAuthenticated$ = new BehaviorSubject<boolean>(false);
+  public readonly isAuthenticated$: Observable<boolean> = this._isAuthenticated$.asObservable();
+  private authCheckInterval: any;
+
   constructor(public zone: NgZone,
               protected appService: AppService,
               public storage: StorageService,
@@ -39,11 +44,50 @@ export class FFSAuthService {
       this.userProfile = JSON.parse(localStorage.getItem('profile'));
       this.idToken = localStorage.getItem(this.idTokenKey);
       this.accessToken = localStorage.getItem(this.accessTokenKey);
+      this.checkAndUpdateAuthState();
+
+      this.authCheckInterval = setInterval(() => {
+        this.checkAndUpdateAuthState();
+      }, 60000);
+
     } catch (e) {
       localStorage.setItem(this.idTokenKey, null);
     }
 
     auth.error$.subscribe((error) => console.log(`Auth: ${error}`));
+  }
+
+  ngOnDestroy() {
+    if (this.authCheckInterval) {
+      clearInterval(this.authCheckInterval);
+    }
+  }
+
+  /**
+   * Checks token expiration and updates cached authentication state.
+   * This is the single source of truth for authentication state.
+   * Only this method should parse the JWT token.
+   */
+  private checkAndUpdateAuthState(): void {
+    try {
+      const idToken = localStorage.getItem(this.idTokenKey);
+      const expiresAt = idToken ? this.getTokenExpiration(idToken) * 1000 : 0;
+      const isAuth = Date.now() < expiresAt;
+
+      // Only update if state has changed to prevent unnecessary emissions
+      if (isAuth !== this._isAuthenticatedCache) {
+        this._isAuthenticatedCache = isAuth;
+        this._isAuthenticated$.next(isAuth);
+        this.log.debug(`Auth state changed: ${isAuth}`);
+      }
+    } catch (e) {
+      this.log.error('Error checking auth state:', e);
+      // On error, ensure we're in unauthenticated state
+      if (this._isAuthenticatedCache !== false) {
+        this._isAuthenticatedCache = false;
+        this._isAuthenticated$.next(false);
+      }
+    }
   }
 
   public login(redirectRequest?: NavigationRequest): void {
@@ -125,6 +169,9 @@ export class FFSAuthService {
     localStorage.setItem(this.accessTokenKey, accessToken);
     localStorage.setItem(this.idTokenKey, idToken);
     localStorage.setItem('profile', JSON.stringify(userProfile));
+
+    // Update authentication state immediately after successful login
+    this.checkAndUpdateAuthState();
   }
 
   private getTokenExpiration(token: string): number {
@@ -149,22 +196,18 @@ export class FFSAuthService {
     // Remove tokens from localStorage
     localStorage.removeItem('access_token');
     localStorage.removeItem('id_token');
+    localStorage.removeItem('profile');
 
     this.accessToken = null;
     this.userProfile = null;
+    this.checkAndUpdateAuthState();
 
     // Go back to the home route
     this.router.navigate(['/home']);
   }
 
   public isAuthenticated(): boolean {
-    try {
-      const idToken = localStorage.getItem(this.idTokenKey);
-      const expiresAt = idToken ? this.getTokenExpiration(idToken) * 1000 : 0;
-      return Date.now() < expiresAt;
-    } catch (e) {
-      return false;
-    }
+    return this._isAuthenticatedCache;
   }
 
   public requireAuthenticated(): boolean {
