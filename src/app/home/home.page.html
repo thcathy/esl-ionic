@@ -42,7 +42,7 @@
                   <ion-label><fa-icon [icon]="['fas', 'plus']"></fa-icon> {{ 'Create' | translate }}</ion-label>
                   <fa-icon  slot="end"[icon]="['fas', 'angle-right']"></fa-icon>
                 </ion-item>
-                <ion-item *ngIf="authService.isAuthenticated()" (click)="navigationService.openMemberHome('dictation')">
+                <ion-item *ngIf="authService.isAuthenticated$ | async" (click)="navigationService.openMemberHome('dictation')">
                   <ion-label><fa-icon icon="list"></fa-icon> {{ 'My Records' | translate }}</ion-label>
                   <fa-icon slot="end" [icon]="['fas', 'angle-right']"></fa-icon>
                 </ion-item>
@@ -67,7 +67,7 @@
                   <ion-label><fa-icon [icon]="['fas', 'spell-check']"></fa-icon> {{ 'Learn' | translate }}</ion-label>
                   <fa-icon slot="end"  [icon]="['fas', 'angle-right']"></fa-icon>
                 </ion-item>
-                <ion-item *ngIf="authService.isAuthenticated()" (click)="navigationService.openMemberHome('vocabulary')">
+                <ion-item *ngIf="authService.isAuthenticated$ | async" (click)="navigationService.openMemberHome('vocabulary')">
                   <ion-label><fa-icon [icon]="['fas', 'list']"></fa-icon> {{ 'My Vocabulary' | translate }}</ion-label>
                   <fa-icon slot="end"  [icon]="['fas', 'angle-right']"></fa-icon>
                 </ion-item>

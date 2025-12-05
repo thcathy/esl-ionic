@@ -53,7 +53,7 @@
                     </ion-select>
                   </ion-item>
 
-                  <ion-button *ngIf="authService.isAuthenticated()" style="margin: 16px;" fill="outline" (click)="navigationService.openMemberHome('vocabulary')">
+                  <ion-button *ngIf="authService.isAuthenticated$ | async" style="margin: 16px;" fill="outline" (click)="navigationService.openMemberHome('vocabulary')">
                     <fa-icon icon="folder-open"></fa-icon>&nbsp;{{'My Vocabulary'|translate}}
                   </ion-button>
 

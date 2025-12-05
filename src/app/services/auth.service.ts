@@ -28,6 +28,8 @@ export class FFSAuthService {
   public readonly isAuthenticated$: Observable<boolean> = this._isAuthenticated$.asObservable();
   private authCheckInterval: any;
 
+  private readonly AUTH_CHECK_INTERVAL_MS = 600000; // 10 mins
+
   constructor(public zone: NgZone,
               protected appService: AppService,
               public storage: StorageService,
@@ -46,9 +48,7 @@ export class FFSAuthService {
       this.accessToken = localStorage.getItem(this.accessTokenKey);
       this.checkAndUpdateAuthState();
 
-      this.authCheckInterval = setInterval(() => {
-        this.checkAndUpdateAuthState();
-      }, 60000);
+      this.authCheckInterval = setInterval(() => this.checkAndUpdateAuthState(), this.AUTH_CHECK_INTERVAL_MS);
 
     } catch (e) {
       localStorage.setItem(this.idTokenKey, null);
@@ -67,12 +67,16 @@ export class FFSAuthService {
    * Checks token expiration and updates cached authentication state.
    * This is the single source of truth for authentication state.
    * Only this method should parse the JWT token.
+   *
+   * Note: Token is considered expired if it will expire before the next check (60s buffer).
+   * This prevents race conditions where token expires between checks.
    */
   private checkAndUpdateAuthState(): void {
     try {
       const idToken = localStorage.getItem(this.idTokenKey);
       const expiresAt = idToken ? this.getTokenExpiration(idToken) * 1000 : 0;
-      const isAuth = Date.now() < expiresAt;
+
+      const isAuth = Date.now() + this.AUTH_CHECK_INTERVAL_MS < expiresAt;
 
       // Only update if state has changed to prevent unnecessary emissions
       if (isAuth !== this._isAuthenticatedCache) {

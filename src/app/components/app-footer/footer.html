@@ -22,7 +22,7 @@
       <h6>{{'Vocabulary Practice'|translate}}</h6>
       <ul>
         <li><a (click)="navigationService.openVocabularyStarter()">{{'Menu_Start'|translate}}</a></li>
-        <li><a *ngIf="authService.isAuthenticated()" (click)="navigationService.openMemberHome('vocabulary')">{{'My Vocabulary'|translate}}</a></li>
+        <li><a *ngIf="authService.isAuthenticated$ | async" (click)="navigationService.openMemberHome('vocabulary')">{{'My Vocabulary'|translate}}</a></li>
       </ul>
     </ion-col>
     <ion-col size="6" size-sm="6" size-md="3" size-lg="3">
@@ -31,7 +31,7 @@
       <ul style="padding-inline-start: 0px;">
         <li><a (click)="authService.signUp()">{{'Sign Up'|translate}}</a></li>
         <li><a (click)="authService.login()">{{'Login'|translate}}</a></li>
-        <li><a *ngIf="authService.isAuthenticated()" (click)="navigationService.openAccountPage()">{{'My Account'|translate}}</a></li>
+        <li><a *ngIf="authService.isAuthenticated$ | async" (click)="navigationService.openAccountPage()">{{'My Account'|translate}}</a></li>
       </ul>
       <h5><fa-icon [icon]="['fas', 'language']"></fa-icon> {{'Language'|translate}}</h5>
       <hr>
