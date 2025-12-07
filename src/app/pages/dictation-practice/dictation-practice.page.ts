@@ -1,4 +1,5 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {IonInput} from '@ionic/angular';
 import {ActivatedRoute} from '@angular/router';
 import {NGXLogger} from 'ngx-logger';
 import {of, Subject} from 'rxjs';
@@ -24,6 +25,7 @@ import {TranslateService} from "@ngx-translate/core";
     standalone: false
 })
 export class DictationPracticePage implements OnInit {
+  @ViewChild('answerInput') answerInput: IonInput;
 
   dictation: Dictation;
   dictationId: number;
@@ -147,6 +149,7 @@ export class DictationPracticePage implements OnInit {
     this.loading.dismiss();
     this.preNextQuestion();
     this.speak();
+    this.focusAnswerInput();
     if (this.practiceType === VocabPracticeType.Puzzle) {
       this.puzzleControls = this.vocabPracticeService.createPuzzleControls(this.currentQuestion().word);
     }
@@ -220,4 +223,10 @@ export class DictationPracticePage implements OnInit {
   }
 
   sleep(ms = 0) { return new Promise(r => setTimeout(r, ms)); }
+
+  focusAnswerInput() {
+    if (!this.isKeyboardActive && this.answerInput) {
+      setTimeout(() => this.answerInput.setFocus(), 100);
+    }
+  }
 }
