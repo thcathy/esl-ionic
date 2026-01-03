@@ -45,3 +45,5 @@ UserInterfaceState.xcuserstate
 .firebase
 *-debug.log
 .runtimeconfig.json
+
+my-release-key.jks

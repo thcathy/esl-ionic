@@ -34,6 +34,46 @@ require_env() {
   fi
 }
 
+sed_inplace() {
+  local expr="$1"
+  local file="$2"
+  if [[ "${OSTYPE:-}" == darwin* ]]; then
+    sed -i '' -e "$expr" "$file"
+  else
+    sed -i -e "$expr" "$file"
+  fi
+}
+
+zipalign_cmd() {
+  if command -v zipalign >/dev/null 2>&1; then
+    echo "zipalign"
+    return 0
+  fi
+
+  local sdk_root="${ANDROID_SDK_ROOT:-${ANDROID_HOME:-}}"
+  if [[ -z "${sdk_root}" ]]; then
+    die "zipalign not found in PATH and ANDROID_SDK_ROOT/ANDROID_HOME not set"
+  fi
+
+  local bt_dir="${sdk_root}/build-tools"
+  if [[ ! -d "${bt_dir}" ]]; then
+    die "Android build-tools directory not found: ${bt_dir}"
+  fi
+
+  local latest
+  latest="$(ls -1d "${bt_dir}"/* 2>/dev/null | sort -V | tail -n 1 || true)"
+  if [[ -z "${latest}" ]]; then
+    die "No build-tools versions found under: ${bt_dir}"
+  fi
+
+  local za="${latest}/zipalign"
+  if [[ ! -x "${za}" ]]; then
+    die "zipalign not executable at: ${za}"
+  fi
+
+  echo "${za}"
+}
+
 release_web_uat() {
   firebase deploy -P batch4-161201
 }
@@ -43,7 +83,7 @@ release_web_prod() {
 }
 
 build_firebase() {
-  ionic build --prod
+  ionic build --configuration production
 }
 
 release_ios() {
@@ -54,8 +94,8 @@ release_ios() {
   require_env "APPLE_ID_APP_PASSWORD"
 
   setVersion
-  sed -i '' "s/MARKETING_VERSION = .*;/MARKETING_VERSION = ${VERSION};/g" "${ROOT_DIR}/ios/App/App.xcodeproj/project.pbxproj"
-  ionic capacitor build ios --prod --no-open
+  sed_inplace "s/MARKETING_VERSION = .*;/MARKETING_VERSION = ${VERSION};/g" "${ROOT_DIR}/ios/App/App.xcodeproj/project.pbxproj"
+  ionic capacitor build ios --configuration production --no-open
 
   pushd "${ROOT_DIR}/ios/App" >/dev/null
   xcodebuild archive -workspace "App.xcworkspace" -archivePath "$XCARCHIVE_PATH" -scheme "App" -destination "generic/platform=iOS"
@@ -66,21 +106,21 @@ release_ios() {
 
 test_ios() {
   setVersion
-  sed -i '' "s/MARKETING_VERSION = .*;/MARKETING_VERSION = ${VERSION};/g" "${ROOT_DIR}/ios/App/App.xcodeproj/project.pbxproj"
-  ionic capacitor build ios --prod
+  sed_inplace "s/MARKETING_VERSION = .*;/MARKETING_VERSION = ${VERSION};/g" "${ROOT_DIR}/ios/App/App.xcodeproj/project.pbxproj"
+  ionic capacitor build ios --configuration production
 }
 
 buildAndroidApk() {
   require_env "ESL_IONIC_KEYSTORE_PASSWORD"
 
-  ionic cap build android --prod --no-open
+  ionic cap build android --configuration production --no-open
   pushd "${ROOT_DIR}/android" >/dev/null
   ./gradlew assembleRelease
   popd >/dev/null
 
   jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore "${ROOT_DIR}/my-release-key.jks" -storepass "${ESL_IONIC_KEYSTORE_PASSWORD}" "${ROOT_DIR}/android/app/build/outputs/apk/release/app-release-unsigned.apk" "esl-dictation"
   rm -f -- "${ROOT_DIR}/esl-dictation.apk"
-  "/Users/thcathy/Library/Android/sdk/build-tools/35.0.0/zipalign" -v 4 "${ROOT_DIR}/android/app/build/outputs/apk/release/app-release-unsigned.apk" "${ROOT_DIR}/esl-dictation.apk"
+  "$(zipalign_cmd)" -v 4 "${ROOT_DIR}/android/app/build/outputs/apk/release/app-release-unsigned.apk" "${ROOT_DIR}/esl-dictation.apk"
   cp "${ROOT_DIR}/esl-dictation.apk" "${HOME}/Google Drive/My Drive/apk/"
 }
 
@@ -91,10 +131,10 @@ release_android() {
   require_env "GCLOUD_SERVICE_ACCOUNT_KEY"
 
   setVersion
-  ionic cap build android --prod --no-open
+  ionic cap build android --configuration production --no-open
   pushd "${ROOT_DIR}/android" >/dev/null
-  sed -i ''  "s/versionName \".*\"/versionName \"${VERSION}\"/g" "app/build.gradle"
-  sed -i ''  "s/versionCode .*/versionCode ${ANDROID_VERSION}/g" "app/build.gradle"
+  sed_inplace "s/versionName \".*\"/versionName \"${VERSION}\"/g" "app/build.gradle"
+  sed_inplace "s/versionCode .*/versionCode ${ANDROID_VERSION}/g" "app/build.gradle"
 #  export JAVA_HOME=`/usr/libexec/java_home -v 17`
   ./gradlew bundle
   jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore "${ROOT_DIR}/my-release-key.jks" -storepass "${ESL_IONIC_KEYSTORE_PASSWORD}" "${AAB_PATH}" "esl-dictation"
