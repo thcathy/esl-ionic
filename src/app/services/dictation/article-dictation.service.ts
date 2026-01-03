@@ -4,7 +4,6 @@ import {SentenceHistory} from '../../entity/sentence-history';
 import {environment} from '../../../environments/environment';
 import {ValidationUtils} from '../../utils/validation-utils';
 import {NGXLogger} from 'ngx-logger';
-import {SentenceLengthOptions} from '../../entity/dictation';
 
 namespace ArticleDictationService {
   export interface CheckAnswerOptions {
@@ -162,22 +161,49 @@ export class ArticleDictationService {
     return (ansSize - answerPosition) < (questionSize - questionPosition);
   }
 
-  public replacePunctuationToWord(input: string): string {
-    input = input.replace(/\,/g, ', comma,');
+  public replacePunctuationToWord(
+    input: string,
+    options: { speakPunctuation?: boolean; } = { speakPunctuation: true, }
+  ): string {
+    if (!options?.speakPunctuation) {
+      return input;
+    }
+
+    input = input.replace(/,/g, ', comma,');
     input = input.replace(/\.{3,}|…/g, ', ellipsis,');
     input = input.replace(/\./g, ', full stop,');
     input = input.replace(/\?/g, ', question mark,');
-    input = input.replace(/\!/g, ', exclamation mark,');
-    input = input.replace(/\:/g, ', colon,');
-    input = input.replace(/\;/g, ', semicolon,');
-    input = input.replace(/\-|—/g, ', hyphen,');
+    input = input.replace(/!/g, ', exclamation mark,');
+    input = input.replace(/:/g, ', colon,');
+    input = input.replace(/;/g, ', semicolon,');
     input = input.replace(/\(/g, ', open round bracket,');
     input = input.replace(/\)/g, ', close round bracket,');
     input = input.replace(/\[/g, ', open square bracket,');
-    input = input.replace(/\]/g, ', close square bracket,');
+    input = input.replace(/]/g, ', close square bracket,');
     input = input.replace(/\//g, ', slash,');
-    input = input.replace(/\'|’|‘/g, ', apostrophe,');
     input = input.replace(/"|“|”/g, ', double quote,');
-    return input;
+
+    if (options?.speakPunctuation) {
+      input = input.replace(/-|—/g, ', hyphen,');
+    }
+
+    // Only "speak" apostrophes that are NOT between two alphanumeric characters.
+    input = input.replace(/['’‘]/g, (match, offset, whole: string) => {
+      const prev = offset > 0 ? whole[offset - 1] : '';
+      const next = offset + 1 < whole.length ? whole[offset + 1] : '';
+      const prevIsAlphaNum = /[A-Za-z0-9]/.test(prev);
+      const nextIsAlphaNum = /[A-Za-z0-9]/.test(next);
+      return (prevIsAlphaNum && nextIsAlphaNum) ? match : ', apostrophe,';
+    });
+
+    // Normalize spacing/gluing introduced by ", <token>," replacements:
+    // - remove empty tokens caused by adjacent replacements (e.g. ellipsis + quote -> ",,")
+    // - collapse whitespace inside tokens
+    // - join with consistent ", " for better TTS
+    const tokens = input
+      .split(',')
+      .map((s) => s.replace(/\s+/g, ' ').trim())
+      .filter((s) => s.length > 0);
+    return tokens.join(', ');
   }
 }

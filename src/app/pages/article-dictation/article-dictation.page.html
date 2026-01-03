@@ -33,10 +33,17 @@
           <ion-row>
             <ion-col>
               <ion-item class="answerInput">
-                <ion-input [(ngModel)]="answer" type="text" labelPlacement="floating" inputmode="verbatim" maxlength="255" (keyup.enter)="submitAnswer()"
-                           autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
-                  <div slot="label">{{'Answer'|translate}} <span style="color: #999">({{caseSensitiveText|translate}}, {{checkPunctuationText|translate}})</span></div>
-                </ion-input>
+                <div class="answer-container">
+                  <div class="answer-label">
+                    {{'Answer'|translate}}
+                    <span class="answer-hint">({{caseSensitiveText|translate}}, {{checkPunctuationText|translate}})</span>
+                  </div>
+                  <ion-input #answerInput *ngIf="!isKeyboardActive" [(ngModel)]="answer" type="text" inputmode="verbatim" maxlength="255"
+                             (keyup.enter)="submitAnswer()"
+                             autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+                  </ion-input>
+                  <div *ngIf="isKeyboardActive" class="answer-display">{{answer}}<span class="blinking-caret">|</span></div>
+                </div>
               </ion-item>
             </ion-col>
           </ion-row>

@@ -1,5 +1,6 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {NGXLogger} from 'ngx-logger';
+import {IonInput} from '@ionic/angular';
 import {VirtualKeyboardEvent} from '../../components/virtual-keyboard/virtual-keyboard';
 import {Dictation} from '../../entity/dictation';
 import {SentenceHistory} from '../../entity/sentence-history';
@@ -16,6 +17,8 @@ import {TranslateService} from "@ngx-translate/core";
     standalone: false
 })
 export class ArticleDictationPage implements OnInit {
+  @ViewChild('answerInput') answerInput: IonInput;
+
   dictation: Dictation;
   sentences: string[];
   speakingRate = 0.7;
@@ -60,6 +63,7 @@ export class ArticleDictationPage implements OnInit {
   ionViewDidEnter() {
     this.clearVariables();
     this.init();
+    this.focusAnswerInput();
   }
 
   async init() {
@@ -84,7 +88,12 @@ export class ArticleDictationPage implements OnInit {
 
   speak() {
     this.speechService.speak(
-      this.dictation.options?.speakPunctuation ? this.articleDictationService.replacePunctuationToWord(this.sentences[this.currentIndex]) : this.sentences[this.currentIndex],
+      this.articleDictationService.replacePunctuationToWord(
+        this.sentences[this.currentIndex],
+        {
+          speakPunctuation: !!this.dictation?.options?.speakPunctuation,
+        }
+      ),
       this.speakingRate);
   }
 
@@ -105,6 +114,7 @@ export class ArticleDictationPage implements OnInit {
       this.navigationService.articleDictationComplete(this.dictation, this.histories.reverse());
     } else {
       this.speak();
+      this.focusAnswerInput();
     }
   }
 
@@ -122,6 +132,7 @@ export class ArticleDictationPage implements OnInit {
         break;
       case VirtualKeyboardEvent.Close:
         this.isKeyboardActive = false;
+        this.focusAnswerInput();
         break;
       case VirtualKeyboardEvent.Open:
         this.isKeyboardActive = true;
@@ -132,4 +143,9 @@ export class ArticleDictationPage implements OnInit {
     this.answer = this.answer.slice(0, this.answer.length - 1);
   }
 
+  private focusAnswerInput() {
+    if (!this.isKeyboardActive && this.answerInput) {
+      setTimeout(() => this.answerInput.setFocus(), 100);
+    }
+  }
 }

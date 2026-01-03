@@ -12,22 +12,33 @@ describe('ArticleDictationService', () => {
 
   describe('test replacePunctuationToWord', () => {
     it('can replace all punctuations', () => {
-      expect(service.replacePunctuationToWord('“I have a dream…”')).toBe(', double quote,I have a dream, ellipsis,, double quote,');
-      expect(service.replacePunctuationToWord('“I have a dream...”')).toBe(', double quote,I have a dream, ellipsis,, double quote,');
-      expect(service.replacePunctuationToWord('“I have a dream....”')).toBe(', double quote,I have a dream, ellipsis,, double quote,');
-      expect(service.replacePunctuationToWord('I have a dream... .')).toBe('I have a dream, ellipsis, , full stop,');
-      expect(service.replacePunctuationToWord('last night?')).toBe('last night, question mark,');
-      expect(service.replacePunctuationToWord('Dr. Smith read his patient’s chart.')).toBe('Dr, full stop, Smith read his patient, apostrophe,s chart, full stop,');
-      expect(service.replacePunctuationToWord('tomorrow!')).toBe('tomorrow, exclamation mark,');
-      expect(service.replacePunctuationToWord('shoes, a dress, two shirts,')).toBe('shoes, comma, a dress, comma, two shirts, comma,');
-      expect(service.replacePunctuationToWord('sentence:')).toBe('sentence, colon,');
+      expect(service.replacePunctuationToWord('“I have a dream…”')).toBe('double quote, I have a dream, ellipsis, double quote');
+      expect(service.replacePunctuationToWord('“I have a dream...”')).toBe('double quote, I have a dream, ellipsis, double quote');
+      expect(service.replacePunctuationToWord('“I have a dream....”')).toBe('double quote, I have a dream, ellipsis, double quote');
+      expect(service.replacePunctuationToWord('I have a dream... .')).toBe('I have a dream, ellipsis, full stop');
+      expect(service.replacePunctuationToWord('last night?')).toBe('last night, question mark');
+      expect(service.replacePunctuationToWord('Dr. Smith read his patient’s chart.')).toBe('Dr, full stop, Smith read his patient’s chart, full stop');
+      expect(service.replacePunctuationToWord('tomorrow!')).toBe('tomorrow, exclamation mark');
+      expect(service.replacePunctuationToWord('shoes, a dress, two shirts,')).toBe('shoes, comma, a dress, comma, two shirts, comma');
+      expect(service.replacePunctuationToWord('sentence:')).toBe('sentence, colon');
       expect(service.replacePunctuationToWord('England; Paris, France; Rome')).toBe('England, semicolon, Paris, comma, France, semicolon, Rome');
-      expect(service.replacePunctuationToWord('Chicago-New York')).toBe('Chicago, hyphen,New York');
-      expect(service.replacePunctuationToWord('clear — Yes')).toBe('clear , hyphen, Yes');
-      expect(service.replacePunctuationToWord('[Mrs. Smith]')).toBe(', open square bracket,Mrs, full stop, Smith, close square bracket,');
-      expect(service.replacePunctuationToWord('(now)')).toBe(', open round bracket,now, close round bracket,');
-      expect(service.replacePunctuationToWord('I’ve')).toBe('I, apostrophe,ve');
-      expect(service.replacePunctuationToWord('“I don’t like this,”')).toBe(', double quote,I don, apostrophe,t like this, comma,, double quote,');
+      expect(service.replacePunctuationToWord('clear — Yes')).toBe('clear, hyphen, Yes');
+      expect(service.replacePunctuationToWord('[Mrs. Smith]')).toBe('open square bracket, Mrs, full stop, Smith, close square bracket');
+      expect(service.replacePunctuationToWord('(now)')).toBe('open round bracket, now, close round bracket');
+      expect(service.replacePunctuationToWord('I’ve')).toBe('I’ve');
+      expect(service.replacePunctuationToWord('“I don’t like this,”')).toBe('double quote, I don’t like this, comma, double quote');
+    });
+
+    it('does not replace hyphen when speakPunctuation is off', () => {
+      expect(service.replacePunctuationToWord('Chicago-New York', { speakPunctuation: false })).toBe('Chicago-New York');
+    });
+
+    it('replaces hyphen when speakPunctuation is on', () => {
+      expect(service.replacePunctuationToWord('Chicago-New York', { speakPunctuation: true })).toBe('Chicago, hyphen, New York');
+    });
+
+    it('returns input unchanged when speakPunctuation is off', () => {
+      expect(service.replacePunctuationToWord('Hi, there!', { speakPunctuation: false })).toBe('Hi, there!');
     });
   });
 

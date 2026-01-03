@@ -4,3 +4,38 @@
   --background: var(--ion-color-primary);
   --color: #ffffff;
 }
+
+.answer-container {
+  width: 100%;
+}
+
+.answer-label {
+  color: var(--ion-color-step-600, #666);
+  font-size: 0.95rem;
+  margin-bottom: 6px;
+}
+
+.answer-hint {
+  color: #999;
+}
+
+.answer-display {
+  min-height: 24px;
+  white-space: pre;
+}
+
+.answer-container ion-input {
+  --padding-top: 0;
+  --padding-bottom: 0;
+  min-height: 24px;
+}
+
+.blinking-caret {
+  font-weight: bold;
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}

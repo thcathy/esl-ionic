@@ -115,26 +115,55 @@ describe('FFSAuthService', () => {
 
   describe('isAuthenticated', () => {
     it('should check token expiration by decoding id token and return appropriate result', () => {
-      // Case 1: Valid token with future expiration (exp: 1728726200 = Oct 12, 2024)
-      const futureToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJleHAiOjI3Mjg3MjYyMDB9.fakesignature';
+      // Note: FFSAuthService caches auth state and only refreshes it via checkAndUpdateAuthState().
+      // This test intentionally updates localStorage and then triggers a refresh.
+      const createFakeJwt = (payload: any) => {
+        const header = { alg: 'HS256', typ: 'JWT' };
+        const encode = (obj: any) =>
+          btoa(JSON.stringify(obj))
+            .replace(/\+/g, '-')
+            .replace(/\//g, '_')
+            .replace(/=+$/g, '');
+        return `${encode(header)}.${encode(payload)}.fakesignature`;
+      };
+
+      const nowSec = Math.floor(Date.now() / 1000);
+
+      // Case 1: Valid token with future expiration (well beyond auth refresh buffer)
+      const futureToken = createFakeJwt({
+        sub: '1234567890',
+        name: 'John Doe',
+        iat: nowSec,
+        exp: nowSec + 60 * 60, // +1 hour
+      });
       localStorage.setItem('id_token', futureToken);
+      (service as any).checkAndUpdateAuthState();
       expect(service.isAuthenticated()).toBe(true);
 
       // Case 2: Valid token with past expiration
-      const pastToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJleHAiOjE1MTYyMzkwMjJ9.fakesignature';
+      const pastToken = createFakeJwt({
+        sub: '1234567890',
+        name: 'John Doe',
+        iat: nowSec - 60 * 60,
+        exp: nowSec - 60, // expired 1 minute ago
+      });
       localStorage.setItem('id_token', pastToken);
+      (service as any).checkAndUpdateAuthState();
       expect(service.isAuthenticated()).toBe(false);
 
       // Case 3: No token
       localStorage.removeItem('id_token');
+      (service as any).checkAndUpdateAuthState();
       expect(service.isAuthenticated()).toBe(false);
 
       // Case 4: Null token
       localStorage.setItem('id_token', null);
+      (service as any).checkAndUpdateAuthState();
       expect(service.isAuthenticated()).toBe(false);
 
       // Case 5: Invalid token format - should return false
       localStorage.setItem('id_token', 'invalid-token');
+      (service as any).checkAndUpdateAuthState();
       expect(service.isAuthenticated()).toBe(false);
     });
   });
