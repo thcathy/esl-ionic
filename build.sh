@@ -5,6 +5,13 @@ IFS=$'\n\t'
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
+DEBUG="${DEBUG:-0}"
+if [[ "${DEBUG}" == "1" || "${DEBUG}" == "true" ]]; then
+  # More informative xtrace (file:line:function) when debugging.
+  export PS4='+ ${BASH_SOURCE##*/}:${LINENO}:${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
+  set -x
+fi
+
 usage() {
   cat <<'EOF'
 Usage:
@@ -74,6 +81,36 @@ zipalign_cmd() {
   echo "${za}"
 }
 
+apksigner_cmd() {
+  if command -v apksigner >/dev/null 2>&1; then
+    echo "apksigner"
+    return 0
+  fi
+
+  local sdk_root="${ANDROID_SDK_ROOT:-${ANDROID_HOME:-}}"
+  if [[ -z "${sdk_root}" ]]; then
+    die "apksigner not found in PATH and ANDROID_SDK_ROOT/ANDROID_HOME not set"
+  fi
+
+  local bt_dir="${sdk_root}/build-tools"
+  if [[ ! -d "${bt_dir}" ]]; then
+    die "Android build-tools directory not found: ${bt_dir}"
+  fi
+
+  local latest
+  latest="$(ls -1d "${bt_dir}"/* 2>/dev/null | sort -V | tail -n 1 || true)"
+  if [[ -z "${latest}" ]]; then
+    die "No build-tools versions found under: ${bt_dir}"
+  fi
+
+  local as="${latest}/apksigner"
+  if [[ ! -x "${as}" ]]; then
+    die "apksigner not executable at: ${as}"
+  fi
+
+  echo "${as}"
+}
+
 release_web_uat() {
   firebase deploy -P batch4-161201
 }
@@ -118,9 +155,19 @@ buildAndroidApk() {
   ./gradlew assembleRelease
   popd >/dev/null
 
-  jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore "${ROOT_DIR}/my-release-key.jks" -storepass "${ESL_IONIC_KEYSTORE_PASSWORD}" "${ROOT_DIR}/android/app/build/outputs/apk/release/app-release-unsigned.apk" "esl-dictation"
-  rm -f -- "${ROOT_DIR}/esl-dictation.apk"
-  "$(zipalign_cmd)" -v 4 "${ROOT_DIR}/android/app/build/outputs/apk/release/app-release-unsigned.apk" "${ROOT_DIR}/esl-dictation.apk"
+  local unsigned_apk="${ROOT_DIR}/android/app/build/outputs/apk/release/app-release-unsigned.apk"
+  local aligned_apk="${ROOT_DIR}/esl-dictation-aligned.apk"
+  local signed_apk="${ROOT_DIR}/esl-dictation.apk"
+
+  rm -f -- "$aligned_apk" "$signed_apk"
+  "$(zipalign_cmd)" -v 4 "$unsigned_apk" "$aligned_apk"
+  "$(apksigner_cmd)" sign \
+    --ks "${ROOT_DIR}/my-release-key.jks" \
+    --ks-key-alias "esl-dictation" \
+    --ks-pass "env:ESL_IONIC_KEYSTORE_PASSWORD" \
+    --out "$signed_apk" \
+    "$aligned_apk"
+  "$(apksigner_cmd)" verify --verbose --print-certs "$signed_apk"
   cp "${ROOT_DIR}/esl-dictation.apk" "${HOME}/Google Drive/My Drive/apk/"
 }
 
@@ -137,7 +184,7 @@ release_android() {
   sed_inplace "s/versionCode .*/versionCode ${ANDROID_VERSION}/g" "app/build.gradle"
 #  export JAVA_HOME=`/usr/libexec/java_home -v 17`
   ./gradlew bundle
-  jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore "${ROOT_DIR}/my-release-key.jks" -storepass "${ESL_IONIC_KEYSTORE_PASSWORD}" "${AAB_PATH}" "esl-dictation"
+  jarsigner -verbose -sigalg SHA256withRSA -digestalg SHA-256 -keystore "${ROOT_DIR}/my-release-key.jks" -storepass "${ESL_IONIC_KEYSTORE_PASSWORD}" "${AAB_PATH}" "esl-dictation"
   fastlane supply -f "${AAB_PATH}" --package_name "com.esl.ionic" --track "production" --skip_upload_images --skip_upload_screenshots --skip_upload_metadata --release_status "draft" --json_key "${GCLOUD_SERVICE_ACCOUNT_KEY}"
   popd >/dev/null
 }
@@ -151,6 +198,8 @@ setVersion() {
 main() {
   local cmd="${1:-help}"
   shift || true
+
+  echo "==> ${0##*/} ${cmd}" >&2
 
   case "$cmd" in
     help|-h|--help)
