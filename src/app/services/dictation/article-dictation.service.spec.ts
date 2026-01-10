@@ -7,7 +7,6 @@ describe('ArticleDictationService', () => {
 
   beforeEach(() => {
     service = new ArticleDictationService(NGXLoggerSpy());
-    service.maxSentenceLength = 40;
   });
 
   describe('test replacePunctuationToWord', () => {
@@ -69,7 +68,7 @@ describe('ArticleDictationService', () => {
     expect(sentences[i++]).toBe('thoughts are with');
     expect(sentences[i++]).toBe('her friends and');
     expect(sentences[i++]).toBe('family at this');
-    expect(sentences[i++]).toBe('terrible time.".');
+    expect(sentences[i++]).toBe('terrible time."');
   });
 
   it('separate sentence with different maxWordsInSentence = 5', () => {
@@ -91,7 +90,7 @@ describe('ArticleDictationService', () => {
     expect(sentences[i++]).toBe('friend and colleague".');
     expect(sentences[i++]).toBe('She added: "Our thoughts are');
     expect(sentences[i++]).toBe('with her friends and family');
-    expect(sentences[i++]).toBe('at this terrible time.".');
+    expect(sentences[i++]).toBe('at this terrible time."');
   });
 
   it('separate sentence with different maxWordsInSentence = 7', () => {
@@ -110,7 +109,7 @@ describe('ArticleDictationService', () => {
     expect(sentences[i++]).toBe('a "well-loved member of staff"');
     expect(sentences[i++]).toBe('and "wonderful friend and colleague".');
     expect(sentences[i++]).toBe('She added: "Our thoughts are with her');
-    expect(sentences[i++]).toBe('friends and family at this terrible time.".');
+    expect(sentences[i++]).toBe('friends and family at this terrible time."');
   });
 
   it('separate sentence with different maxWordsInSentence = 10', () => {
@@ -127,7 +126,7 @@ describe('ArticleDictationService', () => {
     expect(sentences[i++]).toBe(`Jane Bailey described Miss Tweddle-Taylor, 51, as a "well-loved`);
     expect(sentences[i++]).toBe(`member of staff" and "wonderful friend and colleague".`);
     expect(sentences[i++]).toBe('She added: "Our thoughts are with her');
-    expect(sentences[i++]).toBe('friends and family at this terrible time.".');
+    expect(sentences[i++]).toBe('friends and family at this terrible time."');
   });
 
   it('separate sentence with 7 words per sentence', () => {
@@ -147,6 +146,41 @@ describe('ArticleDictationService', () => {
     expect(sentences[i++]).toBe(`The death happened at Hamerton`);
     expect(sentences[i++]).toBe('Zoo Park, near Huntingdon, at');
     expect(sentences[i++]).toBe('about 11:15 BST on Monday.');
+  });
+
+  it('should split by sentence boundaries first, then by word count', () => {
+    // This test verifies the key improvement: sentences are never merged across boundaries
+    const article = 'The cat sat on the mat. The dog ran fast.';
+    const sentences = service.divideToSentences(article, 5);
+
+    // With the improved logic:
+    // 1. First split by sentence ending: ["The cat sat on the mat.", "The dog ran fast."]
+    // 2. Sentence 1 (6 words) > 5, split evenly: ["The cat sat", "on the mat."]
+    // 3. Sentence 2 (4 words) <= 5, keep as-is
+    expect(sentences.length).toBe(3);
+    expect(sentences[0]).toBe('The cat sat');
+    expect(sentences[1]).toBe('on the mat.');
+    expect(sentences[2]).toBe('The dog ran fast.');
+  });
+
+  it('should handle question marks and exclamation marks as sentence endings', () => {
+    const article = 'Are you ready? Yes! Let us go.';
+    const sentences = service.divideToSentences(article, 5);
+
+    expect(sentences.length).toBe(3);
+    expect(sentences[0]).toBe('Are you ready?');
+    expect(sentences[1]).toBe('Yes!');
+    expect(sentences[2]).toBe('Let us go.');
+  });
+
+  it('should keep short sentences intact without merging', () => {
+    const article = 'Hello. World. Test.';
+    const sentences = service.divideToSentences(article, 5);
+
+    expect(sentences.length).toBe(3);
+    expect(sentences[0]).toBe('Hello.');
+    expect(sentences[1]).toBe('World.');
+    expect(sentences[2]).toBe('Test.');
   });
 
   it('No sentence is empty', () => {

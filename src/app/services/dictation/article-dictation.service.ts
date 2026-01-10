@@ -1,7 +1,6 @@
 import {Injectable} from '@angular/core';
 
 import {SentenceHistory} from '../../entity/sentence-history';
-import {environment} from '../../../environments/environment';
 import {ValidationUtils} from '../../utils/validation-utils';
 import {NGXLogger} from 'ngx-logger';
 
@@ -17,8 +16,6 @@ namespace ArticleDictationService {
   { providedIn: 'root' }
 )
 export class ArticleDictationService {
-
-  public maxSentenceLength = environment.maxSentenceLength;
 
   constructor (
     private log: NGXLogger,
@@ -41,11 +38,30 @@ export class ArticleDictationService {
     if (article == null || article.length < 1) { return []; }
 
     return article.split('\n')
-      .map((s) => s.split('\t').join(''))
+      .map((s) => s.replace(/\t/g, ''))
       .map((s) => s.trim())
-      .map((s) => this.splitLongLineByFullstop(s)).reduce((a, b) => a.concat(b), [])
-      .map((s) => this.splitLongLineBySpace(s, maxWordsInSentence)).reduce((a, b) => a.concat(b), [])
+      .flatMap((s) => this.splitBySentenceEnding(s))
+      .flatMap((s) => this.splitLongSentenceByWords(s, maxWordsInSentence))
       .filter((s) => !ValidationUtils.isBlankString(s));
+  }
+
+  splitBySentenceEnding(input: string): string[] {
+    if (!input || input.trim().length === 0) { return []; }
+
+    const sentences = input.split(/(?<=[.?!])\s+/);
+    return sentences
+      .map((s) => s.trim())
+      .filter((s) => s.length > 0);
+  }
+
+  splitLongSentenceByWords(input: string, maxWords: number): string[] {
+    const words = input.split(' ').filter((w) => w.length > 0);
+
+    if (words.length <= maxWords) {
+      return [input];
+    }
+
+    return this.splitLongLineBySpace(input, maxWords);
   }
 
   splitLongLineBySpace(input: string, maxWordsInSentence: number): string[] {
@@ -76,16 +92,6 @@ export class ArticleDictationService {
   }
 
 
-  splitLongLineByFullstop(input: string): string[] {
-    if (input.length < this.maxSentenceLength) {
-      return [input];
-    } else {
-      return input.split('. ')
-              .map((s) => s.endsWith('.') ? s : s + '.')
-              .filter((s) => s.match('.*[a-zA-Z]+.*'))
-              .map((s) => s.trim());
-    }
-  }
 
   splitSentence(sentence: string): string[] { return sentence.split(/\b/).filter(s => !ValidationUtils.isBlankString(s)); }
 
