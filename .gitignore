@@ -48,3 +48,7 @@ UserInterfaceState.xcuserstate
 
 my-release-key.jks
 /ios/App/ESL.xcarchive/
+
+# Playwright
+/playwright-report/
+/test-results/

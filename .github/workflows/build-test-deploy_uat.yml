@@ -16,8 +16,8 @@ jobs:
   build-test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: '18'
           cache: 'npm'
@@ -25,7 +25,7 @@ jobs:
       - run: npm ci --legacy-peer-deps
       - run: npm run build --if-present
       - run: npm run test-ci
-      - uses: actions/upload-artifact@master
+      - uses: actions/upload-artifact@v4
         with:
          name: www
          path: www
@@ -34,13 +34,35 @@ jobs:
         if: github.ref == 'refs/heads/master'
         with:
           junit_files: junit/*.xml
-  deploy:
+
+  e2e-uat:
     runs-on: ubuntu-latest
-    needs: [ build-test ]
     if: github.ref == 'refs/heads/master'
     steps:
-      - uses: actions/checkout@master
-      - uses: actions/download-artifact@master
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: package-lock.json
+      - run: npm ci --legacy-peer-deps
+      - run: npx playwright install --with-deps chromium
+      - name: Upload Playwright report (always)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: |
+            playwright-report
+            test-results
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [ build-test, e2e-uat ]
+    if: github.ref == 'refs/heads/master'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
         with:
           name: www
           path: www

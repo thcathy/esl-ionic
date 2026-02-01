@@ -11,9 +11,11 @@
     "test-ci": "ng test --watch=false --browsers=ChromeHeadlessCI",
     "test-dev": "ng test --browsers=ChromeHeadlessCI",
     "lint": "ng lint",
-    "e2e": "ng e2e --configuration=test",
-    "e2e-ci": "ng e2e --configuration=test --protractor-config=e2e/protractor-ci.conf.js",
-    "uat": "protractor e2e/protractor.conf.js"
+    "e2e:install": "playwright install chromium",
+    "pree2e": "playwright install chromium",
+    "pree2e-ci": "playwright install chromium",
+    "e2e": "playwright test",
+    "e2e-ci": "playwright test --reporter=line"
   },
   "private": true,
   "dependencies": {
@@ -66,8 +68,9 @@
     "@angular/compiler-cli": "^19.2.1",
     "@angular/language-service": "^19.2.1",
     "@capacitor/assets": "^3.0.5",
-    "@capacitor/cli": "^7.0.0",
+    "@capacitor/cli": "^8.0.2",
     "@ionic/angular-toolkit": "^12.1.1",
+    "@playwright/test": "^1.58.1",
     "@types/jasmine": "^4.3.6",
     "@types/jasminewd2": "^2.0.11",
     "@types/node": "^24.6.1",
@@ -83,10 +86,12 @@
     "karma-jasmine": "^5.1.0",
     "karma-jasmine-html-reporter": "^2.0.0",
     "karma-junit-reporter": "^2.0.1",
-    "protractor": "~7.0.0",
     "rxjs-marbles": "^7.0.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.5.4"
+  },
+  "overrides": {
+    "tar": "7.5.7"
   },
   "description": "FunFunSpell dictation"
 }
