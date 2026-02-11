@@ -24,6 +24,7 @@ import {VocabSelectionComponent} from './vocab-selection/vocab-selection.compone
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ArticleDictationOptionsComponent} from "./article-dictation-options/article-dictation-options.component";
 import {TextInterpretationComponent} from "./text-interpretation/text-interpretation.component";
+import {AppHeaderComponent} from "./app-header/app-header.component";
 
 @NgModule({ declarations: [MemberScoreRankingComponent,
         DictationStatisticsComponent,
@@ -38,7 +39,7 @@ import {TextInterpretationComponent} from "./text-interpretation/text-interpreta
         MemberPracticeHistoryListComponent,
         VocabHistoryListComponent,
         TextInterpretationComponent,
-        VirtualKeyboardComponent, CharacterButtonComponent, CharacterComponent, VocabSelectionComponent, ArticleDictationOptionsComponent
+        VirtualKeyboardComponent, CharacterButtonComponent, CharacterComponent, VocabSelectionComponent, ArticleDictationOptionsComponent, AppHeaderComponent
     ],
     exports: [MemberScoreRankingComponent,
         DictationStatisticsComponent,
@@ -53,7 +54,7 @@ import {TextInterpretationComponent} from "./text-interpretation/text-interpreta
         MemberPracticeHistoryListComponent,
         VocabHistoryListComponent,
         TextInterpretationComponent,
-        VirtualKeyboardComponent, CharacterButtonComponent, CharacterComponent, VocabSelectionComponent, ArticleDictationOptionsComponent
+        VirtualKeyboardComponent, CharacterButtonComponent, CharacterComponent, VocabSelectionComponent, ArticleDictationOptionsComponent, AppHeaderComponent
     ], imports: [IonicModule,
         TranslateModule,
         PipesModule,

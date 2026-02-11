@@ -188,10 +188,7 @@ export class ArticleDictationService {
     input = input.replace(/]/g, ', close square bracket,');
     input = input.replace(/\//g, ', slash,');
     input = input.replace(/"|“|”/g, ', double quote,');
-
-    if (options?.speakPunctuation) {
-      input = input.replace(/-|—/g, ', hyphen,');
-    }
+    input = input.replace(/-|—/g, ', hyphen,');
 
     // Only "speak" apostrophes that are NOT between two alphanumeric characters.
     input = input.replace(/['’‘]/g, (match, offset, whole: string) => {

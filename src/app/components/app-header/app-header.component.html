@@ -1,0 +1,25 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button *ngIf="!showBackButton; else backButton"></ion-menu-button>
+      <ng-template #backButton>
+        <ion-button fill="clear" (click)="goBack()">
+          <fa-icon icon="angle-left" size="2x"></fa-icon>
+        </ion-button>
+      </ng-template>
+    </ion-buttons>
+    <ion-title>
+      <ion-img *ngIf="showLogo" src="assets/img/logo_new.png" class="navbar-logo" alt="logo"></ion-img>
+      <span *ngIf="!showLogo">{{ title | translate }}</span>
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button fill="clear" (click)="openMemberMenu()">
+        <fa-icon *ngIf="authService.isAuthenticated$ | async; else loggedOutIcon"
+                 [icon]="['fas', 'user-circle']"></fa-icon>
+        <ng-template #loggedOutIcon>
+          <fa-icon [icon]="['far', 'user']"></fa-icon>
+        </ng-template>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
