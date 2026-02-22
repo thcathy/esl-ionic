@@ -138,18 +138,18 @@
     @if (showOptions) {
       <app-section-card class="dictation-section section-options" [headerTitle]="'Options'|translate" icon="sliders-h">
         <div class="section-body">
-          @if (start) {
+          @if (showPracticeOptions) {
             <app-voice-mode-selector
               [selectedMode]="selectedVoiceMode"
               (selectedModeChange)="onVoiceModeChange($event)">
             </app-voice-mode-selector>
           }
 
-          @if (start && dictationHelper.isSentenceDictation(dictation)) {
+          @if (showPracticeOptions && dictationHelper.isSentenceDictation(dictation)) {
             <app-article-dictation-options #articleDictationOptions></app-article-dictation-options>
           }
 
-          @if (start && !dictationHelper.isSentenceDictation(dictation)) {
+          @if (showPracticeOptions && !dictationHelper.isSentenceDictation(dictation)) {
             <app-vocab-practice-type-selector
               class="start-type-selector"
               [selectedType]="selectedStartPracticeType"
@@ -164,7 +164,7 @@
             }
           }
 
-          @if (showStartButton && start && dictationHelper.isSentenceDictation(dictation)) {
+          @if (showStartButton && showPracticeOptions && dictationHelper.isSentenceDictation(dictation)) {
             <div class="start-button-row">
               <ion-button class="action-button start-button" (click)="startArticleDictation()">
                 <fa-icon [icon]="['fas', 'play']"></fa-icon>&nbsp;{{'Start'|translate}}

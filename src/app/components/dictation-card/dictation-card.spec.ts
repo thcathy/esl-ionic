@@ -91,7 +91,7 @@ describe('DictationCardComponent', () => {
   describe('sentence dictation', () => {
     beforeEach(() => {
       component.dictation = new TestData.DefaultSentenceDictation();
-      component.start = true;
+      component.showPracticeOptions = true;
       fixture.detectChanges();
     });
 
@@ -103,7 +103,7 @@ describe('DictationCardComponent', () => {
   describe('word dictation', () => {
     beforeEach(() => {
       component.dictation = TestData.fillInDictation();
-      component.start = true;
+      component.showPracticeOptions = true;
       fixture.detectChanges();
     });
 

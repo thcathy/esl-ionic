@@ -32,7 +32,7 @@ import {ArticleDictationOptionsComponent} from "../article-dictation-options/art
 })
 export class DictationCardComponent implements OnInit {
   @Input() dictation: Dictation;
-  @Input() start = false;
+  @Input() showPracticeOptions = false;
   @Input() edit = false;
   @Input() showContent = true;
   @Input() showStartButton = true;

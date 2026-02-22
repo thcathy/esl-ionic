@@ -16,7 +16,7 @@ export interface SpeakOptions {
 
 @Injectable({ providedIn: 'root' })
 export class SpeechService {
-  synth: any;
+  synth: SpeechSynthesis | null;
 
   constructor(
     public appService: AppService,
@@ -49,15 +49,20 @@ export class SpeechService {
         .catch((reason: any) => this.log.warn(JSON.stringify(reason)));
     } else {
       this.synth = window.speechSynthesis;
-      var langs = this.synth.getVoices().flatMap(v => v.lang);
-      const lang = langs.find(l => l.startsWith("en-"));
+      const voice = await this.resolveWebVoice();
+      const lang = voice?.lang || 'en-US';
+      const langs = this.synth.getVoices().flatMap(v => v.lang);
       console.log(`lang=${lang}, langs=${JSON.stringify(langs)}`);
 
       const utterance1 = new SpeechSynthesisUtterance(text);
       utterance1.rate = rate;
       utterance1.lang = lang;
+      if (voice) {
+        utterance1.voice = voice;
+      }
       this.synth.cancel();
       this.synth.speak(utterance1);
+      this.synth.resume();
       this.log.info(`speak by web api: ${text}`);
     }
   }
@@ -139,8 +144,38 @@ export class SpeechService {
     this.ttsCloudService.stopCloudAudio();
     if (this.appService.isApp()) {
       TextToSpeech.stop().then(() => this.log.info(`stopped tss`));
-    } else {
-      this.synth.stop();
+    } else if (this.synth) {
+      this.synth.cancel();
     }
+  }
+
+  private async resolveWebVoice(): Promise<SpeechSynthesisVoice | null> {
+    if (!this.synth) {
+      return null;
+    }
+
+    let voices = this.synth.getVoices();
+    if (!voices.length) {
+      await new Promise<void>((resolve) => {
+        const timeout = setTimeout(() => {
+          this.synth.onvoiceschanged = null;
+          resolve();
+        }, 300);
+        this.synth.onvoiceschanged = () => {
+          clearTimeout(timeout);
+          this.synth.onvoiceschanged = null;
+          resolve();
+        };
+      });
+      voices = this.synth.getVoices();
+    }
+
+    if (!voices.length) {
+      return null;
+    }
+
+    return voices.find(v => v.lang?.toLowerCase().startsWith('en-'))
+      || voices.find(v => v.lang?.toLowerCase().startsWith('en'))
+      || voices[0];
   }
 }

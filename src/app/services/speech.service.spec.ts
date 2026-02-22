@@ -150,11 +150,12 @@ describe('SpeechService', () => {
     it('always calls stopCloudAudio first', () => {
       const appService = (service as any).appService;
       appService.isApp.and.returnValue(false);
-      (service as any).synth = jasmine.createSpyObj('speechSynthesis', ['stop']);
+      (service as any).synth = jasmine.createSpyObj('speechSynthesis', ['cancel']);
 
       service.stop();
 
       expect(ttsCloudService.stopCloudAudio).toHaveBeenCalled();
+      expect((service as any).synth.cancel).toHaveBeenCalled();
     });
   });
 });

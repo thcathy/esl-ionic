@@ -14,7 +14,7 @@
 
 <ion-content>
   <div class="inner-content">
-    <app-dictation-card [dictation]="dictation" [start]="true" [edit]="authService.isAuthenticated() && dictation?.creator.emailAddress === authService.userProfile?.email"></app-dictation-card>
+    <app-dictation-card [dictation]="dictation" [showPracticeOptions]="true" [edit]="authService.isAuthenticated() && dictation?.creator.emailAddress === authService.userProfile?.email"></app-dictation-card>
   </div>
   <app-footer></app-footer>
 </ion-content>

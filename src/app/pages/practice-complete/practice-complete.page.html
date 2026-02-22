@@ -19,7 +19,9 @@
         #dictationCard
         [dictation]="dictation"
         [showContent]="showDictationContent"
-        [start]="!dictationHelper.isInstantDictation(dictation)"
+        [showPracticeOptions]="!dictationHelper.isInstantDictation(dictation)
+          || dictationHelper.isSelectVocabExercise(dictation)
+          || dictationHelper.isGeneratedDictation(dictation)"
         [showStartButton]="false">
 
         <div dictationInfoActions class="complete-info-actions">
