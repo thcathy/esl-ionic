@@ -4,7 +4,6 @@ import {SentenceHistory} from "../../entity/sentence-history";
 import {DictationService} from "../../services/dictation/dictation.service";
 import {NavigationService} from "../../services/navigation.service";
 import {TranslateService} from "@ngx-translate/core";
-import {ActivatedRoute} from "@angular/router";
 import {IonicComponentService} from "../../services/ionic-component.service";
 import {StorageService} from '../../services/storage.service';
 import {FFSAuthService} from '../../services/auth.service';
@@ -28,7 +27,6 @@ export class ArticleDictationCompletePage implements OnInit {
   loader;
 
   constructor(
-    public route: ActivatedRoute,
     public dictationService: DictationService,
     public navigationService: NavigationService,
     public translate: TranslateService,
@@ -77,10 +75,7 @@ export class ArticleDictationCompletePage implements OnInit {
   }
 
   recommendBtnText(): string {
-    if (this.recommended)
-      return this.translate.instant('Recommended');
-    else
-      return this.translate.instant('Recommend');
+    return this.translate.instant(this.recommended ? 'Recommended' : 'Recommend');
   }
 
   async retryWithOptions() {

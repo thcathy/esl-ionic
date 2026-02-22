@@ -21,16 +21,20 @@ describe('CharacterComponent', () => {
     component = fixture.componentInstance;
   });
 
-  it('if and only if character is underscore, it is blinking', () => {
-    component.character = '_';
+  it('if character is underscore, it is blinking', () => {
+    fixture.componentRef.setInput('character', '_');
     fixture.detectChanges();
 
     expect(component.isBlink).toBeTrue();
     const span = fixture.debugElement.query(By.css('span')).nativeElement;
     expect(span.classList.contains('blinking')).toBeTrue();
+  });
 
-    component.character = 'a';
+  it('if character is not underscore, it is not blinking', () => {
+    fixture.componentRef.setInput('character', 'a');
     fixture.detectChanges();
+
+    const span = fixture.debugElement.query(By.css('span')).nativeElement;
     expect(component.isBlink).toBeFalse();
     expect(span.classList.contains('blinking')).toBeFalse();
   });

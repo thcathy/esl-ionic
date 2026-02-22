@@ -1,11 +1,9 @@
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {Component, Input, OnInit, ViewChild} from '@angular/core';
-import {Router} from '@angular/router';
 import {AlertController, ToastController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
 import {Dictation, Dictations} from '../../entity/dictation';
 import {VocabPracticeType} from '../../enum/vocab-practice-type.enum';
-import {AppService} from '../../services/app.service';
 import {DictationHelper} from '../../services/dictation/dictation-helper.service';
 import {MemberDictationService} from '../../services/dictation/member-dictation.service';
 import {ManageVocabHistoryService} from '../../services/member/manage-vocab-history.service';
@@ -38,17 +36,14 @@ export class DictationCardComponent implements OnInit {
   @Input() edit = false;
   @Input() showContent = true;
   @Input() showStartButton = true;
+  @Input() showOptions = true;
 
   @ViewChild('articleDictationOptions') articleDictationOptions: ArticleDictationOptionsComponent;
 
   recommendState = 'normal';
-  share = false;
-  dictationUrl: string;
   selectedStartPracticeType: VocabPracticeType = VocabPracticeType.Spell;
   selectedVoiceMode = UIOptionsService.voiceMode.online;
-  constructor(public router: Router,
-              public navService: NavigationService,
-              public appService: AppService,
+  constructor(public navService: NavigationService,
               public dictationHelper: DictationHelper,
               public manageVocabHistoryService: ManageVocabHistoryService,
               public memberDictationService: MemberDictationService,
@@ -77,7 +72,7 @@ export class DictationCardComponent implements OnInit {
     this.recommendState = 'highlight';
   }
 
-  recommendAnimationDone($event): void {
+  recommendAnimationDone(_event): void {
     this.recommendState = 'normal';
   }
 

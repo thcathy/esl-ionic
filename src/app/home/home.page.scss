@@ -49,13 +49,23 @@
   }
 
   .feature-chips ion-chip {
-    --background: rgba(255, 255, 255, 0.16);
+    --background: rgba(255, 255, 255, 0.26);
     --color: #ffffff;
-    border: 1px solid rgba(255, 255, 255, 0.36);
+    border: 1.5px solid rgba(255, 255, 255, 0.56);
+    border-radius: 999px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
     margin: 0;
-    min-height: 24px;
-    font-size: 0.82rem;
-    font-weight: 600;
+    min-height: 28px;
+    padding-inline: 10px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.1px;
+    transition: transform 120ms ease, box-shadow 120ms ease;
+  }
+
+  .feature-chips ion-chip:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.22);
   }
 
   ion-list {
@@ -75,6 +85,7 @@
     ion-item:hover {
       background-color: rgba(255, 255, 255, 0.08);
     }
+
   }
 }
 

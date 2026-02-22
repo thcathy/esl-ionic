@@ -32,6 +32,7 @@ describe('VocabSelectionComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(VocabSelectionComponent);
     component = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
   it('createExercise will call createOrAmendDictation', fakeAsync(() => {
@@ -49,13 +50,11 @@ describe('VocabSelectionComponent', () => {
   it('selectVocab will activate or de-activate vocabulary', fakeAsync(() => {
     const vocab = memberVocabularyMember1Apple();
     component.selectVocab(vocab);
-    fixture.detectChanges();
 
     expect(component.selectedVocabs.size).toBe(1);
     expect(component.selectedVocabs.has('apple')).toBeTruthy();
 
     component.selectVocab(vocab);
-    fixture.detectChanges();
     expect(component.selectedVocabs.size).toBe(0);
     expect(component.selectedVocabs.has('apple')).toBeFalsy();
   }));

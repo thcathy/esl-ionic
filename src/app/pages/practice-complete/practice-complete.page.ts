@@ -77,17 +77,18 @@ export class PracticeCompletePage implements OnInit {
           this.manageVocabHistoryService.classifyVocabulary(results);
         });
       return;
-    } else if (this.dictationHelper.isInstantDictation(this.dictation)) {
-      return;
-    } else {
-      this.dictationService.createVocabDictationHistory(this.dictation, this.mark, this.histories)
-        .subscribe(
-          d => this.dictation = d,
-          e => alert(e),
-          () => this.finished = true
-        );
+    }
+
+    if (this.dictationHelper.isInstantDictation(this.dictation)) {
       return;
     }
+
+    this.dictationService.createVocabDictationHistory(this.dictation, this.mark, this.histories)
+      .subscribe(
+        d => this.dictation = d,
+        e => alert(e),
+        () => this.finished = true
+      );
   }
 
   recommend() {
@@ -103,11 +104,7 @@ export class PracticeCompletePage implements OnInit {
   }
 
   recommendBtnText(): string {
-    if (this.recommended) {
-      return this.translate.instant('Recommended');
-    } else {
-      return this.translate.instant('Recommend');
-    }
+    return this.translate.instant(this.recommended ? 'Recommended' : 'Recommend');
   }
 
   retryWithOptions(retryWrongWord: boolean) {

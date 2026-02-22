@@ -3,7 +3,7 @@ import {ComponentFixture, fakeAsync, TestBed, waitForAsync} from '@angular/core/
 
 import {SharedTestModule} from '../../../testing/shared-test.module';
 import {DictationCardComponent} from './dictation-card';
-import {TestData} from '../../../testing/test-data';
+import {memberVocabularyMember1Apple, memberVocabularyMember1Banana, memberVocabularyMember1Cat, TestData} from '../../../testing/test-data';
 import {ManageVocabHistoryServiceSpy} from '../../../testing/mocks-ionic';
 import {ManageVocabHistoryService} from '../../services/member/manage-vocab-history.service';
 import {NavigationService} from '../../services/navigation.service';
@@ -56,10 +56,10 @@ describe('DictationCardComponent', () => {
   describe('dictation source is Select', () => {
     beforeEach(() => {
       component.dictation = TestData.selectDictation();
-      fixture.detectChanges();
     });
 
     it('html elements display correctly', fakeAsync(() => {
+      fixture.detectChanges();
       expect(fixture.nativeElement.querySelector('.section-info ion-card-header ion-card-title')?.textContent).toContain('Vocabulary Exercise');
       expect(fixture.nativeElement.querySelector('.section-info .descriptionTR')).toBeNull();
       expect(fixture.nativeElement.querySelector('.section-info .suitableTR')).toBeNull();
@@ -71,7 +71,18 @@ describe('DictationCardComponent', () => {
 
     it('if the vocab is learnt will show badge', fakeAsync(() => {
       manageVocabHistoryServiceSpy.isLearnt.and.returnValue(true);
-      component.dictation = TestData.selectDictation();
+      const apple = memberVocabularyMember1Apple();
+      const banana = memberVocabularyMember1Banana();
+      const cat = memberVocabularyMember1Cat();
+      manageVocabHistoryServiceSpy.findMemberVocabulary.and.callFake((word: string) => {
+        if (word === 'banana') {
+          return banana;
+        }
+        if (word === 'cat') {
+          return cat;
+        }
+        return apple;
+      });
       fixture.detectChanges();
       expect(fixture.nativeElement.querySelector('.select-vocab-list ion-badge')).toBeTruthy();
     }));

@@ -20,7 +20,11 @@ describe('SpeechService', () => {
       'playAudioUrl',
       'stopCloudAudio',
       'prefetchAudioUrl',
+      'toPunctuationText',
+      'normalize',
     ]);
+    ttsCloudService.toPunctuationText.and.callFake((text: string) => text);
+    ttsCloudService.normalize.and.callFake((text: string) => text);
     uiOptionsService = jasmine.createSpyObj('UIOptionsService', ['loadOption']);
     service = new SpeechService(AppServiceSpy(), NGXLoggerSpy(), ttsCloudService, uiOptionsService as UIOptionsService);
   });
@@ -48,6 +52,22 @@ describe('SpeechService', () => {
 
       expect(result).toBe('local');
       expect(speakSpy).toHaveBeenCalledWith('hello', 0.7);
+    });
+
+    it('uses punctuation text for local speak when speakPunctuation is true', async () => {
+      const speakSpy = spyOn(service, 'speak').and.resolveTo();
+      ttsCloudService.toPunctuationText.and.returnValue('hello, comma, world');
+      ttsCloudService.normalize.and.returnValue('hello, comma, world');
+
+      const result = await service.speakByVoiceMode('hello, world', {
+        mode: UIOptionsService.voiceMode.local,
+        speakPunctuation: true,
+      });
+
+      expect(result).toBe('local');
+      expect(ttsCloudService.toPunctuationText).toHaveBeenCalledWith('hello, world');
+      expect(ttsCloudService.normalize).toHaveBeenCalledWith('hello, comma, world');
+      expect(speakSpy).toHaveBeenCalledWith('hello, comma, world', 0.7);
     });
 
     it('returns cloud when online playback succeeds', async () => {
@@ -92,6 +112,22 @@ describe('SpeechService', () => {
       expect(result).toBe('local');
       expect(ttsCloudService.playAudioUrl.calls.count()).toBe(2);
       expect(speakSpy).toHaveBeenCalledWith('hello', 0.8);
+    });
+
+    it('uses punctuation text when falling back to local from online mode', async () => {
+      stubCloudPlayback(false);
+      ttsCloudService.playAudioUrl.and.resolveTo(false);
+      ttsCloudService.toPunctuationText.and.returnValue('hello, comma, world');
+      ttsCloudService.normalize.and.returnValue('hello, comma, world');
+      const speakSpy = spyOn(service, 'speak').and.resolveTo();
+
+      const result = await service.speakByVoiceMode('hello, world', {
+        mode: UIOptionsService.voiceMode.online,
+        speakPunctuation: true,
+      });
+
+      expect(result).toBe('local');
+      expect(speakSpy).toHaveBeenCalledWith('hello, comma, world', 0.7);
     });
   });
 

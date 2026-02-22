@@ -79,7 +79,7 @@ export class SpeechService {
       }
       this.log.warn(`Online voice unavailable, fallback to local TTS: ${cloud.audioKey}`);
     }
-    await this.speak(text, rate);
+    await this.speak(this.resolveLocalSpeakText(text, options), rate);
     return 'local';
   }
 
@@ -126,6 +126,13 @@ export class SpeechService {
 
   private isOnlineVoiceMode(mode: string): boolean {
     return mode === UIOptionsService.voiceMode.online;
+  }
+
+  private resolveLocalSpeakText(text: string, options: SpeakOptions): string {
+    if (!options.speakPunctuation) {
+      return text;
+    }
+    return this.ttsCloudService.normalize(this.ttsCloudService.toPunctuationText(text));
   }
 
   stop() {

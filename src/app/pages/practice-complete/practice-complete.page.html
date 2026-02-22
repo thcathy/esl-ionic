@@ -19,7 +19,7 @@
         #dictationCard
         [dictation]="dictation"
         [showContent]="showDictationContent"
-        [start]="true"
+        [start]="!dictationHelper.isInstantDictation(dictation)"
         [showStartButton]="false">
 
         <div dictationInfoActions class="complete-info-actions">
