@@ -27,11 +27,12 @@ describe('VocabSelectionComponent', () => {
       ]
     })
       .compileComponents();
+  }));
 
+  beforeEach(() => {
     fixture = TestBed.createComponent(VocabSelectionComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
-  }));
+  });
 
   it('createExercise will call createOrAmendDictation', fakeAsync(() => {
     const memberVocab = memberVocabularyMember1Apple();

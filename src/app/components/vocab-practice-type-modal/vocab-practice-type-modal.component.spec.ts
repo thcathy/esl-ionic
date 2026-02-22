@@ -20,7 +20,6 @@ describe('VocabPracticeTypeModalComponent', () => {
     fixture = TestBed.createComponent(VocabPracticeTypeModalComponent);
     component = fixture.componentInstance;
     component.modal = jasmine.createSpyObj('IonModal', ['present', 'dismiss']) as any;
-    fixture.detectChanges();
   });
 
   it('open sets selected type and presents modal', () => {

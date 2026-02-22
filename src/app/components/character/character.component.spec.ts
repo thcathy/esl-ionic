@@ -14,11 +14,12 @@ describe('CharacterComponent', () => {
       declarations: [ CharacterComponent ],
       imports: [IonicModule.forRoot(), NoopAnimationsModule ]
     }).compileComponents();
+  }));
 
+  beforeEach(() => {
     fixture = TestBed.createComponent(CharacterComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
-  }));
+  });
 
   it('if and only if character is underscore, it is blinking', () => {
     component.character = '_';

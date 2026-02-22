@@ -36,7 +36,6 @@ describe('DictationCardComponent', () => {
     component = fixture.componentInstance;
     navigationServiceSpy = TestBed.inject(NavigationService) as any;
     uiOptionsService = TestBed.inject(UIOptionsService) as any;
-    fixture.detectChanges();
   });
 
   describe('dictation source is FillIn', () => {

@@ -16,11 +16,12 @@ describe('CharacterButtonComponent', () => {
         NoopAnimationsModule,
       ],
     }).compileComponents();
+  }));
 
+  beforeEach(() => {
     fixture = TestBed.createComponent(CharacterButtonComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
-  }));
+  });
 
   it('click correct button twice only emit event once', () => {
     const emitSpy = spyOn(component.correctPress, 'emit');

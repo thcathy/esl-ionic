@@ -62,7 +62,6 @@ describe('PracticeCompletePage', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(PracticeCompletePage);
     component = fixture.componentInstance;
-    fixture.detectChanges();
     const dictation = TestData.fillInDictation();
     dictation.options = { 'practiceType': VocabPracticeType.Puzzle };
     defaultInput = <PracticeCompletePageInput>{

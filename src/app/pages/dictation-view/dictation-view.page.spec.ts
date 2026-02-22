@@ -20,7 +20,8 @@ describe('DictationViewPage', () => {
     dictationServiceSpy = jasmine.createSpyObj('DictationService', ['getById']);
     dictationServiceSpy.getById.and.returnValue(of(dictation1));
     activateRouteStub = new ActivatedRouteStub();
-    routerSpy = jasmine.createSpyObj('Router', ['getCurrentNavigation']);
+    routerSpy = jasmine.createSpyObj('Router', ['currentNavigation']);
+    routerSpy.currentNavigation.and.returnValue(null);
 
     TestBed.configureTestingModule({
       declarations: [ DictationViewPage ],
@@ -54,7 +55,7 @@ describe('DictationViewPage', () => {
   }));
 
   it('input with navigation extra will not call get dictation from service', fakeAsync(() => {
-    routerSpy.getCurrentNavigation.and.returnValue({
+    routerSpy.currentNavigation.and.returnValue({
       extras: {
         state: {
           dictation: JSON.stringify(dictation1),
