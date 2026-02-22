@@ -36,7 +36,6 @@ export class DictationPracticePage implements OnInit {
   answer: string;
   mark = 0;
   histories: VocabPracticeHistory[] = [];
-  audio: Map<string, HTMLAudioElement> = new Map<string, HTMLAudioElement>();
   loading: any;
   isKeyboardActive: boolean;
   puzzleControls: PuzzleControls;
@@ -95,7 +94,10 @@ export class DictationPracticePage implements OnInit {
   get practiceType() { return this.dictation?.options?.practiceType ?? VocabPracticeType.Spell; }
 
   receiveVocabPractice(p: VocabPractice) {
-    if (p.activePronounceLink) { this.audio.set(p.word, new Audio(p.activePronounceLink)); }
+    void this.speechService.prefetchByVoiceMode(p.word, {
+      speakPunctuation: this.dictation?.options?.speakPunctuation,
+      pronounceUrl: p.activePronounceLink,
+    });
     this.vocabPractices.push(p);
     if (this.vocabPractices.length === 1) {
       this.onNextQuestion();
@@ -104,12 +106,10 @@ export class DictationPracticePage implements OnInit {
 
   speak() {
     const word = this.currentQuestion().word;
-    if (this.audio.get(word) != null) {
-      this.audio.get(word).play();
-      this.audio.set(word, new Audio(this.currentQuestion().activePronounceLink));
-    } else {
-      this.speechService.speak(word);
-    }
+    void this.speechService.speakByVoiceMode(word, {
+      speakPunctuation: this.dictation?.options?.speakPunctuation,
+      pronounceUrl: this.currentQuestion().activePronounceLink,
+    });
     this.speak$.next(true);
   }
 

@@ -1,0 +1,28 @@
+.type-example {
+  height: 24px;
+  padding-left: 20px;
+  font-size: 0.9rem;
+  color: #555555;
+  padding-top: 6px;
+}
+
+.type-example .spell {
+  text-decoration: underline;
+}
+
+.puzzle span {
+  display: inline-block;
+  border: 1px solid;
+  width: 24px;
+  margin: 4px;
+  text-align: center;
+}
+
+.deselected {
+  color: #aaaaaa;
+}
+
+.options-divider {
+  border-top: 1px solid rgba(var(--ion-color-medium-rgb), 0.22);
+  margin: 6px 10px 2px;
+}

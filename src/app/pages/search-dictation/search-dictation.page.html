@@ -11,38 +11,66 @@
       <ion-card-content>
         <form class="input-form" [formGroup]="inputForm" novalidate>
           <ion-searchbar (ionInput)="filterHistory($event)" formControlName="keyword" placeholder="{{'ID or part of title / description' | translate}}" (ionBlur)="stopShowHistory()" (keydown.enter)="search()"></ion-searchbar>
-          <ion-list class="autocomplete" *ngIf="filteredHistory && showHistory">
-            <ion-item *ngFor="let h of filteredHistory" (mousedown)="setKeyword(h)">{{h}} <fa-icon item-end [icon]="['fas', 'history']"></fa-icon></ion-item>
-          </ion-list>
-          <div *ngIf="keyword.invalid && (keyword.dirty || keyword.touched)" class="error-text">
-            <div *ngIf="keyword.errors.minlength">{{'CharactersTooShort'|translate:{length: '3'} }}</div>
-            <div *ngIf="keyword.errors.maxlength">{{'CharactersTooLong'|translate:{length: '50'} }}</div>
-          </div>
-          <ion-item *ngIf="moreOptions">
-            <ion-input type="text" label="{{'Created By'|translate}}" formControlName="creator"></ion-input>
-          </ion-item>
-          <div *ngIf="creator.invalid && (creator.dirty || creator.touched)" class="error-text">
-            <div *ngIf="creator.errors.minlength">{{'CharactersTooShort'|translate:{length: '3'} }}</div>
-            <div *ngIf="creator.errors.maxlength">{{'CharactersTooLong'|translate:{length: '50'} }}</div>
-          </div>
-          <ion-item *ngIf="moreOptions">
-            <ion-select formControlName="suitableStudent" interface="popover"
-              label="{{'Suitable'|translate}} ({{'Age'|translate}})">
-              <ion-select-option *ngFor="let state of suitableStudentOptions" [value]="state">{{'SuitableStudent.' + state|translate}}</ion-select-option>
-            </ion-select>
-          </ion-item>
-          <ion-item *ngIf="moreOptions">
-            <ion-select label="{{'Type'|translate}}" formControlName="type" interface="popover">
-              <ion-select-option value="Any">{{'Any'|translate}}</ion-select-option>
-              <ion-select-option value="Vocab">{{'Word'|translate}}</ion-select-option>
-              <ion-select-option value="Article">{{'Sentence'|translate}}</ion-select-option>
-            </ion-select>
-          </ion-item>
-          <ion-item *ngIf="moreOptions">
-            <ion-select label="{{'Date'|translate}}" formControlName="minDate" interface="popover">
-              <ion-select-option *ngFor="let option of dateOptions" [value]="option">{{option.option|translate}}</ion-select-option>
-            </ion-select>
-          </ion-item>
+          @if (filteredHistory && showHistory) {
+            <ion-list class="autocomplete">
+              @for (h of filteredHistory; track h) {
+                <ion-item (mousedown)="setKeyword(h)">{{h}} <fa-icon item-end [icon]="['fas', 'history']"></fa-icon></ion-item>
+              }
+            </ion-list>
+          }
+          @if (keyword.invalid && (keyword.dirty || keyword.touched)) {
+            <div class="error-text">
+              @if (keyword.errors.minlength) {
+                <div>{{'CharactersTooShort'|translate:{length: '3'} }}</div>
+              }
+              @if (keyword.errors.maxlength) {
+                <div>{{'CharactersTooLong'|translate:{length: '50'} }}</div>
+              }
+            </div>
+          }
+          @if (moreOptions) {
+            <ion-item>
+              <ion-input type="text" label="{{'Created By'|translate}}" formControlName="creator"></ion-input>
+            </ion-item>
+          }
+          @if (creator.invalid && (creator.dirty || creator.touched)) {
+            <div class="error-text">
+              @if (creator.errors.minlength) {
+                <div>{{'CharactersTooShort'|translate:{length: '3'} }}</div>
+              }
+              @if (creator.errors.maxlength) {
+                <div>{{'CharactersTooLong'|translate:{length: '50'} }}</div>
+              }
+            </div>
+          }
+          @if (moreOptions) {
+            <ion-item>
+              <ion-select formControlName="suitableStudent" interface="popover"
+                label="{{'Suitable'|translate}} ({{'Age'|translate}})">
+                @for (state of suitableStudentOptions; track state) {
+                  <ion-select-option [value]="state">{{'SuitableStudent.' + state|translate}}</ion-select-option>
+                }
+              </ion-select>
+            </ion-item>
+          }
+          @if (moreOptions) {
+            <ion-item>
+              <ion-select label="{{'Type'|translate}}" formControlName="type" interface="popover">
+                <ion-select-option value="Any">{{'Any'|translate}}</ion-select-option>
+                <ion-select-option value="Vocab">{{'Word'|translate}}</ion-select-option>
+                <ion-select-option value="Article">{{'Sentence'|translate}}</ion-select-option>
+              </ion-select>
+            </ion-item>
+          }
+          @if (moreOptions) {
+            <ion-item>
+              <ion-select label="{{'Date'|translate}}" formControlName="minDate" interface="popover">
+                @for (option of dateOptions; track option) {
+                  <ion-select-option [value]="option">{{option.option|translate}}</ion-select-option>
+                }
+              </ion-select>
+            </ion-item>
+          }
 
           <ion-button fill="outline" class="ion-float-left" (click)="moreOptions = !moreOptions">
             {{'More Options'|translate}}

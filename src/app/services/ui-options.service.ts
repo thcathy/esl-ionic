@@ -5,11 +5,23 @@ import { StorageService } from './storage.service';
   providedIn: 'root'
 })
 export class UIOptionsService {
+  public static voiceMode = {
+    local: 'local',
+    online: 'online',
+  };
+
   public static keys = {
     disableKeyboard: 'UIOptionsService.keys.disableKeyboard',
     keyboardType: 'UIOptionsService.keys.keyboardType',
     vocabPracticeType: 'UIOptionsService.keys.vocabPracticeType',
     puzzleSize: 'UIOptionsService.keys.puzzleSize',
+    ttsVoiceMode: 'UIOptionsService.keys.ttsVoiceMode',
+    editDictationType: 'UIOptionsService.keys.editDictationType',
+    editDictationSentenceLength: 'UIOptionsService.keys.editDictationSentenceLength',
+    editDictationShowImage: 'UIOptionsService.keys.editDictationShowImage',
+    editDictationIncludeAIImage: 'UIOptionsService.keys.editDictationIncludeAIImage',
+    editDictationWordContainSpace: 'UIOptionsService.keys.editDictationWordContainSpace',
+    editDictationWordPracticeType: 'UIOptionsService.keys.editDictationWordPracticeType',
   };
 
   constructor(

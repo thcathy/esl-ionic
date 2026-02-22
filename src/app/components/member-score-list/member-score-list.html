@@ -7,16 +7,22 @@
     </ion-card-title>
   </ion-card-header>
   <ion-card-content>
-    <ion-progress-bar *ngIf="loading" type="indeterminate"></ion-progress-bar>
+    @if (loading) {
+      <ion-progress-bar type="indeterminate"></ion-progress-bar>
+    }
     <ion-list>
-      <ion-item *ngIf="allTimesScore">
-        <ion-label>{{ 'Full' | translate }}</ion-label>
-        <span class="ion-float-right"><fa-icon [icon]="['fas', 'star']" style="color: gold"></fa-icon> {{allTimesScore.score}}</span>
-      </ion-item>
-      <ion-item *ngFor="let score of scores; let i = index">
-        <ion-label>{{ score.yearMonthAsDate | date: 'yyyy/MM' }}</ion-label>
-        <span class="ion-float-right"><fa-icon [icon]="['fas', 'star']" style="color: gold"></fa-icon> {{score.score}}</span>
-      </ion-item>
+      @if (allTimesScore) {
+        <ion-item>
+          <ion-label>{{ 'Full' | translate }}</ion-label>
+          <span class="ion-float-right"><fa-icon [icon]="['fas', 'star']" style="color: gold"></fa-icon> {{allTimesScore.score}}</span>
+        </ion-item>
+      }
+      @for (score of scores; track score; let i = $index) {
+        <ion-item>
+          <ion-label>{{ score.yearMonthAsDate | date: 'yyyy/MM' }}</ion-label>
+          <span class="ion-float-right"><fa-icon [icon]="['fas', 'star']" style="color: gold"></fa-icon> {{score.score}}</span>
+        </ion-item>
+      }
     </ion-list>
   </ion-card-content>
 </ion-card>

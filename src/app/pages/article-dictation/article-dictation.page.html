@@ -27,9 +27,11 @@
               </ion-button>
             </ion-col>
           </ion-row>
-          <div *ngIf="translate.currentLang != null && translate.currentLang !== 'en'">
-            <app-text-interpretation [text]="currentSentence" />
-          </div>
+          @if (translate.currentLang != null && translate.currentLang !== 'en') {
+            <div>
+              <app-text-interpretation [text]="currentSentence" />
+            </div>
+          }
           <ion-row>
             <ion-col>
               <ion-item class="answerInput">
@@ -38,19 +40,23 @@
                     {{'Answer'|translate}}
                     <span class="answer-hint">({{caseSensitiveText|translate}}, {{checkPunctuationText|translate}})</span>
                   </div>
-                  <ion-input #answerInput *ngIf="!isKeyboardActive" [(ngModel)]="answer" type="text" inputmode="verbatim" maxlength="255"
-                             (keyup.enter)="submitAnswer()"
-                             autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
-                  </ion-input>
-                  <div *ngIf="isKeyboardActive" class="answer-display">{{answer}}<span class="blinking-caret">|</span></div>
+                  @if (!isKeyboardActive) {
+                    <ion-input #answerInput [(ngModel)]="answer" type="text" inputmode="verbatim" maxlength="255"
+                      (keyup.enter)="submitAnswer()"
+                      autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+                    </ion-input>
+                  }
+                  @if (isKeyboardActive) {
+                    <div class="answer-display">{{answer}}<span class="blinking-caret">|</span></div>
+                  }
                 </div>
               </ion-item>
             </ion-col>
           </ion-row>
           <div>
             <ion-button fill="clear" size="large"
-                        [class.grey-text]="!isKeyboardActive"
-                        (click)="virtualKeyboard.changeKeyboardType()">
+              [class.grey-text]="!isKeyboardActive"
+              (click)="virtualKeyboard.changeKeyboardType()">
               <fa-icon icon="keyboard"></fa-icon>
             </ion-button>
             <ion-button class="submitBtn ion-float-right" (click)="submitAnswer()">
@@ -61,13 +67,16 @@
         </ion-grid>
       </ion-card-content>
     </ion-card>
-    <sentence-histories [histories]="histories"></sentence-histories>
+    <sentence-histories
+      [histories]="histories"
+      [speakPunctuation]="!!dictation?.options?.speakPunctuation">
+    </sentence-histories>
   </div>
   <app-footer></app-footer>
 </ion-content>
 
 <ion-footer>
   <virtual-keyboard #virtualKeyboard
-                    (keyPress)="onKeyPress($event)"
-                    (keyboardEvent)="onKeyboardEvent($event)"></virtual-keyboard>
+    (keyPress)="onKeyPress($event)"
+  (keyboardEvent)="onKeyboardEvent($event)"></virtual-keyboard>
 </ion-footer>

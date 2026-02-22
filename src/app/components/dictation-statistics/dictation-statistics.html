@@ -1,25 +1,29 @@
-<ion-card class="card" *ngIf="stat" style="margin-top: 12px;">
-  <ion-card-header>
-    <ion-card-title><fa-icon [icon]="['fas', 'edit']"></fa-icon> {{ stat.type | translate }}</ion-card-title>
-  </ion-card-header>
-  <ion-card-content>
-    <ion-list>
-      <ion-item *ngFor="let dictation of stat.dictations; let i = index">
-        <ion-badge style="background-color: var(--ion-color-secondary); margin: 0;">{{ i+1 }}</ion-badge>
-        <ion-label>
-          <ion-row class="sub-row">
-            <ion-col>{{ dictation.title | truncate:20 }}</ion-col>
-            <ion-col class="ion-text-right">{{dictation?.creator | memberName | truncate:20}}</ion-col>
-          </ion-row>
-          <ion-row class="sub-row">
-            <ion-col style="min-width: 120px;"><fa-icon [icon]="['fas', 'list-ol']"></fa-icon> {{ dictation | dictationQuestions }}</ion-col>
-            <ion-col class="hidden-md-down">&nbsp;</ion-col>
-            <ion-col><fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon> {{ dictation.totalAttempt }}</ion-col>
-            <ion-col class="ion-text-right"><fa-icon [icon]="['far', 'thumbs-up']"></fa-icon> {{dictation.totalRecommended}}</ion-col>
-          </ion-row>
-        </ion-label>
-        <ion-button fill="outline" slot="end" (click)="navService.pushOpenDictation(dictation)">{{ 'ViewDictation' | translate }}</ion-button>
-      </ion-item>
-    </ion-list>
-  </ion-card-content>
-</ion-card>
+@if (stat) {
+  <ion-card class="card" style="margin-top: 12px;">
+    <ion-card-header>
+      <ion-card-title><fa-icon [icon]="['fas', 'edit']"></fa-icon> {{ stat.type | translate }}</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        @for (dictation of stat.dictations; track dictation; let i = $index) {
+          <ion-item>
+            <ion-badge style="background-color: var(--ion-color-secondary); margin: 0;">{{ i+1 }}</ion-badge>
+            <ion-label>
+              <ion-row class="sub-row">
+                <ion-col>{{ dictation.title | truncate:20 }}</ion-col>
+                <ion-col class="ion-text-right">{{dictation?.creator | memberName | truncate:20}}</ion-col>
+              </ion-row>
+              <ion-row class="sub-row">
+                <ion-col style="min-width: 120px;"><fa-icon [icon]="['fas', 'list-ol']"></fa-icon> {{ dictation | dictationQuestions }}</ion-col>
+                <ion-col class="hidden-md-down">&nbsp;</ion-col>
+                <ion-col><fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon> {{ dictation.totalAttempt }}</ion-col>
+                <ion-col class="ion-text-right"><fa-icon [icon]="['far', 'thumbs-up']"></fa-icon> {{dictation.totalRecommended}}</ion-col>
+              </ion-row>
+            </ion-label>
+            <ion-button fill="outline" slot="end" (click)="navService.pushOpenDictation(dictation)">{{ 'ViewDictation' | translate }}</ion-button>
+          </ion-item>
+        }
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+}

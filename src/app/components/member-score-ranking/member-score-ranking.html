@@ -1,28 +1,34 @@
 
-<ion-card class="card" *ngIf="ranking" style="margin-top: 12px;">
-  <ion-card-header>
-    <ion-card-title>
-      <fa-icon [icon]="['fas', 'trophy']"></fa-icon>
-      {{ 'Ranking' | translate }}
-      - {{ ranking?.scores[0]?.scoreYearMonth < 2000000000 ? '' : 'Full' | translate }}{{ ranking?.scores[0]?.scoreYearMonth > 2000000000 ? '' : ranking?.scores[0]?.yearMonthAsDate | date: 'yyyy/MM' }}
-    </ion-card-title>
-  </ion-card-header>
-  <ion-card-content>
-    <ion-list>
-      <ion-item *ngFor="let score of ranking.scores; let i = index">
-        <ion-badge item-start style="background-color: var(--ion-color-secondary);">{{ ranking.firstPosition + i }}</ion-badge>
-        <ion-label>
-          <span *ngIf="ranking.firstPosition + i <= 3">
-            <fa-icon [icon]="['fas', 'trophy']"
-                     [class.gold]="ranking.firstPosition + i == 1"
-                     [class.silver]="ranking.firstPosition + i == 2"
-                     [class.bronze]="ranking.firstPosition + i == 3"
-            ></fa-icon>
-            </span>
-          {{ score.member | memberName }}
-        </ion-label>
-        <span class="ion-float-right"><fa-icon [icon]="['fas', 'star']" style="color: gold"></fa-icon> {{score.score}}</span>
-      </ion-item>
-    </ion-list>
-  </ion-card-content>
-</ion-card>
+@if (ranking) {
+  <ion-card class="card" style="margin-top: 12px;">
+    <ion-card-header>
+      <ion-card-title>
+        <fa-icon [icon]="['fas', 'trophy']"></fa-icon>
+        {{ 'Ranking' | translate }}
+        - {{ ranking?.scores[0]?.scoreYearMonth < 2000000000 ? '' : 'Full' | translate }}{{ ranking?.scores[0]?.scoreYearMonth > 2000000000 ? '' : ranking?.scores[0]?.yearMonthAsDate | date: 'yyyy/MM' }}
+      </ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        @for (score of ranking.scores; track score; let i = $index) {
+          <ion-item>
+            <ion-badge item-start style="background-color: var(--ion-color-secondary);">{{ ranking.firstPosition + i }}</ion-badge>
+            <ion-label>
+              @if (ranking.firstPosition + i <= 3) {
+                <span>
+                  <fa-icon [icon]="['fas', 'trophy']"
+                    [class.gold]="ranking.firstPosition + i == 1"
+                    [class.silver]="ranking.firstPosition + i == 2"
+                    [class.bronze]="ranking.firstPosition + i == 3"
+                  ></fa-icon>
+                </span>
+              }
+              {{ score.member | memberName }}
+            </ion-label>
+            <span class="ion-float-right"><fa-icon [icon]="['fas', 'star']" style="color: gold"></fa-icon> {{score.score}}</span>
+          </ion-item>
+        }
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+}

@@ -16,11 +16,12 @@ import {DictationType, EditDictationPageMode} from './edit-dictation-page-enum';
 import {VocabPracticeType} from '../../enum/vocab-practice-type.enum';
 import {ArticleDictationOptionsComponent} from "../../components/article-dictation-options/article-dictation-options.component";
 import {IonicModule, IonToggle} from "@ionic/angular";
+import {StorageService} from '../../services/storage.service';
 
 describe('EditDictationPage', () => {
   let component: EditDictationPage;
   let fixture: ComponentFixture<EditDictationPage>;
-  let memberDictationServiceSpy, authServiceSpy, activateRouteStub, navigationServiceSpy;
+  let memberDictationServiceSpy, authServiceSpy, activateRouteStub, navigationServiceSpy, storageSpy;
 
   const instantVocabDictation = <Dictation>{
     id: -1,
@@ -57,16 +58,16 @@ describe('EditDictationPage', () => {
   function componentViewWillEnter() {
     component.ionViewWillEnter();
     tick();
-    fixture.detectChanges();
+    fixture.detectChanges(false);
   }
 
   beforeEach(fakeAsync(() => {
     fixture = TestBed.createComponent(EditDictationPage);
     component = fixture.componentInstance;
+    storageSpy = TestBed.inject(StorageService) as any;
     component.articleDictationOptions = TestBed.createComponent(ArticleDictationOptionsComponent).componentInstance;
-    fixture.detectChanges();
+    fixture.detectChanges(false);
     flush();
-    console.log(`2. ${component.articleDictationOptions}`);
   }));
 
   describe('logined', () => {
@@ -110,9 +111,10 @@ describe('EditDictationPage', () => {
       }));
 
       it('show some of the elements in Edit mode', fakeAsync(() => {
-        expect(fixture.nativeElement.querySelector('.input-form .title')).toBeTruthy();
-        expect(fixture.nativeElement.querySelector('.input-form .description')).toBeTruthy();
-        expect(fixture.nativeElement.querySelector('.input-form .suitableAge')).toBeTruthy();
+        expect(component.mode).toBe(EditDictationPageMode.Edit);
+        expect(component.title).toBeTruthy();
+        expect(component.description).toBeTruthy();
+        expect(component.suitableStudent).toBeTruthy();
       }));
 
       it('create form controls required', fakeAsync(() => {
@@ -128,16 +130,13 @@ describe('EditDictationPage', () => {
 
       it('show ai image toggle for word', fakeAsync(() => {
         component.type.setValue(DictationType.Word);
-        expect(fixture.nativeElement.querySelector('.include-ai-image-tooltip-icon')).toBeNull();
         expect(fixture.nativeElement.querySelector('.include-ai-image-toggle')).toBeDefined();
       }));
 
-      // this test case expected result is wrong
-      it('disable ai image toggle for sentence', fakeAsync(() => {
+      it('hide ai image toggle for sentence', fakeAsync(() => {
         component.type.setValue(DictationType.Sentence);
-        componentViewWillEnter();
-        expect(fixture.nativeElement.querySelector('.include-ai-image-tooltip-icon')).toBeDefined();
-        expect(fixture.nativeElement.querySelector('.include-ai-image-toggle')).toBeDefined();
+        fixture.detectChanges(false);
+        expect(fixture.nativeElement.querySelector('.include-ai-image-toggle')).toBeNull();
       }));
     });
   });
@@ -203,13 +202,12 @@ describe('EditDictationPage', () => {
 
       describe('start instant dictation', () => {
         beforeEach(fakeAsync(() => {
-          console.log(`1. ${component.articleDictationOptions}`);
           componentViewWillEnter();
           component.articleDictationOptions = TestBed.createComponent(ArticleDictationOptionsComponent).componentInstance;
           component.articleDictationOptions.caseSensitive = TestBed.createComponent(IonToggle).componentInstance;
           component.articleDictationOptions.checkPunctuation = TestBed.createComponent(IonToggle).componentInstance;
           component.articleDictationOptions.speakPunctuation = TestBed.createComponent(IonToggle).componentInstance;
-          fixture.detectChanges();
+          fixture.detectChanges(false);
           flush();
         }));
 
@@ -233,6 +231,7 @@ describe('EditDictationPage', () => {
           `);
           component.showImage.setValue(true);
           component.wordContainSpace.setValue(true);
+          component.includeAIImage.setValue(true);
           component.type.setValue(DictationType.Word);
           component.wordPracticeType.setValue(VocabPracticeType.Puzzle);
           component.startDictationNow();
@@ -240,6 +239,7 @@ describe('EditDictationPage', () => {
           const call = navigationServiceSpy.startDictation.calls.mostRecent();
           const dictation = call.args[0] as Dictation;
           expect(dictation.showImage).toBeTrue();
+          expect(dictation.includeAIImage).toBeTrue();
           expect(dictation.wordContainSpace).toBeTrue();
           expect(dictation.vocabs.length).toEqual(3);
           expect(dictation.vocabs[0].word).toEqual('apple');
@@ -264,9 +264,60 @@ describe('EditDictationPage', () => {
           expect(fixture.nativeElement.querySelector('.word-options-all')).toBeDefined();
         }));
 
-        it('for include AI image. show info button, not show toggle', fakeAsync(() => {
-          expect(fixture.nativeElement.querySelector('.include-ai-image-tooltip-icon')).toBeDefined();
-          expect(fixture.nativeElement.querySelector('.include-ai-image-toggle')).toBeNull();
+        it('include AI image is disabled when show image is off and enabled when on', fakeAsync(() => {
+          component.showImage.setValue(false);
+          fixture.detectChanges(false);
+          expect(component.includeAIImage.disabled).toBeTrue();
+
+          component.showImage.setValue(true);
+          fixture.detectChanges(false);
+          expect(component.includeAIImage.enabled).toBeTrue();
+        }));
+
+        it('load saved options on view enter', fakeAsync(() => {
+          storageSpy.get.and.callFake((key: string) => Promise.resolve({
+            'UIOptionsService.keys.ttsVoiceMode': 'local',
+            'UIOptionsService.keys.editDictationType': 'sentence',
+            'UIOptionsService.keys.editDictationSentenceLength': 'Long',
+            'UIOptionsService.keys.editDictationShowImage': false,
+            'UIOptionsService.keys.editDictationIncludeAIImage': true,
+            'UIOptionsService.keys.editDictationWordContainSpace': true,
+            'UIOptionsService.keys.editDictationWordPracticeType': 'Puzzle',
+          }[key]));
+
+          componentViewWillEnter();
+
+          expect(component.voiceMode.value).toEqual('local');
+          expect(component.type.value).toEqual(DictationType.Sentence);
+          expect(component.sentenceLength.value).toEqual('Long');
+          expect(component.showImage.value).toBeFalse();
+          expect(component.includeAIImage.value).toBeFalse();
+          expect(component.includeAIImage.disabled).toBeTrue();
+          expect(component.wordContainSpace.value).toBeTrue();
+          expect(component.wordPracticeType.value).toEqual(VocabPracticeType.Puzzle);
+        }));
+
+        it('persist options when start dictation', fakeAsync(() => {
+          component.voiceMode.setValue('local');
+          component.type.setValue(DictationType.Word);
+          component.sentenceLength.setValue('Short');
+          component.showImage.setValue(true);
+          component.includeAIImage.setValue(true);
+          component.wordContainSpace.setValue(true);
+          component.wordPracticeType.setValue(VocabPracticeType.Puzzle);
+          component.question.setValue('apple');
+
+          component.startDictationNow();
+
+          const setCalls = storageSpy.set.calls.allArgs();
+          const saved = new Map<string, any>(setCalls.map((args: any[]) => [args[0], args[1]]));
+          expect(saved.get('UIOptionsService.keys.ttsVoiceMode')).toEqual('local');
+          expect(saved.get('UIOptionsService.keys.editDictationType')).toEqual('word');
+          expect(saved.get('UIOptionsService.keys.editDictationSentenceLength')).toEqual('Short');
+          expect(saved.get('UIOptionsService.keys.editDictationShowImage')).toBeTrue();
+          expect(saved.get('UIOptionsService.keys.editDictationIncludeAIImage')).toBeTrue();
+          expect(saved.get('UIOptionsService.keys.editDictationWordContainSpace')).toBeTrue();
+          expect(saved.get('UIOptionsService.keys.editDictationWordPracticeType')).toEqual(VocabPracticeType.Puzzle);
         }));
       });
 

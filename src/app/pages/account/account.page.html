@@ -22,15 +22,23 @@
           <ion-item>
             <ion-input type="text" label="{{'First Name'|translate}}" formControlName="firstName"></ion-input>
           </ion-item>
-          <div *ngIf="firstName.invalid && (firstName.dirty || firstName.touched)" class="error-text">
-            <div *ngIf="firstName.errors.maxlength">{{'First Name' | translate}}{{'CharactersTooLong'|translate:{length: '50'} }}</div>
-          </div>
+          @if (firstName.invalid && (firstName.dirty || firstName.touched)) {
+            <div class="error-text">
+              @if (firstName.errors.maxlength) {
+                <div>{{'First Name' | translate}}{{'CharactersTooLong'|translate:{length: '50'} }}</div>
+              }
+            </div>
+          }
           <ion-item>
             <ion-input type="text" label="{{'Last Name'|translate}}" formControlName="lastName"></ion-input>
           </ion-item>
-          <div *ngIf="lastName.invalid && (lastName.dirty || lastName.touched)" class="error-text">
-            <div *ngIf="lastName.errors.maxlength">{{'Last Name'|translate}}{{'CharactersTooLong'|translate:{length: '50'} }}</div>
-          </div>
+          @if (lastName.invalid && (lastName.dirty || lastName.touched)) {
+            <div class="error-text">
+              @if (lastName.errors.maxlength) {
+                <div>{{'Last Name'|translate}}{{'CharactersTooLong'|translate:{length: '50'} }}</div>
+              }
+            </div>
+          }
           <ion-item class="ion-text-left">
             <ion-label>{{'Date of birth'|translate}}</ion-label>
             <ion-datetime formControlName="birthday" presentation="date" [preferWheel]="false"></ion-datetime>
@@ -38,29 +46,43 @@
           <ion-item>
             <ion-input type="text" label="{{'Address'|translate}}" formControlName="address"></ion-input>
           </ion-item>
-          <div *ngIf="address.invalid && (address.dirty || address.touched)" class="error-text">
-            <div *ngIf="address.errors.maxlength">{{'Address'|translate}}{{'CharactersTooLong'|translate:{length: '200'} }}</div>
-          </div>
+          @if (address.invalid && (address.dirty || address.touched)) {
+            <div class="error-text">
+              @if (address.errors.maxlength) {
+                <div>{{'Address'|translate}}{{'CharactersTooLong'|translate:{length: '200'} }}</div>
+              }
+            </div>
+          }
           <ion-item>
             <ion-input type="text" label="{{'Phone'|translate}}" formControlName="phoneNumber"></ion-input>
           </ion-item>
-          <div *ngIf="phoneNumber.invalid && (phoneNumber.dirty || phoneNumber.touched)" class="error-text">
-            <div *ngIf="phoneNumber.errors.maxlength">{{'Phone'|translate}}{{'CharactersTooLong'|translate:{length: '20'} }}</div>
-            <div *ngIf="phoneNumber.errors.pattern">{{'Allow numbers input only'|translate}}</div>
-          </div>
+          @if (phoneNumber.invalid && (phoneNumber.dirty || phoneNumber.touched)) {
+            <div class="error-text">
+              @if (phoneNumber.errors.maxlength) {
+                <div>{{'Phone'|translate}}{{'CharactersTooLong'|translate:{length: '20'} }}</div>
+              }
+              @if (phoneNumber.errors.pattern) {
+                <div>{{'Allow numbers input only'|translate}}</div>
+              }
+            </div>
+          }
           <ion-item>
             <ion-input type="text" label="{{'School'|translate}}" formControlName="school"></ion-input>
           </ion-item>
-          <div *ngIf="school.invalid && (school.dirty || school.touched)" class="error-text">
-            <div *ngIf="school.errors.maxlength">{{'School'|translate}}{{'CharactersTooLong'|translate:{length: '100'} }}</div>
-          </div>
+          @if (school.invalid && (school.dirty || school.touched)) {
+            <div class="error-text">
+              @if (school.errors.maxlength) {
+                <div>{{'School'|translate}}{{'CharactersTooLong'|translate:{length: '100'} }}</div>
+              }
+            </div>
+          }
 
           <ion-button  (click)="save()" style="margin: 16px;" [disabled]="inputForm.invalid">
             <fa-icon [icon]="['fas', 'save']"></fa-icon>&nbsp;{{'Save'|translate}}
           </ion-button>
 
           <ion-button (click)="presentDeleteAccountAlert()" class="ion-float-right"
-                      style="margin: 16px;" fill="outline" color="danger">
+            style="margin: 16px;" fill="outline" color="danger">
             <fa-icon [icon]="['fas', 'trash']"></fa-icon>&nbsp;{{'Delete Account'|translate}}
           </ion-button>
 

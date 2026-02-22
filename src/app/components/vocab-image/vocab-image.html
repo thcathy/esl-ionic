@@ -1,13 +1,15 @@
-<ion-card *ngIf="images" class="card">
-  <ion-row>
-    <ion-col>
-      <ion-button [disabled]="images?.length <= 1" [class.grey-text]="images?.length <= 1"
-                  fill="clear" size="small" (click)="previousImage()" class="button"><fa-icon [icon]="['fas', 'angle-left']"></fa-icon></ion-button>
-    </ion-col>
-    <ion-col>
-      <ion-button [disabled]="images?.length <= 1" [class.grey-text]="images?.length <= 1"
-                  fill="clear" class="button ion-float-right" size="small" (click)="nextImage()"><fa-icon [icon]="['fas', 'angle-right']"></fa-icon></ion-button>
-    </ion-col>
-  </ion-row>
-  <img [@move]="state" (@move.done)="onDone($event)" [src]="imageBase64 | safeHtml" class="image" />
-</ion-card>
+@if (images) {
+  <ion-card class="card">
+    <ion-row>
+      <ion-col>
+        <ion-button [disabled]="images?.length <= 1" [class.grey-text]="images?.length <= 1"
+          fill="clear" size="small" (click)="previousImage()" class="button"><fa-icon [icon]="['fas', 'angle-left']"></fa-icon></ion-button>
+        </ion-col>
+        <ion-col>
+          <ion-button [disabled]="images?.length <= 1" [class.grey-text]="images?.length <= 1"
+            fill="clear" class="button ion-float-right" size="small" (click)="nextImage()"><fa-icon [icon]="['fas', 'angle-right']"></fa-icon></ion-button>
+          </ion-col>
+        </ion-row>
+        <img [@move]="state" (@move.done)="onDone($event)" [src]="imageBase64 | safeHtml" class="image" />
+      </ion-card>
+    }

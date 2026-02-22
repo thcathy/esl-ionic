@@ -9,7 +9,6 @@ import {
   Validators
 } from '@angular/forms';
 import {ActivatedRoute} from '@angular/router';
-import {AlertController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
 import {Observable} from 'rxjs';
 import {Dictation, Dictations, SentenceLengthOptions, SuitableStudentOptions} from '../../entity/dictation';
@@ -22,10 +21,21 @@ import {DictationService} from '../../services/dictation/dictation.service';
 import {EditDictationRequest, MemberDictationService} from '../../services/dictation/member-dictation.service';
 import {IonicComponentService} from '../../services/ionic-component.service';
 import {NavigationService} from '../../services/navigation.service';
+import {UIOptionsService} from '../../services/ui-options.service';
 import {DictationUtils} from '../../utils/dictation-utils';
 import {DictationType, EditDictationPageMode} from './edit-dictation-page-enum';
 import {ArticleDictationOptionsComponent} from "../../components/article-dictation-options/article-dictation-options.component";
 import Source = Dictations.Source;
+
+type SavedOptionSnapshot = {
+  voiceMode: string;
+  type: DictationType;
+  sentenceLength: string;
+  showImage: boolean;
+  includeAIImage: boolean;
+  wordContainSpace: boolean;
+  wordPracticeType: VocabPracticeType;
+};
 
 @Component({
     selector: 'app-edit-dictation',
@@ -34,6 +44,16 @@ import Source = Dictations.Source;
     standalone: false
 })
 export class EditDictationPage implements OnInit, CanComponentDeactivate {
+  private static readonly defaultSavedOptions: SavedOptionSnapshot = {
+    voiceMode: UIOptionsService.voiceMode.online,
+    type: DictationType.Word,
+    sentenceLength: 'Normal',
+    showImage: true,
+    includeAIImage: false,
+    wordContainSpace: false,
+    wordPracticeType: VocabPracticeType.Spell,
+  };
+
   inputForm: UntypedFormGroup;
   loader: any;
   dictation: Dictation;
@@ -43,6 +63,7 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
   sentenceLengthOptions = SentenceLengthOptions;
   isPreview = false;
   questions: string[];
+  private savedOptions: SavedOptionSnapshot = {...EditDictationPage.defaultSavedOptions};
 
   @ViewChild('articleDictationOptions') articleDictationOptions: ArticleDictationOptionsComponent;
 
@@ -54,15 +75,16 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
     public translate: TranslateService,
     public dictationService: DictationService,
     public ionicComponentService: IonicComponentService,
-    public alertController: AlertController,
+    private uiOptionsService: UIOptionsService,
     private activatedRoute: ActivatedRoute,
     private articleDictationService: ArticleDictationService,
   ) { }
 
   ngOnInit() {}
 
-  ionViewWillEnter() {
+  async ionViewWillEnter() {
     this.mode = EditDictationPageMode[this.activatedRoute.snapshot.paramMap?.get('mode')] || EditDictationPageMode.Edit;
+    await this.loadSavedOptions();
     this.createForm();
     this.init();
   }
@@ -90,22 +112,24 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
     this.isPreview = false;
     this.dictation = this.navService.getParam(NavigationService.storageKeys.editDictation);
     this.setupFormValue(this.dictation);
+    this.syncIncludeAiImageState();
   }
 
   createForm() {
     const controlsConfig = {};
-    controlsConfig['showImage'] = true;
-    controlsConfig['wordContainSpace'] = false;
+    controlsConfig['showImage'] = this.savedOptions.showImage;
+    controlsConfig['wordContainSpace'] = this.savedOptions.wordContainSpace;
     controlsConfig['question'] = new UntypedFormControl('', [Validators.required]);
-    controlsConfig['type'] = DictationType.Word;
-    controlsConfig['sentenceLength'] = 'Normal';
-    controlsConfig['wordPracticeType'] = VocabPracticeType.Spell;
+    controlsConfig['type'] = this.savedOptions.type;
+    controlsConfig['sentenceLength'] = this.savedOptions.sentenceLength;
+    controlsConfig['wordPracticeType'] = this.savedOptions.wordPracticeType;
+    controlsConfig['voiceMode'] = this.savedOptions.voiceMode;
+    controlsConfig['includeAIImage'] = this.savedOptions.includeAIImage;
 
     if (this.mode === EditDictationPageMode.Edit) {
       controlsConfig['title'] = new UntypedFormControl('', [Validators.required, Validators.minLength(5),  Validators.maxLength(50)]);
       controlsConfig['description'] = new UntypedFormControl('', [Validators.maxLength(100)]);
       controlsConfig['suitableStudent'] = 'Any';
-      controlsConfig['includeAIImage'] = false;
     }
     this.inputForm = this.formBuilder.group(
       controlsConfig,
@@ -116,9 +140,10 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
         ]
       });
 
-    this.inputForm.valueChanges.subscribe(val => {
+    this.inputForm.valueChanges.subscribe(() => {
       this.closePreview();
     });
+    this.showImage.valueChanges.subscribe(() => this.syncIncludeAiImageState());
   }
 
   get title() { return this.inputForm.get('title'); }
@@ -132,6 +157,7 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
   get wordContainSpace() { return this.inputForm.get('wordContainSpace'); }
   get wordPracticeType() { return this.inputForm.get('wordPracticeType'); }
   get includeAIImage() { return this.inputForm.get('includeAIImage'); }
+  get voiceMode() { return this.inputForm.get('voiceMode'); }
 
   get practiceType() { return VocabPracticeType; }
   get pageMode() { return EditDictationPageMode; }
@@ -145,22 +171,16 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
       this.type.setValue(DictationType.Sentence);
       this.question.setValue(dictation.article);
     } else {
-      this.type.setValue(DictationType.Word);
-      this.question.setValue(dictation.vocabs.map(v => v.word).join(dictation.wordContainSpace ? '\n' : ' '));
-      this.showImage.setValue(dictation.showImage);
-      this.wordContainSpace.setValue(dictation.wordContainSpace);
-      this.wordPracticeType.setValue(dictation?.options?.practiceType);
+      this.applyWordDictationFormValue(dictation);
     }
 
     if (!this.dictationService.isInstantDictation(dictation)) {
-      this.title.setValue(dictation.title);
-      this.description.setValue(dictation.description);
-      this.suitableStudent.setValue(dictation.suitableStudent);
-      this.includeAIImage.setValue(dictation.includeAIImage);
+      this.applyEditableDictationFormValue(dictation);
     }
   }
 
   async saveDictation() {
+    this.persistOptions();
     this.loader = await this.ionicComponentService.showLoading();
     this.memberDictationService.createOrAmendDictation(<EditDictationRequest>{
       dictationId: this.dictation ? this.dictation.id : -1,
@@ -211,8 +231,104 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
   }
 
   startDictationNow() {
+    this.persistOptions();
     const d = this.prepareDictation();
     this.navService.startDictation(d);
+  }
+
+  private persistOptions() {
+    const options = {
+      [UIOptionsService.keys.ttsVoiceMode]: this.voiceMode.value || UIOptionsService.voiceMode.online,
+      [UIOptionsService.keys.editDictationType]: this.type.value || DictationType.Word,
+      [UIOptionsService.keys.editDictationSentenceLength]: this.sentenceLength.value || 'Normal',
+      [UIOptionsService.keys.editDictationShowImage]: this.showImage.value === true,
+      [UIOptionsService.keys.editDictationIncludeAIImage]: this.includeAIImage?.value === true,
+      [UIOptionsService.keys.editDictationWordContainSpace]: this.wordContainSpace.value === true,
+      [UIOptionsService.keys.editDictationWordPracticeType]: this.wordPracticeType.value || VocabPracticeType.Spell,
+    };
+
+    Object.entries(options).forEach(([key, value]) => this.uiOptionsService.saveOption(key, value));
+  }
+
+  private resolveVoiceMode(mode: string): string {
+    return mode === UIOptionsService.voiceMode.local || mode === UIOptionsService.voiceMode.online
+      ? mode
+      : UIOptionsService.voiceMode.online;
+  }
+
+  private async loadSavedOptions() {
+    const [
+      savedVoiceMode,
+      savedType,
+      savedSentenceLength,
+      savedShowImage,
+      savedIncludeAiImage,
+      savedWordContainSpace,
+      savedWordPracticeType,
+    ] = await Promise.all([
+      this.uiOptionsService.loadOption(UIOptionsService.keys.ttsVoiceMode),
+      this.uiOptionsService.loadOption(UIOptionsService.keys.editDictationType),
+      this.uiOptionsService.loadOption(UIOptionsService.keys.editDictationSentenceLength),
+      this.uiOptionsService.loadOption(UIOptionsService.keys.editDictationShowImage),
+      this.uiOptionsService.loadOption(UIOptionsService.keys.editDictationIncludeAIImage),
+      this.uiOptionsService.loadOption(UIOptionsService.keys.editDictationWordContainSpace),
+      this.uiOptionsService.loadOption(UIOptionsService.keys.editDictationWordPracticeType),
+    ]);
+
+    this.savedOptions = {
+      voiceMode: this.resolveVoiceMode(savedVoiceMode),
+      type: this.resolveType(savedType),
+      sentenceLength: this.resolveSentenceLength(savedSentenceLength),
+      showImage: this.toBoolean(savedShowImage),
+      includeAIImage: this.toBoolean(savedIncludeAiImage),
+      wordContainSpace: this.toBoolean(savedWordContainSpace),
+      wordPracticeType: this.resolveWordPracticeType(savedWordPracticeType),
+    };
+  }
+
+  private resolveType(type: string): DictationType {
+    return type === DictationType.Sentence ? DictationType.Sentence : DictationType.Word;
+  }
+
+  private resolveSentenceLength(sentenceLength: string): string {
+    return this.sentenceLengthOptions.includes(sentenceLength) ? sentenceLength : 'Normal';
+  }
+
+  private resolveWordPracticeType(practiceType: VocabPracticeType): VocabPracticeType {
+    return practiceType === VocabPracticeType.Puzzle ? VocabPracticeType.Puzzle : VocabPracticeType.Spell;
+  }
+
+  private toBoolean(value: unknown): boolean {
+    return value === true || value === 'true' || value === 1 || value === '1';
+  }
+
+  private applyWordDictationFormValue(dictation: Dictation) {
+    this.type.setValue(DictationType.Word);
+    this.question.setValue(dictation.vocabs.map(v => v.word).join(dictation.wordContainSpace ? '\n' : ' '));
+    this.showImage.setValue(this.toBoolean(dictation.showImage));
+    this.includeAIImage.setValue(this.toBoolean(dictation.includeAIImage));
+    this.wordContainSpace.setValue(this.toBoolean(dictation.wordContainSpace));
+    this.wordPracticeType.setValue(this.resolveWordPracticeType(dictation?.options?.practiceType));
+  }
+
+  private applyEditableDictationFormValue(dictation: Dictation) {
+    this.title.setValue(dictation.title);
+    this.description.setValue(dictation.description);
+    this.suitableStudent.setValue(dictation.suitableStudent);
+    this.includeAIImage.setValue(this.toBoolean(dictation.includeAIImage));
+  }
+
+  private syncIncludeAiImageState() {
+    if (!this.includeAIImage) {
+      return;
+    }
+    if (this.showImage.value === true) {
+      this.includeAIImage.enable({emitEvent: false});
+      return;
+    }
+
+    this.includeAIImage.setValue(false, {emitEvent: false});
+    this.includeAIImage.disable({emitEvent: false});
   }
 
   prepareDictation(): Dictation {
@@ -220,6 +336,7 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
       return <Dictation>{
         id: -1,
         showImage: this.showImage.value as boolean,
+        includeAIImage: this.includeAIImage?.value === true,
         vocabs: DictationUtils.vocabularyValueToArray(this.question.value, this.wordContainSpace.value).map(v => new Vocab(v)),
         totalRecommended: 0,
         title: new Date().toDateString(),

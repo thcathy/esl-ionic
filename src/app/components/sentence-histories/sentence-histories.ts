@@ -10,8 +10,13 @@ import {SpeechService} from "../../services/speech.service";
 })
 export class SentenceHistoriesComponent {
   @Input() histories: SentenceHistory[];
+  @Input() speakPunctuation = false;
 
   constructor(public speechService: SpeechService) {
+  }
+
+  speak(text: string) {
+    void this.speechService.speakByVoiceMode(text, { speakPunctuation: this.speakPunctuation });
   }
 
 }

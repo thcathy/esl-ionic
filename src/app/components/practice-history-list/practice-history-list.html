@@ -1,24 +1,38 @@
-<ion-card class="card" *ngIf="histories" style="margin-top: 8px;">
-  <ion-card-header>
-    <ion-card-title>
-      <fa-icon [icon]="['fas', 'history']"></fa-icon>
-      {{'Records'|translate}}
-      <score class="ion-float-right" [mark]="mark" [total]="histories.length"></score>
-    </ion-card-title>
-  </ion-card-header>
-  <ion-card-content>
-    <ion-list>
-      <ion-item *ngFor="let history of histories; let i = index" [@flyIn]="history.state">
-        <ion-badge item-start style="background-color: #4CAF50; margin: 0px;">{{ histories.length - i }}</ion-badge>
-        <ion-label>
-          <ion-row>
-            <ion-col>{{ history.question.word }}</ion-col>
-            <ion-col [class.green-text]="history.correct" [class.red]="!history.correct">{{ history.answer }}</ion-col>
-            <ion-col class="hidden-md-down">[{{ history.question.ipaunavailable ? 'N.A.' : history.question.ipa }}]</ion-col>
-            <ion-col class="ion-text-right"><fa-icon [icon]="['fas', 'check']" *ngIf="history.correct" class="green-text"></fa-icon><fa-icon [icon]="['fas', 'times']" *ngIf="!history.correct" class="red"></fa-icon></ion-col>
-          </ion-row>
-        </ion-label>
-      </ion-item>
-    </ion-list>
-  </ion-card-content>
-</ion-card>
+@if (histories) {
+  <app-section-card [headerTitle]="'Records'|translate" icon="history">
+    <div class="history-summary">
+      <div class="result-score">
+        <span class="green-text">
+          <fa-icon [icon]="['fas', 'check']"></fa-icon>
+          {{mark}} ({{histories.length > 0 ? (mark / histories.length * 100 | number:'1.0-0') : 0}}%)
+        </span>
+        /
+        <span class="red">
+          <fa-icon [icon]="['fas', 'times']"></fa-icon>
+          {{histories.length - mark}} ({{histories.length > 0 ? ((histories.length - mark) / histories.length * 100 | number:'1.0-0') : 0}}%)
+        </span>
+      </div>
+    </div>
+    <div class="history-content">
+      <ion-list>
+        @for (history of histories; track history; let i = $index) {
+          <ion-item [@flyIn]="history.state">
+            <ion-badge item-start style="background-color: #4CAF50; margin: 0px;">{{ histories.length - i }}</ion-badge>
+            <ion-label>
+              <ion-row>
+                <ion-col>{{ history.question.word }}</ion-col>
+                <ion-col [class.green-text]="history.correct" [class.red]="!history.correct">{{ history.answer }}</ion-col>
+                <ion-col class="hidden-md-down">[{{ history.question.ipaunavailable ? 'N.A.' : history.question.ipa }}]</ion-col>
+                <ion-col class="ion-text-right">@if (history.correct) {
+                  <fa-icon [icon]="['fas', 'check']" class="green-text"></fa-icon>
+                  }@if (!history.correct) {
+                  <fa-icon [icon]="['fas', 'times']" class="red"></fa-icon>
+                }</ion-col>
+              </ion-row>
+            </ion-label>
+          </ion-item>
+        }
+      </ion-list>
+    </div>
+  </app-section-card>
+}

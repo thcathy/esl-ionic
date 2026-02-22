@@ -15,65 +15,89 @@
       </ion-segment>
 
       <ion-card-content>
-        <div [ngSwitch]="type">
-          <div *ngSwitchCase="'byword'">
-            <h3>{{'Input vocabulary'|translate}}:</h3>
-            <h4>{{'example'|translate}}: "apple", "bus stop", "ice-cream"</h4>
-
-            <form class="input-form" [formGroup]="byWordInputForm" novalidate (keydown.enter)="$event.preventDefault()">
-              <ion-grid formArrayName="vocabs">
-                <ion-row>
-                  <ion-col size="6" size-sm="6" size-md="4" size-lg="3"
-                           *ngFor="let vocab of vocabs.controls; let i = index;" [formGroupName]="i">
-                    <ion-item class="vocabInput">
-                      <ion-input id="vocab{{i}}" formControlName="word" maxlength="30" placeholder="{{i+1}}"
-                                 color="{{ vocab.invalid && (vocab.dirty || vocab.touched) ? 'danger' : 'primary' }}"
-                                 (keyup.enter) ="keytab($event, i)">
-                      </ion-input>
-                    </ion-item>
-                    <div class="error-text" *ngIf="vocab.invalid && (vocab.dirty || vocab.touched)">{{'Cannot contain invalid character(s)'|translate}}</div>
+        <ion-item>
+          <ion-select [(ngModel)]="voiceMode" interface="popover">
+            <div slot="label"><fa-icon [icon]="['fas', 'volume-high']"></fa-icon> {{'Voice Mode'|translate}}</div>
+            <ion-select-option value="online">{{'Online Voice'|translate}}</ion-select-option>
+            <ion-select-option value="local">{{'Local Voice'|translate}}</ion-select-option>
+          </ion-select>
+        </ion-item>
+        <ion-note class="ion-padding-start" color="medium">
+          @if (voiceMode === 'online') {
+            {{'VoiceMode.OnlineDescription'|translate}}
+          } @else {
+            {{'VoiceMode.LocalDescription'|translate}}
+          }
+        </ion-note>
+        <div>
+          @switch (type) {
+            @case ('byword') {
+              <div>
+                <h3>{{'Input vocabulary'|translate}}:</h3>
+                <h4>{{'example'|translate}}: "apple", "bus stop", "ice-cream"</h4>
+                <form class="input-form" [formGroup]="byWordInputForm" novalidate (keydown.enter)="$event.preventDefault()">
+                  <ion-grid formArrayName="vocabs">
+                    <ion-row>
+                      @for (vocab of vocabs.controls; track vocab; let i = $index) {
+                        <ion-col size="6" size-sm="6" size-md="4" size-lg="3"
+                          [formGroupName]="i">
+                          <ion-item class="vocabInput">
+                            <ion-input id="vocab{{i}}" formControlName="word" maxlength="30" placeholder="{{i+1}}"
+                              color="{{ vocab.invalid && (vocab.dirty || vocab.touched) ? 'danger' : 'primary' }}"
+                              (keyup.enter) ="keytab($event, i)">
+                            </ion-input>
+                          </ion-item>
+                          @if (vocab.invalid && (vocab.dirty || vocab.touched)) {
+                            <div class="error-text">{{'Cannot contain invalid character(s)'|translate}}</div>
+                          }
+                        </ion-col>
+                      }
+                    </ion-row>
+                  </ion-grid>
+                  <ion-item>
+                    <ion-label><fa-icon [icon]="['far', 'images']"></fa-icon> {{'Show Image'|translate}}</ion-label>
+                    <ion-toggle formControlName="showImage"></ion-toggle>
+                  </ion-item>
+                </form>
+                <ion-row class="ion-no-padding">
+                  <ion-col>
+                    <ion-button fill="outline" (click)="clearVocabs()"><fa-icon [icon]="['fas', 'times']"></fa-icon>&nbsp;{{'Clear inputs'|translate}}</ion-button>
+                  </ion-col>
+                  <ion-col class="ion-text-right">
+                    <ion-button id="start-by-word-button" (click)="startByWord()">
+                      <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>&nbsp;{{'Start'|translate}}
+                    </ion-button>
                   </ion-col>
                 </ion-row>
-              </ion-grid>
-              <ion-item>
-                <ion-label><fa-icon [icon]="['far', 'images']"></fa-icon> {{'Show Image'|translate}}</ion-label>
-                <ion-toggle formControlName="showImage"></ion-toggle>
-              </ion-item>
-            </form>
-            <ion-row class="ion-no-padding">
-              <ion-col>
-                <ion-button fill="outline" (click)="clearVocabs()"><fa-icon [icon]="['fas', 'times']"></fa-icon>&nbsp;{{'Clear inputs'|translate}}</ion-button>
-              </ion-col>
-              <ion-col class="ion-text-right">
-                <ion-button id="start-by-word-button" (click)="startByWord()">
-                  <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>&nbsp;{{'Start'|translate}}
-                </ion-button>
-              </ion-col>
-            </ion-row>
-          </div>
-
-          <div *ngSwitchCase="'bysentence'" style="padding-left: 8px; padding-right: 8px;">
-            <form class="articleInput" [formGroup]="bySentenceInputForm" novalidate>
-              <h3>{{'Input an passage'|translate}}:</h3>
-              <ion-textarea class="textarea" formControlName="article" rows="10"></ion-textarea>
-              <ion-item>
-                <ion-label style="margin: inherit;">{{'Each Sentence Length'|translate}}</ion-label>
-                <ion-select style="padding-right: 30px;" formControlName="sentenceLength" interface="popover">
-                  <ion-select-option *ngFor="let state of sentenceLengthOptions" [value]="state">{{'SentenceLength.' + state|translate}}</ion-select-option>
-                </ion-select>
-              </ion-item>
-              <ion-row style="padding-top: 1rem">
-                <ion-col>
-                  <ion-button fill="outline" (click)="clearArticle()"><fa-icon [icon]="['fas', 'times']"></fa-icon>&nbsp;{{'Clear inputs'|translate}}</ion-button>
-                </ion-col>
-                <ion-col class="ion-text-right">
-                  <ion-button (click)="startBySentence()" [disabled]="bySentenceInputForm.invalid">
-                    <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>&nbsp;{{'Start'|translate}}
-                  </ion-button>
-                </ion-col>
-              </ion-row>
-            </form>
-          </div>
+              </div>
+            }
+            @case ('bysentence') {
+              <div style="padding-left: 8px; padding-right: 8px;">
+                <form class="articleInput" [formGroup]="bySentenceInputForm" novalidate>
+                  <h3>{{'Input an passage'|translate}}:</h3>
+                  <ion-textarea class="textarea" formControlName="article" rows="10"></ion-textarea>
+                  <ion-item>
+                    <ion-label style="margin: inherit;">{{'Each Sentence Length'|translate}}</ion-label>
+                    <ion-select style="padding-right: 30px;" formControlName="sentenceLength" interface="popover">
+                      @for (state of sentenceLengthOptions; track state) {
+                        <ion-select-option [value]="state">{{'SentenceLength.' + state|translate}}</ion-select-option>
+                      }
+                    </ion-select>
+                  </ion-item>
+                  <ion-row style="padding-top: 1rem">
+                    <ion-col>
+                      <ion-button fill="outline" (click)="clearArticle()"><fa-icon [icon]="['fas', 'times']"></fa-icon>&nbsp;{{'Clear inputs'|translate}}</ion-button>
+                    </ion-col>
+                    <ion-col class="ion-text-right">
+                      <ion-button (click)="startBySentence()" [disabled]="bySentenceInputForm.invalid">
+                        <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>&nbsp;{{'Start'|translate}}
+                      </ion-button>
+                    </ion-col>
+                  </ion-row>
+                </form>
+              </div>
+            }
+          }
         </div>
       </ion-card-content>
     </ion-card>

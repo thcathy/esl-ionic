@@ -1,8 +1,12 @@
 <ion-header>
   <ion-toolbar color="primary">
     <ion-buttons slot="start">
-      <ion-menu-button *ngIf="!showBackButton"></ion-menu-button>
-      <ion-button *ngIf="showBackButton" fill="clear" (click)="navigationService.goBack()"><fa-icon icon="angle-left" size="2x"></fa-icon></ion-button>
+      @if (!showBackButton) {
+        <ion-menu-button></ion-menu-button>
+      }
+      @if (showBackButton) {
+        <ion-button fill="clear" (click)="navigationService.goBack()"><fa-icon icon="angle-left" size="2x"></fa-icon></ion-button>
+      }
     </ion-buttons>
     <ion-title>{{'Dictation' | translate}}</ion-title>
   </ion-toolbar>

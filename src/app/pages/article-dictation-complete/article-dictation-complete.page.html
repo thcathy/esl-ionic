@@ -1,8 +1,12 @@
 <ion-header>
   <ion-toolbar color="primary">
     <ion-buttons slot="start">
-      <ion-menu-button *ngIf="!historyStored"></ion-menu-button>
-      <ion-button *ngIf="historyStored" fill="clear" (click)="navigationService.goBack()"><fa-icon icon="angle-left" size="2x"></fa-icon></ion-button>
+      @if (!historyStored) {
+        <ion-menu-button></ion-menu-button>
+      }
+      @if (historyStored) {
+        <ion-button fill="clear" (click)="navigationService.goBack()"><fa-icon icon="angle-left" size="2x"></fa-icon></ion-button>
+      }
     </ion-buttons>
     <ion-title>{{'Finished Practice' | translate}}</ion-title>
   </ion-toolbar>
@@ -10,51 +14,47 @@
 
 <ion-content>
   <div class="inner-content">
-    <ion-card class="card">
-      <ion-card-header style="font-size: 1.2rem;">
-        <ion-card-title>{{ 'Completed dictation' | translate }}</ion-card-title>
-      </ion-card-header>
-      <ion-row class="ion-no-padding">
-        <ion-col>
-          <ion-button (click)="showOptionsOrStart()"><fa-icon [icon]="['fas', 'redo']"></fa-icon>&nbsp;{{'Retry'|translate}}</ion-button>
-        </ion-col>
-        <ion-col class="ion-text-right">
-          <ion-button *ngIf="dictation && dictation.id > 0 && !historyStored" color="secondary" class="save-button" (click)="recommend()" [disabled]="recommended">
-            <fa-icon [icon]="['fas', 'thumbs-up']"></fa-icon>&nbsp;{{ recommendBtnText() }}
-          </ion-button>
-          <ion-button *ngIf="dictation && dictation.id <= 0" color="secondary" class="save-button" (click)="navigationService.editDictation(dictation)">
-            <fa-icon [icon]="['fas', 'save']"></fa-icon>&nbsp;{{'Save'|translate}}
-          </ion-button>
-        </ion-col>
-      </ion-row>
-    </ion-card>
-    <app-dictation-card #dictationCard [dictation]="dictation" [showContent]="false"></app-dictation-card>
-    <ion-card class="card" style="margin-top: 8px;">
-      <h3><fa-icon [icon]="['fas', 'check']"></fa-icon> {{totalCorrect}} ({{totalCorrect / (totalCorrect + totalWrong) * 100 | number:'1.0-0'}}%)
-        / <span class="red"><fa-icon [icon]="['fas', 'times']"></fa-icon> {{totalWrong}} ({{totalWrong / (totalCorrect + totalWrong) * 100 | number:'1.0-0'}}%)</span></h3>
-      <sentence-histories [histories]="histories"></sentence-histories>
-    </ion-card>
+    @if (dictation) {
+      <app-dictation-card
+        #dictationCard
+        [dictation]="dictation"
+        [showContent]="false"
+        [start]="true"
+        [showStartButton]="false">
+
+        <div dictationInfoActions class="complete-info-actions">
+          @if (dictation && dictation.id > 0 && !historyStored) {
+            <ion-button color="secondary" class="save-button" (click)="recommend()" [disabled]="recommended">
+              <fa-icon [icon]="['fas', 'thumbs-up']"></fa-icon>&nbsp;{{ recommendBtnText() }}
+            </ion-button>
+          }
+          @if (dictation && dictation.id <= 0) {
+            <ion-button color="secondary" class="save-button" (click)="navigationService.editDictation(dictation)">
+              <fa-icon [icon]="['fas', 'save']"></fa-icon>&nbsp;{{'Save'|translate}}
+            </ion-button>
+          }
+        </div>
+
+        <div dictationOptionActions class="complete-retry-actions">
+          <div class="start-button-row">
+            <ion-button (click)="retryWithOptions()"><fa-icon [icon]="['fas', 'redo']"></fa-icon>&nbsp;{{'Retry'|translate}}</ion-button>
+          </div>
+        </div>
+      </app-dictation-card>
+    }
+
+    <app-section-card [headerTitle]="'Records'|translate" icon="history">
+      <div class="result-score">
+        <fa-icon [icon]="['fas', 'check']"></fa-icon> {{totalCorrect}} ({{totalCorrect / (totalCorrect + totalWrong) * 100 | number:'1.0-0'}}%)
+        / <span class="red"><fa-icon [icon]="['fas', 'times']"></fa-icon> {{totalWrong}} ({{totalWrong / (totalCorrect + totalWrong) * 100 | number:'1.0-0'}}%)</span>
+      </div>
+      <sentence-histories
+        [histories]="histories"
+        [speakPunctuation]="!!dictation?.options?.speakPunctuation">
+      </sentence-histories>
+    </app-section-card>
 
   </div>
-
-  <ion-modal #articleOptionsModal trigger="open-modal">
-    <ng-template>
-      <ion-header>
-        <ion-toolbar>
-          <ion-title>{{'Options' | translate}}</ion-title>
-          <ion-buttons slot="start">
-            <ion-button color="primary" (click)="articleOptionsModal.dismiss()"><fa-icon icon="xmark"></fa-icon></ion-button>
-          </ion-buttons>
-          <ion-buttons slot="end">
-            <ion-button fill="clear" color="primary" (click)="getDictationThenOpen()">{{'Retry'|translate}}</ion-button>
-          </ion-buttons>
-        </ion-toolbar>
-      </ion-header>
-      <ion-content class="article-options-content">
-        <app-article-dictation-options #articleDictationOptions></app-article-dictation-options>
-      </ion-content>
-    </ng-template>
-  </ion-modal>
 
   <app-footer></app-footer>
 </ion-content>

@@ -112,7 +112,11 @@ describe('PracticeCompletePage', () => {
     }));
 
     it('retry all will go to vocabulary starter with correct vocabulary practice type', fakeAsync(() => {
-      component.getDictationThenOpen(false);
+      const cardSpy = jasmine.createSpyObj('DictationCardComponent', ['getSelectedPracticeType', 'prepareStartDictation']);
+      cardSpy.getSelectedPracticeType.and.returnValue(defaultInput.dictation.options.practiceType);
+      cardSpy.prepareStartDictation.and.callFake((d: Dictation) => d);
+      component.dictationCard = cardSpy as any;
+      component.retryWithOptions(false);
 
       expect(navigationServiceSpy.retryDictation.calls.count()).toEqual(1);
       const dictationInParam = <Dictation>navigationServiceSpy.retryDictation.calls.mostRecent().args[0];
@@ -134,33 +138,34 @@ describe('PracticeCompletePage', () => {
       dictation.options.practiceType = VocabPracticeType.Spell;
       dictation.id = 999;
       dictationServiceSpy.getById.and.returnValue(of(dictation));
-      ionicComponentServiceSpy.presentVocabPracticeTypeActionSheet.and.returnValue(Promise.resolve(dictation.options.practiceType));
       defaultInput.mark = 1;  // not fully correct
       const params = { 'practiceCompletePageInput': defaultInput };
       storageSpy.get.and.callFake((param) => params[param]);
       component.ionViewWillEnter();
       tick();
       fixture.detectChanges();
+      const cardSpy = jasmine.createSpyObj('DictationCardComponent', ['getSelectedPracticeType', 'prepareStartDictation']);
+      cardSpy.getSelectedPracticeType.and.returnValue(VocabPracticeType.Spell);
+      cardSpy.prepareStartDictation.and.callFake((d: Dictation) => d);
+      component.dictationCard = cardSpy as any;
     }));
 
-    it('retry will show vocabulary practice type options for saved vocabulary dictation', fakeAsync(() => {
-      component.getDictationThenOpen(false);
-      expect(navigationServiceSpy.startDictation.calls.count()).toEqual(0);
-      expect(ionicComponentServiceSpy.presentVocabPracticeTypeActionSheet.calls.count()).toEqual(1);
+    it('retry all should fetch latest dictation and retry without wrong-word histories', fakeAsync(() => {
+      component.retryWithOptions(false);
+      tick();
+      expect(navigationServiceSpy.retryDictation.calls.count()).toEqual(1);
+      const dictationInParam = <Dictation>navigationServiceSpy.retryDictation.calls.mostRecent().args[0];
+      expect(dictationInParam.options.practiceType).toEqual(VocabPracticeType.Spell);
+      expect(dictationInParam.options.retryWrongWord).toBeFalse();
+      expect(dictationInParam.options.vocabPracticeHistories?.length).toEqual(0);
     }));
 
     it('show retry wrong word', fakeAsync(() => {
       expect(component.showRetryIncorrect()).toBeTrue();
     }));
 
-    it('show vocabulary practice type options for saved vocabulary dictation', fakeAsync(() => {
-      component.getDictationThenOpen(true);
-      expect(navigationServiceSpy.startDictation.calls.count()).toEqual(0);
-      expect(ionicComponentServiceSpy.presentVocabPracticeTypeActionSheet.calls.count()).toEqual(1);
-    }));
-
     it('retry wrong word only will set options', fakeAsync(() => {
-      component.getDictationThenOpen(true);
+      component.retryWithOptions(true);
       tick();
       expect(navigationServiceSpy.retryDictation.calls.count()).toEqual(1);
       const dictationInParam = <Dictation>navigationServiceSpy.retryDictation.calls.mostRecent().args[0];
@@ -168,6 +173,16 @@ describe('PracticeCompletePage', () => {
       expect(dictationInParam.options.practiceType).toEqual(dictation.options.practiceType);
       expect(dictationInParam.options.retryWrongWord).toBeTrue();
       expect(dictationInParam.options.vocabPracticeHistories?.length).toEqual(2);
+    }));
+
+    it('retry all will set options without retry-wrong-word histories', fakeAsync(() => {
+      component.retryWithOptions(false);
+      tick();
+      expect(navigationServiceSpy.retryDictation.calls.count()).toEqual(1);
+      const dictationInParam = <Dictation>navigationServiceSpy.retryDictation.calls.mostRecent().args[0];
+      expect(dictationInParam.options.practiceType).toEqual(dictation.options.practiceType);
+      expect(dictationInParam.options.retryWrongWord).toBeFalse();
+      expect(dictationInParam.options.vocabPracticeHistories?.length).toEqual(0);
     }));
 
   });

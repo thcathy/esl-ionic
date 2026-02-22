@@ -7,9 +7,8 @@ import {TranslateService} from "@ngx-translate/core";
 import {ActivatedRoute} from "@angular/router";
 import {IonicComponentService} from "../../services/ionic-component.service";
 import {StorageService} from '../../services/storage.service';
-import {IonModal} from "@ionic/angular";
-import {ArticleDictationOptionsComponent} from "../../components/article-dictation-options/article-dictation-options.component";
 import {FFSAuthService} from '../../services/auth.service';
+import {DictationCardComponent} from '../../components/dictation-card/dictation-card';
 
 @Component({
     selector: 'app-article-dictation-complete',
@@ -18,9 +17,7 @@ import {FFSAuthService} from '../../services/auth.service';
     standalone: false
 })
 export class ArticleDictationCompletePage implements OnInit {
-  @ViewChild('dictationCard', { static: true }) dictationCard;
-  @ViewChild('articleOptionsModal') articleDictationOptionsModal: IonModal;
-  @ViewChild('articleDictationOptions') articleDictationOptions: ArticleDictationOptionsComponent;
+  @ViewChild('dictationCard') dictationCard: DictationCardComponent;
 
   dictation: Dictation;
   histories: SentenceHistory[];
@@ -86,23 +83,22 @@ export class ArticleDictationCompletePage implements OnInit {
       return this.translate.instant('Recommend');
   }
 
-  showOptionsOrStart() {
+  async retryWithOptions() {
     if (this.dictationService.isInstantDictation(this.dictation)) {
-      this.openDictation(this.dictation);
-    } else {
-      this.articleDictationOptionsModal.present();
+      const updated = this.dictationCard?.prepareStartDictation(this.dictation) ?? this.dictation;
+      this.openDictation(updated);
+      return;
     }
-  }
 
-  async getDictationThenOpen() {
-    this.articleDictationOptionsModal.dismiss();
-    if (this.dictationService.isInstantDictation(this.dictation)) {
-      this.openDictation(this.dictation);
-    } else {
-      this.loader = await this.ionicComponentService.showLoading();
-      this.dictationService.getById(this.dictation.id)
-        .subscribe(d => this.openDictation(d),  e => this.showCannotGetDictation(e))
-    }
+    this.loader = await this.ionicComponentService.showLoading();
+    this.dictationService.getById(this.dictation.id)
+      .subscribe(
+        d => {
+          const updated = this.dictationCard?.prepareStartDictation(d) ?? d;
+          this.openDictation(updated);
+        },
+        e => this.showCannotGetDictation(e)
+      );
   }
 
   openDictation(d: Dictation) {

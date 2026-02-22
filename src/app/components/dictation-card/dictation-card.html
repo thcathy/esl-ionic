@@ -1,128 +1,177 @@
-<ion-card class="card" *ngIf="dictation" style="margin-top: 8px;">
-  <ion-card-header>
-    <ion-card-title>
-      <div class="dictation" *ngIf="dictation.source === sourceType.FillIn"><fa-icon [icon]="['fas', 'edit']"></fa-icon> {{ 'Dictation' | translate }}</div>
-      <div class="vocabulary" *ngIf="dictation.source === sourceType.Select"><fa-icon [icon]="['fas', 'edit']"></fa-icon> {{ 'Vocabulary Exercise' | translate }}</div>
-    </ion-card-title>
-  </ion-card-header>
-  <ion-card-content>
-    <ion-grid>
-      <ion-row>
-        <ion-col size="12" size-sm="12" size-md="12" size-lg="6">
-          <table class="dictation-detail">
-            <tr *ngIf="dictation.id > 0 && !dictationHelper.isSelectVocabExercise(dictation)">
+@if (dictation) {
+  <div class="dictation-card-layout">
+    <app-section-card
+      class="dictation-section section-info"
+      [headerTitle]="(dictation.source === sourceType.FillIn ? 'Dictation' : 'Vocabulary Exercise') | translate"
+      icon="edit">
+      <div class="section-body">
+        <table class="dictation-detail">
+          @if (dictation.id > 0 && !dictationHelper.isSelectVocabExercise(dictation)) {
+            <tr>
               <td>{{ 'ID' | translate }}</td>
               <td>
                 <strong>{{dictation.id}}</strong>
                 <fa-icon class="info-button" (click)="openSearchByIdPopup()" [icon]="['fas', 'info-circle']"></fa-icon>
               </td>
             </tr>
-            <tr>
-              <td>{{ 'Title' | translate }}</td>
-              <td><strong>{{dictation.title}}</strong></td>
-            </tr>
-            <tr class="descriptionTR" *ngIf="dictation.source === sourceType.FillIn">
+          }
+          <tr>
+            <td>{{ 'Title' | translate }}</td>
+            <td><strong>{{dictation.title}}</strong></td>
+          </tr>
+          @if (dictation.source === sourceType.FillIn) {
+            <tr class="descriptionTR">
               <td>{{ 'Description' | translate }}</td>
               <td>{{ dictation.description }}</td>
             </tr>
-            <tr class="suitableTR" *ngIf="dictation.source === sourceType.FillIn">
+          }
+          @if (dictation.source === sourceType.FillIn) {
+            <tr class="suitableTR">
               <td>{{ 'Suitable' | translate }}</td>
               <td>{{ 'SuitableStudent.' + dictation.suitableStudent | translate }}</td>
             </tr>
-            <tr *ngIf="!dictationHelper.isSentenceDictation(dictation)">
+          }
+          @if (!dictationHelper.isSentenceDictation(dictation)) {
+            <tr>
               <td>{{ 'Show Image' | translate }}</td>
               <td>
-                <fa-icon [icon]="['fas', 'check']" *ngIf="dictation.showImage"></fa-icon>
-                <fa-icon [icon]="['fas', 'times']" *ngIf="!dictation.showImage"></fa-icon>
+                @if (dictation.showImage) {
+                  <fa-icon [icon]="['fas', 'check']"></fa-icon>
+                }
+                @if (!dictation.showImage) {
+                  <fa-icon [icon]="['fas', 'times']"></fa-icon>
+                }
                 ({{ ( dictation.includeAIImage ? 'Include AI Generated Image' : 'Not Include AI Generated Image' ) | translate }})
               </td>
             </tr>
-            <tr *ngIf="dictationHelper.isSentenceDictation(dictation)">
+          }
+          @if (dictationHelper.isSentenceDictation(dictation)) {
+            <tr>
               <td>{{ 'Each Sentence Length' | translate }}</td>
               <td>{{ 'SentenceLength.' + dictation.sentenceLength | translate }}</td>
             </tr>
-            <tr class="recommendTR" *ngIf="dictation.source === sourceType.FillIn && !dictationHelper.isInstantDictation(dictation)"
+          }
+          @if (dictation.source === sourceType.FillIn && !dictationHelper.isInstantDictation(dictation)) {
+            <tr class="recommendTR"
                 [@recommend]="recommendState"
                 (@recommend.done)="recommendAnimationDone($event)">
               <td>{{ 'Recommend' | translate }}</td>
               <td><fa-icon [icon]="['far', 'thumbs-up']"></fa-icon> {{ dictation.totalRecommended }}</td>
             </tr>
-            <tr *ngIf="dictation.lastModifyDate">
+          }
+          @if (dictation.lastModifyDate) {
+            <tr>
               <td>{{ 'Last Updated' | translate }}</td>
               <td>{{ dictation.lastModifyDate | date: 'yyyy-MM-dd' }}</td>
             </tr>
-            <tr *ngIf="dictation.totalAttempt">
+          }
+          @if (dictation.totalAttempt) {
+            <tr>
               <td>{{ 'Finished' | translate }}</td>
               <td>{{dictation.totalAttempt}}</td>
             </tr>
-          </table>
-        </ion-col>
-        <ion-col size="12" size-sm="12" size-md="12" size-lg="6" *ngIf="showContent && !dictationHelper.isSentenceDictation(dictation)">
-          <div style="padding-bottom: 4px;" >{{'Vocabulary'|translate}} ({{dictation.vocabs.length}}):</div>
-          <div class="fillin-vocabs" *ngIf="dictation.source === sourceType.FillIn">
-            <span *ngFor="let vocab of dictation.vocabs">
-              <ion-badge style="background-color: var(--ion-color-secondary); margin-right: 4px;">{{ vocab.word }}</ion-badge>
-            </span>
-          </div>
-          <ion-list class="select-vocab-list" *ngIf="dictation.source === sourceType.Select">
-            <ion-item *ngFor="let vocab of memberVocabularies; let i = index">
-              <ion-label class="vocab-label">
-                <ion-row>
-                  <ion-col class="heading">
-                    {{vocab.id.word}}
-                    <ion-badge color="light" *ngIf="manageVocabHistoryService.isLearnt(vocab)">{{ 'Learnt' | translate }}</ion-badge>
-                  </ion-col>
-                  <ion-col class="ion-text-right">
-                    <span class="green-text"><fa-icon [icon]="['fas', 'check']"></fa-icon> {{vocab.correct}}</span>
-                    /
-                    <span class="red"><fa-icon [icon]="['fas', 'times']"></fa-icon> {{vocab.wrong}}</span>
-                  </ion-col>
-                </ion-row>
-              </ion-label>
-            </ion-item>
-          </ion-list>
-        </ion-col>
-        <ion-col size="12" size-sm="12" size-md="12" size-lg="6" *ngIf="showContent && dictationHelper.isSentenceDictation(dictation)">
-          <div style="padding-bottom: 4px;" >{{'Article'|translate}}:</div>
-          <p>{{dictation.article}}</p>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-    <ion-row>
-      <ion-col>
-        <ion-button class="edit-button" *ngIf="edit && dictation?.source === sourceType.FillIn" color="secondary" (click)="navService.editDictation(dictation)"><fa-icon [icon]="['fas', 'edit']"></fa-icon>&nbsp;{{'Edit'|translate}}</ion-button>
-        <ion-button *ngIf="edit" color="danger" (click)="confirmDeleteDictation()"><fa-icon [icon]="['fas', 'trash']"></fa-icon>&nbsp;{{'Delete'|translate}}</ion-button>
-      </ion-col>
-      <ion-col class="ion-text-right">
-        <ion-button *ngIf="start" (click)="showDictationOptions()"><fa-icon [icon]="['fas', 'play']"></fa-icon>&nbsp;{{'Start'|translate}}</ion-button>
-      </ion-col>
-    </ion-row>
-    <ion-row>
-      <ion-col>
-        <ion-button class="share-button" *ngIf="!dictationHelper.isInstantDictation(dictation) && dictation.source === sourceType.FillIn"
-                     (click)="shareDictation()">
-          <fa-icon [icon]="['fas', 'share-square']"></fa-icon>&nbsp;{{'Share'|translate}}
-        </ion-button>
-      </ion-col>
-    </ion-row>
-  </ion-card-content>
-</ion-card>
+          }
+        </table>
 
-<ion-modal #articleOptionsModal trigger="open-modal">
-  <ng-template>
-    <ion-header >
-      <ion-toolbar>
-        <ion-title>{{'Options' | translate}}</ion-title>
-        <ion-buttons slot="start">
-          <ion-button color="primary" (click)="articleOptionsModal.dismiss()"><fa-icon icon="xmark"></fa-icon></ion-button>
-        </ion-buttons>
-        <ion-buttons slot="end">
-          <ion-button fill="clear" color="primary" (click)="startArticleDictation()">{{'Start'|translate}}</ion-button>
-        </ion-buttons>
-      </ion-toolbar>
-    </ion-header>
-    <ion-content class="article-options-content">
-      <app-article-dictation-options #articleDictationOptions></app-article-dictation-options>
-    </ion-content>
-  </ng-template>
-</ion-modal>
+        <div class="dictation-controls">
+          @if (edit && dictation?.source === sourceType.FillIn) {
+            <ion-button class="action-button edit-button" color="secondary" (click)="navService.editDictation(dictation)"><fa-icon [icon]="['fas', 'edit']"></fa-icon>&nbsp;{{'Edit'|translate}}</ion-button>
+          }
+          @if (edit) {
+            <ion-button class="action-button" color="danger" (click)="confirmDeleteDictation()"><fa-icon [icon]="['fas', 'trash']"></fa-icon>&nbsp;{{'Delete'|translate}}</ion-button>
+          }
+          @if (!dictationHelper.isInstantDictation(dictation) && dictation.source === sourceType.FillIn) {
+            <ion-button class="action-button share-button" (click)="shareDictation()">
+              <fa-icon [icon]="['fas', 'share-square']"></fa-icon>&nbsp;{{'Share'|translate}}
+            </ion-button>
+          }
+          <ng-content select="[dictationInfoActions]"></ng-content>
+        </div>
+      </div>
+    </app-section-card>
+
+    @if (showContent) {
+      <app-section-card class="dictation-section section-content" [headerTitle]="'Content'|translate" icon="pen">
+        <div class="section-body">
+          @if (!dictationHelper.isSentenceDictation(dictation)) {
+            <div class="content-title">{{'Vocabulary'|translate}} ({{dictation.vocabs.length}}):</div>
+            @if (dictation.source === sourceType.FillIn) {
+              <div class="fillin-vocabs">
+                @for (vocab of dictation.vocabs; track vocab) {
+                  <span>
+                    <ion-badge class="fillin-badge">{{ vocab.word }}</ion-badge>
+                  </span>
+                }
+              </div>
+            }
+            @if (dictation.source === sourceType.Select) {
+              <ion-list class="select-vocab-list">
+                @for (vocab of memberVocabularies; track vocab; let i = $index) {
+                  <ion-item>
+                    <ion-label class="vocab-label">
+                      <ion-row>
+                        <ion-col class="heading">
+                          {{vocab.id.word}}
+                          @if (manageVocabHistoryService.isLearnt(vocab)) {
+                            <ion-badge color="light">{{ 'Learnt' | translate }}</ion-badge>
+                          }
+                        </ion-col>
+                        <ion-col class="ion-text-right">
+                          <span class="green-text"><fa-icon [icon]="['fas', 'check']"></fa-icon> {{vocab.correct}}</span>
+                          /
+                          <span class="red"><fa-icon [icon]="['fas', 'times']"></fa-icon> {{vocab.wrong}}</span>
+                        </ion-col>
+                      </ion-row>
+                    </ion-label>
+                  </ion-item>
+                }
+              </ion-list>
+            }
+          } @else {
+            <div class="content-title">{{'Article'|translate}}:</div>
+            <p>{{dictation.article}}</p>
+          }
+        </div>
+      </app-section-card>
+    }
+
+    <app-section-card class="dictation-section section-options" [headerTitle]="'Options'|translate" icon="sliders-h">
+      <div class="section-body">
+        @if (start) {
+          <app-voice-mode-selector
+            [selectedMode]="selectedVoiceMode"
+            (selectedModeChange)="onVoiceModeChange($event)">
+          </app-voice-mode-selector>
+        }
+
+        @if (start && dictationHelper.isSentenceDictation(dictation)) {
+          <app-article-dictation-options #articleDictationOptions></app-article-dictation-options>
+        }
+
+        @if (start && !dictationHelper.isSentenceDictation(dictation)) {
+          <app-vocab-practice-type-selector
+            class="start-type-selector"
+            [selectedType]="selectedStartPracticeType"
+            (selectedTypeChange)="selectedStartPracticeType = $event">
+          </app-vocab-practice-type-selector>
+          @if (showStartButton) {
+            <div class="start-button-row">
+              <ion-button class="action-button start-button" (click)="startVocabDictation(selectedStartPracticeType)">
+                <fa-icon [icon]="['fas', 'play']"></fa-icon>&nbsp;{{'Start'|translate}}
+              </ion-button>
+            </div>
+          }
+        }
+
+        @if (showStartButton && start && dictationHelper.isSentenceDictation(dictation)) {
+          <div class="start-button-row">
+            <ion-button class="action-button start-button" (click)="startArticleDictation()">
+              <fa-icon [icon]="['fas', 'play']"></fa-icon>&nbsp;{{'Start'|translate}}
+            </ion-button>
+          </div>
+        }
+        <ng-content select="[dictationOptionActions]"></ng-content>
+      </div>
+    </app-section-card>
+  </div>
+}

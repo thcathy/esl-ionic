@@ -1,0 +1,52 @@
+.compact-section-card {
+  margin: 4px 0 6px;
+  border: 1px solid rgba(var(--ion-color-medium-rgb), 0.2);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.compact-section-card ion-card-header {
+  padding: 6px 8px;
+}
+
+.compact-section-card ion-card-content {
+  padding-bottom: 4px;
+}
+
+.compact-section-card ion-card-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.88rem;
+  line-height: 1.2;
+}
+
+.compact-section-card ion-card-title fa-icon {
+  font-size: 0.9em;
+}
+
+:host ::ng-deep .compact-section-card ion-card-content ion-item {
+  --min-height: 38px;
+  --padding-start: 10px;
+  --inner-padding-end: 10px;
+}
+
+@media (min-width: 768px) {
+  .compact-section-card {
+    margin: 8px 0 10px;
+  }
+
+  .compact-section-card ion-card-header {
+    padding: 10px 12px;
+  }
+
+  .compact-section-card ion-card-title {
+    font-size: 1rem;
+  }
+
+  :host ::ng-deep .compact-section-card ion-card-content ion-item {
+    --min-height: 48px;
+    --padding-start: 16px;
+    --inner-padding-end: 16px;
+  }
+}

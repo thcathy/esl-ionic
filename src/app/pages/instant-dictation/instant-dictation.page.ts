@@ -8,6 +8,7 @@ import {Dictation, SentenceLengthOptions} from '../../entity/dictation';
 import {Vocab} from '../../entity/vocab';
 import {ValidationUtils} from '../../utils/validation-utils';
 import {StorageService} from '../../services/storage.service';
+import {UIOptionsService} from '../../services/ui-options.service';
 
 // Deprecated
 @Component({
@@ -24,11 +25,13 @@ export class InstantDictationPage implements OnInit {
   bySentenceInputForm: UntypedFormGroup;
   type = 'byword';
   sentenceLengthOptions = SentenceLengthOptions;
+  voiceMode = UIOptionsService.voiceMode.online;
 
   constructor(
     public formBuilder: UntypedFormBuilder,
     public navService: NavigationService,
     public storage: StorageService,
+    public uiOptionsService: UIOptionsService,
     public alertController: AlertController,
     public translate: TranslateService,
     public dictationService: DictationService,
@@ -65,6 +68,8 @@ export class InstantDictationPage implements OnInit {
   }
 
   getFromLocalStorage() {
+    this.uiOptionsService.loadOption(UIOptionsService.keys.ttsVoiceMode)
+      .then(v => this.voiceMode = v || UIOptionsService.voiceMode.online);
     this.storage.get(this.INSTANT_DICTATION_KEY).then((dictation: Dictation) => {
       if (dictation == null) { return; }
 
@@ -96,6 +101,7 @@ export class InstantDictationPage implements OnInit {
   }
 
   startByWord() {
+    this.uiOptionsService.saveOption(UIOptionsService.keys.ttsVoiceMode, this.voiceMode);
     const d = this.prepareVocabDictation();
     if (d.vocabs.length < 1) {
       this.showNoVocabAlert();
@@ -115,6 +121,7 @@ export class InstantDictationPage implements OnInit {
   }
 
   startBySentence() {
+    this.uiOptionsService.saveOption(UIOptionsService.keys.ttsVoiceMode, this.voiceMode);
     const d = this.prepareArticleDictation();
     this.storage.set(this.INSTANT_DICTATION_KEY, d);
     this.navService.startDictation(d);

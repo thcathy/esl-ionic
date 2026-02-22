@@ -31,8 +31,8 @@ export class DictationViewPage implements OnInit {
   ngOnInit() {
     this.route.paramMap.subscribe(params => {
       this.showBackButton = false;
-      if (this.router.getCurrentNavigation() && this.router.getCurrentNavigation().extras.state) {
-        const state = this.router.getCurrentNavigation().extras.state;
+      if (this.router.currentNavigation() && this.router.currentNavigation().extras.state) {
+        const state = this.router.currentNavigation().extras.state;
         this.dictation = JSON.parse(state.dictation);
         this.showBackButton = state.showBackButton;
         const toastMessage = state.toastMessage;

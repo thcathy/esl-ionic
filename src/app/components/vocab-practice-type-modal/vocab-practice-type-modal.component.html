@@ -1,0 +1,18 @@
+<ion-modal #vocabPracticeTypeModal trigger="open-modal">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>{{'Options' | translate}}</ion-title>
+        <ion-buttons slot="start">
+          <ion-button color="primary" (click)="dismiss()"><fa-icon icon="xmark"></fa-icon></ion-button>
+        </ion-buttons>
+        <ion-buttons slot="end">
+          <ion-button fill="clear" color="primary" (click)="start()">{{'Start'|translate}}</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="vocab-options-content">
+      <app-vocab-practice-type-selector [(selectedType)]="selectedType"></app-vocab-practice-type-selector>
+    </ion-content>
+  </ng-template>
+</ion-modal>

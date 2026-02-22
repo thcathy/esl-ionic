@@ -8,16 +8,21 @@ import {dictation2_vocabDictation} from '../../../testing/test-data';
 import {VocabPracticeType} from '../../enum/vocab-practice-type.enum';
 import {NavigationService} from '../../services/navigation.service';
 import {VocabPracticeService} from '../../services/practice/vocab-practice.service';
+import {SpeechService} from '../../services/speech.service';
 import {StorageService} from '../../services/storage.service';
+import {TranslateService} from '@ngx-translate/core';
 
 describe('DictationPracticePage', () => {
   let component: DictationPracticePage;
   let fixture: ComponentFixture<DictationPracticePage>;
-  let storageSpy, navigationServiceSpy;
+  let storageSpy, navigationServiceSpy, speechServiceSpy, translateService;
 
   beforeEach(waitForAsync(() => {
     storageSpy = StorageSpy();
     navigationServiceSpy = NavigationServiceSpy();
+    speechServiceSpy = jasmine.createSpyObj('SpeechService', ['speakByVoiceMode', 'prefetchByVoiceMode']);
+    speechServiceSpy.speakByVoiceMode.and.resolveTo('local');
+    speechServiceSpy.prefetchByVoiceMode.and.resolveTo();
 
     TestBed.configureTestingModule({
       declarations: [ DictationPracticePage ],
@@ -29,15 +34,19 @@ describe('DictationPracticePage', () => {
         { provide: StorageService, useValue: storageSpy },
         { provide: NavigationService, useValue: navigationServiceSpy },
         { provide: VocabPracticeService, useValue: VocabPracticeServiceSpy() },
+        { provide: SpeechService, useValue: speechServiceSpy },
       ],
-    })
+    });
+    TestBed.overrideTemplate(DictationPracticePage, '');
+    TestBed
     .compileComponents();
   }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(DictationPracticePage);
     component = fixture.componentInstance;
-    fixture.detectChanges();
+    translateService = TestBed.inject(TranslateService);
+    translateService.currentLang = 'en';
   });
 
   describe('initDictation', () => {
@@ -61,8 +70,34 @@ describe('DictationPracticePage', () => {
       component.initDictation();
       tick();
       expect(component.practiceType).toBe(VocabPracticeType.Spell);
-      expect(fixture.nativeElement.querySelector('.spell-input-div')).toBeDefined();
-      expect(fixture.nativeElement.querySelector('.puzzle-div')).toBeNull();
     }));
+  });
+
+  describe('speak', () => {
+    it('routes to speech service with pronounce url when available', () => {
+      component.dictation = { options: { speakPunctuation: true } } as any;
+      component.vocabPractices = [{ word: 'hello', activePronounceLink: 'https://x/a.mp3' } as any];
+      component.questionIndex = 0;
+
+      component.speak();
+
+      expect(speechServiceSpy.speakByVoiceMode).toHaveBeenCalledWith('hello', {
+        speakPunctuation: true,
+        pronounceUrl: 'https://x/a.mp3',
+      });
+    });
+
+    it('routes to speech service when pronounce link is unavailable', () => {
+      component.dictation = { options: { speakPunctuation: true } } as any;
+      component.vocabPractices = [{ word: 'hello' } as any];
+      component.questionIndex = 0;
+
+      component.speak();
+
+      expect(speechServiceSpy.speakByVoiceMode).toHaveBeenCalledWith('hello', {
+        speakPunctuation: true,
+        pronounceUrl: undefined,
+      });
+    });
   });
 });

@@ -73,6 +73,7 @@ export class ArticleDictationPage implements OnInit {
       this.articleDictationService.sentenceLengthOptionsToValue(this.dictation.sentenceLength)
     );
     console.debug(`divided into ${this.sentences.length} sentences`);
+    this.sentences.forEach((_sentence, index) => this.prefetchSentence(index));
     this.speak();
   }
 
@@ -87,14 +88,14 @@ export class ArticleDictationPage implements OnInit {
   }
 
   speak() {
-    this.speechService.speak(
-      this.articleDictationService.replacePunctuationToWord(
-        this.sentences[this.currentIndex],
-        {
-          speakPunctuation: !!this.dictation?.options?.speakPunctuation,
-        }
-      ),
-      this.speakingRate);
+    const sentence = this.sentences?.[this.currentIndex];
+    if (!sentence) {
+      return;
+    }
+    void this.speechService.speakByVoiceMode(sentence, {
+      rate: this.speakingRate,
+      speakPunctuation: !!this.dictation?.options?.speakPunctuation,
+    });
   }
 
   submitAnswer() {
@@ -141,6 +142,16 @@ export class ArticleDictationPage implements OnInit {
   }
   backspace() {
     this.answer = this.answer.slice(0, this.answer.length - 1);
+  }
+
+  private prefetchSentence(index: number) {
+    const sentence = this.sentences?.[index];
+    if (!sentence) {
+      return;
+    }
+    void this.speechService.prefetchByVoiceMode(sentence, {
+      speakPunctuation: !!this.dictation?.options?.speakPunctuation,
+    });
   }
 
   private focusAnswerInput() {

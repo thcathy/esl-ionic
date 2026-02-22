@@ -11,12 +11,14 @@ import {InterpretationService} from "../../services/practice/interpretation.serv
       <span>
         <span>{{ 'AI translate'|translate }}: </span>
         <span id="meaning">{{ enabled ? translatedText : '-' }}</span>
-        <span *ngIf="enabled && translatedText === ''">
-          <span class="dot">.</span><span class="dot">.</span><span class="dot">.</span><span class="dot">.</span><span class="dot">.</span>
-        </span>
+        @if (enabled && translatedText === '') {
+          <span>
+            <span class="dot">.</span><span class="dot">.</span><span class="dot">.</span><span class="dot">.</span><span class="dot">.</span>
+          </span>
+        }
       </span>
     </ion-item>
-  `,
+    `,
     styleUrls: ['./text-interpretation.component.scss'],
     standalone: false
 })

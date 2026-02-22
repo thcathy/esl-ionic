@@ -25,6 +25,10 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ArticleDictationOptionsComponent} from "./article-dictation-options/article-dictation-options.component";
 import {TextInterpretationComponent} from "./text-interpretation/text-interpretation.component";
 import {AppHeaderComponent} from "./app-header/app-header.component";
+import {SectionCardComponent} from './section-card/section-card.component';
+import {VocabPracticeTypeModalComponent} from './vocab-practice-type-modal/vocab-practice-type-modal.component';
+import {VocabPracticeTypeSelectorComponent} from './vocab-practice-type-selector/vocab-practice-type-selector.component';
+import {VoiceModeSelectorComponent} from './voice-mode-selector/voice-mode-selector.component';
 
 @NgModule({ declarations: [MemberScoreRankingComponent,
         DictationStatisticsComponent,
@@ -39,7 +43,7 @@ import {AppHeaderComponent} from "./app-header/app-header.component";
         MemberPracticeHistoryListComponent,
         VocabHistoryListComponent,
         TextInterpretationComponent,
-        VirtualKeyboardComponent, CharacterButtonComponent, CharacterComponent, VocabSelectionComponent, ArticleDictationOptionsComponent, AppHeaderComponent
+        VirtualKeyboardComponent, CharacterButtonComponent, CharacterComponent, VocabSelectionComponent, ArticleDictationOptionsComponent, AppHeaderComponent, SectionCardComponent, VocabPracticeTypeModalComponent, VocabPracticeTypeSelectorComponent, VoiceModeSelectorComponent
     ],
     exports: [MemberScoreRankingComponent,
         DictationStatisticsComponent,
@@ -54,7 +58,7 @@ import {AppHeaderComponent} from "./app-header/app-header.component";
         MemberPracticeHistoryListComponent,
         VocabHistoryListComponent,
         TextInterpretationComponent,
-        VirtualKeyboardComponent, CharacterButtonComponent, CharacterComponent, VocabSelectionComponent, ArticleDictationOptionsComponent, AppHeaderComponent
+        VirtualKeyboardComponent, CharacterButtonComponent, CharacterComponent, VocabSelectionComponent, ArticleDictationOptionsComponent, AppHeaderComponent, SectionCardComponent, VocabPracticeTypeModalComponent, VocabPracticeTypeSelectorComponent, VoiceModeSelectorComponent
     ], imports: [IonicModule,
         TranslateModule,
         PipesModule,

@@ -1,13 +1,26 @@
-h3 {
-  font-size: 1.2rem !important;
-  color: var(--ion-color-secondary) !important;
-  padding: 0px 8px 0px 18px;
-}
-
 ion-button {
   margin: 5px;
 }
 
-.article-options-content {
-  --background: #ffffff !important;
+.complete-info-actions,
+.complete-retry-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+}
+
+.complete-retry-actions {
+  justify-content: flex-end;
+}
+
+.start-button-row {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+.result-score {
+  font-size: 1.2rem;
+  color: var(--ion-color-secondary);
+  padding: 4px 8px 0 18px;
 }

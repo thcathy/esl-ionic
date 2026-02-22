@@ -8,6 +8,7 @@ import {FFSAuthService} from '../../services/auth.service';
 import {VocabPracticeType} from '../../enum/vocab-practice-type.enum';
 import {StorageService} from '../../services/storage.service';
 import {TranslateService} from "@ngx-translate/core";
+import {UIOptionsService} from '../../services/ui-options.service';
 
 @Component({
     selector: 'app-vocabulary-starter',
@@ -28,6 +29,7 @@ export class VocabularyStarterPage implements OnInit {
     public authService: FFSAuthService,
     public storage: StorageService,
     public translate: TranslateService,
+    public uiOptionsService: UIOptionsService,
   ) { }
 
   ngOnInit() {
@@ -40,18 +42,22 @@ export class VocabularyStarterPage implements OnInit {
 
   get difficulty() { return this.inputForm.get('difficulty'); }
   get type() { return this.inputForm.get('type'); }
+  get voiceMode() { return this.inputForm.get('voiceMode'); }
   get practiceType() { return VocabPracticeType; }
 
   async setupInput() {
     const input = <VocabularyStarterPageInput> await this.storage.get(this.inputKey);
     if (input?.difficulty !== undefined) { this.difficulty.setValue(input.difficulty); }
     if (input?.type !== undefined) { this.type.setValue(input.type); }
+    const savedVoiceMode = await this.uiOptionsService.loadOption(UIOptionsService.keys.ttsVoiceMode);
+    this.voiceMode.setValue(this.resolveVoiceMode(input, savedVoiceMode));
   }
 
   createForm() {
     this.inputForm = this.formBuilder.group({
       difficulty: '',
       type: '',
+      voiceMode: UIOptionsService.voiceMode.online,
     });
     this.difficulty.setValue(VocabDifficulty.Beginner);
     this.type.setValue(VocabPracticeType.Spell);
@@ -67,14 +73,21 @@ export class VocabularyStarterPage implements OnInit {
   }
 
   saveInput() {
+    this.uiOptionsService.saveOption(UIOptionsService.keys.ttsVoiceMode, this.voiceMode.value ?? UIOptionsService.voiceMode.online);
     this.storage.set(this.inputKey, <VocabularyStarterPageInput>{
       difficulty: this.difficulty.value,
       type: this.type.value,
+      voiceMode: this.voiceMode.value ?? UIOptionsService.voiceMode.online,
     });
+  }
+
+  private resolveVoiceMode(input: VocabularyStarterPageInput | null, savedVoiceMode: string | null | undefined): string {
+    return savedVoiceMode ?? input?.voiceMode ?? UIOptionsService.voiceMode.online;
   }
 }
 
 export interface VocabularyStarterPageInput {
   difficulty: VocabDifficulty;
   type: VocabPracticeType;
+  voiceMode?: string;
 }

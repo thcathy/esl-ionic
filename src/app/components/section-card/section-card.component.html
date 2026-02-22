@@ -1,0 +1,15 @@
+<ion-card class="card compact-section-card">
+  @if (showHeader) {
+    <ion-card-header>
+      <ion-card-title>
+        @if (icon) {
+          <fa-icon [icon]="['fas', icon]"></fa-icon>
+        }
+        {{headerTitle}}
+      </ion-card-title>
+    </ion-card-header>
+  }
+  <ion-card-content>
+    <ng-content></ng-content>
+  </ion-card-content>
+</ion-card>

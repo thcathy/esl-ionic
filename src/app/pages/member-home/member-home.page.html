@@ -16,31 +16,38 @@
     <ion-row>
       <ion-col size="12" size-sm="12" size-md="12" size-lg="6">
         <member-score-list [allTimesScore]="allTimesScore" [scores]="latestScore" [loading]="loadingAllTimesAndLast6Score"></member-score-list>
-        <member-practice-history-list *ngIf="selectedSegment === 'dictation'" [histories]="practiceHistories" [loading]="loadingPracticeHistories"></member-practice-history-list>
-        <app-dictation-list *ngIf="selectedSegment === 'vocabulary'"
-                            [dictations]="createdVocabExercise" [loading]="loadingAllDictations"
-                            [showCreateButton]="false" title="Vocabulary Exercise">
-        </app-dictation-list>
+        @if (selectedSegment === 'dictation') {
+          <member-practice-history-list [histories]="practiceHistories" [loading]="loadingPracticeHistories"></member-practice-history-list>
+        }
+        @if (selectedSegment === 'vocabulary') {
+          <app-dictation-list
+            [dictations]="createdVocabExercise" [loading]="loadingAllDictations"
+            [showCreateButton]="false" title="Vocabulary Exercise">
+          </app-dictation-list>
+        }
       </ion-col>
-      <ion-col size="12" size-sm="12" size-md="12" size-lg="6" *ngIf="selectedSegment === 'dictation'">
-        <app-dictation-list [dictations]="createdDictations" [loading]="loadingAllDictations"
-                            [showCreateButton]="true" title="My Dictation Created">
-        </app-dictation-list>
-      </ion-col>
-      <ion-col size="12" size-sm="12" size-md="12" size-lg="6" *ngIf="selectedSegment === 'vocabulary'">
-        <app-vocab-history-list [vocabs]="answeredBeforeVocabs" [loading]="loadingVocabHistory"
-                                title="Answered Before"
-                                [icon]="faTimesCircle"
-                                infoText="Not include learnt"
-                                [showReview]="answeredBeforeVocabs?.size > 0"
-                                (click)="onVocabHistoryList($event)">
-        </app-vocab-history-list>
-
-        <app-vocab-history-list [vocabs]="learntVocabs" [loading]="loadingVocabHistory"
-                                title="Learnt"
-                                [icon]="faCheckCircle">
-        </app-vocab-history-list>
-      </ion-col>
+      @if (selectedSegment === 'dictation') {
+        <ion-col size="12" size-sm="12" size-md="12" size-lg="6">
+          <app-dictation-list [dictations]="createdDictations" [loading]="loadingAllDictations"
+            [showCreateButton]="true" title="My Dictation Created">
+          </app-dictation-list>
+        </ion-col>
+      }
+      @if (selectedSegment === 'vocabulary') {
+        <ion-col size="12" size-sm="12" size-md="12" size-lg="6">
+          <app-vocab-history-list [vocabs]="answeredBeforeVocabs" [loading]="loadingVocabHistory"
+            title="Answered Before"
+            [icon]="faTimesCircle"
+            infoText="Not include learnt"
+            [showReview]="answeredBeforeVocabs?.size > 0"
+            (click)="onVocabHistoryList($event)">
+          </app-vocab-history-list>
+          <app-vocab-history-list [vocabs]="learntVocabs" [loading]="loadingVocabHistory"
+            title="Learnt"
+            [icon]="faCheckCircle">
+          </app-vocab-history-list>
+        </ion-col>
+      }
     </ion-row>
   </ion-grid>
 

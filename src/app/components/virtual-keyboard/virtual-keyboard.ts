@@ -40,8 +40,8 @@ export class VirtualKeyboardComponent {
   }
 
   setKeyboardType(type: VirtualKeyboardType) {
-    this.activeType = (type == null) ? VirtualKeyboardType.Standard : type;
-    if (type === VirtualKeyboardType.None) {
+    this.activeType = (type == null) ? VirtualKeyboardType.None : type;
+    if (this.activeType === VirtualKeyboardType.None) {
       this.onEvent(VirtualKeyboardEvent.Close);
     } else {
       this.onEvent(VirtualKeyboardEvent.Open);

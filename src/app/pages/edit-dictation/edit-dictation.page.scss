@@ -12,6 +12,10 @@
   }
 }
 
+.inner-content {
+  padding: 2px 4px;
+}
+
 .questionsInput {
   ion-textarea {
     font-size: 0.7rem;
@@ -51,12 +55,54 @@ fa-icon {
   color: #ccc;
 }
 
-.include-ai-image-tooltip-icon {
-  color: var(--ion-color-primary);
+.voice-mode-note {
+  display: block;
+  font-size: 0.82rem;
+  line-height: 1.25;
+  margin-top: 2px;
+  margin-bottom: 6px;
 }
 
-.include-ai-image-tooltip-icon:hover {
-  cursor: pointer;
-  color: var(--ion-color-primary-shade);
+.options-notes {
+  margin: 6px 10px 2px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  background: rgba(var(--ion-color-primary-rgb), 0.08);
+}
+
+.options-note-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.options-note-row + .options-note-row {
+  margin-top: 6px;
+}
+
+.options-note-row fa-icon {
+  color: rgba(var(--ion-color-primary-rgb), 0.85);
+  padding-right: 4px;
+  padding-top: 1px;
+}
+
+.options-note-row ion-note {
+  display: block;
+  font-size: 0.76rem;
+  line-height: 1.35;
+}
+
+.action-button {
+  margin: 6px;
+}
+
+@media (min-width: 768px) {
+  .inner-content {
+    padding: 8px;
+  }
+
+  .action-button {
+    margin: 16px;
+  }
 }
 

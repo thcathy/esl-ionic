@@ -1,17 +1,17 @@
 import {animate, state, style, transition, trigger} from '@angular/animations';
-import {Component, Input, ViewChild} from '@angular/core';
+import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {Router} from '@angular/router';
-import {AlertController, IonModal, ToastController} from '@ionic/angular';
+import {AlertController, ToastController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
 import {Dictation, Dictations} from '../../entity/dictation';
 import {VocabPracticeType} from '../../enum/vocab-practice-type.enum';
 import {AppService} from '../../services/app.service';
 import {DictationHelper} from '../../services/dictation/dictation-helper.service';
 import {MemberDictationService} from '../../services/dictation/member-dictation.service';
-import {IonicComponentService} from '../../services/ionic-component.service';
 import {ManageVocabHistoryService} from '../../services/member/manage-vocab-history.service';
 import {NavigationService} from '../../services/navigation.service';
 import {ShareService} from '../../services/share.service';
+import {UIOptionsService} from '../../services/ui-options.service';
 import {ArticleDictationOptionsComponent} from "../article-dictation-options/article-dictation-options.component";
 
 @Component({
@@ -32,33 +32,46 @@ import {ArticleDictationOptionsComponent} from "../article-dictation-options/art
     ],
     standalone: false
 })
-export class DictationCardComponent {
+export class DictationCardComponent implements OnInit {
   @Input() dictation: Dictation;
   @Input() start = false;
   @Input() edit = false;
   @Input() showContent = true;
+  @Input() showStartButton = true;
 
-  @ViewChild('articleOptionsModal') articleDictationOptionsModal: IonModal;
   @ViewChild('articleDictationOptions') articleDictationOptions: ArticleDictationOptionsComponent;
 
   recommendState = 'normal';
   share = false;
   dictationUrl: string;
-
+  selectedStartPracticeType: VocabPracticeType = VocabPracticeType.Spell;
+  selectedVoiceMode = UIOptionsService.voiceMode.online;
   constructor(public router: Router,
               public navService: NavigationService,
               public appService: AppService,
               public dictationHelper: DictationHelper,
               public manageVocabHistoryService: ManageVocabHistoryService,
               public memberDictationService: MemberDictationService,
+              public uiOptionsService: UIOptionsService,
               public translate: TranslateService,
               public alertController: AlertController,
               public toastController: ToastController,
-              public componentService: IonicComponentService,
               public shareService: ShareService) {}
 
   get sourceType() { return Dictations.Source; }
+  get practiceType() { return VocabPracticeType; }
   get memberVocabularies() { return this.dictation.vocabs.map(v => v.word).map(w => this.manageVocabHistoryService.findMemberVocabulary(w)); }
+
+  async ngOnInit() {
+    const [savedVoiceMode, savedPracticeType] = await Promise.all([
+      this.uiOptionsService.loadOption(UIOptionsService.keys.ttsVoiceMode),
+      this.uiOptionsService.loadOption(UIOptionsService.keys.vocabPracticeType),
+    ]);
+    this.selectedVoiceMode = this.resolveVoiceMode(savedVoiceMode);
+    this.selectedStartPracticeType = this.resolvePracticeType(
+      this.dictation?.options?.practiceType || savedPracticeType
+    );
+  }
 
   highlightRecommend() {
     this.recommendState = 'highlight';
@@ -135,26 +148,57 @@ export class DictationCardComponent {
   }
 
   startArticleDictation() {
-    this.articleDictationOptionsModal.dismiss();
-    this.dictation.options = this.dictation.options || new Dictations.Options();
-    this.dictation.options.caseSensitiveSentence = this.articleDictationOptions.caseSensitive.checked;
-    this.dictation.options.checkPunctuation = this.articleDictationOptions.checkPunctuation.checked;
-    this.dictation.options.speakPunctuation= this.articleDictationOptions.speakPunctuation.checked;
-    this.navService.startDictation(this.dictation);
-  }
-
-  showDictationOptions() {
-    if (this.dictationHelper.isSentenceDictation(this.dictation)) {
-      this.articleDictationOptionsModal.present();
-    } else {
-      this.componentService.presentVocabPracticeTypeActionSheet()
-        .then(type => this.startVocabDictation(type));
-    }
+    const updated = this.prepareStartDictation(this.dictation, this.selectedStartPracticeType);
+    this.navService.startDictation(updated);
   }
 
   startVocabDictation(type: VocabPracticeType) {
-    this.dictation.options = { 'practiceType' : type };
-    this.navService.startDictation(this.dictation);
+    const updated = this.prepareStartDictation(this.dictation, type);
+    this.navService.startDictation(updated);
+  }
+
+  onVoiceModeChange(mode: string) {
+    this.selectedVoiceMode = this.resolveVoiceMode(mode);
+    this.uiOptionsService.saveOption(UIOptionsService.keys.ttsVoiceMode, this.selectedVoiceMode);
+  }
+
+  getSelectedPracticeType(): VocabPracticeType {
+    return this.resolvePracticeType(this.selectedStartPracticeType);
+  }
+
+  prepareStartDictation(dictation: Dictation, practiceType?: VocabPracticeType): Dictation {
+    const resolvedType = this.resolvePracticeType(practiceType ?? this.selectedStartPracticeType);
+    this.selectedStartPracticeType = resolvedType;
+    this.persistStartOptions(resolvedType);
+
+    dictation.options = {
+      ...(dictation.options || {}),
+      practiceType: resolvedType,
+    };
+
+    if (this.dictationHelper.isSentenceDictation(dictation) && this.articleDictationOptions) {
+      dictation.options.caseSensitiveSentence = this.articleDictationOptions.caseSensitive.checked;
+      dictation.options.checkPunctuation = this.articleDictationOptions.checkPunctuation.checked;
+      dictation.options.speakPunctuation = this.articleDictationOptions.speakPunctuation.checked;
+    }
+    return dictation;
+  }
+
+  private persistStartOptions(practiceType?: VocabPracticeType) {
+    this.uiOptionsService.saveOption(UIOptionsService.keys.ttsVoiceMode, this.selectedVoiceMode);
+    if (practiceType) {
+      this.uiOptionsService.saveOption(UIOptionsService.keys.vocabPracticeType, practiceType);
+    }
+  }
+
+  private resolveVoiceMode(mode: string): string {
+    return mode === UIOptionsService.voiceMode.local
+      ? UIOptionsService.voiceMode.local
+      : UIOptionsService.voiceMode.online;
+  }
+
+  private resolvePracticeType(type: VocabPracticeType): VocabPracticeType {
+    return type === VocabPracticeType.Puzzle ? VocabPracticeType.Puzzle : VocabPracticeType.Spell;
   }
 
 }

@@ -1,102 +1,106 @@
-<div *ngIf="activeType == virtualKeyboardType.Alphabetical && !disabled" class="virtual-keyboard ion-text-center">
-  <p>
-    <ion-button fill="outline" size="small" class="keyboard-button2" (click)="onKeyPress('a')">a</ion-button>
-    <ion-button fill="outline" size="small" class="keyboard-button2" (click)="onKeyPress('b')">b</ion-button>
-    <ion-button fill="outline" size="small" class="keyboard-button2" (click)="onKeyPress('c')">c</ion-button>
-    <ion-button fill="outline" size="small" class="keyboard-button2" (click)="onKeyPress('d')">d</ion-button>
-    <ion-button fill="outline" size="small" class="keyboard-button2" (click)="onKeyPress('e')">e</ion-button>
-    <ion-button fill="outline" size="small" class="keyboard-button2" (click)="onKeyPress('f')">f</ion-button>
-    <ion-button fill="outline" size="small" class="keyboard-button2" (click)="onKeyPress('g')">g</ion-button>
-    <ion-button fill="outline" size="small" class="keyboard-button2" (click)="onKeyPress('h')">h</ion-button>
-  </p>
-  <p>
-    <ion-button fill="outline" size="small" class="keyboard-button2" (click)="onKeyPress('i')">i</ion-button>
-    <ion-button fill="outline" size="small" class="keyboard-button2" (click)="onKeyPress('j')">j</ion-button>
-    <ion-button fill="outline" size="small" class="keyboard-button2" (click)="onKeyPress('k')">k</ion-button>
-    <ion-button fill="outline" size="small" class="keyboard-button2" (click)="onKeyPress('l')">l</ion-button>
-    <ion-button fill="outline" size="small" class="keyboard-button2" (click)="onKeyPress('m')">m</ion-button>
-    <ion-button fill="outline" size="small" class="keyboard-button2" (click)="onKeyPress('n')">n</ion-button>
-    <ion-button fill="outline" size="small" class="keyboard-button2" (click)="onKeyPress('o')">o</ion-button>
-    <ion-button fill="outline" size="small" class="keyboard-button2" (click)="onKeyPress('p')">p</ion-button>
-  </p>
-  <p>
-    <ion-button fill="outline" size="small" class="keyboard-button2" (click)="onKeyPress('q')">q</ion-button>
-    <ion-button fill="outline" size="small" class="keyboard-button2" (click)="onKeyPress('r')">r</ion-button>
-    <ion-button fill="outline" size="small" class="keyboard-button2" (click)="onKeyPress('s')">s</ion-button>
-    <ion-button fill="outline" size="small" class="keyboard-button2" (click)="onKeyPress('t')">t</ion-button>
-    <ion-button fill="outline" size="small" class="keyboard-button2" (click)="onKeyPress('u')">u</ion-button>
-    <ion-button fill="outline" size="small" class="keyboard-button2" (click)="onKeyPress('v')">v</ion-button>
-    <ion-button fill="outline" size="small" class="keyboard-button2" (click)="onKeyPress('w')">w</ion-button>
-    <ion-button fill="outline" size="small" class="keyboard-button2" (click)="onKeyPress('x')">x</ion-button>
-  </p>
-  <p>
-    <ion-button fill="outline" size="small" class="keyboard-button2" (click)="onKeyPress('y')">y</ion-button>
-    <ion-button fill="outline" size="small" class="keyboard-button2" (click)="onKeyPress('z')">z</ion-button>
-    <ion-button fill="outline" size="small" class="keyboard-button2" (click)="onKeyPress(',')">,</ion-button>
-    <ion-button fill="outline" size="small" class="keyboard-button2" (click)="onKeyPress('-')">-</ion-button>
-    <ion-button fill="outline" size="small" class="keyboard-button2" (click)="onKeyPress('\'')">'</ion-button>
-    <ion-button fill="outline" size="small" class="keyboard-button2" (click)="onEvent(virtualKeyboardEvent.Backspace)"><fa-icon icon="backspace"></fa-icon></ion-button>
-  </p>
-  <p>
-    <span style="float: left; display: flex; justify-content: space-evenly;">
-      <ion-button fill="clear" size="small" class="keyboard-button2" (click)="onEvent(virtualKeyboardEvent.Clear)"><fa-icon icon="eraser"></fa-icon></ion-button>
-    </span>
-    <span>
-      <ion-button fill="outline" size="small" class="keyboard-button2 space-button2" (click)="onKeyPress(' ')">␣</ion-button>
-    </span>
-    <span style="float: right; display: flex;">
-      <ion-button fill="clear" size="small" class="keyboard-button2" (click)="setKeyboardType(virtualKeyboardType.None)"><fa-icon icon="window-close"></fa-icon></ion-button>
-    </span>
-  </p>
-</div>
+@if (activeType == virtualKeyboardType.Alphabetical && !disabled) {
+  <div class="virtual-keyboard ion-text-center">
+    <p>
+      <ion-button fill="outline" size="small" class="keyboard-button2" (click)="onKeyPress('a')">a</ion-button>
+      <ion-button fill="outline" size="small" class="keyboard-button2" (click)="onKeyPress('b')">b</ion-button>
+      <ion-button fill="outline" size="small" class="keyboard-button2" (click)="onKeyPress('c')">c</ion-button>
+      <ion-button fill="outline" size="small" class="keyboard-button2" (click)="onKeyPress('d')">d</ion-button>
+      <ion-button fill="outline" size="small" class="keyboard-button2" (click)="onKeyPress('e')">e</ion-button>
+      <ion-button fill="outline" size="small" class="keyboard-button2" (click)="onKeyPress('f')">f</ion-button>
+      <ion-button fill="outline" size="small" class="keyboard-button2" (click)="onKeyPress('g')">g</ion-button>
+      <ion-button fill="outline" size="small" class="keyboard-button2" (click)="onKeyPress('h')">h</ion-button>
+    </p>
+    <p>
+      <ion-button fill="outline" size="small" class="keyboard-button2" (click)="onKeyPress('i')">i</ion-button>
+      <ion-button fill="outline" size="small" class="keyboard-button2" (click)="onKeyPress('j')">j</ion-button>
+      <ion-button fill="outline" size="small" class="keyboard-button2" (click)="onKeyPress('k')">k</ion-button>
+      <ion-button fill="outline" size="small" class="keyboard-button2" (click)="onKeyPress('l')">l</ion-button>
+      <ion-button fill="outline" size="small" class="keyboard-button2" (click)="onKeyPress('m')">m</ion-button>
+      <ion-button fill="outline" size="small" class="keyboard-button2" (click)="onKeyPress('n')">n</ion-button>
+      <ion-button fill="outline" size="small" class="keyboard-button2" (click)="onKeyPress('o')">o</ion-button>
+      <ion-button fill="outline" size="small" class="keyboard-button2" (click)="onKeyPress('p')">p</ion-button>
+    </p>
+    <p>
+      <ion-button fill="outline" size="small" class="keyboard-button2" (click)="onKeyPress('q')">q</ion-button>
+      <ion-button fill="outline" size="small" class="keyboard-button2" (click)="onKeyPress('r')">r</ion-button>
+      <ion-button fill="outline" size="small" class="keyboard-button2" (click)="onKeyPress('s')">s</ion-button>
+      <ion-button fill="outline" size="small" class="keyboard-button2" (click)="onKeyPress('t')">t</ion-button>
+      <ion-button fill="outline" size="small" class="keyboard-button2" (click)="onKeyPress('u')">u</ion-button>
+      <ion-button fill="outline" size="small" class="keyboard-button2" (click)="onKeyPress('v')">v</ion-button>
+      <ion-button fill="outline" size="small" class="keyboard-button2" (click)="onKeyPress('w')">w</ion-button>
+      <ion-button fill="outline" size="small" class="keyboard-button2" (click)="onKeyPress('x')">x</ion-button>
+    </p>
+    <p>
+      <ion-button fill="outline" size="small" class="keyboard-button2" (click)="onKeyPress('y')">y</ion-button>
+      <ion-button fill="outline" size="small" class="keyboard-button2" (click)="onKeyPress('z')">z</ion-button>
+      <ion-button fill="outline" size="small" class="keyboard-button2" (click)="onKeyPress(',')">,</ion-button>
+      <ion-button fill="outline" size="small" class="keyboard-button2" (click)="onKeyPress('-')">-</ion-button>
+      <ion-button fill="outline" size="small" class="keyboard-button2" (click)="onKeyPress('\'')">'</ion-button>
+      <ion-button fill="outline" size="small" class="keyboard-button2" (click)="onEvent(virtualKeyboardEvent.Backspace)"><fa-icon icon="backspace"></fa-icon></ion-button>
+    </p>
+    <p>
+      <span style="float: left; display: flex; justify-content: space-evenly;">
+        <ion-button fill="clear" size="small" class="keyboard-button2" (click)="onEvent(virtualKeyboardEvent.Clear)"><fa-icon icon="eraser"></fa-icon></ion-button>
+      </span>
+      <span>
+        <ion-button fill="outline" size="small" class="keyboard-button2 space-button2" (click)="onKeyPress(' ')">␣</ion-button>
+      </span>
+      <span style="float: right; display: flex;">
+        <ion-button fill="clear" size="small" class="keyboard-button2" (click)="setKeyboardType(virtualKeyboardType.None)"><fa-icon icon="window-close"></fa-icon></ion-button>
+      </span>
+    </p>
+  </div>
+}
 
 
-<div *ngIf="activeType == virtualKeyboardType.Standard && !disabled" class="virtual-keyboard ion-text-center">
-  <p>
-    <ion-button fill="outline" size="small" class="keyboard-button" (click)="onKeyPress('q')">q</ion-button>
-    <ion-button fill="outline" size="small" class="keyboard-button" (click)="onKeyPress('w')">w</ion-button>
-    <ion-button fill="outline" size="small" class="keyboard-button" (click)="onKeyPress('e')">e</ion-button>
-    <ion-button fill="outline" size="small" class="keyboard-button" (click)="onKeyPress('r')">r</ion-button>
-    <ion-button fill="outline" size="small" class="keyboard-button" (click)="onKeyPress('t')">t</ion-button>
-    <ion-button fill="outline" size="small" class="keyboard-button" (click)="onKeyPress('y')">y</ion-button>
-    <ion-button fill="outline" size="small" class="keyboard-button" (click)="onKeyPress('u')">u</ion-button>
-    <ion-button fill="outline" size="small" class="keyboard-button" (click)="onKeyPress('i')">i</ion-button>
-    <ion-button fill="outline" size="small" class="keyboard-button" (click)="onKeyPress('o')">o</ion-button>
-    <ion-button fill="outline" size="small" class="keyboard-button" (click)="onKeyPress('p')">p</ion-button>
-  </p>
-  <p>
-    <ion-button fill="outline" size="small" class="keyboard-button" (click)="onKeyPress('a')">a</ion-button>
-    <ion-button fill="outline" size="small" class="keyboard-button" (click)="onKeyPress('s')">s</ion-button>
-    <ion-button fill="outline" size="small" class="keyboard-button" (click)="onKeyPress('d')">d</ion-button>
-    <ion-button fill="outline" size="small" class="keyboard-button" (click)="onKeyPress('f')">f</ion-button>
-    <ion-button fill="outline" size="small" class="keyboard-button" (click)="onKeyPress('g')">g</ion-button>
-    <ion-button fill="outline" size="small" class="keyboard-button" (click)="onKeyPress('h')">h</ion-button>
-    <ion-button fill="outline" size="small" class="keyboard-button" (click)="onKeyPress('j')">j</ion-button>
-    <ion-button fill="outline" size="small" class="keyboard-button" (click)="onKeyPress('k')">k</ion-button>
-    <ion-button fill="outline" size="small" class="keyboard-button" (click)="onKeyPress('l')">l</ion-button>
-  </p>
-  <p>
-    <ion-button fill="outline" size="small" class="keyboard-button" (click)="onKeyPress('z')">z</ion-button>
-    <ion-button fill="outline" size="small" class="keyboard-button" (click)="onKeyPress('x')">x</ion-button>
-    <ion-button fill="outline" size="small" class="keyboard-button" (click)="onKeyPress('c')">c</ion-button>
-    <ion-button fill="outline" size="small" class="keyboard-button" (click)="onKeyPress('v')">v</ion-button>
-    <ion-button fill="outline" size="small" class="keyboard-button" (click)="onKeyPress('b')">b</ion-button>
-    <ion-button fill="outline" size="small" class="keyboard-button" (click)="onKeyPress('n')">n</ion-button>
-    <ion-button fill="outline" size="small" class="keyboard-button" (click)="onKeyPress('m')">m</ion-button>
-  </p>
-  <p>
-    <span style="float: left; display: flex; justify-content: space-evenly;">
-      <ion-button fill="clear" size="small" class="keyboard-button" (click)="onEvent(virtualKeyboardEvent.Clear)"><fa-icon icon="eraser"></fa-icon></ion-button>
-    </span>
-    <span>
-      <ion-button fill="outline" size="small" class="keyboard-button" (click)="onKeyPress(',')">,</ion-button>
-      <ion-button fill="outline" size="small" class="keyboard-button" (click)="onKeyPress('-')">-</ion-button>
-      <ion-button fill="outline" size="small" class="keyboard-button space-button" (click)="onKeyPress(' ')">␣</ion-button>
-      <ion-button fill="outline" size="small" class="keyboard-button" (click)="onKeyPress('\'')">'</ion-button>
-      <ion-button fill="outline" size="small" class="keyboard-button" (click)="onEvent(virtualKeyboardEvent.Backspace)"><fa-icon icon="backspace"></fa-icon></ion-button>
-    </span>
-    <span style="float: right; display: flex;">
-      <ion-button fill="clear" size="small" class="keyboard-button" (click)="setKeyboardType(virtualKeyboardType.None)"><fa-icon icon="window-close"></fa-icon></ion-button>
-    </span>
-  </p>
-</div>
+@if (activeType == virtualKeyboardType.Standard && !disabled) {
+  <div class="virtual-keyboard ion-text-center">
+    <p>
+      <ion-button fill="outline" size="small" class="keyboard-button" (click)="onKeyPress('q')">q</ion-button>
+      <ion-button fill="outline" size="small" class="keyboard-button" (click)="onKeyPress('w')">w</ion-button>
+      <ion-button fill="outline" size="small" class="keyboard-button" (click)="onKeyPress('e')">e</ion-button>
+      <ion-button fill="outline" size="small" class="keyboard-button" (click)="onKeyPress('r')">r</ion-button>
+      <ion-button fill="outline" size="small" class="keyboard-button" (click)="onKeyPress('t')">t</ion-button>
+      <ion-button fill="outline" size="small" class="keyboard-button" (click)="onKeyPress('y')">y</ion-button>
+      <ion-button fill="outline" size="small" class="keyboard-button" (click)="onKeyPress('u')">u</ion-button>
+      <ion-button fill="outline" size="small" class="keyboard-button" (click)="onKeyPress('i')">i</ion-button>
+      <ion-button fill="outline" size="small" class="keyboard-button" (click)="onKeyPress('o')">o</ion-button>
+      <ion-button fill="outline" size="small" class="keyboard-button" (click)="onKeyPress('p')">p</ion-button>
+    </p>
+    <p>
+      <ion-button fill="outline" size="small" class="keyboard-button" (click)="onKeyPress('a')">a</ion-button>
+      <ion-button fill="outline" size="small" class="keyboard-button" (click)="onKeyPress('s')">s</ion-button>
+      <ion-button fill="outline" size="small" class="keyboard-button" (click)="onKeyPress('d')">d</ion-button>
+      <ion-button fill="outline" size="small" class="keyboard-button" (click)="onKeyPress('f')">f</ion-button>
+      <ion-button fill="outline" size="small" class="keyboard-button" (click)="onKeyPress('g')">g</ion-button>
+      <ion-button fill="outline" size="small" class="keyboard-button" (click)="onKeyPress('h')">h</ion-button>
+      <ion-button fill="outline" size="small" class="keyboard-button" (click)="onKeyPress('j')">j</ion-button>
+      <ion-button fill="outline" size="small" class="keyboard-button" (click)="onKeyPress('k')">k</ion-button>
+      <ion-button fill="outline" size="small" class="keyboard-button" (click)="onKeyPress('l')">l</ion-button>
+    </p>
+    <p>
+      <ion-button fill="outline" size="small" class="keyboard-button" (click)="onKeyPress('z')">z</ion-button>
+      <ion-button fill="outline" size="small" class="keyboard-button" (click)="onKeyPress('x')">x</ion-button>
+      <ion-button fill="outline" size="small" class="keyboard-button" (click)="onKeyPress('c')">c</ion-button>
+      <ion-button fill="outline" size="small" class="keyboard-button" (click)="onKeyPress('v')">v</ion-button>
+      <ion-button fill="outline" size="small" class="keyboard-button" (click)="onKeyPress('b')">b</ion-button>
+      <ion-button fill="outline" size="small" class="keyboard-button" (click)="onKeyPress('n')">n</ion-button>
+      <ion-button fill="outline" size="small" class="keyboard-button" (click)="onKeyPress('m')">m</ion-button>
+    </p>
+    <p>
+      <span style="float: left; display: flex; justify-content: space-evenly;">
+        <ion-button fill="clear" size="small" class="keyboard-button" (click)="onEvent(virtualKeyboardEvent.Clear)"><fa-icon icon="eraser"></fa-icon></ion-button>
+      </span>
+      <span>
+        <ion-button fill="outline" size="small" class="keyboard-button" (click)="onKeyPress(',')">,</ion-button>
+        <ion-button fill="outline" size="small" class="keyboard-button" (click)="onKeyPress('-')">-</ion-button>
+        <ion-button fill="outline" size="small" class="keyboard-button space-button" (click)="onKeyPress(' ')">␣</ion-button>
+        <ion-button fill="outline" size="small" class="keyboard-button" (click)="onKeyPress('\'')">'</ion-button>
+        <ion-button fill="outline" size="small" class="keyboard-button" (click)="onEvent(virtualKeyboardEvent.Backspace)"><fa-icon icon="backspace"></fa-icon></ion-button>
+      </span>
+      <span style="float: right; display: flex;">
+        <ion-button fill="clear" size="small" class="keyboard-button" (click)="setKeyboardType(virtualKeyboardType.None)"><fa-icon icon="window-close"></fa-icon></ion-button>
+      </span>
+    </p>
+  </div>
+}

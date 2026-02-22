@@ -1,3 +1,14 @@
 ion-button {
   margin: 5px;
 }
+
+.complete-info-actions,
+.complete-retry-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+}
+
+.complete-retry-actions {
+  justify-content: flex-end;
+}

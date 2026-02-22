@@ -7,15 +7,17 @@
 
 <ion-content>
   <div style="padding: 16px;">
-    <ion-card class="card" *ngIf="currentQuestion()">
-      <ion-card-header>
-        <ion-card-title>
-          {{'Question'|translate}} {{ questionIndex + 1 }} <span
-          *ngIf="dictation?.options?.retryWrongWord">({{'incorrect only'|translate}})</span>
+    @if (currentQuestion()) {
+      <ion-card class="card">
+        <ion-card-header>
+          <ion-card-title>
+            {{'Question'|translate}} {{ questionIndex + 1 }} @if (dictation?.options?.retryWrongWord) {
+            <span
+            >({{'incorrect only'|translate}})</span>
+          }
           <score class="ion-float-right" [mark]="mark"></score>
         </ion-card-title>
       </ion-card-header>
-
       <ion-card-content style="font-size: 1.6rem">
         <ion-grid>
           <ion-row>
@@ -31,41 +33,50 @@
               <div>
                 <app-text-interpretation [text]="currentQuestion().word" />
               </div>
-              <div *ngIf="practiceType === type.Spell" class="spell-input-div">
-                <ion-item class="answerInput">
-                  <div class="answer-container">
-                    <div class="answer-label">{{'Answer'|translate}}:</div>
-                    <ion-input #answerInput *ngIf="!isKeyboardActive" [(ngModel)]="answer" type="text" inputmode="text" [maxlength]="100" (keyup.enter)="submitSpellingAnswer()"
-                               autocomplete="off" autocorrect="off" autocapitalize="off" [spellcheck]="false"></ion-input>
-                    <div *ngIf="isKeyboardActive" class="answer-display">{{answer}}<span class="blinking-caret">|</span></div>
-                  </div>
-                </ion-item>
-                <div>
+              @if (practiceType === type.Spell) {
+                <div class="spell-input-div">
+                  <ion-item class="answerInput">
+                    <div class="answer-container">
+                      <div class="answer-label">{{'Answer'|translate}}:</div>
+                      @if (!isKeyboardActive) {
+                        <ion-input #answerInput [(ngModel)]="answer" type="text" inputmode="text" [maxlength]="100" (keyup.enter)="submitSpellingAnswer()"
+                        autocomplete="off" autocorrect="off" autocapitalize="off" [spellcheck]="false"></ion-input>
+                      }
+                      @if (isKeyboardActive) {
+                        <div class="answer-display">{{answer}}<span class="blinking-caret">|</span></div>
+                      }
+                    </div>
+                  </ion-item>
+                  <div>
                     <ion-button fill="clear" size="large"
-                                [class.grey-text]="!isKeyboardActive"
-                                (click)="virtualKeyboard.changeKeyboardType()">
+                      [class.grey-text]="!isKeyboardActive"
+                      (click)="virtualKeyboard.changeKeyboardType()">
                       <fa-icon icon="keyboard"></fa-icon>
                     </ion-button>
                     <ion-button class="submitBtn ion-float-right" (click)="submitSpellingAnswer()">
                       <fa-icon icon="check"></fa-icon>&nbsp;{{'Submit'|translate}}
                     </ion-button>
+                  </div>
                 </div>
-              </div>
-              <div *ngIf="practiceType === type.Puzzle && puzzleControls != null" class="puzzle-div">
-                <div>
-                  <app-character *ngFor="let char of puzzleControls.answers"
-                                 [character]="char" [state]="puzzleControls.answerState"></app-character>
+              }
+              @if (practiceType === type.Puzzle && puzzleControls != null) {
+                <div class="puzzle-div">
+                  <div>
+                    @for (char of puzzleControls.answers; track char) {
+                      <app-character
+                      [character]="char" [state]="puzzleControls.answerState"></app-character>
+                    }
+                  </div>
+                  <div>
+                    @for (char of puzzleControls.buttons; track char; let i = $index) {
+                      <app-character-button
+                        [character]="char" [isCorrect]="puzzleControls.buttonCorrects[i]"
+                        (correctPress)="onCharacterButtonPress($event)">
+                      </app-character-button>
+                    }
+                  </div>
                 </div>
-
-                <div>
-                  <app-character-button *ngFor="let char of puzzleControls.buttons; let i = index"
-                                        [character]="char" [isCorrect]="puzzleControls.buttonCorrects[i]"
-                                        (correctPress)="onCharacterButtonPress($event)">
-
-                  </app-character-button>
-                </div>
-              </div>
-
+              }
             </ion-col>
             <ion-col size="12" size-sm="12" size-md="6">
               <vocab-image [images]="currentQuestion().picsFullPaths" [AIImage]="dictation.includeAIImage"></vocab-image>
@@ -74,15 +85,16 @@
         </ion-grid>
       </ion-card-content>
     </ion-card>
+  }
 
-    <practice-history-list [histories]="histories" [mark]="mark"></practice-history-list>
-  </div>
-  <app-footer></app-footer>
+  <practice-history-list [histories]="histories" [mark]="mark"></practice-history-list>
+</div>
+<app-footer></app-footer>
 </ion-content>
 
 <ion-footer>
-    <virtual-keyboard #virtualKeyboard
-                      [disabled]="practiceType === type.Puzzle"
-                      (keyPress)="onKeyPress($event)"
-                      (keyboardEvent)="onKeyboardEvent($event)"></virtual-keyboard>
+  <virtual-keyboard #virtualKeyboard
+    [disabled]="practiceType === type.Puzzle"
+    (keyPress)="onKeyPress($event)"
+  (keyboardEvent)="onKeyboardEvent($event)"></virtual-keyboard>
 </ion-footer>

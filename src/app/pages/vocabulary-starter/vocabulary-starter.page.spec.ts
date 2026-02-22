@@ -49,22 +49,30 @@ describe('VocabularyStarterPage', () => {
   it('input are stored when submit and load when enter page', fakeAsync(() => {
     const params = { 'VocabularyStarterPage.vocabularyStarterPageInput': <VocabularyStarterPageInput>{
       difficulty: VocabDifficulty.Hard,
-      type: VocabPracticeType.Spell
+      type: VocabPracticeType.Spell,
+      voiceMode: 'local',
     }};
     storageSpy.get.and.callFake((param) => params[param]);
     component.ionViewWillEnter();
     tick();
     expect(component.difficulty.value).toEqual(VocabDifficulty.Hard);
     expect(component.type.value).toEqual(VocabPracticeType.Spell);
+    expect(component.voiceMode.value).toEqual('local');
 
     component.difficulty.setValue(VocabDifficulty.Normal);
     component.type.setValue(VocabPracticeType.Puzzle);
+    component.voiceMode.setValue('online');
     component.start();
     tick();
-    const storedArg = <VocabularyStarterPageInput> storageSpy.set.calls.mostRecent().args[1];
-    expect(storageSpy.set.calls.mostRecent().args[0]).toEqual(component.inputKey);
+    const setCalls = storageSpy.set.calls.allArgs();
+    const storedInputCall = setCalls.find((args: any[]) => args[0] === component.inputKey);
+    expect(storedInputCall).toBeDefined();
+    const storedArg = <VocabularyStarterPageInput> storedInputCall[1];
     expect(storedArg.difficulty).toEqual(VocabDifficulty.Normal);
     expect(storedArg.type).toEqual(VocabPracticeType.Puzzle);
+    expect(storedArg.voiceMode).toEqual('online');
+    const voiceModeCall = setCalls.find((args: any[]) => args[0] === 'UIOptionsService.keys.ttsVoiceMode');
+    expect(voiceModeCall).toEqual(['UIOptionsService.keys.ttsVoiceMode', 'online']);
   }));
 
 });

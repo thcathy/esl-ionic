@@ -1,0 +1,14 @@
+<ion-item>
+  <ion-select [value]="selectedMode" (ionChange)="onSelectedModeChange($event?.detail?.value)" interface="popover">
+    <div slot="label"><fa-icon [icon]="['fas', 'volume-high']"></fa-icon> {{'Voice Mode'|translate}}</div>
+    <ion-select-option [value]="voiceMode.online">{{'Online Voice'|translate}}</ion-select-option>
+    <ion-select-option [value]="voiceMode.local">{{'Local Voice'|translate}}</ion-select-option>
+  </ion-select>
+</ion-item>
+<ion-note class="ion-padding-start voice-mode-note" color="medium">
+  @if (selectedMode === voiceMode.online) {
+    {{'VoiceMode.OnlineDescription'|translate}}
+  } @else {
+    {{'VoiceMode.LocalDescription'|translate}}
+  }
+</ion-note>

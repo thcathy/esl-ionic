@@ -3,6 +3,16 @@ import {Injectable} from '@angular/core';
 import {AppService} from './app.service';
 import { TextToSpeech } from '@capacitor-community/text-to-speech';
 import {NGXLogger} from 'ngx-logger';
+import {TtsCloudService} from './tts-cloud.service';
+import {UIOptionsService} from './ui-options.service';
+
+export interface SpeakOptions {
+  speakPunctuation?: boolean;
+  rate?: number;
+  ttsVersion?: string;
+  mode?: string;
+  pronounceUrl?: string;
+}
 
 @Injectable({ providedIn: 'root' })
 export class SpeechService {
@@ -11,6 +21,8 @@ export class SpeechService {
   constructor(
     public appService: AppService,
     private log: NGXLogger,
+    private ttsCloudService: TtsCloudService,
+    private uiOptionsService: UIOptionsService,
   ) {}
 
   async speak(text: string, rate = 0.7) {
@@ -50,7 +62,74 @@ export class SpeechService {
     }
   }
 
+  async speakByVoiceMode(text: string, options: SpeakOptions = {}): Promise<'cloud' | 'local'> {
+    const voiceMode = options.mode || await this.getVoiceMode();
+    const rate = options.rate ?? 0.7;
+    if (this.isOnlineVoiceMode(voiceMode)) {
+      const cloud = await this.trySpeakCloud(text, options);
+      if (cloud.playedByCloud) {
+        return 'cloud';
+      }
+      if (options.pronounceUrl) {
+        const playedByPronounceAudio = await this.ttsCloudService.playAudioUrl(options.pronounceUrl);
+        if (playedByPronounceAudio) {
+          this.log.info(`Pronunciation audio played after cloud fallback: ${options.pronounceUrl}`);
+          return 'cloud';
+        }
+      }
+      this.log.warn(`Online voice unavailable, fallback to local TTS: ${cloud.audioKey}`);
+    }
+    await this.speak(text, rate);
+    return 'local';
+  }
+
+  async prefetchByVoiceMode(text: string, options: SpeakOptions = {}) {
+    const voiceMode = options.mode || await this.getVoiceMode();
+    if (!this.isOnlineVoiceMode(voiceMode)) {
+      return;
+    }
+    if (options.pronounceUrl) {
+      this.ttsCloudService.prefetchAudioUrl(options.pronounceUrl);
+    }
+    const cloudInfo = await this.ttsCloudService.buildCloudAudioInfo(text, {
+      speakPunctuation: options.speakPunctuation,
+      ttsVersion: options.ttsVersion,
+    });
+    this.ttsCloudService.prefetchAudioUrl(cloudInfo.url);
+  }
+
+  async getVoiceMode(): Promise<string> {
+    const mode = await this.uiOptionsService.loadOption(UIOptionsService.keys.ttsVoiceMode);
+    if (!mode) {
+      return UIOptionsService.voiceMode.online;
+    }
+    return mode;
+  }
+
+  private async trySpeakCloud(
+    text: string,
+    options: SpeakOptions
+  ): Promise<{ playedByCloud: boolean; audioKey: string }> {
+    const audioInfo = await this.ttsCloudService.buildCloudAudioInfo(text, {
+      speakPunctuation: options.speakPunctuation,
+      ttsVersion: options.ttsVersion,
+    });
+    const playedByCloud = await this.ttsCloudService.playAudioUrl(audioInfo.url);
+    if (playedByCloud) {
+      this.log.info(`Cloud TTS played: ${audioInfo.key}`);
+    }
+    return {
+      playedByCloud,
+      audioKey: audioInfo.key,
+    };
+  }
+
+  private isOnlineVoiceMode(mode: string): boolean {
+    return mode === UIOptionsService.voiceMode.online;
+  }
+
   stop() {
+    this.ttsCloudService.stopCloudAudio();
     if (this.appService.isApp()) {
       TextToSpeech.stop().then(() => this.log.info(`stopped tss`));
     } else {

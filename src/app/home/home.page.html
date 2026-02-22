@@ -21,11 +21,28 @@
           <ion-row>
             <ion-col size="12" size-sm="6" size-md="3" size-lg="3">
               <ion-card class="main-image-card">
-                  <img src="assets/img/teacher_speaking.png" alt="teacher spearking" />
+                <img src="assets/img/teacher_speaking.png" alt="teacher spearking" />
               </ion-card>
             </ion-col>
             <ion-col size="12" size-sm="6" size-md="5" size-lg="5">
               <h2>{{ 'Online Dictation' | translate }}</h2>
+              <div class="feature-chips">
+                <ion-chip>
+                  <ion-label>{{ 'FeatureBadge.AIVoice' | translate }}</ion-label>
+                </ion-chip>
+                <ion-chip>
+                  <ion-label>{{ 'FeatureBadge.AIImage' | translate }}</ion-label>
+                </ion-chip>
+                <ion-chip>
+                  <ion-label>{{ 'FeatureBadge.AIMeaning' | translate }}</ion-label>
+                </ion-chip>
+                <ion-chip>
+                  <ion-label>{{ 'FeatureBadge.Free' | translate }}</ion-label>
+                </ion-chip>
+                <ion-chip>
+                  <ion-label>{{ 'FeatureBadge.NoAds' | translate }}</ion-label>
+                </ion-chip>
+              </div>
               <p>{{ 'Home_Online_Dictation_description' | translate }}</p>
             </ion-col>
             <ion-col size="12" size-sm="12" size-md="4" size-lg="4">
@@ -42,10 +59,12 @@
                   <ion-label><fa-icon [icon]="['fas', 'plus']"></fa-icon> {{ 'Create' | translate }}</ion-label>
                   <fa-icon  slot="end"[icon]="['fas', 'angle-right']"></fa-icon>
                 </ion-item>
-                <ion-item *ngIf="authService.isAuthenticated$ | async" (click)="navigationService.openMemberHome('dictation')">
-                  <ion-label><fa-icon icon="list"></fa-icon> {{ 'My Records' | translate }}</ion-label>
-                  <fa-icon slot="end" [icon]="['fas', 'angle-right']"></fa-icon>
-                </ion-item>
+                @if (authService.isAuthenticated$ | async) {
+                  <ion-item (click)="navigationService.openMemberHome('dictation')">
+                    <ion-label><fa-icon icon="list"></fa-icon> {{ 'My Records' | translate }}</ion-label>
+                    <fa-icon slot="end" [icon]="['fas', 'angle-right']"></fa-icon>
+                  </ion-item>
+                }
               </ion-list>
             </ion-col>
           </ion-row>
@@ -59,6 +78,23 @@
             </ion-col>
             <ion-col size="12" size-sm="6" size-md="5" size-lg="5">
               <h2>{{'English Vocabulary' | translate }}</h2>
+              <div class="feature-chips">
+                <ion-chip>
+                  <ion-label>{{ 'FeatureBadge.Words5000' | translate }}</ion-label>
+                </ion-chip>
+                <ion-chip>
+                  <ion-label>{{ 'FeatureBadge.Pronunciation' | translate }}</ion-label>
+                </ion-chip>
+                <ion-chip>
+                  <ion-label>{{ 'FeatureBadge.Images' | translate }}</ion-label>
+                </ion-chip>
+                <ion-chip>
+                  <ion-label>{{ 'FeatureBadge.AIMeaning' | translate }}</ion-label>
+                </ion-chip>
+                <ion-chip>
+                  <ion-label>{{ 'FeatureBadge.Free' | translate }}</ion-label>
+                </ion-chip>
+              </div>
               <p>{{ 'Home_English_Vocabulary_description' | translate }}</p>
             </ion-col>
             <ion-col size="12" size-sm="12" size-md="4" size-lg="4">
@@ -67,10 +103,12 @@
                   <ion-label><fa-icon [icon]="['fas', 'spell-check']"></fa-icon> {{ 'Learn' | translate }}</ion-label>
                   <fa-icon slot="end"  [icon]="['fas', 'angle-right']"></fa-icon>
                 </ion-item>
-                <ion-item *ngIf="authService.isAuthenticated$ | async" (click)="navigationService.openMemberHome('vocabulary')">
-                  <ion-label><fa-icon [icon]="['fas', 'list']"></fa-icon> {{ 'My Vocabulary' | translate }}</ion-label>
-                  <fa-icon slot="end"  [icon]="['fas', 'angle-right']"></fa-icon>
-                </ion-item>
+                @if (authService.isAuthenticated$ | async) {
+                  <ion-item (click)="navigationService.openMemberHome('vocabulary')">
+                    <ion-label><fa-icon [icon]="['fas', 'list']"></fa-icon> {{ 'My Vocabulary' | translate }}</ion-label>
+                    <fa-icon slot="end"  [icon]="['fas', 'angle-right']"></fa-icon>
+                  </ion-item>
+                }
               </ion-list>
             </ion-col>
           </ion-row>

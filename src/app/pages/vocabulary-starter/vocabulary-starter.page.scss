@@ -2,21 +2,16 @@
   font-size: 1.1rem;
 }
 
-.col {
-  max-width: 95%;
-}
-
-ion-badge {
-  margin-left: 8px;
-  margin-right: 8px;
+.inner-content {
+  padding: 2px 4px;
 }
 
 .puzzle span {
-    display: inline-block;
-    border: 1px solid;
-    width: 24px;
-    margin: 4px;
-    text-align: center;
+  display: inline-block;
+  border: 1px solid;
+  width: 24px;
+  margin: 4px;
+  text-align: center;
 }
 
 .type-example {
@@ -24,6 +19,7 @@ ion-badge {
   padding-left: 20px;
   font-size: 0.9rem;
   color: #555555;
+  padding-top: 6px;
 }
 
 .type-example .spell {
@@ -34,3 +30,70 @@ ion-badge {
   color: #aaaaaa;
 }
 
+.voice-mode-note {
+  display: block;
+  font-size: 0.82rem;
+  line-height: 1.25;
+  margin-top: 2px;
+  margin-bottom: 6px;
+}
+
+.options-divider {
+  border-top: 1px solid rgba(var(--ion-color-medium-rgb), 0.22);
+  margin: 6px 10px 2px;
+}
+
+.action-row {
+  padding: 4px;
+}
+
+.action-button {
+  margin: 6px;
+}
+
+.info-content {
+  padding: 2px 8px 6px;
+  color: #334155;
+}
+
+.info-content .info-label {
+  font-size: 0.76rem;
+  font-weight: 500;
+  margin: 6px 0 3px;
+  color: var(--ion-color-primary-shade);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.info-content .info-label fa-icon {
+  color: var(--ion-color-primary);
+  font-size: 0.9em;
+  padding-right: 0;
+}
+
+.info-content ul {
+  margin: 0 0 10px;
+  padding-left: 16px;
+}
+
+.info-content li {
+  font-size: 0.86rem;
+  line-height: 1.45;
+  color: #334155;
+  margin-bottom: 3px;
+}
+
+.info-content li::marker {
+  color: #64748b;
+}
+
+@media (min-width: 768px) {
+  .inner-content {
+    padding: 8px;
+  }
+
+  .action-button {
+    margin: 10px;
+  }
+}

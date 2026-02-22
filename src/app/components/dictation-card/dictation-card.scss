@@ -1,3 +1,31 @@
+.dictation-card-layout {
+  display: grid;
+  gap: 2px;
+}
+
+.section-body {
+  padding: 2px 8px 6px;
+}
+
+.section-info .section-body,
+.section-content .section-body {
+  color: #334155;
+}
+
+.section-info .section-body strong,
+.section-content .section-body strong {
+  color: #1f2937;
+}
+
+.content-title {
+  padding-bottom: 4px;
+}
+
+.fillin-badge {
+  background-color: var(--ion-color-secondary);
+  margin-right: 4px;
+}
+
 .info-button {
   color: var(--ion-color-primary);
   padding-left: 0.5rem;
@@ -8,7 +36,9 @@
 }
 
 .dictation-detail td {
+  padding-bottom: 4px;
   padding-right: 8px !important;
+  vertical-align: top;
 }
 
 .select-vocab-list {
@@ -25,6 +55,26 @@
   }
 }
 
-.article-options-content {
-   --background: #ffffff !important;
+.dictation-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+  margin-top: 6px;
+}
+
+.action-button {
+  margin: 6px;
+}
+
+.start-type-selector {
+  display: block;
+}
+
+.start-button {
+  margin-top: 6px;
+}
+
+.start-button-row {
+  display: flex;
+  justify-content: flex-end;
 }

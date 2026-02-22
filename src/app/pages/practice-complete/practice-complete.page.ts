@@ -12,6 +12,7 @@ import {NGXLogger} from 'ngx-logger';
 import {VocabPracticeType} from '../../enum/vocab-practice-type.enum';
 import {DictationHelper} from '../../services/dictation/dictation-helper.service';
 import {StorageService} from '../../services/storage.service';
+import {DictationCardComponent} from '../../components/dictation-card/dictation-card';
 
 @Component({
     selector: 'app-practice-complete',
@@ -20,7 +21,7 @@ import {StorageService} from '../../services/storage.service';
     standalone: false
 })
 export class PracticeCompletePage implements OnInit {
-  @ViewChild('dictationCard') dictationCard;
+  @ViewChild('dictationCard') dictationCard: DictationCardComponent;
   dictation: Dictation;
   mark = 0;
   histories: VocabPracticeHistory[] = [];
@@ -109,26 +110,27 @@ export class PracticeCompletePage implements OnInit {
     }
   }
 
-  getDictationThenOpen(retryWrongWord: boolean) {
-    if (this.dictationHelper.isGeneratedDictation(this.dictation)
-    || this.dictationHelper.isInstantDictation(this.dictation)) {
-      this.openDictation(this.dictation, this.dictation.options?.practiceType, retryWrongWord);
-    } else {
-      // this.ionicComponentService.showLoading().then(l => this.loader = l);
-      this.ionicComponentService.presentVocabPracticeTypeActionSheet()
-        .then(type => {
-          console.log(`${type}`);
-          this.dictationService.getById(this.dictation.id)
-            .toPromise()
-            .then(d => this.openDictation(d, type, retryWrongWord))
-            .catch(e => this.showCannotGetDictation(e));
-        });
+  retryWithOptions(retryWrongWord: boolean) {
+    const selectedType = this.dictationCard?.getSelectedPracticeType() ?? this.practiceType;
+    if (this.dictationHelper.isGeneratedDictation(this.dictation) || this.dictationHelper.isInstantDictation(this.dictation)) {
+      const updatedDictation = this.dictationCard?.prepareStartDictation(this.dictation, selectedType) ?? this.dictation;
+      this.openDictation(updatedDictation, selectedType, retryWrongWord);
+      return;
     }
+
+    this.dictationService.getById(this.dictation.id)
+      .toPromise()
+      .then(d => {
+        const updatedDictation = this.dictationCard?.prepareStartDictation(d, selectedType) ?? d;
+        this.openDictation(updatedDictation, selectedType, retryWrongWord);
+      })
+      .catch(e => this.showCannotGetDictation(e));
   }
 
   openDictation(d: Dictation, type: VocabPracticeType, retryWrongWord: boolean) {
     if (this.loader) { this.loader.dismiss(); }
     d.options = {
+      ...(d.options || {}),
       practiceType : type,
       retryWrongWord: retryWrongWord,
       vocabPracticeHistories: retryWrongWord ? this.histories : [],
