@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 
 import {AppService} from './app.service';
-import { TextToSpeech } from '@capacitor-community/text-to-speech';
+import {TextToSpeech} from '@capacitor-community/text-to-speech';
 import {NGXLogger} from 'ngx-logger';
 import {TtsCloudService} from './tts-cloud.service';
 import {UIOptionsService} from './ui-options.service';
@@ -14,9 +14,16 @@ export interface SpeakOptions {
   pronounceUrl?: string;
 }
 
+/**
+ * Speech service: native TTS when running inside the Capacitor app (WebView);
+ * Web Speech API when running in a real browser (e.g. user opened the site in Safari/Chrome).
+ * On iOS Safari/Chrome, web TTS only works when speak() runs synchronously in the user gesture.
+ */
 @Injectable({ providedIn: 'root' })
 export class SpeechService {
   synth: SpeechSynthesis | null;
+  private voiceCache: SpeechSynthesisVoice | null = null;
+  private voiceModeCache: string | null = null;
 
   constructor(
     public appService: AppService,
@@ -25,50 +32,63 @@ export class SpeechService {
     private uiOptionsService: UIOptionsService,
   ) {}
 
-  async speak(text: string, rate = 0.7) {
+  async speak(text: string, rate = 0.7): Promise<void> {
     rate = Math.round(rate * 10) / 10;
-    console.info(`speak ${text} in speed ${rate}`);
 
-
-    if (!this.appService.isIOS() && this.appService.isApp()) {
-      const langs = await TextToSpeech.getSupportedLanguages();
-      const lang = langs.languages.find((l) => l.startsWith('en-'));
-      console.log(`lang=${lang}, langs=${JSON.stringify(langs)}`);
-
-      if (this.appService.isIOS()) {
-        rate = rate * 2;
-      }
-
-      await TextToSpeech.stop();
-      await TextToSpeech.speak({
-        text: text,
-        lang: lang,
-        rate: rate,
-      })
-        .then(() => this.log.debug(`Speak by tts: ${text}`))
-        .catch((reason: any) => this.log.warn(JSON.stringify(reason)));
+    if (this.appService.isApp()) {
+      await this.speakNative(text, rate);
     } else {
-      this.synth = window.speechSynthesis;
-      const voice = await this.resolveWebVoice();
-      const lang = voice?.lang || 'en-US';
-      const langs = this.synth.getVoices().flatMap(v => v.lang);
-      console.log(`lang=${lang}, langs=${JSON.stringify(langs)}`);
-
-      const utterance1 = new SpeechSynthesisUtterance(text);
-      utterance1.rate = rate;
-      utterance1.lang = lang;
-      if (voice) {
-        utterance1.voice = voice;
-      }
-      this.synth.cancel();
-      this.synth.speak(utterance1);
-      this.synth.resume();
-      this.log.info(`speak by web api: ${text}`);
+      this.speakWeb(text, rate);
     }
   }
 
+  private async speakNative(text: string, rate: number): Promise<void> {
+    const langs = await TextToSpeech.getSupportedLanguages();
+    const lang = langs.languages.find((l) => l.startsWith('en-'));
+    await TextToSpeech.stop();
+    await TextToSpeech.speak({ text, lang, rate })
+      .then(() => this.log.debug(`Speak by TTS: ${text}`))
+      .catch((reason: unknown) => this.log.warn(JSON.stringify(reason)));
+  }
+
+  private speakWeb(text: string, rate: number): void {
+    this.synth = window.speechSynthesis;
+    const voice = this.getWebVoiceSync();
+    const lang = voice?.lang ?? 'en-US';
+
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.rate = rate;
+    utterance.lang = lang;
+    if (voice) {
+      utterance.voice = voice;
+    }
+    utterance.onerror = (ev: SpeechSynthesisErrorEvent) => {
+      const msg = (ev as unknown as { message?: string }).message ?? String(ev.error);
+      this.log.warn(`TTS error: ${ev.error}`, msg);
+    };
+
+    this.synth.cancel();
+    this.synth.speak(utterance);
+    this.synth.resume();
+  }
+
+  /** Preload voice and voice mode on an earlier user gesture (e.g. Start) so first speak() stays sync on iOS browser. */
+  async ensureVoiceLoaded(): Promise<void> {
+    if (this.appService.isApp()) {
+      return;
+    }
+    this.synth = window.speechSynthesis;
+    this.voiceCache = await this.resolveWebVoice();
+    await this.getVoiceMode();
+  }
+
+  /** Warm voice-mode cache when entering a page with speak UI so speakByVoiceMode avoids await. */
+  async ensureVoiceModeLoaded(): Promise<void> {
+    await this.getVoiceMode();
+  }
+
   async speakByVoiceMode(text: string, options: SpeakOptions = {}): Promise<'cloud' | 'local'> {
-    const voiceMode = options.mode || await this.getVoiceMode();
+    const voiceMode = options.mode ?? this.voiceModeCache ?? await this.getVoiceMode();
     const rate = options.rate ?? 0.7;
     if (this.isOnlineVoiceMode(voiceMode)) {
       const cloud = await this.trySpeakCloud(text, options);
@@ -76,20 +96,20 @@ export class SpeechService {
         return 'cloud';
       }
       if (options.pronounceUrl) {
-        const playedByPronounceAudio = await this.ttsCloudService.playAudioUrl(options.pronounceUrl);
-        if (playedByPronounceAudio) {
+        const played = await this.ttsCloudService.playAudioUrl(options.pronounceUrl);
+        if (played) {
           this.log.info(`Pronunciation audio played after cloud fallback: ${options.pronounceUrl}`);
           return 'cloud';
         }
       }
       this.log.warn(`Online voice unavailable, fallback to local TTS: ${cloud.audioKey}`);
     }
-    await this.speak(this.resolveLocalSpeakText(text, options), rate);
+    void this.speak(this.resolveLocalSpeakText(text, options), rate);
     return 'local';
   }
 
-  async prefetchByVoiceMode(text: string, options: SpeakOptions = {}) {
-    const voiceMode = options.mode || await this.getVoiceMode();
+  async prefetchByVoiceMode(text: string, options: SpeakOptions = {}): Promise<void> {
+    const voiceMode = options.mode ?? this.voiceModeCache ?? await this.getVoiceMode();
     if (!this.isOnlineVoiceMode(voiceMode)) {
       return;
     }
@@ -105,10 +125,9 @@ export class SpeechService {
 
   async getVoiceMode(): Promise<string> {
     const mode = await this.uiOptionsService.loadOption(UIOptionsService.keys.ttsVoiceMode);
-    if (!mode) {
-      return UIOptionsService.voiceMode.online;
-    }
-    return mode;
+    const resolved = !mode ? UIOptionsService.voiceMode.online : mode;
+    this.voiceModeCache = resolved;
+    return resolved;
   }
 
   private async trySpeakCloud(
@@ -140,42 +159,64 @@ export class SpeechService {
     return this.ttsCloudService.normalize(this.ttsCloudService.toPunctuationText(text));
   }
 
-  stop() {
+  stop(): void {
     this.ttsCloudService.stopCloudAudio();
     if (this.appService.isApp()) {
-      TextToSpeech.stop().then(() => this.log.info(`stopped tss`));
+      TextToSpeech.stop().then(() => this.log.info('Stopped TTS'));
     } else if (this.synth) {
       this.synth.cancel();
     }
+  }
+
+  private getWebVoiceSync(): SpeechSynthesisVoice | null {
+    if (!this.synth) {
+      return null;
+    }
+    if (this.voiceCache) {
+      return this.voiceCache;
+    }
+    const voices = this.synth.getVoices();
+    const chosen = this.pickEnglishVoice(voices);
+    if (chosen) {
+      this.voiceCache = chosen;
+    }
+    return chosen;
   }
 
   private async resolveWebVoice(): Promise<SpeechSynthesisVoice | null> {
     if (!this.synth) {
       return null;
     }
-
     let voices = this.synth.getVoices();
     if (!voices.length) {
       await new Promise<void>((resolve) => {
         const timeout = setTimeout(() => {
-          this.synth.onvoiceschanged = null;
+          this.synth!.onvoiceschanged = null;
           resolve();
         }, 300);
-        this.synth.onvoiceschanged = () => {
+        this.synth!.onvoiceschanged = () => {
           clearTimeout(timeout);
-          this.synth.onvoiceschanged = null;
+          this.synth!.onvoiceschanged = null;
           resolve();
         };
       });
       voices = this.synth.getVoices();
     }
+    const chosen = this.pickEnglishVoice(voices);
+    if (chosen) {
+      this.voiceCache = chosen;
+    }
+    return chosen;
+  }
 
+  private pickEnglishVoice(voices: SpeechSynthesisVoice[]): SpeechSynthesisVoice | null {
     if (!voices.length) {
       return null;
     }
-
-    return voices.find(v => v.lang?.toLowerCase().startsWith('en-'))
-      || voices.find(v => v.lang?.toLowerCase().startsWith('en'))
-      || voices[0];
+    return (
+      voices.find((v) => v.lang?.toLowerCase().startsWith('en-')) ??
+      voices.find((v) => v.lang?.toLowerCase().startsWith('en')) ??
+      voices[0]
+    );
   }
 }

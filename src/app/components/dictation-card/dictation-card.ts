@@ -9,6 +9,7 @@ import {MemberDictationService} from '../../services/dictation/member-dictation.
 import {ManageVocabHistoryService} from '../../services/member/manage-vocab-history.service';
 import {NavigationService} from '../../services/navigation.service';
 import {ShareService} from '../../services/share.service';
+import {SpeechService} from '../../services/speech.service';
 import {UIOptionsService} from '../../services/ui-options.service';
 import {ArticleDictationOptionsComponent} from "../article-dictation-options/article-dictation-options.component";
 
@@ -51,7 +52,8 @@ export class DictationCardComponent implements OnInit {
               public translate: TranslateService,
               public alertController: AlertController,
               public toastController: ToastController,
-              public shareService: ShareService) {}
+              public shareService: ShareService,
+              private speechService: SpeechService) {}
 
   get sourceType() { return Dictations.Source; }
   get practiceType() { return VocabPracticeType; }
@@ -142,12 +144,14 @@ export class DictationCardComponent implements OnInit {
     this.shareService.shareDictation(this.dictation);
   }
 
-  startArticleDictation() {
+  startArticleDictation(): void {
+    void this.speechService.ensureVoiceLoaded();
     const updated = this.prepareStartDictation(this.dictation, this.selectedStartPracticeType);
     this.navService.startDictation(updated);
   }
 
-  startVocabDictation(type: VocabPracticeType) {
+  startVocabDictation(type: VocabPracticeType): void {
+    void this.speechService.ensureVoiceLoaded();
     const updated = this.prepareStartDictation(this.dictation, type);
     this.navService.startDictation(updated);
   }

@@ -58,6 +58,7 @@ export class DictationPracticePage implements OnInit {
 
   ionViewWillEnter() {
     this.clearVaribles();
+    void this.speechService.ensureVoiceModeLoaded();
     this.initDictation();
   }
 
