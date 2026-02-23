@@ -42,6 +42,7 @@ export namespace Dictations {
     practiceType?: VocabPracticeType;
     retryWrongWord?: boolean = false;
     vocabPracticeHistories?: VocabPracticeHistory[];
+    voiceMode?: string;
     caseSensitiveSentence?: boolean = false;
     checkPunctuation?: boolean = false;
     speakPunctuation?: boolean = false;

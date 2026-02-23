@@ -84,74 +84,70 @@
                         </ion-row>
                       </ion-radio-group>
                 </app-section-card>
-                    <app-section-card [headerTitle]="'Options' | translate" icon="sliders-h">
-                    @if (mode === pageMode.Start) {
-                      <app-voice-mode-selector
-                        [selectedMode]="voiceMode.value"
-                        (selectedModeChange)="voiceMode.setValue($event)">
-                      </app-voice-mode-selector>
-                    }
-                    @if (type.value === dictationType.Word) {
-                      <div class="word-options-all">
-                        <ion-row>
-                          <ion-col>
-                            <ion-item>
-                              <ion-toggle formControlName="showImage">
-                                <fa-icon [icon]="['far', 'images']"></fa-icon> {{'Show Image'|translate}}
-                              </ion-toggle>
-                            </ion-item>
-                          </ion-col>
-                          <ion-col>
-                            <ion-item>
-                              <ion-toggle class="include-ai-image-toggle" formControlName="includeAIImage" [disabled]="showImage.value !== true">
-                                <fa-icon [icon]="['fas', 'robot']"></fa-icon>{{'Include AI Image'|translate}}
-                              </ion-toggle>
-                            </ion-item>
-                          </ion-col>
-                        </ion-row>
-                        <ion-item>
-                          <ion-toggle formControlName="wordContainSpace">
-                            <fa-icon [icon]="['fas', 'window-minimize']" /> {{'Words Contain Space'|translate}}
-                          </ion-toggle>
-                        </ion-item>
+                      <app-section-card [headerTitle]="'Options' | translate" icon="sliders-h">
                         @if (mode === pageMode.Start) {
-                          <div class="word-options-instant">
-                            <app-vocab-practice-type-selector
-                              [selectedType]="wordPracticeType.value || practiceType.Spell"
-                              (selectedTypeChange)="wordPracticeType.setValue($event)">
-                            </app-vocab-practice-type-selector>
+                          <app-voice-mode-selector
+                            [selectedMode]="voiceMode.value"
+                            (selectedModeChange)="onVoiceModeChange($event)">
+                          </app-voice-mode-selector>
+                        }
+                        @if (type.value === dictationType.Word) {
+                          <div class="word-options-all">
+                            <ion-row>
+                              <ion-col>
+                                <ion-item>
+                                  <ion-toggle formControlName="showImage">
+                                    <fa-icon [icon]="['far', 'images']"></fa-icon> {{'Show Image'|translate}}
+                                  </ion-toggle>
+                                </ion-item>
+                              </ion-col>
+                              <ion-col>
+                                <ion-item>
+                                  <ion-toggle class="include-ai-image-toggle" formControlName="includeAIImage" [disabled]="showImage.value !== true">
+                                    <fa-icon [icon]="['fas', 'robot']"></fa-icon>{{'Include AI Image'|translate}}
+                                  </ion-toggle>
+                                </ion-item>
+                              </ion-col>
+                            </ion-row>
+                            <ion-item>
+                              <ion-toggle formControlName="wordContainSpace">
+                                <fa-icon [icon]="['fas', 'window-minimize']" /> {{'Words Contain Space'|translate}}
+                              </ion-toggle>
+                            </ion-item>
+                            @if (mode === pageMode.Start) {
+                              <div class="word-options-instant">
+                                <app-vocab-practice-type-selector
+                                  [selectedType]="wordPracticeType.value || practiceType.Spell"
+                                  (selectedTypeChange)="wordPracticeType.setValue($event)">
+                                </app-vocab-practice-type-selector>
+                              </div>
+                            }
                           </div>
                         }
-                      </div>
-                    }
-                    @if (type.value === dictationType.Sentence) {
-                      <div>
-                        <ion-item>
-                          <ion-select formControlName="sentenceLength" interface="popover">
-                            <div slot="label"><fa-icon [icon]="['fas', 'ruler']" /> {{'Each Sentence Length'|translate}}</div>
-                            @for (state of sentenceLengthOptions; track state) {
-                              <ion-select-option [value]="state">{{'SentenceLength.' + state|translate}}</ion-select-option>
+                        @if (type.value === dictationType.Sentence) {
+                          <div>
+                            <ion-item>
+                              <ion-select formControlName="sentenceLength" interface="popover">
+                                <div slot="label"><fa-icon [icon]="['fas', 'ruler']" /> {{'Each Sentence Length'|translate}}</div>
+                                @for (state of sentenceLengthOptions; track state) {
+                                  <ion-select-option [value]="state">{{'SentenceLength.' + state|translate}}</ion-select-option>
+                                }
+                              </ion-select>
+                            </ion-item>
+                            @if (mode === pageMode.Start) {
+                              <app-article-dictation-options #articleDictationOptions></app-article-dictation-options>
                             }
-                          </ion-select>
-                        </ion-item>
-                        <!--                <ion-item>-->
-                        <!--                  <ion-label>-->
-                        <!--                    <fa-icon [icon]="['fas', 'robot']"></fa-icon>{{'Include AI Image'|translate}}-->
-                      <!--                  </ion-label>-->
-                      <!--                  <fa-icon *ngIf="type.value == dictationType.Sentence" class="include-ai-image-tooltip-icon" (click)="showAIImageTooltip()" [icon]="['fas', 'info-circle']"></fa-icon>-->
-                    <!--                </ion-item>-->
-                    <app-article-dictation-options #articleDictationOptions></app-article-dictation-options>
-                  </div>
-                }
-                @if (mode === pageMode.Start) {
-                  <div class="options-notes">
-                    <div class="options-note-row">
-                      <fa-icon [icon]="['fas', 'circle-info']"></fa-icon>
-                      <ion-note color="medium">{{'QuickDictation.OptionAvailabilityNote1'|translate}}</ion-note>
-                    </div>
-                  </div>
-                }
-                    </app-section-card>
+                          </div>
+                        }
+                        @if (mode === pageMode.Start) {
+                          <div class="options-notes">
+                            <div class="options-note-row">
+                              <fa-icon [icon]="['fas', 'circle-info']"></fa-icon>
+                              <ion-note color="medium">{{'QuickDictation.OptionAvailabilityNote1'|translate}}</ion-note>
+                            </div>
+                          </div>
+                        }
+                      </app-section-card>
               </ion-col>
               <ion-col id="ion-col-textarea" size="12" size-sm="12" size-md="12" size-lg="6">
             <app-section-card headerTitle="Content" icon="pen">

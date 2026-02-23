@@ -9,6 +9,7 @@ import {NavigationService} from '../../services/navigation.service';
 import {SpeechService} from '../../services/speech.service';
 import {StorageService} from '../../services/storage.service';
 import {TranslateService} from "@ngx-translate/core";
+import {UIOptionsService} from '../../services/ui-options.service';
 
 @Component({
     selector: 'app-article-dictation',
@@ -27,6 +28,7 @@ export class ArticleDictationPage implements OnInit {
   answer = '';
   histories: SentenceHistory[] = [];
   isKeyboardActive: boolean;
+  voiceMode: string;
 
   get caseSensitiveText() {
     return this?.dictation?.options?.caseSensitiveSentence ? 'Case Sensitive' : 'Case Insensitive';
@@ -68,6 +70,13 @@ export class ArticleDictationPage implements OnInit {
 
   async init() {
     this.dictation = await this.storage.get(NavigationService.storageKeys.dictation);
+    const modeFromDictation = this.resolveVoiceMode(this.dictation?.options?.voiceMode);
+    if (modeFromDictation) {
+      this.voiceMode = modeFromDictation;
+    } else {
+      await this.speechService.ensureVoiceModeLoaded();
+      this.voiceMode = await this.speechService.getVoiceMode();
+    }
     this.sentences = this.articleDictationService.divideToSentences(
       this.dictation.article,
       this.articleDictationService.sentenceLengthOptionsToValue(this.dictation.sentenceLength)
@@ -95,6 +104,7 @@ export class ArticleDictationPage implements OnInit {
     void this.speechService.speakByVoiceMode(sentence, {
       rate: this.speakingRate,
       speakPunctuation: !!this.dictation?.options?.speakPunctuation,
+      mode: this.voiceMode,
     });
   }
 
@@ -151,6 +161,7 @@ export class ArticleDictationPage implements OnInit {
     }
     void this.speechService.prefetchByVoiceMode(sentence, {
       speakPunctuation: !!this.dictation?.options?.speakPunctuation,
+      mode: this.voiceMode,
     });
   }
 
@@ -158,5 +169,12 @@ export class ArticleDictationPage implements OnInit {
     if (!this.isKeyboardActive && this.answerInput) {
       setTimeout(() => this.answerInput.setFocus(), 100);
     }
+  }
+
+  private resolveVoiceMode(mode: string | undefined): string | null {
+    if (mode === UIOptionsService.voiceMode.local || mode === UIOptionsService.voiceMode.online) {
+      return mode;
+    }
+    return null;
   }
 }

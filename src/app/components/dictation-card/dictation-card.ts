@@ -158,7 +158,9 @@ export class DictationCardComponent implements OnInit {
 
   onVoiceModeChange(mode: string) {
     this.selectedVoiceMode = this.resolveVoiceMode(mode);
-    this.uiOptionsService.saveOption(UIOptionsService.keys.ttsVoiceMode, this.selectedVoiceMode);
+    void this.uiOptionsService
+      .saveOption(UIOptionsService.keys.ttsVoiceMode, this.selectedVoiceMode)
+      .then(() => this.speechService.ensureVoiceModeLoaded());
   }
 
   getSelectedPracticeType(): VocabPracticeType {
@@ -173,6 +175,7 @@ export class DictationCardComponent implements OnInit {
     dictation.options = {
       ...(dictation.options || {}),
       practiceType: resolvedType,
+      voiceMode: this.selectedVoiceMode,
     };
 
     if (this.dictationHelper.isSentenceDictation(dictation) && this.articleDictationOptions) {

@@ -21,6 +21,7 @@ import {DictationService} from '../../services/dictation/dictation.service';
 import {EditDictationRequest, MemberDictationService} from '../../services/dictation/member-dictation.service';
 import {IonicComponentService} from '../../services/ionic-component.service';
 import {NavigationService} from '../../services/navigation.service';
+import {SpeechService} from '../../services/speech.service';
 import {UIOptionsService} from '../../services/ui-options.service';
 import {DictationUtils} from '../../utils/dictation-utils';
 import {DictationType, EditDictationPageMode} from './edit-dictation-page-enum';
@@ -75,6 +76,7 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
     public translate: TranslateService,
     public dictationService: DictationService,
     public ionicComponentService: IonicComponentService,
+    private speechService: SpeechService,
     private uiOptionsService: UIOptionsService,
     private activatedRoute: ActivatedRoute,
     private articleDictationService: ArticleDictationService,
@@ -256,6 +258,14 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
       : UIOptionsService.voiceMode.online;
   }
 
+  onVoiceModeChange(mode: string): void {
+    const resolvedMode = this.resolveVoiceMode(mode);
+    this.voiceMode.setValue(resolvedMode);
+    void this.uiOptionsService
+      .saveOption(UIOptionsService.keys.ttsVoiceMode, resolvedMode)
+      .then(() => this.speechService.ensureVoiceModeLoaded());
+  }
+
   private async loadSavedOptions() {
     const [
       savedVoiceMode,
@@ -342,7 +352,10 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
         title: new Date().toDateString(),
         suitableStudent: 'Any',
         wordContainSpace: this.wordContainSpace.value,
-        options: { practiceType : this.wordPracticeType.value },
+        options: {
+          practiceType : this.wordPracticeType.value,
+          voiceMode: this.voiceMode.value || UIOptionsService.voiceMode.online,
+        },
         source: Dictations.Source.FillIn,
       };
     } else {
@@ -355,6 +368,7 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
         suitableStudent: 'Any',
         source: Dictations.Source.FillIn,
         options: {
+          voiceMode: this.voiceMode.value || UIOptionsService.voiceMode.online,
           caseSensitiveSentence : this.articleDictationOptions.caseSensitive.checked,
           checkPunctuation: this.articleDictationOptions.checkPunctuation.checked,
           speakPunctuation: this.articleDictationOptions.speakPunctuation.checked,
