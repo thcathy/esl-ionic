@@ -12,7 +12,7 @@
             <ion-row>
               <ion-col size="12" size-sm="12" size-md="12" size-lg="6">
                 @if (mode === editDictationPageMode.Edit) {
-                  <app-section-card headerTitle="Info" icon="info-circle">
+                  <app-section-card [headerTitle]="'Info' | translate" icon="info-circle">
                     <div class="title">
                       <ion-item>
                         <ion-input type="text" formControlName="title"
@@ -56,7 +56,7 @@
                     </ion-item>
                   </app-section-card>
                 }
-                <app-section-card headerTitle="Type" icon="tags">
+                <app-section-card [headerTitle]="'Type' | translate" icon="tags">
                   <ion-radio-group formControlName="type">
                     <ion-row class="radio">
                       <ion-col>
@@ -150,7 +150,7 @@
                       </app-section-card>
               </ion-col>
               <ion-col id="ion-col-textarea" size="12" size-sm="12" size-md="12" size-lg="6">
-            <app-section-card headerTitle="Content" icon="pen">
+            <app-section-card [headerTitle]="'Content' | translate" icon="pen">
                 <!--              <ion-item>-->
                 <!--                <ion-label position="floating">{{'Vocabulary'|translate}} * ({{'separate by space, comma or 1 word per line'|translate}})-->
               <!--                </ion-label>-->
