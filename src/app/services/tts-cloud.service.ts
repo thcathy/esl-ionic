@@ -110,12 +110,14 @@ export class TtsCloudService {
     return slug.length > 0 ? slug : TtsCloudService.FALLBACK_SEGMENT;
   }
 
-  async playAudioUrl(url: string): Promise<boolean> {
+  async playAudioUrl(url: string, rate?: number): Promise<boolean> {
     try {
       this.stopCloudAudio();
       // Always use a fresh player instance to avoid rapid-click replay issues.
       const audio = new Audio(url);
-      audio.currentTime = 0;
+      if (rate != null) {
+        audio.playbackRate = rate;
+      }
       this.currentAudio = audio;
       await audio.play();
       return true;
@@ -125,8 +127,5 @@ export class TtsCloudService {
       return false;
     }
   }
-
-  async playCloudUrl(url: string): Promise<boolean> {
-    return this.playAudioUrl(url);
-  }
 }
+

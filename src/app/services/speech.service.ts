@@ -138,7 +138,7 @@ export class SpeechService {
       speakPunctuation: options.speakPunctuation,
       ttsVersion: options.ttsVersion,
     });
-    const playedByCloud = await this.ttsCloudService.playAudioUrl(audioInfo.url);
+    const playedByCloud = await this.ttsCloudService.playAudioUrl(audioInfo.url, options.rate);
     if (playedByCloud) {
       this.log.info(`Cloud TTS played: ${audioInfo.key}`);
     }

@@ -19,6 +19,7 @@ describe('TtsCloudService', () => {
         : jasmine.createSpy().and.rejectWith(new Error('blocked')),
       pause: jasmine.createSpy(),
       currentTime,
+      playbackRate: 1,
     };
     const audioSpy = spyOn(window as any, 'Audio').and.returnValue(fakeAudio);
     return { fakeAudio, audioSpy };
@@ -59,27 +60,35 @@ describe('TtsCloudService', () => {
   });
 
   describe('audio playback', () => {
-    it('playCloudUrl returns true when audio plays', async () => {
+    it('playAudioUrl returns true when audio plays', async () => {
       const { fakeAudio, audioSpy } = mockAudioPlay(true);
 
-      const result = await service.playCloudUrl(audioUrl);
+      const result = await service.playAudioUrl(audioUrl);
 
       expect(result).toBeTrue();
       expect(audioSpy).toHaveBeenCalledWith(audioUrl);
       expect(fakeAudio.play).toHaveBeenCalled();
     });
 
-    it('playCloudUrl returns false on play error', async () => {
+    it('playAudioUrl returns false on play error', async () => {
       mockAudioPlay(false);
 
-      const result = await service.playCloudUrl(audioUrl);
+      const result = await service.playAudioUrl(audioUrl);
 
       expect(result).toBeFalse();
     });
 
+    it('playAudioUrl sets playbackRate when rate is provided', async () => {
+      const { fakeAudio } = mockAudioPlay(true);
+
+      await service.playAudioUrl(audioUrl, 0.5);
+
+      expect(fakeAudio.playbackRate).toBe(0.5);
+    });
+
     it('stopCloudAudio pauses and resets time', async () => {
       const { fakeAudio } = mockAudioPlay(true, 10);
-      await service.playCloudUrl(audioUrl);
+      await service.playAudioUrl(audioUrl);
 
       service.stopCloudAudio();
 
