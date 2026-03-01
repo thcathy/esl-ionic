@@ -191,7 +191,20 @@ release_android() {
 
 setVersion() {
   VERSION="$(python3 -c "import json,sys; print(json.load(sys.stdin)['version'])" < "${ROOT_DIR}/package.json")"
-  ANDROID_VERSION="${VERSION//./0}"
+  local version_core="${VERSION%%-*}"
+  local major minor patch
+  IFS='.' read -r major minor patch <<< "${version_core}"
+  major="${major:-0}"
+  minor="${minor:-0}"
+  patch="${patch:-0}"
+
+  [[ "${major}" =~ ^[0-9]+$ ]] || die "Invalid major version in package.json: ${VERSION}"
+  [[ "${minor}" =~ ^[0-9]+$ ]] || die "Invalid minor version in package.json: ${VERSION}"
+  [[ "${patch}" =~ ^[0-9]+$ ]] || die "Invalid patch version in package.json: ${VERSION}"
+
+  # Use monotonically increasing versionCode: M*100000 + m*1000 + p
+  # Examples: 9.7.10 -> 907010, 10.0.0 -> 1000000
+  ANDROID_VERSION="$(( major * 100000 + minor * 1000 + patch ))"
   echo "set version=${VERSION}, android versionCode=${ANDROID_VERSION}"
 }
 
