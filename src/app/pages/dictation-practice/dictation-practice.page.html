@@ -30,9 +30,6 @@
                   <ion-button shape="round" class="phonicsButton" (click)="showPhonics()">{{phonics|translate}}</ion-button>
                 </ion-col>
               </ion-row>
-              <div>
-                <app-text-interpretation [text]="currentQuestion().word" />
-              </div>
               @if (practiceType === type.Spell) {
                 <div class="spell-input-div">
                   <ion-item class="answerInput">
@@ -59,6 +56,9 @@
                   </div>
                 </div>
               }
+              <div>
+                <app-text-interpretation [text]="currentQuestion().word" />
+              </div>
               @if (practiceType === type.Puzzle && puzzleControls != null) {
                 <div class="puzzle-div">
                   <div>
