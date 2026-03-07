@@ -78,7 +78,7 @@ describe('SpeechService', () => {
 
       expect(result).toBe('cloud');
       expect(ttsCloudService.buildCloudAudioInfo).toHaveBeenCalled();
-      expect(ttsCloudService.playAudioUrl).toHaveBeenCalledWith(cloudAudioInfo.url);
+      expect(ttsCloudService.playAudioUrl).toHaveBeenCalledWith(cloudAudioInfo.url, undefined);
       expect(speakSpy).not.toHaveBeenCalled();
     });
 
