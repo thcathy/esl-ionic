@@ -11,6 +11,7 @@ import {NavigationService} from '../../services/navigation.service';
 import {ShareService} from '../../services/share.service';
 import {SpeechService} from '../../services/speech.service';
 import {UIOptionsService} from '../../services/ui-options.service';
+import {FFSAuthService} from '../../services/auth.service';
 import {ArticleDictationOptionsComponent} from "../article-dictation-options/article-dictation-options.component";
 
 @Component({
@@ -38,6 +39,7 @@ export class DictationCardComponent implements OnInit {
   @Input() showContent = true;
   @Input() showStartButton = true;
   @Input() showOptions = true;
+  @Input() showCopyButton = false;
 
   @ViewChild('articleDictationOptions') articleDictationOptions: ArticleDictationOptionsComponent;
 
@@ -53,11 +55,12 @@ export class DictationCardComponent implements OnInit {
               public alertController: AlertController,
               public toastController: ToastController,
               public shareService: ShareService,
+              public authService: FFSAuthService,
               private speechService: SpeechService) {}
 
   get sourceType() { return Dictations.Source; }
   get practiceType() { return VocabPracticeType; }
-  get memberVocabularies() { return this.dictation.vocabs.map(v => v.word).map(w => this.manageVocabHistoryService.findMemberVocabulary(w)); }
+  get memberVocabularies() { return (this.dictation?.vocabs ?? []).map(v => v.word).map(w => this.manageVocabHistoryService.findMemberVocabulary(w)); }
 
   async ngOnInit() {
     const [savedVoiceMode, savedPracticeType] = await Promise.all([
@@ -142,6 +145,14 @@ export class DictationCardComponent implements OnInit {
 
   shareDictation() {
     this.shareService.shareDictation(this.dictation);
+  }
+
+  copyDictation() {
+    if (!this.authService.isAuthenticated()) {
+      this.presentToast(this.translate.instant('Please log in first to copy this dictation.'));
+      return;
+    }
+    this.navService.copyDictation(this.dictation);
   }
 
   startArticleDictation(): void {

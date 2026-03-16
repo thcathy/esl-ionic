@@ -3,7 +3,12 @@ import {ComponentFixture, fakeAsync, TestBed, waitForAsync} from '@angular/core/
 
 import {SharedTestModule} from '../../../testing/shared-test.module';
 import {DictationCardComponent} from './dictation-card';
-import {memberVocabularyMember1Apple, memberVocabularyMember1Banana, memberVocabularyMember1Cat, TestData} from '../../../testing/test-data';
+import {
+  memberVocabularyMember1Apple,
+  memberVocabularyMember1Banana,
+  memberVocabularyMember1Cat,
+  TestData
+} from '../../../testing/test-data';
 import {ManageVocabHistoryServiceSpy} from '../../../testing/mocks-ionic';
 import {ManageVocabHistoryService} from '../../services/member/manage-vocab-history.service';
 import {NavigationService} from '../../services/navigation.service';
@@ -50,6 +55,13 @@ describe('DictationCardComponent', () => {
       expect(fixture.nativeElement.querySelector('.section-content .fillin-vocabs')).toBeTruthy();
       expect(fixture.nativeElement.querySelector('.section-info .share-button')).toBeTruthy();
       expect(fixture.nativeElement.querySelector('.section-info .edit-button')).toBeTruthy();
+    }));
+
+    it('show copy button when enabled for FillIn source', fakeAsync(() => {
+      component.dictation = TestData.fillInDictation();
+      component.showCopyButton = true;
+      fixture.detectChanges();
+      expect(fixture.nativeElement.querySelector('.section-info ion-button .fa-copy')).toBeTruthy();
     }));
   });
 
@@ -150,6 +162,30 @@ describe('DictationCardComponent', () => {
       expect(uiOptionsService.saveOption).toHaveBeenCalledWith(UIOptionsService.keys.ttsVoiceMode, UIOptionsService.voiceMode.local);
       expect(uiOptionsService.saveOption).toHaveBeenCalledWith(UIOptionsService.keys.vocabPracticeType, VocabPracticeType.Puzzle);
       expect(component.dictation.options.practiceType).toBe(VocabPracticeType.Puzzle);
+    }));
+  });
+
+  describe('copy dictation', () => {
+    beforeEach(() => {
+      component.dictation = TestData.fillInDictation();
+    });
+
+    it('show toast and do not navigate when user is not authenticated', fakeAsync(() => {
+      (component.authService.isAuthenticated as jasmine.Spy).and.returnValue(false);
+      spyOn(component, 'presentToast');
+
+      component.copyDictation();
+
+      expect(component.presentToast).toHaveBeenCalledWith('Please log in first to copy this dictation.');
+      expect(navigationServiceSpy.copyDictation).not.toHaveBeenCalled();
+    }));
+
+    it('navigate with copy when user is authenticated', fakeAsync(() => {
+      (component.authService.isAuthenticated as jasmine.Spy).and.returnValue(true);
+
+      component.copyDictation();
+
+      expect(navigationServiceSpy.copyDictation).toHaveBeenCalledWith(component.dictation);
     }));
   });
 

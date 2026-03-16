@@ -1,8 +1,6 @@
 import {Injectable} from '@angular/core';
-import { filter, from, map, mergeMap, Observable } from 'rxjs';
+import {filter, from, map, Observable} from 'rxjs';
 import {Dictation, Dictations} from '../../entity/dictation';
-import { vocabDifficulties } from '../../entity/voacb-practice';
-import { VocabPracticeHistory } from '../../entity/vocab-practice-history';
 import {ValidationUtils} from '../../utils/validation-utils';
 
 @Injectable({ providedIn: 'root' })
@@ -24,6 +22,34 @@ export class DictationHelper {
 
   isGeneratedDictation(dictation: Dictation): boolean {
     return dictation != null && dictation.source === Dictations.Source.Generate;
+  }
+
+  toCopyDraft(dictation: Dictation): Dictation {
+    const options: Dictations.Options | undefined = dictation.options
+      ? {
+          practiceType: dictation.options.practiceType,
+          voiceMode: dictation.options.voiceMode,
+          caseSensitiveSentence: dictation.options.caseSensitiveSentence,
+          checkPunctuation: dictation.options.checkPunctuation,
+          speakPunctuation: dictation.options.speakPunctuation,
+          retryWrongWord: dictation.options.retryWrongWord,
+        }
+      : undefined;
+
+    return {
+      id: -1,
+      title: dictation.title,
+      description: dictation.description,
+      suitableStudent: dictation.suitableStudent,
+      source: dictation.source,
+      article: dictation.article,
+      sentenceLength: dictation.sentenceLength,
+      showImage: dictation.showImage,
+      includeAIImage: dictation.includeAIImage,
+      wordContainSpace: dictation.wordContainSpace,
+      vocabs: dictation.vocabs?.map(vocab => ({...vocab})),
+      options: options,
+    };
   }
 
   wordsToPractice(dictation: Dictation): Observable<string> {

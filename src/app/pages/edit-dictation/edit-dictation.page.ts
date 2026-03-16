@@ -138,7 +138,7 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
       {
         validators: [
           maxVocabularyValidator(50, 'type', 'question', 'wordContainSpace'),
-          vocabularyPatternValidator('type', 'question')
+          vocabularyPatternValidator('type', 'question', 'wordContainSpace')
         ]
       });
 
@@ -176,7 +176,7 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
       this.applyWordDictationFormValue(dictation);
     }
 
-    if (!this.dictationService.isInstantDictation(dictation)) {
+    if (this.mode === EditDictationPageMode.Edit) {
       this.applyEditableDictationFormValue(dictation);
     }
   }
@@ -314,7 +314,7 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
 
   private applyWordDictationFormValue(dictation: Dictation) {
     this.type.setValue(DictationType.Word);
-    this.question.setValue(dictation.vocabs.map(v => v.word).join(dictation.wordContainSpace ? '\n' : ' '));
+    this.question.setValue((dictation.vocabs ?? []).map(v => v.word).join(dictation.wordContainSpace ? '\n' : ' '));
     this.showImage.setValue(this.toBoolean(dictation.showImage));
     this.includeAIImage.setValue(this.toBoolean(dictation.includeAIImage));
     this.wordContainSpace.setValue(this.toBoolean(dictation.wordContainSpace));
@@ -407,13 +407,15 @@ function maxVocabularyValidator(max: number, typeName: string, questionName: str
   };
 }
 
-function vocabularyPatternValidator(typeName: string, questionName: string): ValidatorFn {
+function vocabularyPatternValidator(typeName: string, questionName: string, wordContainSpaceName: string): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
     const type = control.get(typeName)?.value;
     if (type == null || type === DictationType.Sentence) { return null; }
 
     const question = control.get(questionName)?.value;
-    const valid = question != null && question !== '' && DictationUtils.vocabularyValueToArray(question, control.get(questionName).value).length <= 0;
-    return valid ? {'invalidVocabularyPattern': true} : null;
+    const isInvalidPattern = question != null
+      && question !== ''
+      && DictationUtils.vocabularyValueToArray(question, control.get(wordContainSpaceName)?.value).length <= 0;
+    return isInvalidPattern ? {'invalidVocabularyPattern': true} : null;
   };
 }

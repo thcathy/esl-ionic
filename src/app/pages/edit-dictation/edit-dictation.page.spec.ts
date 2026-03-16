@@ -17,6 +17,7 @@ import {VocabPracticeType} from '../../enum/vocab-practice-type.enum';
 import {ArticleDictationOptionsComponent} from "../../components/article-dictation-options/article-dictation-options.component";
 import {IonicModule, IonToggle} from "@ionic/angular";
 import {StorageService} from '../../services/storage.service';
+import {DictationUtils} from '../../utils/dictation-utils';
 
 describe('EditDictationPage', () => {
   let component: EditDictationPage;
@@ -115,6 +116,26 @@ describe('EditDictationPage', () => {
         expect(component.title).toBeTruthy();
         expect(component.description).toBeTruthy();
         expect(component.suitableStudent).toBeTruthy();
+      }));
+
+      it('prefill title/description/suitableStudent for copied draft id -1 in Edit mode', fakeAsync(() => {
+        navigationServiceSpy.getParam.and.returnValue({
+          id: -1,
+          title: 'Copied Title',
+          description: 'Copied Description',
+          suitableStudent: 'JuniorPrimary',
+          showImage: true,
+          includeAIImage: false,
+          wordContainSpace: false,
+          vocabs: [{word: 'apple'}],
+          source: Dictations.Source.FillIn,
+        } as Dictation);
+
+        componentViewWillEnter();
+
+        expect(component.title.value).toEqual('Copied Title');
+        expect(component.description.value).toEqual('Copied Description');
+        expect(component.suitableStudent.value).toEqual('JuniorPrimary');
       }));
 
       it('create form controls required', fakeAsync(() => {
@@ -348,6 +369,22 @@ describe('EditDictationPage', () => {
 
           component.question.setValue('without invalid text');
           expect(component.inputForm.errors).toBeNull();
+        }));
+
+        it('use wordContainSpace boolean (not question text) for vocabulary parsing', fakeAsync(() => {
+          component.type.setValue(DictationType.Word);
+          component.wordContainSpace.setValue(false);
+          const question = 'new york';
+          const parseSpy = spyOn(DictationUtils, 'vocabularyValueToArray').and.returnValue(['new', 'york']);
+
+          component.question.setValue(question);
+
+          const calls = parseSpy.calls.allArgs();
+          const hasQuestionAsFlag = calls.some(args => args[0] === question && typeof args[1] === 'string' && args[1] === question);
+          const hasBooleanFlag = calls.some(args => args[0] === question && args[1] === false);
+
+          expect(hasQuestionAsFlag).toBeFalse();
+          expect(hasBooleanFlag).toBeTrue();
         }));
 
         it('dont validate vocabulary pattern for sentence dictation', fakeAsync(() => {

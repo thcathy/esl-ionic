@@ -77,6 +77,11 @@
           @if (edit && dictation?.source === sourceType.FillIn) {
             <ion-button class="action-button edit-button" color="secondary" (click)="navService.editDictation(dictation)"><fa-icon [icon]="['fas', 'edit']"></fa-icon>&nbsp;{{'Edit'|translate}}</ion-button>
           }
+          @if (showCopyButton && dictation?.source === sourceType.FillIn) {
+            <ion-button class="action-button" color="secondary" (click)="copyDictation()">
+              <fa-icon [icon]="['fas', 'copy']"></fa-icon>&nbsp;{{'Copy'|translate}}
+            </ion-button>
+          }
           @if (edit) {
             <ion-button class="action-button" color="danger" (click)="confirmDeleteDictation()"><fa-icon [icon]="['fas', 'trash']"></fa-icon>&nbsp;{{'Delete'|translate}}</ion-button>
           }

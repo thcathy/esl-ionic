@@ -113,9 +113,12 @@ export class NavigationService {
   }
 
   editDictation(dictation: Dictation = null, mode: string = 'Edit') {
-    // await this.storage.set(NavigationService.storageKeys.editDictation, dictation);
     this.setParam(NavigationService.storageKeys.editDictation, dictation);
     return this.router.navigate(['/edit-dictation/' + mode]);
+  }
+
+  copyDictation(dictation: Dictation, mode: string = 'Edit') {
+    return this.editDictation(dictation ? this.dictationHelper.toCopyDraft(dictation) : null, mode);
   }
 
   async practiceComplete(input: PracticeCompletePageInput) {
