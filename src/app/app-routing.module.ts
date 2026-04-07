@@ -1,12 +1,10 @@
-import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
-import {MemberHomePage} from './pages/member-home/member-home.page';
+import {NgModule} from '@angular/core';
+import {RouterModule, Routes} from '@angular/router';
 
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'home', loadChildren: () => import('./home/home.module').then(m => m.HomePageModule) },
-  { path: 'instant-dictation', loadChildren: () => import('./pages/instant-dictation/instant-dictation.module').then(m => m.InstantDictationPageModule) },
-  { path: 'dictation-practice', loadChildren: () => import('./pages/dictation-practice/dictation-practice.module').then(m => m.DictationPracticePageModule) },
+{ path: 'dictation-practice', loadChildren: () => import('./pages/dictation-practice/dictation-practice.module').then(m => m.DictationPracticePageModule) },
   { path: 'practice-complete', loadChildren: () => import('./pages/practice-complete/practice-complete.module').then(m => m.PracticeCompletePageModule) },
   { path: 'article-dictation', loadChildren: () => import('./pages/article-dictation/article-dictation.module').then(m => m.ArticleDictationPageModule) },
   { path: 'article-dictation-complete', loadChildren: () => import('./pages/article-dictation-complete/article-dictation-complete.module').then(m => m.ArticleDictationCompletePageModule) },

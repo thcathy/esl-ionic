@@ -1,0 +1,3 @@
+app_identifier "com.esl.ionic"
+apple_id       ENV["APPLE_ID_APP_USERNAME"]
+team_id        "DU483K8F48"

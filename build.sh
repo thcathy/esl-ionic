@@ -12,6 +12,13 @@ if [[ "${DEBUG}" == "1" || "${DEBUG}" == "true" ]]; then
   set -x
 fi
 
+if [[ -f "${ROOT_DIR}/.env" ]]; then
+  # shellcheck source=.env
+  set -o allexport
+  source "${ROOT_DIR}/.env"
+  set +o allexport
+fi
+
 usage() {
   cat <<'EOF'
 Usage:
@@ -41,75 +48,6 @@ require_env() {
   fi
 }
 
-sed_inplace() {
-  local expr="$1"
-  local file="$2"
-  if [[ "${OSTYPE:-}" == darwin* ]]; then
-    sed -i '' -e "$expr" "$file"
-  else
-    sed -i -e "$expr" "$file"
-  fi
-}
-
-zipalign_cmd() {
-  if command -v zipalign >/dev/null 2>&1; then
-    echo "zipalign"
-    return 0
-  fi
-
-  local sdk_root="${ANDROID_SDK_ROOT:-${ANDROID_HOME:-}}"
-  if [[ -z "${sdk_root}" ]]; then
-    die "zipalign not found in PATH and ANDROID_SDK_ROOT/ANDROID_HOME not set"
-  fi
-
-  local bt_dir="${sdk_root}/build-tools"
-  if [[ ! -d "${bt_dir}" ]]; then
-    die "Android build-tools directory not found: ${bt_dir}"
-  fi
-
-  local latest
-  latest="$(ls -1d "${bt_dir}"/* 2>/dev/null | sort -V | tail -n 1 || true)"
-  if [[ -z "${latest}" ]]; then
-    die "No build-tools versions found under: ${bt_dir}"
-  fi
-
-  local za="${latest}/zipalign"
-  if [[ ! -x "${za}" ]]; then
-    die "zipalign not executable at: ${za}"
-  fi
-
-  echo "${za}"
-}
-
-apksigner_cmd() {
-  if command -v apksigner >/dev/null 2>&1; then
-    echo "apksigner"
-    return 0
-  fi
-
-  local sdk_root="${ANDROID_SDK_ROOT:-${ANDROID_HOME:-}}"
-  if [[ -z "${sdk_root}" ]]; then
-    die "apksigner not found in PATH and ANDROID_SDK_ROOT/ANDROID_HOME not set"
-  fi
-
-  local bt_dir="${sdk_root}/build-tools"
-  if [[ ! -d "${bt_dir}" ]]; then
-    die "Android build-tools directory not found: ${bt_dir}"
-  fi
-
-  local latest
-  latest="$(ls -1d "${bt_dir}"/* 2>/dev/null | sort -V | tail -n 1 || true)"
-  if [[ -z "${latest}" ]]; then
-    die "No build-tools versions found under: ${bt_dir}"
-  fi
-
-  local as="${latest}/apksigner"
-  if [[ ! -x "${as}" ]]; then
-    die "apksigner not executable at: ${as}"
-  fi
-
-  echo "${as}"
-}
 
 release_web_uat() {
   firebase deploy -P batch4-161201
@@ -124,27 +62,24 @@ build_firebase() {
 }
 
 release_ios() {
-  local XCARCHIVE_PATH="${ROOT_DIR}/ios/App/ESL.xcarchive"
-  local EXPORT_PATH="${ROOT_DIR}/tmp"
-
   require_env "APPLE_ID_APP_USERNAME"
-  require_env "APPLE_ID_APP_PASSWORD"
 
   setVersion
-  sed_inplace "s/MARKETING_VERSION = .*;/MARKETING_VERSION = ${VERSION};/g" "${ROOT_DIR}/ios/App/App.xcodeproj/project.pbxproj"
   ionic capacitor build ios --configuration production --no-open
 
   pushd "${ROOT_DIR}/ios/App" >/dev/null
-  xcodebuild archive -workspace "App.xcworkspace" -archivePath "$XCARCHIVE_PATH" -scheme "App" -destination "generic/platform=iOS"
-  xcodebuild -exportArchive -archivePath "$XCARCHIVE_PATH" -exportPath "$EXPORT_PATH" -exportOptionsPlist "ExportOptions.plist" -allowProvisioningUpdates
-  xcrun altool --upload-app -t ios -f "${EXPORT_PATH}/App.ipa" -u "$APPLE_ID_APP_USERNAME" -p "$APPLE_ID_APP_PASSWORD"
+  fastlane set_version version:"${VERSION}" build_number:"${ANDROID_VERSION}"
+  fastlane build
+  fastlane upload ipa:"${ROOT_DIR}/tmp/App.ipa" version:"${VERSION}"
   popd >/dev/null
 }
 
 test_ios() {
   setVersion
-  sed_inplace "s/MARKETING_VERSION = .*;/MARKETING_VERSION = ${VERSION};/g" "${ROOT_DIR}/ios/App/App.xcodeproj/project.pbxproj"
   ionic capacitor build ios --configuration production
+  pushd "${ROOT_DIR}/ios/App" >/dev/null
+  fastlane set_version version:"${VERSION}" build_number:"${ANDROID_VERSION}"
+  popd >/dev/null
 }
 
 buildAndroidApk() {
@@ -152,27 +87,12 @@ buildAndroidApk() {
 
   ionic cap build android --configuration production --no-open
   pushd "${ROOT_DIR}/android" >/dev/null
-  ./gradlew assembleRelease
+  fastlane build_apk
   popd >/dev/null
-
-  local unsigned_apk="${ROOT_DIR}/android/app/build/outputs/apk/release/app-release-unsigned.apk"
-  local aligned_apk="${ROOT_DIR}/esl-dictation-aligned.apk"
-  local signed_apk="${ROOT_DIR}/esl-dictation.apk"
-
-  rm -f -- "$aligned_apk" "$signed_apk"
-  "$(zipalign_cmd)" -v 4 "$unsigned_apk" "$aligned_apk"
-  "$(apksigner_cmd)" sign \
-    --ks "${ROOT_DIR}/my-release-key.jks" \
-    --ks-key-alias "esl-dictation" \
-    --ks-pass "env:ESL_IONIC_KEYSTORE_PASSWORD" \
-    --out "$signed_apk" \
-    "$aligned_apk"
-  "$(apksigner_cmd)" verify --verbose --print-certs "$signed_apk"
-  cp "${ROOT_DIR}/esl-dictation.apk" "${HOME}/Google Drive/My Drive/apk/"
 }
 
 release_android() {
-  local AAB_PATH="app/build/outputs/bundle/release/app-release.aab"
+  local AAB_PATH="${ROOT_DIR}/android/app/build/outputs/bundle/release/app-release.aab"
 
   require_env "ESL_IONIC_KEYSTORE_PASSWORD"
   require_env "GCLOUD_SERVICE_ACCOUNT_KEY"
@@ -180,12 +100,9 @@ release_android() {
   setVersion
   ionic cap build android --configuration production --no-open
   pushd "${ROOT_DIR}/android" >/dev/null
-  sed_inplace "s/versionName \".*\"/versionName \"${VERSION}\"/g" "app/build.gradle"
-  sed_inplace "s/versionCode .*/versionCode ${ANDROID_VERSION}/g" "app/build.gradle"
-#  export JAVA_HOME=`/usr/libexec/java_home -v 17`
-  ./gradlew bundle
-  jarsigner -verbose -sigalg SHA256withRSA -digestalg SHA-256 -keystore "${ROOT_DIR}/my-release-key.jks" -storepass "${ESL_IONIC_KEYSTORE_PASSWORD}" "${AAB_PATH}" "esl-dictation"
-  fastlane supply -f "${AAB_PATH}" --package_name "com.esl.ionic" --track "production" --skip_upload_images --skip_upload_screenshots --skip_upload_metadata --release_status "draft" --json_key "${GCLOUD_SERVICE_ACCOUNT_KEY}"
+  fastlane set_version version:"${VERSION}" version_code:"${ANDROID_VERSION}"
+  fastlane build_bundle
+  fastlane upload aab:"${AAB_PATH}"
   popd >/dev/null
 }
 

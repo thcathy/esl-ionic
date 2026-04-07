@@ -1,0 +1,2 @@
+json_key_file ENV["GCLOUD_SERVICE_ACCOUNT_KEY"]
+package_name   "com.esl.ionic"

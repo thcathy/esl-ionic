@@ -1,0 +1,77 @@
+require "fileutils"
+
+default_platform(:android)
+
+# Absolute paths — immune to fastlane's working directory changes
+ANDROID_DIR = File.expand_path("../..", __FILE__)   # android/
+ROOT_DIR     = File.expand_path("../../..", __FILE__) # project root
+
+platform :android do
+  desc "Build, sign and copy release APK"
+  lane :build_apk do
+    gradle(
+      task:        "assemble",
+      build_type:  "Release",
+      project_dir: ANDROID_DIR
+    )
+
+    sign_apk(
+      apk_path:        "#{ANDROID_DIR}/app/build/outputs/apk/release/app-release-unsigned.apk",
+      output_filepath: "#{ROOT_DIR}/esl-dictation.apk",
+      keystore_path:   "#{ROOT_DIR}/my-release-key.jks",
+      alias:           "esl-dictation",
+      storepass:       ENV["ESL_IONIC_KEYSTORE_PASSWORD"],
+      keypass:         ENV["ESL_IONIC_KEYSTORE_PASSWORD"]
+    )
+
+    sh "cp \"#{ROOT_DIR}/esl-dictation.apk\" \"#{ENV['HOME']}/Google Drive/My Drive/apk/\""
+  end
+
+  desc "Build signed release AAB"
+  lane :build_bundle do
+    gradle(
+      task:        "bundle",
+      build_type:  "Release",
+      project_dir: ANDROID_DIR
+    )
+  end
+
+  desc "Upload AAB to Play Store as draft"
+  lane :upload do |options|
+    aab_path = options[:aab] or UI.user_error!("aab is required")
+
+    {
+      "en-US" => "en",
+      "zh-TW" => "zh-Hant",
+      "zh-CN" => "zh-Hans"
+    }.each do |play_locale, file_locale|
+      dir = "#{ANDROID_DIR}/fastlane/metadata/android/#{play_locale}/changelogs"
+      FileUtils.mkdir_p(dir)
+      File.write("#{dir}/default.txt", File.read("#{ROOT_DIR}/release_notes/#{file_locale}.txt").strip)
+    end
+
+    upload_to_play_store(
+      aab:                     aab_path,
+      track:                   "production",
+      release_status:          "draft",
+      skip_upload_images:      true,
+      skip_upload_screenshots: true,
+      skip_upload_metadata:    true,
+      skip_upload_changelogs:  false
+    )
+  end
+
+  desc "Set version name and code in build.gradle"
+  lane :set_version do |options|
+    version      = options[:version]      or UI.user_error!("version is required")
+    version_code = options[:version_code] or UI.user_error!("version_code is required")
+
+    gradle_file = "#{ANDROID_DIR}/app/build.gradle"
+    content = File.read(gradle_file)
+    content = content.gsub(/versionName ".*"/, "versionName \"#{version}\"")
+    content = content.gsub(/versionCode \d+/, "versionCode #{version_code.to_i}")
+    File.write(gradle_file, content)
+
+    UI.success "Set versionName=#{version}, versionCode=#{version_code}"
+  end
+end
