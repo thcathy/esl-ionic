@@ -1,0 +1,228 @@
+.preload-container {
+  padding: 16px;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+/* ---------- Hero: bouncing letter blocks ---------- */
+.hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 12px 0 14px;
+}
+
+.hero-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 8px;
+  height: 70px;
+}
+
+.block {
+  width: 44px;
+  height: 52px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  font-family: 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 900;
+  font-size: 26px;
+  color: #fff;
+  box-shadow:
+    inset 0 -4px 0 rgba(0, 0, 0, 0.18),
+    0 6px 12px rgba(0, 0, 0, 0.18);
+  animation: hop 1.4s ease-in-out infinite;
+  transform-origin: center bottom;
+}
+
+@keyframes hop {
+  0%, 60%, 100% { transform: translateY(0) rotate(0); }
+  20% { transform: translateY(-22px) rotate(-5deg); }
+  30% { transform: translateY(-28px) rotate(3deg); }
+  40% { transform: translateY(0) rotate(0); }
+}
+
+/* ---------- Loading card ---------- */
+.load-card {
+  margin-top: 12px;
+  background: #ffffff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.05), 0 12px 24px rgba(0, 0, 0, 0.08);
+}
+
+.load-head {
+  background: var(--ion-color-tertiary);
+  color: #fff;
+  padding: 10px 14px;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.load-body {
+  padding: 14px;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 34px 1fr 42px;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 2px;
+}
+
+.row + .row {
+  border-top: 1px solid #f0f2f5;
+}
+
+.ico {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-weight: 800;
+  font-size: 14px;
+  box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.12);
+}
+
+.ico-primary { background: var(--ion-color-primary); }
+.ico-secondary { background: var(--ion-color-secondary); }
+.ico-tertiary { background: var(--ion-color-tertiary); }
+
+.label {
+  font-size: 13px;
+  font-weight: 700;
+  color: #2b2b2b;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.label small {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--ion-color-medium);
+  letter-spacing: 0.04em;
+}
+
+.track {
+  position: relative;
+  height: 8px;
+  background: #e9eef3;
+  border-radius: 999px;
+  overflow: hidden;
+  margin-top: 2px;
+}
+
+.fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 0%;
+  border-radius: 999px;
+  transition: width 0.3s ease;
+}
+
+.fill::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+  animation: shimmer 1.6s linear infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.fill-primary { background: var(--ion-color-primary); }
+.fill-secondary { background: var(--ion-color-secondary); }
+.fill-tertiary { background: var(--ion-color-tertiary); }
+.fill-failed { background: var(--ion-color-warning); }
+
+.pct {
+  text-align: right;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ion-color-dark);
+}
+
+/* ---------- Status bar ---------- */
+.status {
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #fff;
+  border-radius: 12px;
+  padding: 10px 12px;
+  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.05);
+}
+
+.spinner {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 3px solid #e6eef5;
+  border-top-color: var(--ion-color-primary);
+  animation: spin 0.9s linear infinite;
+  flex: 0 0 auto;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.msg {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #2b2b2b;
+  flex: 1;
+}
+
+.warning-icon {
+  color: var(--ion-color-warning);
+  font-size: 20px;
+  flex: 0 0 auto;
+}
+
+/* ---------- Continue button ---------- */
+.continue-section {
+  margin-top: 12px;
+}
+
+/* ---------- Tip strip ---------- */
+.tip {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  background: rgba(255, 255, 255, 0.55);
+  border-radius: 10px;
+  font-size: 12px;
+  color: #245a78;
+  font-weight: 700;
+}
+
+.tip-badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 5px;
+  background: var(--ion-color-primary);
+  color: #fff;
+  letter-spacing: 0.06em;
+  flex-shrink: 0;
+}
+
+.tip-text {
+  flex: 1;
+  transition: opacity 0.25s;
+}

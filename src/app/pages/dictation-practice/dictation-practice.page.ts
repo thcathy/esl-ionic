@@ -3,12 +3,14 @@ import {IonInput} from '@ionic/angular';
 import {ActivatedRoute} from '@angular/router';
 import {NGXLogger} from 'ngx-logger';
 import {of, Subject} from 'rxjs';
-import {mergeMap} from 'rxjs/operators';
+import {mergeMap, tap} from 'rxjs/operators';
 import {VirtualKeyboardEvent} from '../../components/virtual-keyboard/virtual-keyboard';
+import {DictationPreloadComponent} from '../../components/dictation-preload/dictation-preload.component';
 import {Dictation, PuzzleControls} from '../../entity/dictation';
 import {VocabPractice} from '../../entity/voacb-practice';
 import {VocabPracticeHistory} from '../../entity/vocab-practice-history';
 import {VocabPracticeType} from '../../enum/vocab-practice-type.enum';
+import {UIOptionsService} from '../../services/ui-options.service';
 import {DictationHelper} from '../../services/dictation/dictation-helper.service';
 import {DictationService} from '../../services/dictation/dictation.service';
 import {IonicComponentService} from '../../services/ionic-component.service';
@@ -26,9 +28,11 @@ import {TranslateService} from "@ngx-translate/core";
 })
 export class DictationPracticePage implements OnInit {
   @ViewChild('answerInput') answerInput: IonInput;
+  @ViewChild('preload', { static: true }) preload: DictationPreloadComponent;
 
   dictation: Dictation;
   dictationId: number;
+  showPreload = true;
   vocabPractices: VocabPractice[] = [];
   questionIndex: number;
   totalQuestions: number = 0;
@@ -72,33 +76,72 @@ export class DictationPracticePage implements OnInit {
     this.mark = 0;
     this.answer = '';
     this.puzzleControls = null;
+    this.showPreload = true;
   }
 
   async initDictation() {
-    this.loading = await this.ionicComponentService.showLoading();
     this.dictation = await this.storage.get(NavigationService.storageKeys.dictation);
     this.questionIndex = 0;
     this.totalQuestions = 0;
     this.mark = 0;
     this.phonics = 'Phonetic';
+
+    // Images: instant done if not showing images
+    if (!this.dictation.showImage) {
+      this.preload.setImagesInstantDone();
+    }
+
+    // Voices: check if online mode
+    const voiceMode = await this.speechService.getVoiceMode();
+    const isOnline = voiceMode === UIOptionsService.voiceMode.online;
+    if (!isOnline) {
+      this.preload.setVoicesInstantDone();
+    }
+
     this.dictationHelper.wordsToPractice(this.dictation)
       .pipe(
           mergeMap(word => {
             this.totalQuestions++;
-            return this.vocabPracticeService.getQuestion(word, this.dictation.showImage);
+            return this.vocabPracticeService.getQuestion(word, this.dictation.showImage).pipe(
+              tap(vocabPractice => {
+                this.preload.trackDictionary(Promise.resolve(!!vocabPractice));
+              })
+            );
           }),
-          mergeMap(vocabPractice => this.dictation.showImage ? this.vocabPracticeService.getImages(vocabPractice, this.dictation.includeAIImage) : of(vocabPractice))
-      ).subscribe(p => this.receiveVocabPractice(p));
+          mergeMap(vocabPractice => this.dictation.showImage ? this.vocabPracticeService.getImages(vocabPractice, this.dictation.includeAIImage).pipe(
+            tap(vp => {
+              this.preload.trackImage(Promise.resolve(!!vp?.picsFullPaths));
+            })
+          ) : of(vocabPractice))
+      ).subscribe({
+        next: p => this.receiveVocabPractice(p, isOnline),
+        complete: () => {
+          this.preload.markDictionaryComplete();
+          if (this.dictation.showImage) { this.preload.markImagesComplete(); }
+          if (isOnline) { this.preload.markVoicesComplete(); }
+        }
+      });
   }
 
   get type() { return VocabPracticeType; }
   get practiceType() { return this.dictation?.options?.practiceType ?? VocabPracticeType.Spell; }
 
-  receiveVocabPractice(p: VocabPractice) {
-    void this.speechService.prefetchByVoiceMode(p.word, {
+  onPreloadDone() {
+    this.showPreload = false;
+  }
+
+  onContinueWithLocalVoice() {
+    this.showPreload = false;
+  }
+
+  receiveVocabPractice(p: VocabPractice, isOnline = false) {
+    const prefetchPromise = this.speechService.prefetchByVoiceMode(p.word, {
       speakPunctuation: this.dictation?.options?.speakPunctuation,
       pronounceUrl: p.activePronounceLink,
     });
+    if (isOnline) {
+      this.preload.trackVoice(prefetchPromise);
+    }
     this.vocabPractices.push(p);
     if (this.vocabPractices.length === 1) {
       this.onNextQuestion();
@@ -147,7 +190,7 @@ export class DictationPracticePage implements OnInit {
   }
 
   onNextQuestion() {
-    this.loading.dismiss();
+    this.loading?.dismiss();
     this.preNextQuestion();
     this.speak();
     this.focusAnswerInput();

@@ -2,6 +2,7 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {NGXLogger} from 'ngx-logger';
 import {IonInput} from '@ionic/angular';
 import {VirtualKeyboardEvent} from '../../components/virtual-keyboard/virtual-keyboard';
+import {DictationPreloadComponent} from '../../components/dictation-preload/dictation-preload.component';
 import {Dictation} from '../../entity/dictation';
 import {SentenceHistory} from '../../entity/sentence-history';
 import {ArticleDictationService} from '../../services/dictation/article-dictation.service';
@@ -19,6 +20,7 @@ import {UIOptionsService} from '../../services/ui-options.service';
 })
 export class ArticleDictationPage implements OnInit {
   @ViewChild('answerInput') answerInput: IonInput;
+  @ViewChild('preload', { static: true }) preload: DictationPreloadComponent;
 
   dictation: Dictation;
   sentences: string[];
@@ -29,6 +31,7 @@ export class ArticleDictationPage implements OnInit {
   histories: SentenceHistory[] = [];
   isKeyboardActive: boolean;
   voiceMode: string;
+  showPreload = true;
 
   get caseSensitiveText() {
     return this?.dictation?.options?.caseSensitiveSentence ? 'Case Sensitive' : 'Case Insensitive';
@@ -60,6 +63,7 @@ export class ArticleDictationPage implements OnInit {
     this.sentences = [];
     this.histories = [];
     this.dictation = null;
+    this.showPreload = true;
   }
 
   ionViewDidEnter() {
@@ -82,8 +86,39 @@ export class ArticleDictationPage implements OnInit {
       this.articleDictationService.sentenceLengthOptionsToValue(this.dictation.sentenceLength)
     );
     console.debug(`divided into ${this.sentences.length} sentences`);
-    this.sentences.forEach((_sentence, index) => this.prefetchSentence(index));
+    this.initPreload();
+  }
+
+  onPreloadDone() {
+    this.showPreload = false;
     this.speak();
+    this.focusAnswerInput();
+  }
+
+  onContinueWithLocalVoice() {
+    this.voiceMode = UIOptionsService.voiceMode.local;
+    this.showPreload = false;
+    this.speak();
+    this.focusAnswerInput();
+  }
+
+  private initPreload() {
+    // Dictionary: content already from storage — instant done
+    this.preload.setDictionaryInstantDone();
+
+    // Images: no images in article dictation — instant done
+    this.preload.setImagesInstantDone();
+
+    // Voices: prefetch all sentences
+    const isOnline = this.voiceMode === UIOptionsService.voiceMode.online;
+    if (!isOnline) {
+      this.preload.setVoicesInstantDone();
+    } else {
+      this.sentences.forEach((_sentence, index) => {
+        this.preload.trackVoice(this.prefetchSentence(index));
+      });
+      this.preload.markVoicesComplete();
+    }
   }
 
   slower() {
@@ -154,12 +189,12 @@ export class ArticleDictationPage implements OnInit {
     this.answer = this.answer.slice(0, this.answer.length - 1);
   }
 
-  private prefetchSentence(index: number) {
+  private prefetchSentence(index: number): Promise<boolean> {
     const sentence = this.sentences?.[index];
     if (!sentence) {
-      return;
+      return Promise.resolve(true);
     }
-    void this.speechService.prefetchByVoiceMode(sentence, {
+    return this.speechService.prefetchByVoiceMode(sentence, {
       speakPunctuation: !!this.dictation?.options?.speakPunctuation,
       mode: this.voiceMode,
     });

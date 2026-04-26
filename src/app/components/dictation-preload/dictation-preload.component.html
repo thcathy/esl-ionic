@@ -1,0 +1,121 @@
+<div class="preload-container">
+
+  <!-- Hero: animated letter blocks -->
+  <div class="hero">
+    <div class="hero-row">
+      @for (letter of lettersRow1; track $index) {
+        <div class="block" [style.background]="letter.color" [style.animation-delay]="($index * 0.1) + 's'">
+          {{ letter.char }}
+        </div>
+      }
+    </div>
+    <div class="hero-row">
+      @for (letter of lettersRow2; track $index) {
+        <div class="block" [style.background]="letter.color" [style.animation-delay]="(($index + 6) * 0.1) + 's'">
+          {{ letter.char }}
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- Getting ready card -->
+  <div class="load-card">
+    <div class="load-head">
+      <span>{{ 'Preload.GettingReady' | translate }}</span>
+    </div>
+    <div class="load-body">
+
+      <!-- Dictionary row -->
+      <div class="row">
+        <div class="ico ico-primary">Aa</div>
+        <div class="label">
+          {{ 'Preload.Dictionary' | translate }}
+          <small>
+            @if (dictionary.state === 'done') {
+              {{ 'Preload.Ready' | translate }}
+            } @else if (dictionary.state === 'loading') {
+              {{ dictionary.loaded }}/{{ dictionary.total }}
+            } @else if (dictionary.state === 'failed') {
+              {{ 'Preload.Ready' | translate }}
+            }
+          </small>
+          <div class="track">
+            <div class="fill fill-primary" [style.width.%]="getPercent(dictionary)"></div>
+          </div>
+        </div>
+        <div class="pct">{{ getPercent(dictionary) }}%</div>
+      </div>
+
+      <!-- Voices row -->
+      <div class="row">
+        <div class="ico ico-secondary">&#9835;</div>
+        <div class="label">
+          {{ 'Preload.Voices' | translate }}
+          <small>
+            @if (voices.state === 'done') {
+              {{ 'Preload.Ready' | translate }}
+            } @else if (voices.state === 'loading') {
+              {{ voices.loaded }}/{{ voices.total }}
+            } @else if (voices.state === 'failed') {
+              {{ 'Preload.VoiceFailed' | translate }}
+            }
+          </small>
+          <div class="track">
+            <div class="fill fill-secondary" [class.fill-failed]="voices.state === 'failed'" [style.width.%]="getPercent(voices)"></div>
+          </div>
+        </div>
+        <div class="pct">{{ getPercent(voices) }}%</div>
+      </div>
+
+      <!-- Images row -->
+      <div class="row">
+        <div class="ico ico-tertiary">
+          <fa-icon [icon]="['fas', 'image']" size="sm"></fa-icon>
+        </div>
+        <div class="label">
+          {{ 'Preload.Images' | translate }}
+          <small>
+            @if (images.state === 'done') {
+              {{ 'Preload.Ready' | translate }}
+            } @else if (images.state === 'loading') {
+              {{ images.loaded }}/{{ images.total }}
+            } @else if (images.state === 'failed') {
+              {{ 'Preload.Ready' | translate }}
+            }
+          </small>
+          <div class="track">
+            <div class="fill fill-tertiary" [style.width.%]="getPercent(images)"></div>
+          </div>
+        </div>
+        <div class="pct">{{ getPercent(images) }}%</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Status bar -->
+  <div class="status">
+    @if (!showContinueButton) {
+      <div class="spinner"></div>
+    } @else {
+      <fa-icon [icon]="['fas', 'circle-exclamation']" class="warning-icon"></fa-icon>
+    }
+    <div class="msg">{{ statusMessage | translate }}</div>
+  </div>
+
+  <!-- Continue button (only when voices failed) -->
+  @if (showContinueButton) {
+    <div class="continue-section">
+      <ion-button expand="block" color="primary" (click)="onContinueWithLocalVoice()">
+        {{ 'Preload.ContinueLocalVoice' | translate }}
+      </ion-button>
+    </div>
+  }
+
+  <!-- Tip strip -->
+  <div class="tip">
+    <span class="tip-badge">TIP</span>
+    <span class="tip-text">{{ tips[currentTipIndex] | translate }}</span>
+  </div>
+
+</div>

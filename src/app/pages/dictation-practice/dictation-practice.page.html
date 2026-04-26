@@ -6,7 +6,11 @@
 </ion-header>
 
 <ion-content>
-  <div style="padding: 16px;">
+  <app-dictation-preload #preload [hidden]="!showPreload"
+    (preloadDone)="onPreloadDone()"
+    (continueWithLocalVoice)="onContinueWithLocalVoice()">
+  </app-dictation-preload>
+  <div style="padding: 16px;" [hidden]="showPreload">
     @if (currentQuestion()) {
       <ion-card class="card">
         <ion-card-header>
