@@ -17,6 +17,9 @@ export interface PreloadCategory {
 export class DictationPreloadComponent implements OnDestroy {
   private static readonly GLOBAL_TIMEOUT_MS = 15000;
   private static readonly AUTO_TRANSITION_DELAY_MS = 800;
+  private static readonly MIN_DISPLAY_MS = 1800;
+
+  private startTime = Date.now();
 
   dictionary: PreloadCategory = { total: 0, loaded: 0, failed: 0, state: 'idle' };
   voices: PreloadCategory = { total: 0, loaded: 0, failed: 0, state: 'idle' };
@@ -188,7 +191,7 @@ export class DictationPreloadComponent implements OnDestroy {
       this.showContinueButton = true;
     } else {
       this.statusMessage = 'Preload.Status.AllReady';
-      setTimeout(() => this.preloadDone.emit(true), DictationPreloadComponent.AUTO_TRANSITION_DELAY_MS);
+      setTimeout(() => this.preloadDone.emit(true), this.computeTransitionDelay());
     }
   }
 
@@ -204,9 +207,15 @@ export class DictationPreloadComponent implements OnDestroy {
       // If voices didn't fail but we timed out, just auto-transition
       if (this.voices.state !== 'failed') {
         this.statusMessage = 'Preload.Status.AllReady';
-        setTimeout(() => this.preloadDone.emit(true), DictationPreloadComponent.AUTO_TRANSITION_DELAY_MS);
+        setTimeout(() => this.preloadDone.emit(true), this.computeTransitionDelay());
       }
     }
+  }
+
+  private computeTransitionDelay(): number {
+    const elapsed = Date.now() - this.startTime;
+    const remainingForMin = DictationPreloadComponent.MIN_DISPLAY_MS - elapsed;
+    return Math.max(DictationPreloadComponent.AUTO_TRANSITION_DELAY_MS, remainingForMin);
   }
 
   private isCategoryFinished(cat: PreloadCategory): boolean {

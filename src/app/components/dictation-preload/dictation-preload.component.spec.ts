@@ -61,7 +61,7 @@ describe('DictationPreloadComponent', () => {
     component.trackVoice(Promise.resolve(true));
     component.markVoicesComplete();
     tick();
-    tick(1000); // auto-transition delay
+    tick(2000); // covers AUTO_TRANSITION_DELAY_MS + MIN_DISPLAY_MS
     expect(emitted).toBeTrue();
   }));
 
