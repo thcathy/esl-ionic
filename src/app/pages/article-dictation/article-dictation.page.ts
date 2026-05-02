@@ -103,21 +103,23 @@ export class ArticleDictationPage implements OnInit {
   }
 
   private initPreload() {
-    // Dictionary: content already from storage — instant done
-    this.preload.setDictionaryInstantDone();
+    const total = this.sentences.length;
+    this.preload.setTotals({ dictionary: total, voices: total, images: total });
 
-    // Images: no images in article dictation — instant done
-    this.preload.setImagesInstantDone();
+    // Dictionary: content already from storage
+    this.preload.completeCategory('dictionary');
 
-    // Voices: prefetch all sentences
+    // Images: no images in article dictation
+    this.preload.completeCategory('images');
+
+    // Voices: prefetch all sentences (online) or instant complete (local)
     const isOnline = this.voiceMode === UIOptionsService.voiceMode.online;
     if (!isOnline) {
-      this.preload.setVoicesInstantDone();
+      this.preload.completeCategory('voices');
     } else {
       this.sentences.forEach((_sentence, index) => {
-        this.preload.trackVoice(this.prefetchSentence(index));
+        this.prefetchSentence(index).then(success => this.preload.recordVoice(success));
       });
-      this.preload.markVoicesComplete();
     }
   }
 

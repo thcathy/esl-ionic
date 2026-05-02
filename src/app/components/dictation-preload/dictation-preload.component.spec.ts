@@ -31,45 +31,58 @@ describe('DictationPreloadComponent', () => {
     expect(component.images.state).toBe('idle');
   });
 
-  it('setDictionaryInstantDone sets done state', () => {
-    component.setDictionaryInstantDone();
-    expect(component.dictionary.state).toBe('done');
+  it('setTotals sets total for each category', () => {
+    component.setTotals({ dictionary: 5, voices: 5, images: 3 });
+    expect(component.dictionary.total).toBe(5);
+    expect(component.voices.total).toBe(5);
+    expect(component.images.total).toBe(3);
   });
 
-  it('setVoicesInstantDone sets done state', () => {
-    component.setVoicesInstantDone();
+  it('completeCategory jumps loaded to total and marks done', () => {
+    component.setTotals({ dictionary: 5, voices: 5, images: 5 });
+    component.completeCategory('voices');
+    expect(component.voices.loaded).toBe(5);
     expect(component.voices.state).toBe('done');
   });
 
-  it('setImagesInstantDone sets done state', () => {
-    component.setImagesInstantDone();
-    expect(component.images.state).toBe('done');
+  it('recordVoice increments loaded on success', () => {
+    component.setTotals({ dictionary: 1, voices: 2, images: 1 });
+    component.recordVoice(true);
+    expect(component.voices.loaded).toBe(1);
+    expect(component.voices.state).toBe('loading');
   });
 
-  it('trackVoice increments total and moves to loading', () => {
-    component.trackVoice(new Promise(() => {}));
-    expect(component.voices.total).toBe(1);
-    expect(component.voices.state).toBe('loading');
+  it('recordVoice marks done when total reached without failures', () => {
+    component.setTotals({ dictionary: 1, voices: 2, images: 1 });
+    component.recordVoice(true);
+    component.recordVoice(true);
+    expect(component.voices.state).toBe('done');
+  });
+
+  it('recordVoice marks failed when total reached with any failure', () => {
+    component.setTotals({ dictionary: 1, voices: 2, images: 1 });
+    component.recordVoice(true);
+    component.recordVoice(false);
+    expect(component.voices.state).toBe('failed');
   });
 
   it('emits preloadDone when all categories succeed', fakeAsync(() => {
     let emitted = false;
     component.preloadDone.subscribe(() => emitted = true);
 
-    component.setDictionaryInstantDone();
-    component.setImagesInstantDone();
-    component.trackVoice(Promise.resolve(true));
-    component.markVoicesComplete();
-    tick();
+    component.setTotals({ dictionary: 1, voices: 1, images: 1 });
+    component.completeCategory('dictionary');
+    component.completeCategory('images');
+    component.recordVoice(true);
     tick(2000); // covers AUTO_TRANSITION_DELAY_MS + MIN_DISPLAY_MS
     expect(emitted).toBeTrue();
   }));
 
   it('shows continue button when voices fail', fakeAsync(() => {
-    component.setDictionaryInstantDone();
-    component.setImagesInstantDone();
-    component.trackVoice(Promise.resolve(false));
-    component.markVoicesComplete();
+    component.setTotals({ dictionary: 1, voices: 1, images: 1 });
+    component.completeCategory('dictionary');
+    component.completeCategory('images');
+    component.recordVoice(false);
     tick();
     expect(component.showContinueButton).toBeTrue();
   }));
@@ -81,15 +94,15 @@ describe('DictationPreloadComponent', () => {
     expect(emitted).toBeTrue();
   });
 
-  it('getPercent returns 100 for done category', () => {
-    component.setDictionaryInstantDone();
+  it('getPercent returns 100 for completed category', () => {
+    component.setTotals({ dictionary: 5, voices: 5, images: 5 });
+    component.completeCategory('dictionary');
     expect(component.getPercent(component.dictionary)).toBe(100);
   });
 
-  it('getPercent returns correct percentage during loading', fakeAsync(() => {
-    component.trackVoice(Promise.resolve(true));
-    component.trackVoice(new Promise(() => {}));
-    tick();
+  it('getPercent returns correct percentage during loading', () => {
+    component.setTotals({ dictionary: 1, voices: 2, images: 1 });
+    component.recordVoice(true);
     expect(component.getPercent(component.voices)).toBe(50);
-  }));
+  });
 });

@@ -48,9 +48,8 @@ describe('DictationPracticePage', () => {
     fixture = TestBed.createComponent(DictationPracticePage);
     component = fixture.componentInstance;
     component.preload = jasmine.createSpyObj('DictationPreloadComponent', [
-      'setDictionaryInstantDone', 'setVoicesInstantDone', 'setImagesInstantDone',
-      'trackDictionary', 'trackVoice', 'trackImage',
-      'markDictionaryComplete', 'markVoicesComplete', 'markImagesComplete',
+      'setTotals', 'completeCategory',
+      'recordDictionary', 'recordVoice', 'recordImage',
     ]) as any;
     translateService = TestBed.inject(TranslateService);
     translateService.currentLang = 'en';

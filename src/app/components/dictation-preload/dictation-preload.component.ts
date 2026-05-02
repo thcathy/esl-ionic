@@ -1,11 +1,19 @@
 import {Component, EventEmitter, OnDestroy, Output} from '@angular/core';
 import {TranslateService} from '@ngx-translate/core';
 
+export type PreloadCategoryName = 'dictionary' | 'voices' | 'images';
+
 export interface PreloadCategory {
   total: number;
   loaded: number;
   failed: number;
   state: 'idle' | 'loading' | 'done' | 'failed';
+}
+
+export interface PreloadTotals {
+  dictionary: number;
+  voices: number;
+  images: number;
 }
 
 @Component({
@@ -34,9 +42,6 @@ export class DictationPreloadComponent implements OnDestroy {
 
   private globalTimeout: ReturnType<typeof setTimeout> | null = null;
   private tipInterval: ReturnType<typeof setInterval> | null = null;
-  private dictionaryComplete = false;
-  private voicesComplete = false;
-  private imagesComplete = false;
 
   readonly tips: string[] = [
     'Preload.Tip.VoiceMode',
@@ -69,79 +74,34 @@ export class DictationPreloadComponent implements OnDestroy {
     this.startTipRotation();
   }
 
-  trackDictionary(promise: Promise<boolean>): void {
-    this.startCategoryLoading(this.dictionary);
-    this.dictionary.total++;
-    promise.then(success => {
-      if (success) { this.dictionary.loaded++; } else { this.dictionary.failed++; }
-      this.checkCategoryCompletion(this.dictionary, this.dictionaryComplete);
-    });
+  /** Set total items per category. Call once before any record/complete calls. */
+  setTotals(totals: PreloadTotals): void {
+    this.dictionary.total = totals.dictionary;
+    this.voices.total = totals.voices;
+    this.images.total = totals.images;
+    this.ensureGlobalTimeout();
+    this.updateStatusMessage();
   }
 
-  trackVoice(promise: Promise<boolean>): void {
-    this.startCategoryLoading(this.voices);
-    this.voices.total++;
-    promise.then(success => {
-      if (success) { this.voices.loaded++; } else { this.voices.failed++; }
-      this.checkCategoryCompletion(this.voices, this.voicesComplete);
-    });
+  /** Mark a whole category as instantly complete (e.g. local voice mode). Loaded jumps to total. */
+  completeCategory(name: PreloadCategoryName): void {
+    const cat = this.getCategory(name);
+    cat.loaded = cat.total;
+    cat.failed = 0;
+    cat.state = 'done';
+    this.checkOverallCompletion();
   }
 
-  trackImage(promise: Promise<boolean>): void {
-    this.startCategoryLoading(this.images);
-    this.images.total++;
-    promise.then(success => {
-      if (success) { this.images.loaded++; } else { this.images.failed++; }
-      this.checkCategoryCompletion(this.images, this.imagesComplete);
-    });
-  }
-
-  markDictionaryComplete(): void {
-    this.dictionaryComplete = true;
-    if (this.dictionary.state === 'idle') {
-      this.dictionary.state = 'done';
-    }
-    this.checkCategoryCompletion(this.dictionary, true);
-  }
-
-  markVoicesComplete(): void {
-    this.voicesComplete = true;
-    if (this.voices.state === 'idle') {
-      this.voices.state = 'done';
-    }
-    this.checkCategoryCompletion(this.voices, true);
-  }
-
-  markImagesComplete(): void {
-    this.imagesComplete = true;
-    if (this.images.state === 'idle') {
-      this.images.state = 'done';
-    }
-    this.checkCategoryCompletion(this.images, true);
-  }
-
-  setDictionaryInstantDone(): void {
-    this.dictionary.state = 'done';
-    this.dictionaryComplete = true;
-  }
-
-  setVoicesInstantDone(): void {
-    this.voices.state = 'done';
-    this.voicesComplete = true;
-  }
-
-  setImagesInstantDone(): void {
-    this.images.state = 'done';
-    this.imagesComplete = true;
-  }
+  recordDictionary(success: boolean): void { this.recordResult(this.dictionary, success); }
+  recordVoice(success: boolean): void { this.recordResult(this.voices, success); }
+  recordImage(success: boolean): void { this.recordResult(this.images, success); }
 
   onContinueWithLocalVoice(): void {
     this.continueWithLocalVoice.emit();
   }
 
   getProgress(cat: PreloadCategory): number {
-    if (cat.state === 'done') { return 1; }
-    if (cat.total === 0) { return 0; }
+    if (cat.total === 0) { return 1; }
     return (cat.loaded + cat.failed) / cat.total;
   }
 
@@ -154,28 +114,23 @@ export class DictationPreloadComponent implements OnDestroy {
     if (this.tipInterval) { clearInterval(this.tipInterval); }
   }
 
-  private startCategoryLoading(cat: PreloadCategory): void {
-    if (cat.state === 'idle') {
-      cat.state = 'loading';
-    }
-    this.ensureGlobalTimeout();
-    this.updateStatusMessage();
+  private getCategory(name: PreloadCategoryName): PreloadCategory {
+    return this[name];
   }
 
-  private ensureGlobalTimeout(): void {
-    if (this.globalTimeout) { return; }
-    this.globalTimeout = setTimeout(() => {
-      this.finalize();
-    }, DictationPreloadComponent.GLOBAL_TIMEOUT_MS);
-  }
-
-  private checkCategoryCompletion(cat: PreloadCategory, allRegistered: boolean): void {
-    if (cat.state !== 'loading') { return; }
-    if (allRegistered && cat.loaded + cat.failed >= cat.total) {
+  private recordResult(cat: PreloadCategory, success: boolean): void {
+    if (cat.state === 'idle') { cat.state = 'loading'; }
+    if (success) { cat.loaded++; } else { cat.failed++; }
+    if (cat.loaded + cat.failed >= cat.total) {
       cat.state = cat.failed > 0 ? 'failed' : 'done';
     }
     this.updateStatusMessage();
     this.checkOverallCompletion();
+  }
+
+  private ensureGlobalTimeout(): void {
+    if (this.globalTimeout) { return; }
+    this.globalTimeout = setTimeout(() => this.finalize(), DictationPreloadComponent.GLOBAL_TIMEOUT_MS);
   }
 
   private checkOverallCompletion(): void {
@@ -198,18 +153,11 @@ export class DictationPreloadComponent implements OnDestroy {
   private finalize(): void {
     this.globalTimeout = null;
     [this.dictionary, this.voices, this.images].forEach(cat => {
-      if (cat.state === 'loading') {
+      if (cat.state === 'loading' || cat.state === 'idle') {
         cat.state = cat.failed > 0 || cat.loaded + cat.failed < cat.total ? 'failed' : 'done';
       }
     });
     this.checkOverallCompletion();
-    if (!this.showContinueButton) {
-      // If voices didn't fail but we timed out, just auto-transition
-      if (this.voices.state !== 'failed') {
-        this.statusMessage = 'Preload.Status.AllReady';
-        setTimeout(() => this.preloadDone.emit(true), this.computeTransitionDelay());
-      }
-    }
   }
 
   private computeTransitionDelay(): number {

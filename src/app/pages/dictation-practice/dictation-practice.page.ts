@@ -86,16 +86,19 @@ export class DictationPracticePage implements OnInit {
     this.mark = 0;
     this.phonics = 'Phonetic';
 
+    const totalWords = this.countWordsToPractice(this.dictation);
+    this.preload.setTotals({ dictionary: totalWords, voices: totalWords, images: totalWords });
+
     // Images: instant done if not showing images
     if (!this.dictation.showImage) {
-      this.preload.setImagesInstantDone();
+      this.preload.completeCategory('images');
     }
 
     // Voices: check if online mode
     const voiceMode = await this.speechService.getVoiceMode();
     const isOnline = voiceMode === UIOptionsService.voiceMode.online;
     if (!isOnline) {
-      this.preload.setVoicesInstantDone();
+      this.preload.completeCategory('voices');
     }
 
     this.dictationHelper.wordsToPractice(this.dictation)
@@ -104,23 +107,23 @@ export class DictationPracticePage implements OnInit {
             this.totalQuestions++;
             return this.vocabPracticeService.getQuestion(word, this.dictation.showImage).pipe(
               tap(vocabPractice => {
-                this.preload.trackDictionary(Promise.resolve(!!vocabPractice));
+                this.preload.recordDictionary(!!vocabPractice);
               })
             );
           }),
           mergeMap(vocabPractice => this.dictation.showImage ? this.vocabPracticeService.getImages(vocabPractice, this.dictation.includeAIImage).pipe(
             tap(vp => {
-              this.preload.trackImage(Promise.resolve(!!vp?.picsFullPaths));
+              this.preload.recordImage(!!vp?.picsFullPaths);
             })
           ) : of(vocabPractice))
-      ).subscribe({
-        next: p => this.receiveVocabPractice(p, isOnline),
-        complete: () => {
-          this.preload.markDictionaryComplete();
-          if (this.dictation.showImage) { this.preload.markImagesComplete(); }
-          if (isOnline) { this.preload.markVoicesComplete(); }
-        }
-      });
+      ).subscribe(p => this.receiveVocabPractice(p, isOnline));
+  }
+
+  private countWordsToPractice(dictation: Dictation): number {
+    if (dictation.options?.retryWrongWord) {
+      return (dictation.options.vocabPracticeHistories || []).filter(h => !h.correct).length;
+    }
+    return dictation.vocabs?.length ?? 0;
   }
 
   get type() { return VocabPracticeType; }
@@ -140,7 +143,7 @@ export class DictationPracticePage implements OnInit {
       pronounceUrl: p.activePronounceLink,
     });
     if (isOnline) {
-      this.preload.trackVoice(prefetchPromise);
+      prefetchPromise.then(success => this.preload.recordVoice(success));
     }
     this.vocabPractices.push(p);
     if (this.vocabPractices.length === 1) {
