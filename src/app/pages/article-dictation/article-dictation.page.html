@@ -7,8 +7,7 @@
 
 <ion-content>
   <app-dictation-preload #preload [hidden]="!showPreload"
-    (preloadDone)="onPreloadDone()"
-    (continueWithLocalVoice)="onContinueWithLocalVoice()">
+    (preloadCompleted)="onPreloadCompleted($event)">
   </app-dictation-preload>
   <div class="inner-content" [hidden]="showPreload">
     <ion-card class="card">

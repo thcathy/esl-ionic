@@ -1,7 +1,10 @@
 import {Component, EventEmitter, OnDestroy, Output} from '@angular/core';
-import {TranslateService} from '@ngx-translate/core';
 
-export type PreloadCategoryName = 'dictionary' | 'voices' | 'images';
+export enum PreloadCategoryName {
+  Questions = 'questions',
+  Voices = 'voices',
+  Images = 'images',
+}
 
 export interface PreloadCategory {
   total: number;
@@ -10,10 +13,14 @@ export interface PreloadCategory {
   state: 'idle' | 'loading' | 'done' | 'failed';
 }
 
+export interface PreloadResult {
+  useLocalVoice: boolean;
+}
+
 export interface PreloadTotals {
-  dictionary: number;
-  voices: number;
-  images: number;
+  [PreloadCategoryName.Questions]: number;
+  [PreloadCategoryName.Voices]: number;
+  [PreloadCategoryName.Images]: number;
 }
 
 @Component({
@@ -24,24 +31,27 @@ export interface PreloadTotals {
 })
 export class DictationPreloadComponent implements OnDestroy {
   private static readonly GLOBAL_TIMEOUT_MS = 15000;
-  private static readonly AUTO_TRANSITION_DELAY_MS = 800;
-  private static readonly MIN_DISPLAY_MS = 1800;
+  private static readonly MIN_DISPLAY_MS = 2000;
+  private static readonly LOOP_INTERVAL_MS = 500;
 
-  private startTime = Date.now();
+  private startTime = 0;
+  resetting = false;
 
-  dictionary: PreloadCategory = { total: 0, loaded: 0, failed: 0, state: 'idle' };
+  questions: PreloadCategory = { total: 0, loaded: 0, failed: 0, state: 'idle' };
   voices: PreloadCategory = { total: 0, loaded: 0, failed: 0, state: 'idle' };
   images: PreloadCategory = { total: 0, loaded: 0, failed: 0, state: 'idle' };
 
-  statusMessage = '';
+  statusMessage = 'Preload.Status.Preparing';
   currentTipIndex = 0;
   showContinueButton = false;
 
-  @Output() preloadDone = new EventEmitter<boolean>();
-  @Output() continueWithLocalVoice = new EventEmitter<void>();
+  @Output() preloadCompleted = new EventEmitter<PreloadResult>();
 
-  private globalTimeout: ReturnType<typeof setTimeout> | null = null;
+  countdown = 0;
+
+  private loopInterval: ReturnType<typeof setInterval> | null = null;
   private tipInterval: ReturnType<typeof setInterval> | null = null;
+  private countdownInterval: ReturnType<typeof setInterval> | null = null;
 
   readonly tips: string[] = [
     'Preload.Tip.VoiceMode',
@@ -69,35 +79,45 @@ export class DictationPreloadComponent implements OnDestroy {
     { char: 'L', color: '#2FB62F' },
   ];
 
-  constructor(private translate: TranslateService) {
+  /** Starts the preload process. Categories with total 0 are auto-completed (nothing to load). */
+  start(totals: PreloadTotals): void {
+    this.stopLoop();
+    this.stopCountdown();
+    if (this.tipInterval) { clearInterval(this.tipInterval); this.tipInterval = null; }
+
+    this.resetting = true;
+    this.questions = { total: totals.questions, loaded: 0, failed: 0, state: 'idle' };
+    this.voices   = { total: totals.voices,    loaded: 0, failed: 0, state: 'idle' };
+    this.images   = { total: totals.images,    loaded: 0, failed: 0, state: 'idle' };
     this.statusMessage = 'Preload.Status.Preparing';
+    this.showContinueButton = false;
+    this.currentTipIndex = 0;
+    this.startTime = Date.now();
+    requestAnimationFrame(() => { this.resetting = false; });
+
+    Object.values(PreloadCategoryName).forEach(name => {
+      if (this[name].total === 0) { this[name].state = 'done'; }
+    });
     this.startTipRotation();
+    this.loopInterval = setInterval(() => this.checkCompletion(), DictationPreloadComponent.LOOP_INTERVAL_MS);
   }
 
-  /** Set total items per category. Call once before any record/complete calls. */
-  setTotals(totals: PreloadTotals): void {
-    this.dictionary.total = totals.dictionary;
-    this.voices.total = totals.voices;
-    this.images.total = totals.images;
-    this.ensureGlobalTimeout();
-    this.updateStatusMessage();
-  }
-
-  /** Mark a whole category as instantly complete (e.g. local voice mode). Loaded jumps to total. */
+  /** Mark a whole category as instantly complete (e.g. local voice mode, content from cache). */
   completeCategory(name: PreloadCategoryName): void {
-    const cat = this.getCategory(name);
+    const cat = this[name];
     cat.loaded = cat.total;
     cat.failed = 0;
     cat.state = 'done';
-    this.checkOverallCompletion();
   }
 
-  recordDictionary(success: boolean): void { this.recordResult(this.dictionary, success); }
+  recordQuestion(success: boolean): void { this.recordResult(this.questions, success); }
   recordVoice(success: boolean): void { this.recordResult(this.voices, success); }
   recordImage(success: boolean): void { this.recordResult(this.images, success); }
 
   onContinueWithLocalVoice(): void {
-    this.continueWithLocalVoice.emit();
+    this.stopCountdown();
+    this.stopLoop();
+    this.preloadCompleted.emit({ useLocalVoice: true });
   }
 
   getProgress(cat: PreloadCategory): number {
@@ -110,12 +130,9 @@ export class DictationPreloadComponent implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.globalTimeout) { clearTimeout(this.globalTimeout); }
+    this.stopLoop();
+    this.stopCountdown();
     if (this.tipInterval) { clearInterval(this.tipInterval); }
-  }
-
-  private getCategory(name: PreloadCategoryName): PreloadCategory {
-    return this[name];
   }
 
   private recordResult(cat: PreloadCategory, success: boolean): void {
@@ -124,60 +141,62 @@ export class DictationPreloadComponent implements OnDestroy {
     if (cat.loaded + cat.failed >= cat.total) {
       cat.state = cat.failed > 0 ? 'failed' : 'done';
     }
-    this.updateStatusMessage();
-    this.checkOverallCompletion();
   }
 
-  private ensureGlobalTimeout(): void {
-    if (this.globalTimeout) { return; }
-    this.globalTimeout = setTimeout(() => this.finalize(), DictationPreloadComponent.GLOBAL_TIMEOUT_MS);
-  }
+  private checkCompletion(): void {
+    const elapsed = Date.now() - this.startTime;
 
-  private checkOverallCompletion(): void {
-    const allDone = this.isCategoryFinished(this.dictionary)
-      && this.isCategoryFinished(this.voices)
-      && this.isCategoryFinished(this.images);
-    if (!allDone) { return; }
+    if (elapsed >= DictationPreloadComponent.GLOBAL_TIMEOUT_MS) {
+      this.finalize();
+    }
 
-    if (this.globalTimeout) { clearTimeout(this.globalTimeout); this.globalTimeout = null; }
+    if (!this.allCategoriesFinished()) { return; }
 
     if (this.voices.state === 'failed') {
       this.statusMessage = 'Preload.Status.VoiceFailed';
       this.showContinueButton = true;
-    } else {
+      this.stopLoop();
+      this.startCountdown();
+      return;
+    }
+
+    if (elapsed >= DictationPreloadComponent.MIN_DISPLAY_MS) {
       this.statusMessage = 'Preload.Status.AllReady';
-      setTimeout(() => this.preloadDone.emit(true), this.computeTransitionDelay());
+      this.stopLoop();
+      this.preloadCompleted.emit({ useLocalVoice: false });
     }
   }
 
   private finalize(): void {
-    this.globalTimeout = null;
-    [this.dictionary, this.voices, this.images].forEach(cat => {
-      if (cat.state === 'loading' || cat.state === 'idle') {
-        cat.state = cat.failed > 0 || cat.loaded + cat.failed < cat.total ? 'failed' : 'done';
-      }
+    Object.values(PreloadCategoryName).forEach(name => {
+      const cat = this[name];
+      if (cat.state === 'done' || cat.state === 'failed') { return; }
+      cat.state = cat.failed > 0 || cat.loaded + cat.failed < cat.total ? 'failed' : 'done';
     });
-    this.checkOverallCompletion();
   }
 
-  private computeTransitionDelay(): number {
-    const elapsed = Date.now() - this.startTime;
-    const remainingForMin = DictationPreloadComponent.MIN_DISPLAY_MS - elapsed;
-    return Math.max(DictationPreloadComponent.AUTO_TRANSITION_DELAY_MS, remainingForMin);
+  private allCategoriesFinished(): boolean {
+    return Object.values(PreloadCategoryName)
+      .every(name => this[name].state === 'done' || this[name].state === 'failed');
   }
 
-  private isCategoryFinished(cat: PreloadCategory): boolean {
-    return cat.state === 'done' || cat.state === 'failed';
+  private startCountdown(): void {
+    this.countdown = 10;
+    this.countdownInterval = setInterval(() => {
+      this.countdown--;
+      if (this.countdown <= 0) {
+        this.stopCountdown();
+        this.onContinueWithLocalVoice();
+      }
+    }, 1000);
   }
 
-  private updateStatusMessage(): void {
-    if (this.voices.state === 'loading') {
-      this.statusMessage = 'Preload.Status.LoadingVoices';
-    } else if (this.images.state === 'loading') {
-      this.statusMessage = 'Preload.Status.LoadingImages';
-    } else if (this.dictionary.state === 'loading') {
-      this.statusMessage = 'Preload.Status.Preparing';
-    }
+  private stopCountdown(): void {
+    if (this.countdownInterval) { clearInterval(this.countdownInterval); this.countdownInterval = null; }
+  }
+
+  private stopLoop(): void {
+    if (this.loopInterval) { clearInterval(this.loopInterval); this.loopInterval = null; }
   }
 
   private startTipRotation(): void {

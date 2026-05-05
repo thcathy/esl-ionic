@@ -21,93 +21,86 @@
   <!-- Getting ready card -->
   <div class="load-card">
     <div class="load-head">
-      <span>{{ 'Preload.GettingReady' | translate }}</span>
+      @if (showContinueButton) {
+        <fa-icon [icon]="['fas', 'circle-exclamation']" class="warning-icon"></fa-icon>
+      }
+      <span>{{ statusMessage | translate }}</span>
     </div>
     <div class="load-body">
 
       <!-- Dictionary row -->
-      <div class="row">
-        <div class="ico ico-primary">Aa</div>
-        <div class="label">
-          {{ 'Preload.Dictionary' | translate }}
-          <small>
-            @if (dictionary.state === 'done') {
-              {{ 'Preload.Ready' | translate }}
-            } @else if (dictionary.state === 'loading') {
-              {{ dictionary.loaded }}/{{ dictionary.total }}
-            } @else if (dictionary.state === 'failed') {
-              {{ 'Preload.Ready' | translate }}
-            }
-          </small>
-          <div class="track">
-            <div class="fill fill-primary" [style.width.%]="getPercent(dictionary)"></div>
+      @if (questions.total > 0) {
+        <div class="row">
+          <div class="ico ico-primary">Aa</div>
+          <div class="label">
+            <div class="label-title">
+              {{ 'Preload.Questions' | translate }}
+              <small>
+                @if (questions.state === 'done') { {{ 'Preload.Ready' | translate }} }
+                @else if (questions.state === 'loading') { {{ questions.loaded }}/{{ questions.total }} }
+                @else if (questions.state === 'failed') { {{ 'Preload.Ready' | translate }} }
+              </small>
+            </div>
+            <div class="track">
+              <div class="fill fill-primary" [style.width.%]="getPercent(questions)" [style.transition]="resetting ? 'none' : null"></div>
+            </div>
           </div>
+          <div class="pct">{{ getPercent(questions) }}%</div>
         </div>
-        <div class="pct">{{ getPercent(dictionary) }}%</div>
-      </div>
+      }
 
       <!-- Voices row -->
-      <div class="row">
-        <div class="ico ico-secondary">&#9835;</div>
-        <div class="label">
-          {{ 'Preload.Voices' | translate }}
-          <small>
-            @if (voices.state === 'done') {
-              {{ 'Preload.Ready' | translate }}
-            } @else if (voices.state === 'loading') {
-              {{ voices.loaded }}/{{ voices.total }}
-            } @else if (voices.state === 'failed') {
-              {{ 'Preload.VoiceFailed' | translate }}
-            }
-          </small>
-          <div class="track">
-            <div class="fill fill-secondary" [class.fill-failed]="voices.state === 'failed'" [style.width.%]="getPercent(voices)"></div>
+      @if (voices.total > 0) {
+        <div class="row">
+          <div class="ico ico-secondary">&#9835;</div>
+          <div class="label">
+            <div class="label-title">
+              {{ 'Preload.Voices' | translate }}
+              <small>
+                @if (voices.state === 'done') { {{ 'Preload.Ready' | translate }} }
+                @else if (voices.state === 'loading') { {{ voices.loaded }}/{{ voices.total }} }
+                @else if (voices.state === 'failed') { {{ 'Preload.VoiceFailed' | translate }} }
+              </small>
+            </div>
+            <div class="track">
+              <div class="fill fill-secondary" [class.fill-failed]="voices.state === 'failed'" [style.width.%]="getPercent(voices)" [style.transition]="resetting ? 'none' : null"></div>
+            </div>
           </div>
+          <div class="pct">{{ getPercent(voices) }}%</div>
         </div>
-        <div class="pct">{{ getPercent(voices) }}%</div>
-      </div>
+      }
 
       <!-- Images row -->
-      <div class="row">
-        <div class="ico ico-tertiary">
-          <fa-icon [icon]="['fas', 'image']" size="sm"></fa-icon>
-        </div>
-        <div class="label">
-          {{ 'Preload.Images' | translate }}
-          <small>
-            @if (images.state === 'done') {
-              {{ 'Preload.Ready' | translate }}
-            } @else if (images.state === 'loading') {
-              {{ images.loaded }}/{{ images.total }}
-            } @else if (images.state === 'failed') {
-              {{ 'Preload.Ready' | translate }}
-            }
-          </small>
-          <div class="track">
-            <div class="fill fill-tertiary" [style.width.%]="getPercent(images)"></div>
+      @if (images.total > 0) {
+        <div class="row">
+          <div class="ico ico-tertiary">
+            <fa-icon [icon]="['fas', 'image']" size="sm"></fa-icon>
           </div>
+          <div class="label">
+            <div class="label-title">
+              {{ 'Preload.Images' | translate }}
+              <small>
+                @if (images.state === 'done') { {{ 'Preload.Ready' | translate }} }
+                @else if (images.state === 'loading') { {{ images.loaded }}/{{ images.total }} }
+                @else if (images.state === 'failed') { {{ 'Preload.Ready' | translate }} }
+              </small>
+            </div>
+            <div class="track">
+              <div class="fill fill-tertiary" [style.width.%]="getPercent(images)" [style.transition]="resetting ? 'none' : null"></div>
+            </div>
+          </div>
+          <div class="pct">{{ getPercent(images) }}%</div>
         </div>
-        <div class="pct">{{ getPercent(images) }}%</div>
-      </div>
+      }
 
     </div>
-  </div>
-
-  <!-- Status bar -->
-  <div class="status">
-    @if (!showContinueButton) {
-      <div class="spinner"></div>
-    } @else {
-      <fa-icon [icon]="['fas', 'circle-exclamation']" class="warning-icon"></fa-icon>
-    }
-    <div class="msg">{{ statusMessage | translate }}</div>
   </div>
 
   <!-- Continue button (only when voices failed) -->
   @if (showContinueButton) {
     <div class="continue-section">
-      <ion-button expand="block" color="primary" (click)="onContinueWithLocalVoice()">
-        {{ 'Preload.ContinueLocalVoice' | translate }}
+      <ion-button expand="block" color="success" (click)="onContinueWithLocalVoice()">
+        {{ 'Preload.ContinueLocalVoice' | translate }} ({{ countdown }})
       </ion-button>
     </div>
   }

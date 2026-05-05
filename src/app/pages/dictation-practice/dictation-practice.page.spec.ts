@@ -48,8 +48,8 @@ describe('DictationPracticePage', () => {
     fixture = TestBed.createComponent(DictationPracticePage);
     component = fixture.componentInstance;
     component.preload = jasmine.createSpyObj('DictationPreloadComponent', [
-      'setTotals', 'completeCategory',
-      'recordDictionary', 'recordVoice', 'recordImage',
+      'start', 'completeCategory',
+      'recordQuestion', 'recordVoice', 'recordImage',
     ]) as any;
     translateService = TestBed.inject(TranslateService);
     translateService.currentLang = 'en';
@@ -66,6 +66,7 @@ describe('DictationPracticePage', () => {
 
       component.initDictation();
       tick();
+      component.onPreloadCompleted({ useLocalVoice: false });
       expect(component.vocabPractices.length).toBe(dictation.vocabs.length);
       expect(total).toBe(1);
     }));

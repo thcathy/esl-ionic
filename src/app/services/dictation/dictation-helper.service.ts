@@ -1,5 +1,4 @@
 import {Injectable} from '@angular/core';
-import {filter, from, map, Observable} from 'rxjs';
 import {Dictation, Dictations} from '../../entity/dictation';
 import {ValidationUtils} from '../../utils/validation-utils';
 
@@ -52,14 +51,11 @@ export class DictationHelper {
     };
   }
 
-  wordsToPractice(dictation: Dictation): Observable<string> {
-    if (dictation.options?.retryWrongWord) {
-      return from(dictation.options.vocabPracticeHistories).pipe(
-        filter(h => !h.correct),
-        map(h => h.question.word)
-      );
-    } else {
-      return from(dictation.vocabs).pipe(map(v => v.word));
-    }
+  wordsToPractice(dictation: Dictation): string[] {
+    return dictation.options?.retryWrongWord ?
+      (dictation.options.vocabPracticeHistories ?? [])
+        .filter(h => !h.correct)
+        .map(h => h.question.word)
+      : (dictation.vocabs ?? []).map(v => v.word);
   }
 }

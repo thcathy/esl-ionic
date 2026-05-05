@@ -61,6 +61,9 @@
   font-size: 14px;
   font-weight: 800;
   letter-spacing: 0.02em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .load-body {
@@ -102,6 +105,12 @@
   display: flex;
   flex-direction: column;
   gap: 4px;
+}
+
+.label-title {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
 }
 
 .label small {
@@ -151,39 +160,6 @@
   font-size: 12px;
   font-weight: 600;
   color: var(--ion-color-dark);
-}
-
-/* ---------- Status bar ---------- */
-.status {
-  margin-top: 12px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background: #fff;
-  border-radius: 12px;
-  padding: 10px 12px;
-  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.05);
-}
-
-.spinner {
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  border: 3px solid #e6eef5;
-  border-top-color: var(--ion-color-primary);
-  animation: spin 0.9s linear infinite;
-  flex: 0 0 auto;
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
-.msg {
-  font-size: 13.5px;
-  font-weight: 700;
-  color: #2b2b2b;
-  flex: 1;
 }
 
 .warning-icon {
