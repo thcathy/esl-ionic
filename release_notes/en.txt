@@ -1,1 +1,1 @@
-Bug fixes and improvements.
+Smoother start to every dictation with a new loading screen that keeps you informed while the app gets ready.
