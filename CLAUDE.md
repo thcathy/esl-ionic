@@ -24,6 +24,9 @@ npm test               # Run unit tests (Chrome with autoplay)
 npm run test-dev       # Run unit tests headless (CI-friendly, use this in terminal)
 npm run test-ci        # Run unit tests headless, no watch mode
 
+# Run a single test file
+npx ng test --browsers=ChromeHeadlessCI --watch=false --include='**/speech.service.spec.ts'
+
 # E2E tests (Playwright)
 npm run e2e            # Run e2e tests (installs Chromium first)
 npm run e2e-ci         # Run e2e with line reporter
@@ -111,10 +114,10 @@ Three locales supported: `en`, `zh-Hans`, `zh-Hant`. Translation files in `src/a
 | `StorageService` | Ionic Storage wrapper (IndexedDB) |
 | `MemberService` | Member profile API |
 
-## Git Conventions
-
-- Never include Claude attribution (no `Co-Authored-By: Claude`, no "Generated with Claude Code") in commit messages.
-
 ### Component Patterns
 
 Pages use `ionViewWillEnter()` (not `ngOnInit()`) for data initialization, since Ionic caches page instances and `ngOnInit` only fires once. Components are declared in `shared.module.ts` and `components.module.ts` which are imported by page modules.
+
+## Git Conventions
+
+- Never include Claude attribution (no `Co-Authored-By: Claude`, no "Generated with Claude Code") in commit messages.

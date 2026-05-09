@@ -1,108 +1,123 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {IonInput} from '@ionic/angular';
-import {ActivatedRoute} from '@angular/router';
-import {NGXLogger} from 'ngx-logger';
 import {of, Subject} from 'rxjs';
-import {mergeMap} from 'rxjs/operators';
+import {mergeMap, tap} from 'rxjs/operators';
 import {VirtualKeyboardEvent} from '../../components/virtual-keyboard/virtual-keyboard';
+import {DictationPreloadComponent, PreloadCategoryName, PreloadResult} from '../../components/dictation-preload/dictation-preload.component';
 import {Dictation, PuzzleControls} from '../../entity/dictation';
 import {VocabPractice} from '../../entity/voacb-practice';
 import {VocabPracticeHistory} from '../../entity/vocab-practice-history';
 import {VocabPracticeType} from '../../enum/vocab-practice-type.enum';
+import {UIOptionsService} from '../../services/ui-options.service';
 import {DictationHelper} from '../../services/dictation/dictation-helper.service';
-import {DictationService} from '../../services/dictation/dictation.service';
-import {IonicComponentService} from '../../services/ionic-component.service';
 import {NavigationService} from '../../services/navigation.service';
 import {VocabPracticeService} from '../../services/practice/vocab-practice.service';
 import {SpeechService} from '../../services/speech.service';
 import {StorageService} from '../../services/storage.service';
-import {TranslateService} from "@ngx-translate/core";
-
 @Component({
     selector: 'app-dictation-practice',
     templateUrl: './dictation-practice.page.html',
     styleUrls: ['./dictation-practice.page.scss'],
     standalone: false
 })
-export class DictationPracticePage implements OnInit {
+export class DictationPracticePage {
   @ViewChild('answerInput') answerInput: IonInput;
+  @ViewChild('preload', { static: true }) preload: DictationPreloadComponent;
 
   dictation: Dictation;
-  dictationId: number;
+  showPreload = true;
   vocabPractices: VocabPractice[] = [];
   questionIndex: number;
-  totalQuestions: number = 0;
   phonics: string;
   answer: string;
   mark = 0;
   histories: VocabPracticeHistory[] = [];
-  loading: any;
   isKeyboardActive: boolean;
   puzzleControls: PuzzleControls;
   speak$ = new Subject<boolean>();
 
   constructor(
-    public route: ActivatedRoute,
     public vocabPracticeService: VocabPracticeService,
-    public dictationService: DictationService,
     public speechService: SpeechService,
     public navigationService: NavigationService,
-    public ionicComponentService: IonicComponentService,
     public storage: StorageService,
     public dictationHelper: DictationHelper,
-    public translate: TranslateService,
-    private log: NGXLogger,
   ) { }
 
-  ngOnInit() {      }
-
   ionViewWillEnter() {
-    this.clearVaribles();
-    void this.speechService.ensureVoiceModeLoaded();
+    this.clearVariables();
     this.initDictation();
   }
 
-  clearVaribles() {
+  clearVariables() {
     this.histories = [];
     this.dictation = null;
-    this.dictationId = null;
     this.vocabPractices = [];
     this.questionIndex = 0;
-    this.totalQuestions = 0;
     this.mark = 0;
     this.answer = '';
     this.puzzleControls = null;
+    this.showPreload = true;
   }
 
   async initDictation() {
-    this.loading = await this.ionicComponentService.showLoading();
     this.dictation = await this.storage.get(NavigationService.storageKeys.dictation);
     this.questionIndex = 0;
-    this.totalQuestions = 0;
     this.mark = 0;
     this.phonics = 'Phonetic';
-    this.dictationHelper.wordsToPractice(this.dictation)
-      .pipe(
-          mergeMap(word => {
-            this.totalQuestions++;
-            return this.vocabPracticeService.getQuestion(word, this.dictation.showImage);
-          }),
-          mergeMap(vocabPractice => this.dictation.showImage ? this.vocabPracticeService.getImages(vocabPractice, this.dictation.includeAIImage) : of(vocabPractice))
-      ).subscribe(p => this.receiveVocabPractice(p));
+
+    const words = this.dictationHelper.wordsToPractice(this.dictation);
+    const voiceMode = await this.speechService.getVoiceMode();
+    const isOnline = voiceMode === UIOptionsService.voiceMode.online;
+
+    this.preload.start({
+      questions: words.length,
+      voices: isOnline ? words.length : 0,
+      images: this.dictation.showImage ? words.length : 0,
+    });
+
+    for (const word of words) {
+      this.fetchQuestion(word)
+        .pipe(
+          mergeMap(vp => this.fetchImages(vp)),
+          tap(vp => this.prefetchVoice(vp, isOnline))
+        )
+        .subscribe(p => this.receiveVocabPractice(p));
+    }
   }
 
   get type() { return VocabPracticeType; }
   get practiceType() { return this.dictation?.options?.practiceType ?? VocabPracticeType.Spell; }
 
-  receiveVocabPractice(p: VocabPractice) {
-    void this.speechService.prefetchByVoiceMode(p.word, {
+  onPreloadCompleted(_result: PreloadResult) {
+    this.showPreload = false;
+    this.onNextQuestion();
+  }
+
+  private fetchQuestion(word: string) {
+    return this.vocabPracticeService.getQuestion(word, this.dictation.showImage).pipe(
+      tap(vp => this.preload.recordQuestion(!!vp))
+    );
+  }
+
+  private prefetchVoice(vp: VocabPractice, isOnline: boolean): void {
+    if (!isOnline) { return; }
+    this.speechService.prefetchByVoiceMode(vp.word, {
       speakPunctuation: this.dictation?.options?.speakPunctuation,
-      pronounceUrl: p.activePronounceLink,
-    });
+      pronounceUrl: vp.activePronounceLink,
+    }).then(success => this.preload.recordVoice(success));
+  }
+
+  private fetchImages(vocabPractice: VocabPractice) {
+    return this.dictation.showImage
+      ? this.vocabPracticeService.getImages(vocabPractice, this.dictation.includeAIImage).pipe(
+          tap(vp => this.preload.recordImage(!!vp?.picsFullPaths))
+        )
+      : of(vocabPractice);
+  }
+
+  private receiveVocabPractice(p: VocabPractice) {
     this.vocabPractices.push(p);
-    if (this.vocabPractices.length === 1) {
-      this.onNextQuestion();
-    }
   }
 
   speak() {
@@ -142,12 +157,11 @@ export class DictationPracticePage implements OnInit {
       });
       return;
     }
-
-    this.waitForNextQuestion().then(() => this.onNextQuestion());
+    this.questionIndex++;
+    this.onNextQuestion();
   }
 
   onNextQuestion() {
-    this.loading.dismiss();
     this.preNextQuestion();
     this.speak();
     this.focusAnswerInput();
@@ -156,7 +170,7 @@ export class DictationPracticePage implements OnInit {
     }
   }
 
-  end = (): boolean => this.questionIndex + 1 >= this.totalQuestions;
+  end = (): boolean => this.questionIndex + 1 >= this.vocabPractices.length;
 
   onKeyPress = (key: string) => this.answer += key;
 
@@ -187,7 +201,7 @@ export class DictationPracticePage implements OnInit {
   }
 
   backspace() { this.answer = this.answer.slice(0, this.answer.length - 1); }
-  isSpellingCorrect() { return this.vocabPracticeService.isWordEqual(this.currentQuestion().word, this.answer == null ? '' : this.answer, this.dictation.wordContainSpace); }
+  isSpellingCorrect() { return this.vocabPracticeService.isWordEqual(this.currentQuestion().word, this.answer ?? '', this.dictation.wordContainSpace); }
 
   private checkAnswer(isCorrect: () => boolean) {
     const correct = isCorrect();
@@ -208,25 +222,8 @@ export class DictationPracticePage implements OnInit {
     this.answer = '';
   }
 
-  async waitForNextQuestion() {
-    const nextQuestionIndex = this.questionIndex + 1;
-    const waitingNeeded = nextQuestionIndex >= this.vocabPractices.length && nextQuestionIndex < this.totalQuestions;
-    if (waitingNeeded) {
-      this.loading = await this.ionicComponentService.showLoading();
-
-      for (let count = 0; count < 100 && nextQuestionIndex >= this.vocabPractices.length; count++) {
-        this.log.debug('waiting for question api return');
-        await this.sleep(500);
-      }
-    }
-    this.questionIndex = nextQuestionIndex;
-    this.loading.dismiss();
-  }
-
-  sleep(ms = 0) { return new Promise(r => setTimeout(r, ms)); }
-
   focusAnswerInput() {
-    if (!this.isKeyboardActive && this.answerInput) {
+    if (!this.showPreload && !this.isKeyboardActive && this.answerInput) {
       setTimeout(() => this.answerInput.setFocus(), 100);
     }
   }

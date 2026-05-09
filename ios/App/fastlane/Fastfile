@@ -1,0 +1,74 @@
+default_platform(:ios)
+
+# Absolute paths — immune to fastlane's working directory changes
+IOS_APP_DIR = File.expand_path("../..", __FILE__)      # ios/App/
+ROOT_DIR     = File.expand_path("../../../..", __FILE__) # project root
+
+platform :ios do
+  desc "Set marketing version and build number in Xcode project"
+  lane :set_version do |options|
+    version      = options[:version]      or UI.user_error!("version is required")
+    build_number = options[:build_number] or UI.user_error!("build_number is required")
+
+    pbxproj = "#{IOS_APP_DIR}/App.xcodeproj/project.pbxproj"
+    content = File.read(pbxproj)
+    content = content.gsub(/MARKETING_VERSION = .*;/, "MARKETING_VERSION = #{version};")
+    content = content.gsub(/CURRENT_PROJECT_VERSION = .*;/, "CURRENT_PROJECT_VERSION = #{build_number};")
+    File.write(pbxproj, content)
+
+    info_plist = "#{IOS_APP_DIR}/App/Info.plist"
+    plist = File.read(info_plist)
+    plist = plist.gsub(%r{(<key>CFBundleShortVersionString</key>\s*<string>).*?(</string>)}, "\\1#{version}\\2")
+    plist = plist.gsub(%r{(<key>CFBundleVersion</key>\s*<string>).*?(</string>)}, "\\1#{build_number}\\2")
+    File.write(info_plist, plist)
+
+    UI.success "Set MARKETING_VERSION=#{version}, CFBundleVersion=#{build_number}"
+  end
+
+  desc "Build and archive the app, output IPA to tmp/"
+  lane :build do
+    gym(
+      workspace:        "#{IOS_APP_DIR}/App.xcworkspace",
+      scheme:           "App",
+      export_method:    "app-store",
+      output_directory: "#{ROOT_DIR}/tmp",
+      output_name:      "App.ipa",
+      export_options: {
+        signingStyle:      "automatic",
+        compileBitcode:    true,
+        stripSwiftSymbols: true,
+        thinning:          "<none>"
+      }
+    )
+  end
+
+  desc "Upload IPA and create App Store release"
+  lane :upload do |options|
+    ipa_path = options[:ipa]     or UI.user_error!("ipa is required")
+    version  = options[:version] or UI.user_error!("version is required")
+
+    # Upload build and wait for Apple to finish processing
+    pilot(
+      ipa:                               ipa_path,
+      skip_waiting_for_build_processing: false,
+      skip_submission:                   true
+    )
+
+    # Create App Store version and link the processed build
+    upload_to_app_store(
+      app_version:                version,
+      skip_binary_upload:         true,
+      skip_screenshots:           true,
+      skip_metadata:              true,
+      submit_for_review:          false,
+      automatic_release:          false,
+      force:                      true,
+      run_precheck_before_submit: false,
+      release_notes: {
+        "en-US"   => File.read("#{ROOT_DIR}/release_notes/en.txt").strip,
+        "zh-Hans" => File.read("#{ROOT_DIR}/release_notes/zh-Hans.txt").strip,
+        "zh-Hant" => File.read("#{ROOT_DIR}/release_notes/zh-Hant.txt").strip
+      }
+    )
+  end
+end

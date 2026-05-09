@@ -75,16 +75,28 @@ export class TtsCloudService {
     this.currentAudio = null;
   }
 
-  prefetchAudioUrl(url: string | null | undefined) {
+  prefetchAudioUrl(url: string | null | undefined): Promise<boolean> {
     if (!url || this.prefetchedAudioUrls.has(url)) {
-      return;
+      return Promise.resolve(true);
     }
-    const audio = new Audio(url);
-    audio.preload = 'auto';
     this.prefetchedAudioUrls.add(url);
-    if (typeof audio.load === 'function') {
-      audio.load();
-    }
+    return new Promise<boolean>((resolve) => {
+      const audio = new Audio(url);
+      audio.preload = 'auto';
+      const timeout = setTimeout(() => { cleanup(); resolve(false); }, 10000);
+      const cleanup = () => {
+        clearTimeout(timeout);
+        audio.removeEventListener('canplaythrough', onSuccess);
+        audio.removeEventListener('error', onError);
+      };
+      const onSuccess = () => { cleanup(); resolve(true); };
+      const onError = () => { cleanup(); resolve(false); };
+      audio.addEventListener('canplaythrough', onSuccess, { once: true });
+      audio.addEventListener('error', onError, { once: true });
+      if (typeof audio.load === 'function') {
+        audio.load();
+      }
+    });
   }
 
   private buildAudioKey(ttsVersion: string, normalizedText: string, keyHash: string): string {

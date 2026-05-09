@@ -247,5 +247,20 @@
   "Local Voice": "本机电脑",
   "VoiceMode.OnlineDescription": "网络的 AI 语音或真人录音",
   "VoiceMode.LocalDescription": "本机生成语音,不使用网络",
-  "QuickDictation.OptionAvailabilityNote1": "在快速听写中，不一定能提供 AI 图像与在线 AI／真人语音。请先登录并创建听写，以确保这些功能可用。"
+  "QuickDictation.OptionAvailabilityNote1": "在快速听写中，不一定能提供 AI 图像与在线 AI／真人语音。请先登录并创建听写，以确保这些功能可用。",
+  "Preload.Questions": "题目",
+  "Preload.Voices": "语音",
+  "Preload.Images": "图像",
+  "Preload.Ready": "就绪",
+  "Preload.VoiceFailed": "部分语音无法加载",
+  "Preload.ContinueLocalVoice": "使用本机语音继续",
+  "Preload.Status.Preparing": "准备听写练习...",
+  "Preload.Status.AllReady": "准备就绪！",
+  "Preload.Status.VoiceFailed": "部分语音无法使用",
+  "Preload.Tip.VoiceMode": "在设置中切换在线语音和本机语音。",
+  "Preload.Tip.Speed": "调整语速以适合你的听力水平。",
+  "Preload.Tip.SpeakPunctuation": "开启「读出标点」可听到逗号和句号。",
+  "Preload.Tip.PuzzleMode": "试试拼图模式，选字母代替打字。",
+  "Preload.Tip.CreateDictation": "用任何单词表建立自己的听写练习。",
+  "Preload.Tip.OfflineMode": "本机语音离线也能用，随时随地练习。"
 }

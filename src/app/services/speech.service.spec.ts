@@ -26,7 +26,9 @@ describe('SpeechService', () => {
     ttsCloudService.toPunctuationText.and.callFake((text: string) => text);
     ttsCloudService.normalize.and.callFake((text: string) => text);
     uiOptionsService = jasmine.createSpyObj('UIOptionsService', ['loadOption']);
-    service = new SpeechService(AppServiceSpy(), NGXLoggerSpy(), ttsCloudService, uiOptionsService as UIOptionsService);
+    service = new SpeechService(
+      AppServiceSpy(), NGXLoggerSpy(), ttsCloudService, uiOptionsService as UIOptionsService,
+    );
   });
 
   function stubCloudPlayback(playedByCloud: boolean) {
@@ -147,7 +149,7 @@ describe('SpeechService', () => {
   });
 
   describe('stop', () => {
-    it('always calls stopCloudAudio first', () => {
+    it('calls stopCloudAudio', () => {
       const appService = (service as any).appService;
       appService.isApp.and.returnValue(false);
       (service as any).synth = jasmine.createSpyObj('speechSynthesis', ['cancel']);

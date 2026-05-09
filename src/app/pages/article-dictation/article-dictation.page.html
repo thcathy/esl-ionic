@@ -6,7 +6,10 @@
 </ion-header>
 
 <ion-content>
-  <div class="inner-content">
+  <app-dictation-preload #preload [hidden]="!showPreload"
+    (preloadCompleted)="onPreloadCompleted($event)">
+  </app-dictation-preload>
+  <div class="inner-content" [hidden]="showPreload">
     <ion-card class="card">
       <ion-card-header>
         <ion-card-title>{{'Sentence'|translate}} {{ currentIndex + 1 }}/{{sentences?.length}}</ion-card-title>

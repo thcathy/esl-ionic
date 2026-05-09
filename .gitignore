@@ -1,4 +1,5 @@
 /.angular/cache
+.env
 # Specifies intentionally untracked files to ignore when using Git
 # http://git-scm.com/docs/gitignore
 
@@ -52,3 +53,7 @@ my-release-key.jks
 # Playwright
 /playwright-report/
 /test-results/
+
+# Fastlane
+/ios/App/fastlane/report.xml
+

@@ -247,5 +247,20 @@
   "Local Voice": "本機電腦",
   "VoiceMode.OnlineDescription": "來自網絡的自然 AI 或真人錄音",
   "VoiceMode.LocalDescription": "本機生成語音,不使用網絡",
-  "QuickDictation.OptionAvailabilityNote1": "在快速聽寫中，不一定能提供 AI 圖像與網上 AI／真人語音。請先登入並建立聽寫，以確保這些功能可用。"
+  "QuickDictation.OptionAvailabilityNote1": "在快速聽寫中，不一定能提供 AI 圖像與網上 AI／真人語音。請先登入並建立聽寫，以確保這些功能可用。",
+  "Preload.Questions": "題目",
+  "Preload.Voices": "語音",
+  "Preload.Images": "圖像",
+  "Preload.Ready": "就緒",
+  "Preload.VoiceFailed": "部分語音無法載入",
+  "Preload.ContinueLocalVoice": "使用本機語音繼續",
+  "Preload.Status.Preparing": "準備聽寫練習...",
+  "Preload.Status.AllReady": "準備就緒！",
+  "Preload.Status.VoiceFailed": "部分語音無法使用",
+  "Preload.Tip.VoiceMode": "在設定中切換網上語音和本機語音。",
+  "Preload.Tip.Speed": "調整語速以適合你的聽力水平。",
+  "Preload.Tip.SpeakPunctuation": "開啟「讀出標點」可聽到逗號和句號。",
+  "Preload.Tip.PuzzleMode": "試試拼圖模式，選字母代替打字。",
+  "Preload.Tip.CreateDictation": "用任何單詞表建立自己的聽寫練習。",
+  "Preload.Tip.OfflineMode": "本機語音離線也能用，隨時隨地練習。"
 }

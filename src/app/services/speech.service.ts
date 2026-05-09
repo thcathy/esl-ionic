@@ -108,19 +108,21 @@ export class SpeechService {
     return 'local';
   }
 
-  async prefetchByVoiceMode(text: string, options: SpeakOptions = {}): Promise<void> {
+  async prefetchByVoiceMode(text: string, options: SpeakOptions = {}): Promise<boolean> {
     const voiceMode = options.mode ?? this.voiceModeCache ?? await this.getVoiceMode();
     if (!this.isOnlineVoiceMode(voiceMode)) {
-      return;
+      return true;
     }
+    let pronounceResult = true;
     if (options.pronounceUrl) {
-      this.ttsCloudService.prefetchAudioUrl(options.pronounceUrl);
+      pronounceResult = await this.ttsCloudService.prefetchAudioUrl(options.pronounceUrl);
     }
     const cloudInfo = await this.ttsCloudService.buildCloudAudioInfo(text, {
       speakPunctuation: options.speakPunctuation,
       ttsVersion: options.ttsVersion,
     });
-    this.ttsCloudService.prefetchAudioUrl(cloudInfo.url);
+    const cloudResult = await this.ttsCloudService.prefetchAudioUrl(cloudInfo.url);
+    return pronounceResult && cloudResult;
   }
 
   async getVoiceMode(): Promise<string> {

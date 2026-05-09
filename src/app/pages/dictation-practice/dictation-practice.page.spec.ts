@@ -20,9 +20,11 @@ describe('DictationPracticePage', () => {
   beforeEach(waitForAsync(() => {
     storageSpy = StorageSpy();
     navigationServiceSpy = NavigationServiceSpy();
-    speechServiceSpy = jasmine.createSpyObj('SpeechService', ['speakByVoiceMode', 'prefetchByVoiceMode']);
+    speechServiceSpy = jasmine.createSpyObj('SpeechService', ['speakByVoiceMode', 'prefetchByVoiceMode', 'getVoiceMode', 'ensureVoiceModeLoaded']);
     speechServiceSpy.speakByVoiceMode.and.resolveTo('local');
-    speechServiceSpy.prefetchByVoiceMode.and.resolveTo();
+    speechServiceSpy.prefetchByVoiceMode.and.resolveTo(true);
+    speechServiceSpy.getVoiceMode.and.resolveTo('local');
+    speechServiceSpy.ensureVoiceModeLoaded.and.resolveTo();
 
     TestBed.configureTestingModule({
       declarations: [ DictationPracticePage ],
@@ -45,6 +47,10 @@ describe('DictationPracticePage', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(DictationPracticePage);
     component = fixture.componentInstance;
+    component.preload = jasmine.createSpyObj('DictationPreloadComponent', [
+      'start', 'completeCategory',
+      'recordQuestion', 'recordVoice', 'recordImage',
+    ]) as any;
     translateService = TestBed.inject(TranslateService);
     translateService.currentLang = 'en';
   });
@@ -60,6 +66,7 @@ describe('DictationPracticePage', () => {
 
       component.initDictation();
       tick();
+      component.onPreloadCompleted({ useLocalVoice: false });
       expect(component.vocabPractices.length).toBe(dictation.vocabs.length);
       expect(total).toBe(1);
     }));

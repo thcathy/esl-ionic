@@ -1,7 +1,8 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {NGXLogger} from 'ngx-logger';
 import {IonInput} from '@ionic/angular';
 import {VirtualKeyboardEvent} from '../../components/virtual-keyboard/virtual-keyboard';
+import {DictationPreloadComponent, PreloadCategoryName, PreloadResult} from '../../components/dictation-preload/dictation-preload.component';
 import {Dictation} from '../../entity/dictation';
 import {SentenceHistory} from '../../entity/sentence-history';
 import {ArticleDictationService} from '../../services/dictation/article-dictation.service';
@@ -17,8 +18,9 @@ import {UIOptionsService} from '../../services/ui-options.service';
     styleUrls: ['./article-dictation.page.scss'],
     standalone: false
 })
-export class ArticleDictationPage implements OnInit {
+export class ArticleDictationPage {
   @ViewChild('answerInput') answerInput: IonInput;
+  @ViewChild('preload', { static: true }) preload: DictationPreloadComponent;
 
   dictation: Dictation;
   sentences: string[];
@@ -29,6 +31,7 @@ export class ArticleDictationPage implements OnInit {
   histories: SentenceHistory[] = [];
   isKeyboardActive: boolean;
   voiceMode: string;
+  showPreload = true;
 
   get caseSensitiveText() {
     return this?.dictation?.options?.caseSensitiveSentence ? 'Case Sensitive' : 'Case Insensitive';
@@ -51,8 +54,6 @@ export class ArticleDictationPage implements OnInit {
     private log: NGXLogger,
   ) {}
 
-  ngOnInit() {}
-
   clearVariables() {
     this.currentIndex = 0;
     this.mark = 0;
@@ -60,30 +61,48 @@ export class ArticleDictationPage implements OnInit {
     this.sentences = [];
     this.histories = [];
     this.dictation = null;
+    this.showPreload = true;
   }
 
   ionViewDidEnter() {
     this.clearVariables();
     this.init();
-    this.focusAnswerInput();
   }
 
   async init() {
     this.dictation = await this.storage.get(NavigationService.storageKeys.dictation);
-    const modeFromDictation = this.resolveVoiceMode(this.dictation?.options?.voiceMode);
-    if (modeFromDictation) {
-      this.voiceMode = modeFromDictation;
-    } else {
-      await this.speechService.ensureVoiceModeLoaded();
-      this.voiceMode = await this.speechService.getVoiceMode();
-    }
+    this.voiceMode = await this.speechService.getVoiceMode();
     this.sentences = this.articleDictationService.divideToSentences(
       this.dictation.article,
       this.articleDictationService.sentenceLengthOptionsToValue(this.dictation.sentenceLength)
     );
-    console.debug(`divided into ${this.sentences.length} sentences`);
-    this.sentences.forEach((_sentence, index) => this.prefetchSentence(index));
+    this.log.debug(`divided into ${this.sentences.length} sentences`);
+    this.initPreload();
+  }
+
+  onPreloadCompleted(result: PreloadResult) {
+    if (result.useLocalVoice) { this.voiceMode = UIOptionsService.voiceMode.local; }
+    this.showPreload = false;
     this.speak();
+    this.focusAnswerInput();
+  }
+
+  private initPreload() {
+    const total = this.sentences.length;
+    const isVoiceModeOnline = this.voiceMode === UIOptionsService.voiceMode.online;
+
+    this.preload.start({ questions: total, voices: isVoiceModeOnline ? total : 0, images: 0 });
+
+    if (isVoiceModeOnline) {
+      this.sentences.forEach(sentence => {
+        this.speechService.prefetchByVoiceMode(sentence, {
+          speakPunctuation: !!this.dictation?.options?.speakPunctuation,
+          mode: this.voiceMode,
+        }).then(success => this.preload.recordVoice(success));
+      });
+    }
+
+    this.preload.completeCategory(PreloadCategoryName.Questions);
   }
 
   slower() {
@@ -154,27 +173,9 @@ export class ArticleDictationPage implements OnInit {
     this.answer = this.answer.slice(0, this.answer.length - 1);
   }
 
-  private prefetchSentence(index: number) {
-    const sentence = this.sentences?.[index];
-    if (!sentence) {
-      return;
-    }
-    void this.speechService.prefetchByVoiceMode(sentence, {
-      speakPunctuation: !!this.dictation?.options?.speakPunctuation,
-      mode: this.voiceMode,
-    });
-  }
-
   private focusAnswerInput() {
     if (!this.isKeyboardActive && this.answerInput) {
       setTimeout(() => this.answerInput.setFocus(), 100);
     }
-  }
-
-  private resolveVoiceMode(mode: string | undefined): string | null {
-    if (mode === UIOptionsService.voiceMode.local || mode === UIOptionsService.voiceMode.online) {
-      return mode;
-    }
-    return null;
   }
 }
