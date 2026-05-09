@@ -54,3 +54,6 @@ my-release-key.jks
 /playwright-report/
 /test-results/
 
+# Fastlane
+/ios/App/fastlane/report.xml
+
