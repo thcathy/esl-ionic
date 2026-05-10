@@ -1,1 +1,1 @@
-Smoother start to every dictation with a new loading screen that keeps you informed while the app gets ready.
+Translations and word meanings now use a smarter AI model for more natural, accurate results — and load instantly when you revisit them.
