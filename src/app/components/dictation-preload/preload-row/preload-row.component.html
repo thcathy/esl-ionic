@@ -1,0 +1,22 @@
+<div class="row">
+  <div class="ico {{ iconClass }}">
+    <ng-content></ng-content>
+  </div>
+  <div class="label">
+    <div class="label-title">
+      {{ label | translate }}
+      <small>
+        @if (category.state === 'loading') { {{ category.loaded }}/{{ category.total }} }
+        @else if (treatFailedAsFailure) { {{ failedLabel! | translate }} }
+        @else { {{ 'Preload.Ready' | translate }} }
+      </small>
+    </div>
+    <div class="track">
+      <div class="fill {{ fillClass }}"
+           [class.fill-failed]="treatFailedAsFailure"
+           [style.width.%]="percent"
+           [style.transition]="resetting ? 'none' : null"></div>
+    </div>
+  </div>
+  <div class="pct">{{ percent }}%</div>
+</div>

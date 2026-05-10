@@ -11,6 +11,7 @@ import {VocabPracticeType} from '../../enum/vocab-practice-type.enum';
 import {UIOptionsService} from '../../services/ui-options.service';
 import {DictationHelper} from '../../services/dictation/dictation-helper.service';
 import {NavigationService} from '../../services/navigation.service';
+import {InterpretationService} from '../../services/practice/interpretation.service';
 import {VocabPracticeService} from '../../services/practice/vocab-practice.service';
 import {SpeechService} from '../../services/speech.service';
 import {StorageService} from '../../services/storage.service';
@@ -42,6 +43,7 @@ export class DictationPracticePage {
     public navigationService: NavigationService,
     public storage: StorageService,
     public dictationHelper: DictationHelper,
+    private interpretationService: InterpretationService,
   ) { }
 
   ionViewWillEnter() {
@@ -74,16 +76,23 @@ export class DictationPracticePage {
       questions: words.length,
       voices: isOnline ? words.length : 0,
       images: this.dictation.showImage ? words.length : 0,
+      interpretations: words.length,
     });
 
     for (const word of words) {
       this.fetchQuestion(word)
         .pipe(
           mergeMap(vp => this.fetchImages(vp)),
-          tap(vp => this.prefetchVoice(vp, isOnline))
+          tap(vp => this.prefetchVoice(vp, isOnline)),
+          tap(vp => this.prefetchInterpretation(vp))
         )
         .subscribe(p => this.receiveVocabPractice(p));
     }
+  }
+
+  private prefetchInterpretation(vp: VocabPractice): void {
+    this.interpretationService.interpret(vp.word)
+      .subscribe(() => this.preload.recordInterpretation(true));
   }
 
   get type() { return VocabPracticeType; }

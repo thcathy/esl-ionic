@@ -30,6 +30,7 @@ import {VocabPracticeTypeModalComponent} from './vocab-practice-type-modal/vocab
 import {VocabPracticeTypeSelectorComponent} from './vocab-practice-type-selector/vocab-practice-type-selector.component';
 import {VoiceModeSelectorComponent} from './voice-mode-selector/voice-mode-selector.component';
 import {DictationPreloadComponent} from './dictation-preload/dictation-preload.component';
+import {PreloadRowComponent} from './dictation-preload/preload-row/preload-row.component';
 
 @NgModule({ declarations: [MemberScoreRankingComponent,
         DictationStatisticsComponent,
@@ -44,7 +45,7 @@ import {DictationPreloadComponent} from './dictation-preload/dictation-preload.c
         MemberPracticeHistoryListComponent,
         VocabHistoryListComponent,
         TextInterpretationComponent,
-        VirtualKeyboardComponent, CharacterButtonComponent, CharacterComponent, VocabSelectionComponent, ArticleDictationOptionsComponent, AppHeaderComponent, SectionCardComponent, VocabPracticeTypeModalComponent, VocabPracticeTypeSelectorComponent, VoiceModeSelectorComponent, DictationPreloadComponent
+        VirtualKeyboardComponent, CharacterButtonComponent, CharacterComponent, VocabSelectionComponent, ArticleDictationOptionsComponent, AppHeaderComponent, SectionCardComponent, VocabPracticeTypeModalComponent, VocabPracticeTypeSelectorComponent, VoiceModeSelectorComponent, DictationPreloadComponent, PreloadRowComponent
     ],
     exports: [MemberScoreRankingComponent,
         DictationStatisticsComponent,

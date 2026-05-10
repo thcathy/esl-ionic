@@ -6,6 +6,7 @@ import {DictationPreloadComponent, PreloadCategoryName, PreloadResult} from '../
 import {Dictation} from '../../entity/dictation';
 import {SentenceHistory} from '../../entity/sentence-history';
 import {ArticleDictationService} from '../../services/dictation/article-dictation.service';
+import {InterpretationService} from '../../services/practice/interpretation.service';
 import {NavigationService} from '../../services/navigation.service';
 import {SpeechService} from '../../services/speech.service';
 import {StorageService} from '../../services/storage.service';
@@ -51,6 +52,7 @@ export class ArticleDictationPage {
     public storage: StorageService,
     public navigationService: NavigationService,
     protected translate: TranslateService,
+    private interpretationService: InterpretationService,
     private log: NGXLogger,
   ) {}
 
@@ -90,8 +92,14 @@ export class ArticleDictationPage {
   private initPreload() {
     const total = this.sentences.length;
     const isVoiceModeOnline = this.voiceMode === UIOptionsService.voiceMode.online;
+    const interpretationsTotal = this.interpretationService.isEN() ? 0 : total;
 
-    this.preload.start({ questions: total, voices: isVoiceModeOnline ? total : 0, images: 0 });
+    this.preload.start({
+      questions: total,
+      voices: isVoiceModeOnline ? total : 0,
+      images: 0,
+      interpretations: interpretationsTotal,
+    });
 
     if (isVoiceModeOnline) {
       this.sentences.forEach(sentence => {
@@ -99,6 +107,13 @@ export class ArticleDictationPage {
           speakPunctuation: !!this.dictation?.options?.speakPunctuation,
           mode: this.voiceMode,
         }).then(success => this.preload.recordVoice(success));
+      });
+    }
+
+    if (interpretationsTotal > 0) {
+      this.sentences.forEach(sentence => {
+        this.interpretationService.interpret(sentence)
+          .subscribe(() => this.preload.recordInterpretation(true));
       });
     }
 

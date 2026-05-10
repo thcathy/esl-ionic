@@ -4,6 +4,7 @@ export enum PreloadCategoryName {
   Questions = 'questions',
   Voices = 'voices',
   Images = 'images',
+  Interpretations = 'interpretations',
 }
 
 export interface PreloadCategory {
@@ -21,6 +22,7 @@ export interface PreloadTotals {
   [PreloadCategoryName.Questions]: number;
   [PreloadCategoryName.Voices]: number;
   [PreloadCategoryName.Images]: number;
+  [PreloadCategoryName.Interpretations]: number;
 }
 
 @Component({
@@ -40,6 +42,7 @@ export class DictationPreloadComponent implements OnDestroy {
   questions: PreloadCategory = { total: 0, loaded: 0, failed: 0, state: 'idle' };
   voices: PreloadCategory = { total: 0, loaded: 0, failed: 0, state: 'idle' };
   images: PreloadCategory = { total: 0, loaded: 0, failed: 0, state: 'idle' };
+  interpretations: PreloadCategory = { total: 0, loaded: 0, failed: 0, state: 'idle' };
 
   statusMessage = 'Preload.Status.Preparing';
   currentTipIndex = 0;
@@ -86,9 +89,10 @@ export class DictationPreloadComponent implements OnDestroy {
     if (this.tipInterval) { clearInterval(this.tipInterval); this.tipInterval = null; }
 
     this.resetting = true;
-    this.questions = { total: totals.questions, loaded: 0, failed: 0, state: 'idle' };
-    this.voices   = { total: totals.voices,    loaded: 0, failed: 0, state: 'idle' };
-    this.images   = { total: totals.images,    loaded: 0, failed: 0, state: 'idle' };
+    this.questions       = { total: totals.questions,       loaded: 0, failed: 0, state: 'idle' };
+    this.voices          = { total: totals.voices,          loaded: 0, failed: 0, state: 'idle' };
+    this.images          = { total: totals.images,          loaded: 0, failed: 0, state: 'idle' };
+    this.interpretations = { total: totals.interpretations, loaded: 0, failed: 0, state: 'idle' };
     this.statusMessage = 'Preload.Status.Preparing';
     this.showContinueButton = false;
     this.currentTipIndex = 0;
@@ -113,6 +117,7 @@ export class DictationPreloadComponent implements OnDestroy {
   recordQuestion(success: boolean): void { this.recordResult(this.questions, success); }
   recordVoice(success: boolean): void { this.recordResult(this.voices, success); }
   recordImage(success: boolean): void { this.recordResult(this.images, success); }
+  recordInterpretation(success: boolean): void { this.recordResult(this.interpretations, success); }
 
   onContinueWithLocalVoice(): void {
     this.stopCountdown();

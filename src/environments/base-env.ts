@@ -8,7 +8,6 @@ export const baseEnv = {
   learntVocabularyMinimumCorrect: 5,
   vocabPracticeQuestions: 10,
   interpretation: {
-    translateApiUrl: 'https://arm-s1.funfunspell.com/libretranslate/translate',
-    englishMeaningUrl: 'https://esl-rest.funfunspell.com/esl-rest/vocab/meaning',
+    apiUrl: 'https://esl-rest.funfunspell.com/esl-rest/interpretation',
   }
 };

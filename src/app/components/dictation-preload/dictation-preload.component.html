@@ -28,69 +28,49 @@
     </div>
     <div class="load-body">
 
-      <!-- Dictionary row -->
       @if (questions.total > 0) {
-        <div class="row">
-          <div class="ico ico-primary">Aa</div>
-          <div class="label">
-            <div class="label-title">
-              {{ 'Preload.Questions' | translate }}
-              <small>
-                @if (questions.state === 'done') { {{ 'Preload.Ready' | translate }} }
-                @else if (questions.state === 'loading') { {{ questions.loaded }}/{{ questions.total }} }
-                @else if (questions.state === 'failed') { {{ 'Preload.Ready' | translate }} }
-              </small>
-            </div>
-            <div class="track">
-              <div class="fill fill-primary" [style.width.%]="getPercent(questions)" [style.transition]="resetting ? 'none' : null"></div>
-            </div>
-          </div>
-          <div class="pct">{{ getPercent(questions) }}%</div>
-        </div>
+        <app-preload-row
+          [category]="questions"
+          label="Preload.Questions"
+          iconClass="ico-primary"
+          fillClass="fill-primary"
+          [resetting]="resetting">
+          Aa
+        </app-preload-row>
       }
 
-      <!-- Voices row -->
       @if (voices.total > 0) {
-        <div class="row">
-          <div class="ico ico-secondary">&#9835;</div>
-          <div class="label">
-            <div class="label-title">
-              {{ 'Preload.Voices' | translate }}
-              <small>
-                @if (voices.state === 'done') { {{ 'Preload.Ready' | translate }} }
-                @else if (voices.state === 'loading') { {{ voices.loaded }}/{{ voices.total }} }
-                @else if (voices.state === 'failed') { {{ 'Preload.VoiceFailed' | translate }} }
-              </small>
-            </div>
-            <div class="track">
-              <div class="fill fill-secondary" [class.fill-failed]="voices.state === 'failed'" [style.width.%]="getPercent(voices)" [style.transition]="resetting ? 'none' : null"></div>
-            </div>
-          </div>
-          <div class="pct">{{ getPercent(voices) }}%</div>
-        </div>
+        <app-preload-row
+          [category]="voices"
+          label="Preload.Voices"
+          iconClass="ico-secondary"
+          fillClass="fill-secondary"
+          failedLabel="Preload.VoiceFailed"
+          [resetting]="resetting">
+          &#9835;
+        </app-preload-row>
       }
 
-      <!-- Images row -->
       @if (images.total > 0) {
-        <div class="row">
-          <div class="ico ico-tertiary">
-            <fa-icon [icon]="['fas', 'image']" size="sm"></fa-icon>
-          </div>
-          <div class="label">
-            <div class="label-title">
-              {{ 'Preload.Images' | translate }}
-              <small>
-                @if (images.state === 'done') { {{ 'Preload.Ready' | translate }} }
-                @else if (images.state === 'loading') { {{ images.loaded }}/{{ images.total }} }
-                @else if (images.state === 'failed') { {{ 'Preload.Ready' | translate }} }
-              </small>
-            </div>
-            <div class="track">
-              <div class="fill fill-tertiary" [style.width.%]="getPercent(images)" [style.transition]="resetting ? 'none' : null"></div>
-            </div>
-          </div>
-          <div class="pct">{{ getPercent(images) }}%</div>
-        </div>
+        <app-preload-row
+          [category]="images"
+          label="Preload.Images"
+          iconClass="ico-tertiary"
+          fillClass="fill-tertiary"
+          [resetting]="resetting">
+          <fa-icon [icon]="['fas', 'image']" size="sm"></fa-icon>
+        </app-preload-row>
+      }
+
+      @if (interpretations.total > 0) {
+        <app-preload-row
+          [category]="interpretations"
+          label="AI translate"
+          iconClass="ico-quaternary"
+          fillClass="fill-quaternary"
+          [resetting]="resetting">
+          <fa-icon [icon]="['fas', 'language']" size="sm"></fa-icon>
+        </app-preload-row>
       }
 
     </div>

@@ -1,66 +1,51 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {HttpClient, HttpParams} from "@angular/common/http";
 import {Observable, of} from "rxjs";
 import {TranslateService} from "@ngx-translate/core";
 import {environment} from "../../../environments/environment";
-import {catchError, map} from "rxjs/operators";
+import {catchError, map, tap} from "rxjs/operators";
+
+export type InterpretLang = 'en' | 'zh-Hans' | 'zh-Hant';
 
 @Injectable({
   providedIn: 'root'
 })
 export class InterpretationService {
-  static languageMap: { [key: string]: string } = {
-    'zh-hant': 'zt',
-    'zh-hans': 'zh',
-  };
+  static readonly NO_RESULT = '-';
+
+  private readonly apiUrl = environment.interpretation.apiUrl;
+  private readonly cache = new Map<string, string>();
 
   constructor(private http: HttpClient,
               private translate: TranslateService) {}
 
-  private aiTranslateUrl = environment.interpretation.translateApiUrl;
-  private englishMeaningUrl = environment.interpretation.englishMeaningUrl;
+  interpret(text: string): Observable<string> {
+    const lang = this.targetLang();
+    const key = `${text}|${lang}`;
+    const hit = this.cache.get(key);
+    if (hit !== undefined) {
+      return of(hit);
+    }
 
-  isEN() {
-    return this.translate.currentLang.startsWith('en');
-  }
-
-  interpret(text: string): Observable<any> {
-    if (this.isEN())
-      return this.getMeaning(text);
-    else
-      return this.aiTranslate(text);
-  }
-
-  private aiTranslate(text: string) {
-    const body = {
-      q: text,
-      source: 'en',
-      target: this.mapTargetLanguage(this.translate.currentLang),
-    };
-
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-    });
-    return this.http.post<any>(this.aiTranslateUrl, body, {headers}).pipe(
-      map(response => response.translatedText),
+    const params = new HttpParams().set('text', text).set('lang', lang);
+    return this.http.get(this.apiUrl, {params, responseType: 'text'}).pipe(
+      map(result => result || InterpretationService.NO_RESULT),
+      tap(result => this.cache.set(key, result)),
       catchError(error => {
-        console.error('Error translating text:', error);
-        return of('');
+        console.error('Error fetching interpretation:', error);
+        return of(InterpretationService.NO_RESULT);
       })
     );
   }
 
-  mapTargetLanguage = (lang: string) => InterpretationService.languageMap[lang?.toLowerCase()] || lang?.toLowerCase();
+  targetLang(): InterpretLang {
+    const c = (this.translate.currentLang ?? 'en').toLowerCase();
+    if (c.startsWith('en')) return 'en';
+    if (c === 'zh-hans') return 'zh-Hans';
+    return 'zh-Hant';
+  }
 
-  getMeaning(text: string) {
-    const encodedText = encodeURIComponent(text);
-    const url = `${this.englishMeaningUrl}/${encodedText}`;
-
-    return this.http.get(url, { responseType: 'text' }).pipe(
-      catchError(error => {
-        console.error('Error fetching meaning:', error);
-        return of('');
-      })
-    );
+  isEN(): boolean {
+    return this.targetLang() === 'en';
   }
 }
