@@ -84,15 +84,11 @@ export class DictationPracticePage {
         .pipe(
           mergeMap(vp => this.fetchImages(vp)),
           tap(vp => this.prefetchVoice(vp, isOnline)),
-          tap(vp => this.prefetchInterpretation(vp))
+          tap(vp => this.interpretationService.interpret(vp.word)
+            .subscribe(() => this.preload.recordInterpretation(true)))
         )
         .subscribe(p => this.receiveVocabPractice(p));
     }
-  }
-
-  private prefetchInterpretation(vp: VocabPractice): void {
-    this.interpretationService.interpret(vp.word)
-      .subscribe(() => this.preload.recordInterpretation(true));
   }
 
   get type() { return VocabPracticeType; }

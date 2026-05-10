@@ -104,9 +104,22 @@ describe('InterpretationService', () => {
       translateServiceMock.currentLang = 'zh-Hant';
       let received: string | undefined;
 
-      service.interpret('   ').subscribe(r => received = r);
+      service.interpret('elephant').subscribe(r => received = r);
       httpMock.expectOne(r => r.url === apiUrl).flush('');
       expect(received).toBe(InterpretationService.NO_RESULT);
+    });
+
+    it('keys cache by lang — same text in different lang issues a separate request', () => {
+      translateServiceMock.currentLang = 'zh-Hant';
+      service.interpret('elephant').subscribe();
+      httpMock.expectOne(r => r.url === apiUrl && r.params.get('lang') === 'zh-Hant').flush('大象');
+
+      translateServiceMock.currentLang = 'zh-Hans';
+      let received: string | undefined;
+      service.interpret('elephant').subscribe(r => received = r);
+      const req = httpMock.expectOne(r => r.url === apiUrl && r.params.get('lang') === 'zh-Hans');
+      req.flush('大象');
+      expect(received).toBe('大象');
     });
   });
 });

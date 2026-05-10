@@ -16,13 +16,11 @@ export class PreloadRowComponent {
   @Input() resetting = false;
 
   get percent(): number {
-    if (this.category.total === 0) {
-      return 100;
-    }
+    if (this.category.total === 0) { return 100; }
     return Math.round(((this.category.loaded + this.category.failed) / this.category.total) * 100);
   }
 
-  get treatFailedAsFailure(): boolean {
-    return !!this.failedLabel && this.category.state === 'failed';
+  get showFailure(): boolean {
+    return this.category.state === 'failed' && !!this.failedLabel;
   }
 }

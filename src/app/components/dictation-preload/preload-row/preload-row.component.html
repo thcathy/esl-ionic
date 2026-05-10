@@ -6,14 +6,18 @@
     <div class="label-title">
       {{ label | translate }}
       <small>
-        @if (category.state === 'loading') { {{ category.loaded }}/{{ category.total }} }
-        @else if (treatFailedAsFailure) { {{ failedLabel! | translate }} }
-        @else { {{ 'Preload.Ready' | translate }} }
+        @if (category.state === 'loading') {
+          {{ category.loaded }}/{{ category.total }}
+        } @else if (showFailure) {
+          {{ failedLabel | translate }}
+        } @else {
+          {{ 'Preload.Ready' | translate }}
+        }
       </small>
     </div>
     <div class="track">
       <div class="fill {{ fillClass }}"
-           [class.fill-failed]="treatFailedAsFailure"
+           [class.fill-failed]="showFailure"
            [style.width.%]="percent"
            [style.transition]="resetting ? 'none' : null"></div>
     </div>
