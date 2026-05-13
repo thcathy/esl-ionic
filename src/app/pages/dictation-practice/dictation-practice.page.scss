@@ -19,7 +19,25 @@
 }
 
 .puzzle-div {
-  text-align: center;
+  padding: 8px 0;
+}
+
+.puzzle-slots {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 2px;
+  margin-bottom: 24px;
+}
+
+.puzzle-buttons {
+  display: grid;
+  grid-template-columns: repeat(var(--cols, 6), max-content);
+  justify-content: center;
+  align-items: center;
+  gap: 2px;
+  min-height: 64px;
 }
 
 .answer-container {

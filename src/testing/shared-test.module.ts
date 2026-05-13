@@ -7,7 +7,7 @@ import {SplashScreen} from '@capacitor/splash-screen';
 import {AlertController, IonicModule, LoadingController, NavController, Platform, ToastController} from '@ionic/angular';
 import {TranslateModule} from '@ngx-translate/core';
 
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {provideNoopAnimations} from '@angular/platform-browser/animations';
 import {NGXLogger} from 'ngx-logger';
 import {ComponentsModule} from '../app/components/components.module';
 import {FontAwesomeIconsModule} from '../app/fontawesome-icons.module';
@@ -31,17 +31,17 @@ import {provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
 
 @NgModule({ declarations: [],
     exports: [
-        CommonModule, FormsModule, ReactiveFormsModule, NoopAnimationsModule,
+        CommonModule, FormsModule, ReactiveFormsModule,
         TranslateModule, IonicModule,
         ComponentsModule,
         FontAwesomeIconsModule, PipesModule,
     ], imports: [RouterTestingModule.withRoutes([]),
         TranslateModule.forRoot(),
         CommonModule,
-        FormsModule, ReactiveFormsModule, NoopAnimationsModule,
+        FormsModule, ReactiveFormsModule,
         ComponentsModule,
         IonicModule.forRoot(),
-        FontAwesomeIconsModule, PipesModule], providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()] })
+        FontAwesomeIconsModule, PipesModule], providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting(), provideNoopAnimations()] })
 export class SharedTestModule {
   static forRoot(): ModuleWithProviders<SharedTestModule> {
     return {

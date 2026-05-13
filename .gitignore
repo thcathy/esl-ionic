@@ -56,4 +56,5 @@ my-release-key.jks
 
 # Fastlane
 /ios/App/fastlane/report.xml
+/ios/App/fastlane/metadata/
 

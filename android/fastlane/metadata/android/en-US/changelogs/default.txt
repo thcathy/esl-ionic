@@ -1,1 +1,1 @@
-Translations and word meanings now use a smarter AI model for more natural, accurate results — and load instantly when you revisit them.
+Puzzle mode got a friendlier look — colorful tile buttons, smoother completion animations, and evenly-balanced letter rows on every screen size.

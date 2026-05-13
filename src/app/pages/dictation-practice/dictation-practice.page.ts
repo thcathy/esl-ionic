@@ -94,6 +94,14 @@ export class DictationPracticePage {
   get type() { return VocabPracticeType; }
   get practiceType() { return this.dictation?.options?.practiceType ?? VocabPracticeType.Spell; }
 
+  get puzzleCols(): number {
+    const n = this.puzzleControls?.buttons?.length ?? 1;
+    const maxPerRow = 6;
+    if (n <= maxPerRow) return n;
+    const rows = Math.ceil(n / maxPerRow);
+    return Math.ceil(n / rows);
+  }
+
   onPreloadCompleted(_result: PreloadResult) {
     this.showPreload = false;
     this.onNextQuestion();

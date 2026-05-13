@@ -1,3 +1,5 @@
+require "fileutils"
+
 default_platform(:ios)
 
 # Absolute paths — immune to fastlane's working directory changes
@@ -47,6 +49,20 @@ platform :ios do
     ipa_path = options[:ipa]     or UI.user_error!("ipa is required")
     version  = options[:version] or UI.user_error!("version is required")
 
+    # Mirror release notes into fastlane metadata so upload_to_app_store picks them up.
+    # `skip_metadata: true` would short-circuit release_notes uploads, so we let deliver
+    # read from the metadata dir — only release_notes.txt is present, so only that field
+    # is touched on App Store Connect.
+    {
+      "en-US"   => "en",
+      "zh-Hans" => "zh-Hans",
+      "zh-Hant" => "zh-Hant"
+    }.each do |store_locale, file_locale|
+      dir = "#{IOS_APP_DIR}/fastlane/metadata/#{store_locale}"
+      FileUtils.mkdir_p(dir)
+      File.write("#{dir}/release_notes.txt", File.read("#{ROOT_DIR}/release_notes/#{file_locale}.txt").strip)
+    end
+
     # Upload build and wait for Apple to finish processing
     pilot(
       ipa:                               ipa_path,
@@ -59,16 +75,11 @@ platform :ios do
       app_version:                version,
       skip_binary_upload:         true,
       skip_screenshots:           true,
-      skip_metadata:              true,
+      skip_metadata:              false,
       submit_for_review:          false,
       automatic_release:          false,
       force:                      true,
-      run_precheck_before_submit: false,
-      release_notes: {
-        "en-US"   => File.read("#{ROOT_DIR}/release_notes/en.txt").strip,
-        "zh-Hans" => File.read("#{ROOT_DIR}/release_notes/zh-Hans.txt").strip,
-        "zh-Hant" => File.read("#{ROOT_DIR}/release_notes/zh-Hant.txt").strip
-      }
+      run_precheck_before_submit: false
     )
   end
 end

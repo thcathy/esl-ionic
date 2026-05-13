@@ -1,7 +1,7 @@
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 
 import {SharedTestModule} from '../../../testing/shared-test.module';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {provideNoopAnimations} from '@angular/platform-browser/animations';
 import {VocabImageComponent} from './vocab-image';
 import {AILoadingImage, defaultImage} from '../../entity/dictation';
 
@@ -12,10 +12,8 @@ describe('VocabImageComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ VocabImageComponent ],
-      imports: [
-        SharedTestModule.forRoot(),
-        NoopAnimationsModule,
-      ],
+      imports: [SharedTestModule.forRoot()],
+      providers: [provideNoopAnimations()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(VocabImageComponent);

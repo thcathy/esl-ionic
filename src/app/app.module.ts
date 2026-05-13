@@ -9,7 +9,7 @@ import {LoggerModule} from 'ngx-logger';
 import {CommonModule} from '@angular/common';
 import {HTTP_INTERCEPTORS, HttpClient, provideHttpClient, withInterceptorsFromDi, withJsonpSupport} from '@angular/common/http';
 import {ReactiveFormsModule} from '@angular/forms';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {provideAnimations} from '@angular/platform-browser/animations';
 import {ServiceWorkerModule} from '@angular/service-worker';
 import {IonicStorageModule} from '@ionic/storage-angular';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
@@ -46,7 +46,7 @@ const auth0RedirectUri = `${config.appId}://${environment.auth0Host}/capacitor/$
 
 @NgModule({ declarations: [AppComponent],
     bootstrap: [AppComponent], imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule,
-        BrowserAnimationsModule, CommonModule, ReactiveFormsModule,
+        CommonModule, ReactiveFormsModule,
         IonicStorageModule.forRoot(),
         FontAwesomeIconsModule,
         AuthModule.forRoot({
@@ -89,5 +89,6 @@ const auth0RedirectUri = `${config.appId}://${environment.auth0Host}/capacitor/$
             multi: true
         },
         provideHttpClient(withInterceptorsFromDi(), withJsonpSupport()),
+        provideAnimations(),
     ] })
 export class AppModule {}

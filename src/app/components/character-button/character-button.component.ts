@@ -1,44 +1,20 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {animate, style, transition, trigger} from '@angular/animations';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
+
+const WRONG_RESET_MS = 500;
+const CORRECT_RESET_MS = 400;
 
 @Component({
     selector: 'app-character-button',
     templateUrl: './character-button.component.html',
     styleUrls: ['./character-button.component.scss'],
-    animations: [
-        trigger('change', [
-            transition('* => wrong', [
-                animate('500ms ease-out', style({
-                    color: '#FF4500',
-                    transform: 'scale(1.3) translateY(-5%)',
-                })),
-                animate('500ms ease-in', style({
-                    transform: 'scale(1)'
-                }))
-            ]),
-            transition('* => correct', [
-                animate('500ms ease-out', style({
-                    color: '#00FF00',
-                    transform: 'scale(1.3) translateY(-5%)',
-                })),
-                animate('500ms ease-in', style({
-                    transform: 'scale(1)'
-                }))
-            ]),
-        ])
-    ],
     standalone: false
 })
-export class CharacterButtonComponent implements OnInit {
+export class CharacterButtonComponent {
   @Input() character: string;
   @Input() isCorrect: boolean;
   @Output() correctPress = new EventEmitter<string>();
 
   state = '';
-
-  constructor() { }
-
-  ngOnInit() {}
 
   onClick() {
     if (this.state !== '') {
@@ -47,12 +23,11 @@ export class CharacterButtonComponent implements OnInit {
 
     if (this.isCorrect) {
       this.state = 'correct';
-      console.log(`passed correct button`);
       this.correctPress.emit(this.character);
+      setTimeout(() => this.state = '', CORRECT_RESET_MS);
     } else {
       this.state = 'wrong';
+      setTimeout(() => this.state = '', WRONG_RESET_MS);
     }
-    setTimeout(() => this.state = '', 1000);
   }
-
 }

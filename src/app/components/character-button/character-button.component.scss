@@ -1,11 +1,43 @@
 ion-button {
-  font-size: 32px;
+  --border-radius: 10px;
+  --background: hsl(202, 78%, 60%);
+  --background-activated: hsl(202, 78%, 48%);
+  --color: white;
+  --box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);
+  --text-transform: none;
   width: 44px;
-  height: 44px;
-  font-weight: bold;
-  margin: 4px;
-  --padding-start: 8px;
-  --padding-top: 8px;
-  --padding-bottom: 8px;
-  --padding-end: 8px;
+  height: 48px;
+  font-size: 20px;
+  font-weight: 700;
+  margin: 3px;
+  --padding-start: 2px;
+  --padding-end: 2px;
+  --padding-top: 2px;
+  --padding-bottom: 2px;
+}
+
+ion-button span {
+  text-transform: lowercase;
+}
+
+ion-button span.shake {
+  animation: shake 400ms;
+}
+
+ion-button span.pop {
+  animation: pop 300ms;
+}
+
+@keyframes shake {
+  0%   { transform: translateX(0); }
+  25%  { transform: translateX(-7px); color: #FF6B6B; }
+  50%  { transform: translateX(7px); }
+  75%  { transform: translateX(-4px); }
+  100% { transform: translateX(0); }
+}
+
+@keyframes pop {
+  0%   { transform: scale(1.0); }
+  60%  { transform: scale(1.2); color: #34C759; }
+  100% { transform: scale(1.0); }
 }

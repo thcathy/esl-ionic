@@ -1,8 +1,7 @@
-import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import {ComponentFixture, fakeAsync, TestBed, tick, waitForAsync} from '@angular/core/testing';
 
 import {CharacterButtonComponent} from './character-button.component';
 import {SharedTestModule} from '../../../testing/shared-test.module';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 
 describe('CharacterButtonComponent', () => {
   let component: CharacterButtonComponent;
@@ -11,10 +10,7 @@ describe('CharacterButtonComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ CharacterButtonComponent ],
-      imports: [
-        SharedTestModule.forRoot(),
-        NoopAnimationsModule,
-      ],
+      imports: [SharedTestModule.forRoot()],
     }).compileComponents();
   }));
 
@@ -34,15 +30,45 @@ describe('CharacterButtonComponent', () => {
     expect(emitSpy.calls.mostRecent().args[0]).toEqual('a');
   });
 
-  it('click correct button', () => {
+  it('click correct button sets state to correct and emits character', () => {
+    const emitSpy = spyOn(component.correctPress, 'emit');
     component.isCorrect = true;
+    component.character = 'x';
     component.onClick();
     expect(component.state).toEqual('correct');
+    expect(emitSpy).toHaveBeenCalledOnceWith('x');
   });
 
-  it('click wrong button', () => {
+  it('click wrong button sets state to wrong and does not emit', () => {
+    const emitSpy = spyOn(component.correctPress, 'emit');
     component.isCorrect = false;
     component.onClick();
     expect(component.state).toEqual('wrong');
+    expect(emitSpy).not.toHaveBeenCalled();
   });
+
+  it('correct state resets so button can be re-clicked for repeated letters', fakeAsync(() => {
+    const emitSpy = spyOn(component.correctPress, 'emit');
+    component.isCorrect = true;
+    component.character = 'e';
+
+    component.onClick();
+    expect(component.state).toEqual('correct');
+
+    tick(400);
+    expect(component.state).toEqual('');
+
+    component.onClick();
+    expect(emitSpy).toHaveBeenCalledTimes(2);
+  }));
+
+  it('wrong state resets after timeout so button is clickable again', fakeAsync(() => {
+    component.isCorrect = false;
+
+    component.onClick();
+    expect(component.state).toEqual('wrong');
+
+    tick(500);
+    expect(component.state).toEqual('');
+  }));
 });

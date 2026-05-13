@@ -64,14 +64,14 @@
               </div>
               @if (practiceType === type.Puzzle && puzzleControls != null) {
                 <div class="puzzle-div">
-                  <div>
-                    @for (char of puzzleControls.answers; track char) {
+                  <div class="puzzle-slots">
+                    @for (char of puzzleControls.answers; track $index) {
                       <app-character
-                      [character]="char" [state]="puzzleControls.answerState"></app-character>
+                        [character]="char" [state]="puzzleControls.answerState"></app-character>
                     }
                   </div>
-                  <div>
-                    @for (char of puzzleControls.buttons; track char; let i = $index) {
+                  <div class="puzzle-buttons" [style.--cols]="puzzleCols">
+                    @for (char of puzzleControls.buttons; track $index; let i = $index) {
                       <app-character-button
                         [character]="char" [isCorrect]="puzzleControls.buttonCorrects[i]"
                         (correctPress)="onCharacterButtonPress($event)">

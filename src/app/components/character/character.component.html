@@ -1,1 +1,5 @@
-<span [class.blinking]="isBlink" [@change]="state">{{_character}}</span>
+<span
+  [class.current-slot]="isBlink"
+  [class.future-slot]="isFuture"
+  [class.filled-slot]="!isBlink && !isFuture"
+  [class.correct]="state === 'correct'">{{ (isBlink || isFuture) ? '' : _character }}</span>

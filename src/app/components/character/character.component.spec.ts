@@ -3,7 +3,6 @@ import {IonicModule} from '@ionic/angular';
 
 import {CharacterComponent} from './character.component';
 import {By} from '@angular/platform-browser';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 
 describe('CharacterComponent', () => {
   let component: CharacterComponent;
@@ -12,7 +11,7 @@ describe('CharacterComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ CharacterComponent ],
-      imports: [IonicModule.forRoot(), NoopAnimationsModule ]
+      imports: [IonicModule.forRoot()],
     }).compileComponents();
   }));
 
@@ -21,21 +20,57 @@ describe('CharacterComponent', () => {
     component = fixture.componentInstance;
   });
 
-  it('if character is underscore, it is blinking', () => {
+  function getSpan(): HTMLSpanElement {
+    return fixture.debugElement.query(By.css('span')).nativeElement;
+  }
+
+  it('underscore renders as current slot with blank text', () => {
     fixture.componentRef.setInput('character', '_');
     fixture.detectChanges();
 
     expect(component.isBlink).toBeTrue();
-    const span = fixture.debugElement.query(By.css('span')).nativeElement;
-    expect(span.classList.contains('blinking')).toBeTrue();
+    expect(component.isFuture).toBeFalse();
+    const span = getSpan();
+    expect(span.classList.contains('current-slot')).toBeTrue();
+    expect(span.classList.contains('future-slot')).toBeFalse();
+    expect(span.classList.contains('filled-slot')).toBeFalse();
+    expect(span.textContent.trim()).toBe('');
   });
 
-  it('if character is not underscore, it is not blinking', () => {
+  it('question mark renders as future slot with blank text', () => {
+    fixture.componentRef.setInput('character', '?');
+    fixture.detectChanges();
+
+    expect(component.isFuture).toBeTrue();
+    expect(component.isBlink).toBeFalse();
+    const span = getSpan();
+    expect(span.classList.contains('future-slot')).toBeTrue();
+    expect(span.classList.contains('current-slot')).toBeFalse();
+    expect(span.classList.contains('filled-slot')).toBeFalse();
+    expect(span.textContent.trim()).toBe('');
+  });
+
+  it('a letter renders as filled slot showing the letter', () => {
     fixture.componentRef.setInput('character', 'a');
     fixture.detectChanges();
 
-    const span = fixture.debugElement.query(By.css('span')).nativeElement;
     expect(component.isBlink).toBeFalse();
-    expect(span.classList.contains('blinking')).toBeFalse();
+    expect(component.isFuture).toBeFalse();
+    const span = getSpan();
+    expect(span.classList.contains('filled-slot')).toBeTrue();
+    expect(span.classList.contains('current-slot')).toBeFalse();
+    expect(span.classList.contains('future-slot')).toBeFalse();
+    expect(span.textContent.trim()).toBe('a');
+  });
+
+  it('switching from underscore to a letter clears blink state', () => {
+    fixture.componentRef.setInput('character', '_');
+    fixture.detectChanges();
+    expect(component.isBlink).toBeTrue();
+
+    fixture.componentRef.setInput('character', 'b');
+    fixture.detectChanges();
+    expect(component.isBlink).toBeFalse();
+    expect(getSpan().classList.contains('filled-slot')).toBeTrue();
   });
 });
