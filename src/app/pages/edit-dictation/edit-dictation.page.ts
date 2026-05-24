@@ -45,6 +45,7 @@ type SavedOptionSnapshot = {
     standalone: false
 })
 export class EditDictationPage implements OnInit, CanComponentDeactivate {
+  static readonly MAX_ARTICLE_LENGTH = 2000;
   private static readonly defaultSavedOptions: SavedOptionSnapshot = {
     voiceMode: UIOptionsService.voiceMode.online,
     type: DictationType.Word,
@@ -138,7 +139,8 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
       {
         validators: [
           maxVocabularyValidator(50, 'type', 'question', 'wordContainSpace'),
-          vocabularyPatternValidator('type', 'question', 'wordContainSpace')
+          vocabularyPatternValidator('type', 'question', 'wordContainSpace'),
+          maxArticleLengthValidator(EditDictationPage.MAX_ARTICLE_LENGTH, 'type', 'question')
         ]
       });
 
@@ -164,6 +166,7 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
   get practiceType() { return VocabPracticeType; }
   get pageMode() { return EditDictationPageMode; }
   get dictationType() { return DictationType; }
+  get maxArticleLength() { return EditDictationPage.MAX_ARTICLE_LENGTH; }
 
   setupFormValue(dictation: Dictation) {
     if (dictation == null) { return; }
@@ -404,6 +407,17 @@ function maxVocabularyValidator(max: number, typeName: string, questionName: str
     const question = control.get(questionName).value;
     const tooLarge = question != null && DictationUtils.vocabularyValueToArray(question, control.get(wordContainSpaceName).value).length > max;
     return tooLarge ? {'maxVocabulary': true} : null;
+  };
+}
+
+function maxArticleLengthValidator(max: number, typeName: string, questionName: string): ValidatorFn {
+  return (control: AbstractControl): ValidationErrors | null => {
+    const type = control.get(typeName)?.value;
+    if (type !== DictationType.Sentence) { return null; }
+
+    const question = control.get(questionName)?.value;
+    const tooLong = typeof question === 'string' && question.length > max;
+    return tooLong ? {'maxArticleLength': true} : null;
   };
 }
 

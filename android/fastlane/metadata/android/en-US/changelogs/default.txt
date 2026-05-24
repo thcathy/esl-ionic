@@ -1,1 +1,1 @@
-Puzzle mode got a friendlier look — colorful tile buttons, smoother completion animations, and evenly-balanced letter rows on every screen size.
+Article dictation now keeps each passage to a comfortable practice size — up to 2,000 characters so sessions stay focused and fast.

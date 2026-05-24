@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 
-const WRONG_RESET_MS = 500;
+const WRONG_RESET_MS = 200;
 const CORRECT_RESET_MS = 400;
 
 @Component({

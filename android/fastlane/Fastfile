@@ -42,7 +42,9 @@ platform :android do
 
     {
       "en-US" => "en",
+      "en-GB" => "en",
       "zh-TW" => "zh-Hant",
+      "zh-HK" => "zh-Hant",
       "zh-CN" => "zh-Hans"
     }.each do |play_locale, file_locale|
       dir = "#{ANDROID_DIR}/fastlane/metadata/android/#{play_locale}/changelogs"

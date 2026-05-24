@@ -68,7 +68,7 @@ describe('CharacterButtonComponent', () => {
     component.onClick();
     expect(component.state).toEqual('wrong');
 
-    tick(500);
+    tick(200);
     expect(component.state).toEqual('');
   }));
 });

@@ -90,6 +90,12 @@
                             [selectedMode]="voiceMode.value"
                             (selectedModeChange)="onVoiceModeChange($event)">
                           </app-voice-mode-selector>
+                          <div class="options-notes">
+                            <div class="options-note-row">
+                              <fa-icon [icon]="['fas', 'circle-info']"></fa-icon>
+                              <ion-note color="medium">{{'QuickDictation.OptionAvailabilityNote1'|translate}}</ion-note>
+                            </div>
+                          </div>
                         }
                         @if (type.value === dictationType.Word) {
                           <div class="word-options-all">
@@ -139,14 +145,6 @@
                             }
                           </div>
                         }
-                        @if (mode === pageMode.Start) {
-                          <div class="options-notes">
-                            <div class="options-note-row">
-                              <fa-icon [icon]="['fas', 'circle-info']"></fa-icon>
-                              <ion-note color="medium">{{'QuickDictation.OptionAvailabilityNote1'|translate}}</ion-note>
-                            </div>
-                          </div>
-                        }
                       </app-section-card>
               </ion-col>
               <ion-col id="ion-col-textarea" size="12" size-sm="12" size-md="12" size-lg="6">
@@ -184,6 +182,9 @@
               }
               @if (inputForm.errors?.invalidVocabularyPattern) {
                 <div>{{'Cannot contain invalid character(s)'|translate}}</div>
+              }
+              @if (inputForm.errors?.maxArticleLength) {
+                <div>{{'CharactersTooLong'|translate:{length:maxArticleLength} }}</div>
               }
             </div>
           }

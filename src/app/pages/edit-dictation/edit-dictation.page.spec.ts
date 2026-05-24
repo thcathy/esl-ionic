@@ -393,6 +393,28 @@ describe('EditDictationPage', () => {
           expect(component.question.errors).toBeDefined();
         }));
 
+        it('article dictation cannot exceed max article length', fakeAsync(() => {
+          component.type.setValue(DictationType.Sentence);
+
+          component.question.setValue('a short article.');
+          expect(component.inputForm.errors).toBeNull();
+
+          const atLimit = 'a'.repeat(EditDictationPage.MAX_ARTICLE_LENGTH);
+          component.question.setValue(atLimit);
+          expect(component.inputForm.errors).toBeNull();
+
+          const overLimit = 'a'.repeat(EditDictationPage.MAX_ARTICLE_LENGTH + 1);
+          component.question.setValue(overLimit);
+          expect(component.inputForm.errors.maxArticleLength).toBeDefined();
+        }));
+
+        it('word dictation is not affected by article length limit', fakeAsync(() => {
+          component.type.setValue(DictationType.Word);
+          const longWordList = 'a '.repeat(EditDictationPage.MAX_ARTICLE_LENGTH);
+          component.question.setValue(longWordList);
+          expect(component.inputForm.errors?.maxArticleLength).toBeUndefined();
+        }));
+
         it('word dictation cannot start with over 50 words', fakeAsync(() => {
           component.type.setValue(DictationType.Word);
 
