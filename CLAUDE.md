@@ -121,3 +121,15 @@ Pages use `ionViewWillEnter()` (not `ngOnInit()`) for data initialization, since
 ## Git Conventions
 
 - Never include Claude attribution (no `Co-Authored-By: Claude`, no "Generated with Claude Code") in commit messages.
+
+## Related repos
+
+| Repo | Role |
+|------|------|
+| `esl-rest` | Spring Boot API — dictation, member, interpretation, TTS queue |
+| `esl-ionic` | This repo — PWA, iOS, Android client |
+| `image-generation-server` | Vocab image gen — Replicate/LocalAI → Firebase |
+
+TTS playback uses pre-generated MP3s from `https://audio.funfunspell.com` (published by `esl-rest`). `esl-speech-worker` is deprecated.
+
+Agent entry point: [AGENTS.md](./AGENTS.md).
