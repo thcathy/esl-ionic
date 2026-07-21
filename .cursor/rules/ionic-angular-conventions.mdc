@@ -1,0 +1,32 @@
+---
+description: Ionic and Angular conventions for esl-ionic
+globs: **/*.{ts,html,scss}
+alwaysApply: true
+---
+
+# Ionic / Angular Conventions
+
+## Page lifecycle
+
+Use `ionViewWillEnter()` for page data initialization, not `ngOnInit()`. Ionic caches page instances; `ngOnInit` runs only once.
+
+## Navigation
+
+Use `NavigationService` for inter-page navigation and passing data via `StorageService` — avoid direct `Router.navigate` for dictation/practice flows.
+
+## Platform branching
+
+Use `AppService.isApp()` to distinguish Capacitor native vs PWA/browser before branching behavior.
+
+## Speech / TTS
+
+- Route all TTS through `SpeechService` (cloud via `TtsCloudService`, native, or Web Speech API).
+- On iOS Safari, call `SpeechService.ensureVoiceLoaded()` during a user gesture before async `speak()`.
+
+## Modules
+
+Pages remain NgModule-based (`standalone: false`). Declare shared components in `components.module.ts` / `shared.module.ts`.
+
+## Tests
+
+Use `npm run test-dev` (headless) in terminal/CI, not interactive `npm test`.
