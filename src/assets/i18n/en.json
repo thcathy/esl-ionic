@@ -78,12 +78,14 @@
   "Local Voice": "Local computer",
   "VoiceMode.OnlineDescription": "Natural AI or recorded human voice from internet",
   "VoiceMode.LocalDescription": "Generated voice without internet usage",
-  "QuickDictation.OptionAvailabilityNote1": "In Quick Dictation, AI image and Online AI / Human voice may not always be available. Please log in and create dictation to ensure their availability.",
+  "QuickDictation.OptionAvailabilityNote1": "Images may still be generating. New images are generated only when a logged-in user saves a dictation; Quick Dictation loads images already on the CDN. Online AI / Human voice may also be unavailable until you log in and create a dictation.",
+  "VocabImage.AIGeneratedNote": "AI-generated image. It may not match this word's meaning.",
   "Preload.Questions": "Questions",
   "Preload.Voices": "Voices",
   "Preload.Images": "Images",
   "Preload.Ready": "Ready",
   "Preload.VoiceFailed": "Some audio couldn't be loaded",
+  "Preload.ImageFailed": "Some images unavailable — they may still be generating",
   "Preload.ContinueLocalVoice": "Continue with local voice",
   "Preload.Status.Preparing": "Preparing dictation...",
   "Preload.Status.AllReady": "Ready to practice!",
@@ -93,5 +95,6 @@
   "Preload.Tip.SpeakPunctuation": "Enable 'Speak Punctuation' to hear commas and periods.",
   "Preload.Tip.PuzzleMode": "Try puzzle mode to reorder letters instead of typing.",
   "Preload.Tip.CreateDictation": "Create your own dictation from any word list.",
-  "Preload.Tip.OfflineMode": "Local voice works offline — great for practice on the go."
+  "Preload.Tip.OfflineMode": "Local voice works offline — great for practice on the go.",
+  "Preload.Tip.Images": "Images may still be generating. New images are generated only when a logged-in user saves a dictation."
 }

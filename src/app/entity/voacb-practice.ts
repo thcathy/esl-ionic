@@ -11,6 +11,8 @@ export interface VocabPractice {
   grades?: Grade[];
   createdDate?: Date;
   picsFullPaths?: string[];
+  /** True when CDN images are AI-generated and not human-verified. */
+  imageUnverified?: boolean;
   ipaunavailable?: boolean;
   ipa?: string;
   activePronounceLink?: string;

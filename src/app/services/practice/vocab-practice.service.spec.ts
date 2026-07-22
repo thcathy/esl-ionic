@@ -4,13 +4,14 @@ import {VocabPracticeHistory} from '../../entity/vocab-practice-history';
 import {vocab_apple, vocab_banana} from '../../../testing/test-data';
 import {HttpClient} from '@angular/common/http';
 import {Dictations, PuzzleControls} from '../../entity/dictation';
+import {of} from 'rxjs';
 
 describe('VocabPracticeService', () => {
   let service: VocabPracticeService;
   let httpClientSpy;
 
   beforeEach(() => {
-    httpClientSpy = jasmine.createSpyObj('HttpClient', ['post']);
+    httpClientSpy = jasmine.createSpyObj('HttpClient', ['post', 'get']);
 
     TestBed.configureTestingModule({
     imports: [],
@@ -86,6 +87,39 @@ describe('VocabPracticeService', () => {
 
   it('imageUrl can create correct url', () => {
     expect(service.imageUrl('i am ok')).toContain('images%2Fi-%2Fi-am-ok.json?alt=media');
+  });
+
+  it('getImages marks unverified AI images and accepts them when includeAIImage is true', (done) => {
+    const practice = { word: 'unicorn', picsFullPaths: null } as any;
+    httpClientSpy.get.and.returnValue(of({ images: ['img1'], isVerify: false }));
+
+    service.getImages(practice, true).subscribe(result => {
+      expect(result.picsFullPaths).toEqual(['img1']);
+      expect(result.imageUnverified).toBeTrue();
+      done();
+    });
+  });
+
+  it('getImages hides unverified AI images when includeAIImage is false', (done) => {
+    const practice = { word: 'unicorn', picsFullPaths: null } as any;
+    httpClientSpy.get.and.returnValue(of({ images: ['img1'], isVerify: false }));
+
+    service.getImages(practice, false).subscribe(result => {
+      expect(result.picsFullPaths).toBeNull();
+      expect(result.imageUnverified).toBeFalse();
+      done();
+    });
+  });
+
+  it('getImages accepts verified images without marking unverified', (done) => {
+    const practice = { word: 'apple', picsFullPaths: null } as any;
+    httpClientSpy.get.and.returnValue(of({ images: ['img1'], isVerify: true }));
+
+    service.getImages(practice, false).subscribe(result => {
+      expect(result.picsFullPaths).toEqual(['img1']);
+      expect(result.imageUnverified).toBeFalse();
+      done();
+    });
   });
 
   describe('test receiveAnswer', () => {

@@ -1,5 +1,6 @@
 ion-card {
-  height: 274px;
+  min-height: 274px;
+  height: auto;
 }
 
 .button {
@@ -13,6 +14,14 @@ ion-card {
   margin-left: auto;
   margin-right: auto;
   padding: 4px;
+}
+
+.ai-image-note {
+  display: block;
+  text-align: center;
+  padding: 0 12px 10px;
+  font-size: 0.75rem;
+  line-height: 1.3;
 }
 
 .grey-text {

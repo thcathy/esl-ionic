@@ -11,5 +11,10 @@
           </ion-col>
         </ion-row>
         <img [@move]="state" (@move.done)="onDone($event)" [src]="imageBase64 | safeHtml" class="image" />
+        @if (showAIGeneratedNote) {
+          <ion-note class="ai-image-note" color="medium">
+            {{ 'VocabImage.AIGeneratedNote' | translate }}
+          </ion-note>
+        }
       </ion-card>
     }

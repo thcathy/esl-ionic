@@ -25,16 +25,21 @@ import {DictationUtils} from '../../utils/dictation-utils';
 export class VocabImageComponent implements OnChanges {
   @Input() images: string[]
   @Input() AIImage: boolean = false;
+  /** Show a note when the displayed images are unverified AI-generated content. */
+  @Input() imageUnverified: boolean = false;
   index: number;
   state = 'center';
   imageBase64 = '';
+  showAIGeneratedNote = false;
 
   constructor() {
     this.index = 0;
   }
 
   ngOnChanges(_changes: SimpleChanges) {
+    let usingPlaceholder = false;
     if (DictationUtils.notValidImages(this.images)) {
+      usingPlaceholder = true;
       if (this.images == null) {
         this.images = this.AIImage ? AILoadingImage : defaultImage;
       } else {
@@ -44,6 +49,7 @@ export class VocabImageComponent implements OnChanges {
     this.images = CollectionUtils.shuffle(this.images);
     this.index = 0;
     this.imageBase64 = this.images[0];
+    this.showAIGeneratedNote = this.imageUnverified && !usingPlaceholder;
   }
 
   nextImage() {

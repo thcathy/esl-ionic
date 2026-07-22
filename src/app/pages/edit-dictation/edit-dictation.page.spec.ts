@@ -159,6 +159,16 @@ describe('EditDictationPage', () => {
         fixture.detectChanges(false);
         expect(fixture.nativeElement.querySelector('.include-ai-image-toggle')).toBeNull();
       }));
+
+      it('defaults show image and include AI image to true for new create dictation', fakeAsync(() => {
+        storageSpy.get.and.returnValue(Promise.resolve(null));
+        navigationServiceSpy.getParam.and.returnValue(null);
+
+        componentViewWillEnter();
+
+        expect(component.showImage.value).toBeTrue();
+        expect(component.includeAIImage.value).toBeTrue();
+      }));
     });
   });
 
@@ -292,6 +302,16 @@ describe('EditDictationPage', () => {
 
           component.showImage.setValue(true);
           fixture.detectChanges(false);
+          expect(component.includeAIImage.enabled).toBeTrue();
+        }));
+
+        it('defaults show image and include AI image to true when no saved options', fakeAsync(() => {
+          storageSpy.get.and.returnValue(Promise.resolve(null));
+
+          componentViewWillEnter();
+
+          expect(component.showImage.value).toBeTrue();
+          expect(component.includeAIImage.value).toBeTrue();
           expect(component.includeAIImage.enabled).toBeTrue();
         }));
 

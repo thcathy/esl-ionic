@@ -247,12 +247,14 @@
   "Local Voice": "本機電腦",
   "VoiceMode.OnlineDescription": "來自網絡的自然 AI 或真人錄音",
   "VoiceMode.LocalDescription": "本機生成語音,不使用網絡",
-  "QuickDictation.OptionAvailabilityNote1": "在快速聽寫中，不一定能提供 AI 圖像與網上 AI／真人語音。請先登入並建立聽寫，以確保這些功能可用。",
+  "QuickDictation.OptionAvailabilityNote1": "圖像可能仍在生成中。只有已登入用戶儲存聽寫時才會生成新圖像；快速聽寫只會載入 CDN 上已有的圖像。網上 AI／真人語音也可能不可用，請登入並建立聽寫以確保可用。",
+  "VocabImage.AIGeneratedNote": "AI 生成圖像。它可能與這個單詞的含義不符。",
   "Preload.Questions": "題目",
   "Preload.Voices": "語音",
   "Preload.Images": "圖像",
   "Preload.Ready": "就緒",
   "Preload.VoiceFailed": "部分語音無法載入",
+  "Preload.ImageFailed": "部分圖像不可用——可能仍在生成中",
   "Preload.ContinueLocalVoice": "使用本機語音繼續",
   "Preload.Status.Preparing": "準備聽寫練習...",
   "Preload.Status.AllReady": "準備就緒！",
@@ -262,5 +264,6 @@
   "Preload.Tip.SpeakPunctuation": "開啟「讀出標點」可聽到逗號和句號。",
   "Preload.Tip.PuzzleMode": "試試拼圖模式，選字母代替打字。",
   "Preload.Tip.CreateDictation": "用任何單詞表建立自己的聽寫練習。",
-  "Preload.Tip.OfflineMode": "本機語音離線也能用，隨時隨地練習。"
+  "Preload.Tip.OfflineMode": "本機語音離線也能用，隨時隨地練習。",
+  "Preload.Tip.Images": "圖像可能仍在生成中。只有已登入用戶儲存聽寫時才會生成新圖像。"
 }

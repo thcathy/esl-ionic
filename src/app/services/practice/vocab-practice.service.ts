@@ -48,11 +48,14 @@ export class VocabPracticeService extends Service {
         .pipe(
           map(imagesObject => {
             console.log(`imagesObject verified=${imagesObject.isVerify}`);
-            vocabPractice.picsFullPaths = (includeAIImage || imagesObject.isVerify) ? imagesObject.images : null;
+            const acceptImages = includeAIImage || imagesObject.isVerify;
+            vocabPractice.picsFullPaths = acceptImages ? imagesObject.images : null;
+            vocabPractice.imageUnverified = acceptImages && !imagesObject.isVerify;
             return vocabPractice;
           }),
           catchError(error => {
             vocabPractice.picsFullPaths = null;
+            vocabPractice.imageUnverified = false;
             return of(vocabPractice);
           })
         );

@@ -51,7 +51,7 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
     type: DictationType.Word,
     sentenceLength: 'Normal',
     showImage: true,
-    includeAIImage: false,
+    includeAIImage: true,
     wordContainSpace: false,
     wordPracticeType: VocabPracticeType.Spell,
   };
@@ -292,8 +292,8 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
       voiceMode: this.resolveVoiceMode(savedVoiceMode),
       type: this.resolveType(savedType),
       sentenceLength: this.resolveSentenceLength(savedSentenceLength),
-      showImage: this.toBoolean(savedShowImage),
-      includeAIImage: this.toBoolean(savedIncludeAiImage),
+      showImage: this.toBoolean(savedShowImage, EditDictationPage.defaultSavedOptions.showImage),
+      includeAIImage: this.toBoolean(savedIncludeAiImage, EditDictationPage.defaultSavedOptions.includeAIImage),
       wordContainSpace: this.toBoolean(savedWordContainSpace),
       wordPracticeType: this.resolveWordPracticeType(savedWordPracticeType),
     };
@@ -311,7 +311,10 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
     return practiceType === VocabPracticeType.Puzzle ? VocabPracticeType.Puzzle : VocabPracticeType.Spell;
   }
 
-  private toBoolean(value: unknown): boolean {
+  private toBoolean(value: unknown, defaultValue = false): boolean {
+    if (value === undefined || value === null) {
+      return defaultValue;
+    }
     return value === true || value === 'true' || value === 1 || value === '1';
   }
 

@@ -42,4 +42,20 @@ describe('VocabImageComponent', () => {
     expect(component.imageBase64).toEqual(defaultImage[0]);
   });
 
+  it('shows AI generated note for unverified images only', () => {
+    component.imageUnverified = true;
+    component.images = ['data:image/png;base64,abc'];
+    component.ngOnChanges(null);
+    expect(component.showAIGeneratedNote).toBeTrue();
+
+    component.images = null;
+    component.ngOnChanges(null);
+    expect(component.showAIGeneratedNote).toBeFalse();
+
+    component.imageUnverified = false;
+    component.images = ['data:image/png;base64,abc'];
+    component.ngOnChanges(null);
+    expect(component.showAIGeneratedNote).toBeFalse();
+  });
+
 });
