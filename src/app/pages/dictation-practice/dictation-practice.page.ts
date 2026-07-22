@@ -124,7 +124,8 @@ export class DictationPracticePage {
   private fetchImages(vocabPractice: VocabPractice) {
     return this.dictation.showImage
       ? this.vocabPracticeService.getImages(vocabPractice, this.dictation.includeAIImage).pipe(
-          tap(vp => this.preload.recordImage(!!vp?.picsFullPaths))
+          // "filtered" means CDN had images we chose not to show — not a load failure.
+          tap(vp => this.preload.recordImage(vp?.imageLoadStatus !== 'missing'))
         )
       : of(vocabPractice);
   }

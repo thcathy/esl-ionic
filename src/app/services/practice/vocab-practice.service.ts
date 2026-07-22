@@ -42,24 +42,51 @@ export class VocabPracticeService extends Service {
   getImages(vocabPractice: VocabPractice, includeAIImage: boolean = true): Observable<VocabPractice> {
     console.log(`picsFullPaths from server: ${vocabPractice.picsFullPaths}`);
     if (!DictationUtils.notValidImages(vocabPractice.picsFullPaths)) {
+      vocabPractice.imageUnverified = false;
+      vocabPractice.imageLoadStatus = 'ok';
       return of(vocabPractice);
-    } else {
-      return this.http.get<ImagesObject>(this.imageUrl(vocabPractice.word))
-        .pipe(
-          map(imagesObject => {
-            console.log(`imagesObject verified=${imagesObject.isVerify}`);
-            const acceptImages = includeAIImage || imagesObject.isVerify;
-            vocabPractice.picsFullPaths = acceptImages ? imagesObject.images : null;
-            vocabPractice.imageUnverified = acceptImages && !imagesObject.isVerify;
-            return vocabPractice;
-          }),
-          catchError(error => {
-            vocabPractice.picsFullPaths = null;
-            vocabPractice.imageUnverified = false;
-            return of(vocabPractice);
-          })
-        );
     }
+
+    return this.http.get<ImagesObject>(this.imageUrl(vocabPractice.word))
+      .pipe(
+        map(imagesObject => this.applyImagesObject(vocabPractice, imagesObject, includeAIImage)),
+        catchError(() => of(this.markImagesMissing(vocabPractice)))
+      );
+  }
+
+  private applyImagesObject(
+    vocabPractice: VocabPractice,
+    imagesObject: ImagesObject,
+    includeAIImage: boolean,
+  ): VocabPractice {
+    console.log(`imagesObject verified=${imagesObject.isVerify}`);
+    const isVerified = imagesObject.isVerify === true;
+    const hasImages = !DictationUtils.notValidImages(imagesObject.images);
+
+    if (!hasImages) {
+      return this.markImagesMissing(vocabPractice);
+    }
+
+    if (includeAIImage || isVerified) {
+      vocabPractice.picsFullPaths = imagesObject.images;
+      vocabPractice.imageUnverified = imagesObject.isVerify === false;
+      vocabPractice.imageLoadStatus = 'ok';
+      return vocabPractice;
+    }
+
+    // CDN had images, but they are unverified and the user opted out of AI images.
+    vocabPractice.picsFullPaths = [];
+    vocabPractice.imageUnverified = false;
+    vocabPractice.imageLoadStatus = 'filtered';
+    return vocabPractice;
+  }
+
+  private markImagesMissing(vocabPractice: VocabPractice): VocabPractice {
+    // Empty array (not null) so practice shows the default placeholder instead of a perpetual AI loading image.
+    vocabPractice.picsFullPaths = [];
+    vocabPractice.imageUnverified = false;
+    vocabPractice.imageLoadStatus = 'missing';
+    return vocabPractice;
   }
 
   imageUrl(phrase: string): string {
@@ -88,6 +115,7 @@ export class VocabPracticeService extends Service {
     return <Dictation>{
       id: -1,
       showImage: true,
+      includeAIImage: true,
       vocabs: words.map(s => <Vocab>{word: s}),
       source: Dictations.Source.Generate,
     };

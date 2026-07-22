@@ -13,6 +13,13 @@ export interface VocabPractice {
   picsFullPaths?: string[];
   /** True when CDN images are AI-generated and not human-verified. */
   imageUnverified?: boolean;
+  /**
+   * Result of CDN image fetch for preload accounting.
+   * - ok: images accepted for display
+   * - filtered: CDN had images but they were hidden (e.g. unverified + includeAIImage off)
+   * - missing: no usable CDN image (404 / empty / error)
+   */
+  imageLoadStatus?: 'ok' | 'filtered' | 'missing';
   ipaunavailable?: boolean;
   ipa?: string;
   activePronounceLink?: string;

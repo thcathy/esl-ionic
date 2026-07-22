@@ -320,8 +320,8 @@ describe('EditDictationPage', () => {
             'UIOptionsService.keys.ttsVoiceMode': 'local',
             'UIOptionsService.keys.editDictationType': 'sentence',
             'UIOptionsService.keys.editDictationSentenceLength': 'Long',
-            'UIOptionsService.keys.editDictationShowImage': false,
-            'UIOptionsService.keys.editDictationIncludeAIImage': true,
+            'UIOptionsService.keys.editDictationShowImage.v2': false,
+            'UIOptionsService.keys.editDictationIncludeAIImage.v2': true,
             'UIOptionsService.keys.editDictationWordContainSpace': true,
             'UIOptionsService.keys.editDictationWordPracticeType': 'Puzzle',
           }[key]));
@@ -355,8 +355,8 @@ describe('EditDictationPage', () => {
           expect(saved.get('UIOptionsService.keys.ttsVoiceMode')).toEqual('local');
           expect(saved.get('UIOptionsService.keys.editDictationType')).toEqual('word');
           expect(saved.get('UIOptionsService.keys.editDictationSentenceLength')).toEqual('Short');
-          expect(saved.get('UIOptionsService.keys.editDictationShowImage')).toBeTrue();
-          expect(saved.get('UIOptionsService.keys.editDictationIncludeAIImage')).toBeTrue();
+          expect(saved.get('UIOptionsService.keys.editDictationShowImage.v2')).toBeTrue();
+          expect(saved.get('UIOptionsService.keys.editDictationIncludeAIImage.v2')).toBeTrue();
           expect(saved.get('UIOptionsService.keys.editDictationWordContainSpace')).toBeTrue();
           expect(saved.get('UIOptionsService.keys.editDictationWordPracticeType')).toEqual(VocabPracticeType.Puzzle);
         }));
