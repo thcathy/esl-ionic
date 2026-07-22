@@ -78,14 +78,16 @@
   "Local Voice": "Local computer",
   "VoiceMode.OnlineDescription": "Natural AI or recorded human voice from internet",
   "VoiceMode.LocalDescription": "Generated voice without internet usage",
-  "QuickDictation.OptionAvailabilityNote1": "Images may still be generating. New images are generated only when a logged-in user saves a dictation; Quick Dictation loads images already on the CDN. Online AI / Human voice may also be unavailable until you log in and create a dictation.",
+  "QuickDictation.OptionAvailabilityNote1": "Images may still be generating. New images are created only when a logged-in user saves a dictation. Quick Dictation uses images that are already ready.",
+  "QuickDictation.OptionAvailabilityNote2": "Online AI / Human voice may also be unavailable until you log in and create a dictation.",
+  "CreateDictation.AIImageNote": "When you save this dictation, images will be generated for words that do not have one yet.",
   "VocabImage.AIGeneratedNote": "AI-generated image. It may not match this word's meaning.",
   "Preload.Questions": "Questions",
   "Preload.Voices": "Voices",
   "Preload.Images": "Images",
   "Preload.Ready": "Ready",
   "Preload.VoiceFailed": "Some audio couldn't be loaded",
-  "Preload.ImageFailed": "Some images unavailable — they may still be generating",
+  "Preload.ImageFailed": "Some images couldn't be loaded",
   "Preload.ContinueLocalVoice": "Continue with local voice",
   "Preload.Status.Preparing": "Preparing dictation...",
   "Preload.Status.AllReady": "Ready to practice!",
@@ -96,5 +98,5 @@
   "Preload.Tip.PuzzleMode": "Try puzzle mode to reorder letters instead of typing.",
   "Preload.Tip.CreateDictation": "Create your own dictation from any word list.",
   "Preload.Tip.OfflineMode": "Local voice works offline — great for practice on the go.",
-  "Preload.Tip.Images": "Images may still be generating. New images are generated only when a logged-in user saves a dictation."
+  "Preload.Tip.Images": "Missing images may appear later after a logged-in user saves a dictation."
 }

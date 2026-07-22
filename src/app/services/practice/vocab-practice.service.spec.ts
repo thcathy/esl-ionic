@@ -69,6 +69,7 @@ describe('VocabPracticeService', () => {
     expect(result.id).toEqual(-1);
     expect(result.source).toEqual(Dictations.Source.Generate);
     expect(result.showImage).toBeTruthy();
+    expect(result.includeAIImage).toBeTrue();
     expect(result.vocabs.length).toEqual(1);
     expect(result.vocabs[0].word).toEqual('test');
     expect(result.source).toEqual(Dictations.Source.Generate);
@@ -107,6 +108,7 @@ describe('VocabPracticeService', () => {
     service.getImages(practice, false).subscribe(result => {
       expect(result.picsFullPaths).toBeNull();
       expect(result.imageUnverified).toBeFalse();
+      expect(result.imageSkipped).toBeTrue();
       done();
     });
   });

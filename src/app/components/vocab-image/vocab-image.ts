@@ -1,6 +1,6 @@
 import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {animate, state, style, transition, trigger} from '@angular/animations';
-import {AILoadingImage, defaultImage} from '../../entity/dictation';
+import {defaultImage} from '../../entity/dictation';
 import {CollectionUtils} from '../../utils/collection-utils';
 import {DictationUtils} from '../../utils/dictation-utils';
 
@@ -31,25 +31,23 @@ export class VocabImageComponent implements OnChanges {
   state = 'center';
   imageBase64 = '';
   showAIGeneratedNote = false;
+  usingPlaceholder = false;
 
   constructor() {
     this.index = 0;
   }
 
   ngOnChanges(_changes: SimpleChanges) {
-    let usingPlaceholder = false;
+    this.usingPlaceholder = false;
     if (DictationUtils.notValidImages(this.images)) {
-      usingPlaceholder = true;
-      if (this.images == null) {
-        this.images = this.AIImage ? AILoadingImage : defaultImage;
-      } else {
-        this.images = defaultImage;
-      }
+      // After preload, missing images are definitive — use default placeholder (not a perpetual "generating" image).
+      this.usingPlaceholder = true;
+      this.images = defaultImage;
     }
     this.images = CollectionUtils.shuffle(this.images);
     this.index = 0;
     this.imageBase64 = this.images[0];
-    this.showAIGeneratedNote = this.imageUnverified && !usingPlaceholder;
+    this.showAIGeneratedNote = this.imageUnverified && !this.usingPlaceholder;
   }
 
   nextImage() {

@@ -44,6 +44,7 @@ describe('VocabSelectionComponent', () => {
     expect(request.source).toEqual(Dictations.Source.Select);
     expect(request.dictationId).toEqual(-1);
     expect(request.showImage).toBeTruthy();
+    expect(request.includeAIImage).toBeTrue();
     expect(request.wordContainSpace).toBeTruthy();
   }));
 

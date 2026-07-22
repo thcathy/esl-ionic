@@ -36,6 +36,9 @@ export class DictationPracticePage {
   isKeyboardActive: boolean;
   puzzleControls: PuzzleControls;
   speak$ = new Subject<boolean>();
+  /** Show the unverified-AI caption at most once per practice session. */
+  showUnverifiedAINote = false;
+  private aiImageNoteShown = false;
 
   constructor(
     public vocabPracticeService: VocabPracticeService,
@@ -60,6 +63,8 @@ export class DictationPracticePage {
     this.answer = '';
     this.puzzleControls = null;
     this.showPreload = true;
+    this.showUnverifiedAINote = false;
+    this.aiImageNoteShown = false;
   }
 
   async initDictation() {
@@ -124,7 +129,8 @@ export class DictationPracticePage {
   private fetchImages(vocabPractice: VocabPractice) {
     return this.dictation.showImage
       ? this.vocabPracticeService.getImages(vocabPractice, this.dictation.includeAIImage).pipe(
-          tap(vp => this.preload.recordImage(!!vp?.picsFullPaths))
+          // Opting out of unverified AI images is not a load failure.
+          tap(vp => this.preload.recordImage(!!vp?.picsFullPaths || !!vp?.imageSkipped))
         )
       : of(vocabPractice);
   }
@@ -176,10 +182,19 @@ export class DictationPracticePage {
 
   onNextQuestion() {
     this.preNextQuestion();
+    this.updateUnverifiedAINote();
     this.speak();
     this.focusAnswerInput();
     if (this.practiceType === VocabPracticeType.Puzzle) {
       this.puzzleControls = this.vocabPracticeService.createPuzzleControls(this.currentQuestion().word);
+    }
+  }
+
+  private updateUnverifiedAINote() {
+    const unverified = !!this.currentQuestion()?.imageUnverified;
+    this.showUnverifiedAINote = unverified && !this.aiImageNoteShown;
+    if (this.showUnverifiedAINote) {
+      this.aiImageNoteShown = true;
     }
   }
 

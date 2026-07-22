@@ -42,7 +42,7 @@ export class VocabPracticeService extends Service {
   getImages(vocabPractice: VocabPractice, includeAIImage: boolean = true): Observable<VocabPractice> {
     console.log(`picsFullPaths from server: ${vocabPractice.picsFullPaths}`);
     if (!DictationUtils.notValidImages(vocabPractice.picsFullPaths)) {
-      vocabPractice.imageUnverified = false;
+      // Keep any existing imageUnverified flag from the server payload.
       return of(vocabPractice);
     }
 
@@ -51,13 +51,21 @@ export class VocabPracticeService extends Service {
         map(imagesObject => {
           console.log(`imagesObject verified=${imagesObject.isVerify}`);
           const acceptImages = includeAIImage || imagesObject.isVerify === true;
-          vocabPractice.picsFullPaths = acceptImages ? imagesObject.images : null;
-          vocabPractice.imageUnverified = acceptImages && imagesObject.isVerify === false;
+          if (acceptImages) {
+            vocabPractice.picsFullPaths = imagesObject.images;
+            vocabPractice.imageUnverified = imagesObject.isVerify === false;
+            vocabPractice.imageSkipped = false;
+          } else {
+            vocabPractice.picsFullPaths = null;
+            vocabPractice.imageUnverified = false;
+            vocabPractice.imageSkipped = true;
+          }
           return vocabPractice;
         }),
         catchError(() => {
           vocabPractice.picsFullPaths = null;
           vocabPractice.imageUnverified = false;
+          vocabPractice.imageSkipped = false;
           return of(vocabPractice);
         })
       );
@@ -89,6 +97,7 @@ export class VocabPracticeService extends Service {
     return <Dictation>{
       id: -1,
       showImage: true,
+      includeAIImage: true,
       vocabs: words.map(s => <Vocab>{word: s}),
       source: Dictations.Source.Generate,
     };

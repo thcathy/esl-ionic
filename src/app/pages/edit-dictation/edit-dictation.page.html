@@ -95,6 +95,10 @@
                               <fa-icon [icon]="['fas', 'circle-info']"></fa-icon>
                               <ion-note color="medium">{{'QuickDictation.OptionAvailabilityNote1'|translate}}</ion-note>
                             </div>
+                            <div class="options-note-row">
+                              <fa-icon [icon]="['fas', 'circle-info']"></fa-icon>
+                              <ion-note color="medium">{{'QuickDictation.OptionAvailabilityNote2'|translate}}</ion-note>
+                            </div>
                           </div>
                         }
                         @if (type.value === dictationType.Word) {
@@ -115,6 +119,14 @@
                                 </ion-item>
                               </ion-col>
                             </ion-row>
+                            @if (mode === pageMode.Edit && includeAIImage.value === true && showImage.value === true) {
+                              <div class="options-notes create-ai-image-note">
+                                <div class="options-note-row">
+                                  <fa-icon [icon]="['fas', 'circle-info']"></fa-icon>
+                                  <ion-note color="medium">{{'CreateDictation.AIImageNote'|translate}}</ion-note>
+                                </div>
+                              </div>
+                            }
                             <ion-item>
                               <ion-toggle formControlName="wordContainSpace">
                                 <fa-icon [icon]="['fas', 'window-minimize']" /> {{'Words Contain Space'|translate}}

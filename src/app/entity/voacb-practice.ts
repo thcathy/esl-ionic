@@ -13,6 +13,8 @@ export interface VocabPractice {
   picsFullPaths?: string[];
   /** True when CDN images are AI-generated and not human-verified. */
   imageUnverified?: boolean;
+  /** True when CDN had images but they were hidden because includeAIImage is off. */
+  imageSkipped?: boolean;
   ipaunavailable?: boolean;
   ipa?: string;
   activePronounceLink?: string;

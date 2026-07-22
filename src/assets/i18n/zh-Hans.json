@@ -247,14 +247,16 @@
   "Local Voice": "本机电脑",
   "VoiceMode.OnlineDescription": "网络的 AI 语音或真人录音",
   "VoiceMode.LocalDescription": "本机生成语音,不使用网络",
-  "QuickDictation.OptionAvailabilityNote1": "图像可能仍在生成中。只有已登录用户保存听写时才会生成新图像；快速听写只会加载 CDN 上已有的图像。在线 AI／真人语音也可能不可用，请登录并创建听写以确保可用。",
+  "QuickDictation.OptionAvailabilityNote1": "图像可能仍在生成中。只有已登录用户保存听写时才会生成新图像。快速听写只会使用已经准备好的图像。",
+  "QuickDictation.OptionAvailabilityNote2": "在线 AI／真人语音也可能不可用，请登录并创建听写以确保可用。",
+  "CreateDictation.AIImageNote": "保存听写后，尚未有图像的单词会开始生成图像。",
   "VocabImage.AIGeneratedNote": "AI 生成图像。它可能与这个单词的含义不符。",
   "Preload.Questions": "题目",
   "Preload.Voices": "语音",
   "Preload.Images": "图像",
   "Preload.Ready": "就绪",
   "Preload.VoiceFailed": "部分语音无法加载",
-  "Preload.ImageFailed": "部分图像不可用——可能仍在生成中",
+  "Preload.ImageFailed": "部分图像无法加载",
   "Preload.ContinueLocalVoice": "使用本机语音继续",
   "Preload.Status.Preparing": "准备听写练习...",
   "Preload.Status.AllReady": "准备就绪！",
@@ -265,5 +267,5 @@
   "Preload.Tip.PuzzleMode": "试试拼图模式，选字母代替打字。",
   "Preload.Tip.CreateDictation": "用任何单词表建立自己的听写练习。",
   "Preload.Tip.OfflineMode": "本机语音离线也能用，随时随地练习。",
-  "Preload.Tip.Images": "图像可能仍在生成中。只有已登录用户保存听写时才会生成新图像。"
+  "Preload.Tip.Images": "缺少的图像可能在登录用户保存听写后出现。"
 }

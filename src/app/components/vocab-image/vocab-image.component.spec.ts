@@ -3,7 +3,7 @@ import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {SharedTestModule} from '../../../testing/shared-test.module';
 import {provideNoopAnimations} from '@angular/platform-browser/animations';
 import {VocabImageComponent} from './vocab-image';
-import {AILoadingImage, defaultImage} from '../../entity/dictation';
+import {defaultImage} from '../../entity/dictation';
 
 describe('VocabImageComponent', () => {
   let component: VocabImageComponent;
@@ -31,15 +31,12 @@ describe('VocabImageComponent', () => {
     expect(component.imageBase64).toEqual(defaultImage[0]);
   });
 
-  it('AI loading image if no images input', () => {
+  it('uses default placeholder when AI image is on but images are missing', () => {
     component.AIImage = true;
     component.images = null;
     component.ngOnChanges(null);
-    expect(component.imageBase64).toEqual(AILoadingImage[0]);
-
-    component.images = [];
-    component.ngOnChanges(null);
     expect(component.imageBase64).toEqual(defaultImage[0]);
+    expect(component.usingPlaceholder).toBeTrue();
   });
 
   it('shows AI generated note for unverified images only', () => {
