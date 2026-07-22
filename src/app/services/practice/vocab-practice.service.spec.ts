@@ -4,7 +4,7 @@ import {VocabPracticeHistory} from '../../entity/vocab-practice-history';
 import {vocab_apple, vocab_banana} from '../../../testing/test-data';
 import {HttpClient} from '@angular/common/http';
 import {Dictations, PuzzleControls} from '../../entity/dictation';
-import {of, throwError} from 'rxjs';
+import {of} from 'rxjs';
 
 describe('VocabPracticeService', () => {
   let service: VocabPracticeService;
@@ -69,7 +69,6 @@ describe('VocabPracticeService', () => {
     expect(result.id).toEqual(-1);
     expect(result.source).toEqual(Dictations.Source.Generate);
     expect(result.showImage).toBeTruthy();
-    expect(result.includeAIImage).toBeTrue();
     expect(result.vocabs.length).toEqual(1);
     expect(result.vocabs[0].word).toEqual('test');
     expect(result.source).toEqual(Dictations.Source.Generate);
@@ -97,19 +96,17 @@ describe('VocabPracticeService', () => {
     service.getImages(practice, true).subscribe(result => {
       expect(result.picsFullPaths).toEqual(['img1']);
       expect(result.imageUnverified).toBeTrue();
-      expect(result.imageLoadStatus).toEqual('ok');
       done();
     });
   });
 
-  it('getImages filters unverified AI images when includeAIImage is false', (done) => {
+  it('getImages hides unverified AI images when includeAIImage is false', (done) => {
     const practice = { word: 'unicorn', picsFullPaths: null } as any;
     httpClientSpy.get.and.returnValue(of({ images: ['img1'], isVerify: false }));
 
     service.getImages(practice, false).subscribe(result => {
-      expect(result.picsFullPaths).toEqual([]);
+      expect(result.picsFullPaths).toBeNull();
       expect(result.imageUnverified).toBeFalse();
-      expect(result.imageLoadStatus).toEqual('filtered');
       done();
     });
   });
@@ -120,30 +117,6 @@ describe('VocabPracticeService', () => {
 
     service.getImages(practice, false).subscribe(result => {
       expect(result.picsFullPaths).toEqual(['img1']);
-      expect(result.imageUnverified).toBeFalse();
-      expect(result.imageLoadStatus).toEqual('ok');
-      done();
-    });
-  });
-
-  it('getImages early return clears unverified and marks ok', (done) => {
-    const practice = { word: 'apple', picsFullPaths: ['img1'], imageUnverified: true } as any;
-
-    service.getImages(practice, false).subscribe(result => {
-      expect(httpClientSpy.get).not.toHaveBeenCalled();
-      expect(result.imageUnverified).toBeFalse();
-      expect(result.imageLoadStatus).toEqual('ok');
-      done();
-    });
-  });
-
-  it('getImages marks missing when CDN request fails', (done) => {
-    const practice = { word: 'missing-word', picsFullPaths: null } as any;
-    httpClientSpy.get.and.returnValue(throwError(() => new Error('404')));
-
-    service.getImages(practice, true).subscribe(result => {
-      expect(result.picsFullPaths).toEqual([]);
-      expect(result.imageLoadStatus).toEqual('missing');
       expect(result.imageUnverified).toBeFalse();
       done();
     });

@@ -80,7 +80,6 @@ export class VocabSelectionComponent implements OnInit {
       dictationId: -1,
       title: this.title.value,
       showImage: true,
-      includeAIImage: true,
       vocabulary: Array.from(this.selectedVocabs.keys()),
       wordContainSpace : true,
       source : Dictations.Source.Select,

@@ -18,9 +18,8 @@ export class UIOptionsService {
     ttsVoiceMode: 'UIOptionsService.keys.ttsVoiceMode',
     editDictationType: 'UIOptionsService.keys.editDictationType',
     editDictationSentenceLength: 'UIOptionsService.keys.editDictationSentenceLength',
-    // v2: reset prior false defaults so Create/Quick opt into images/AI images once.
-    editDictationShowImage: 'UIOptionsService.keys.editDictationShowImage.v2',
-    editDictationIncludeAIImage: 'UIOptionsService.keys.editDictationIncludeAIImage.v2',
+    editDictationShowImage: 'UIOptionsService.keys.editDictationShowImage',
+    editDictationIncludeAIImage: 'UIOptionsService.keys.editDictationIncludeAIImage',
     editDictationWordContainSpace: 'UIOptionsService.keys.editDictationWordContainSpace',
     editDictationWordPracticeType: 'UIOptionsService.keys.editDictationWordPracticeType',
   };
