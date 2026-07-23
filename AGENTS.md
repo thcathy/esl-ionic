@@ -42,9 +42,11 @@ Single test: `npx ng test --browsers=ChromeHeadlessCI --watch=false --include='*
 - Call `SpeechService.speak()` async on iOS Safari without prior user gesture — preload voice via `ensureVoiceLoaded()`
 - Include Claude attribution in commit messages
 
-## Cursor rules
+## Cursor agents & rules
 
-Committed agent hints: [`.cursor/rules/`](./.cursor/rules/) (Ionic/Angular conventions). Workspace-level `esl-all/.cursor/rules/` is local-only — not source of truth for cloud agents.
+Committed agents: [`.cursor/agents/`](./.cursor/agents/) — `esl-uiux` (UI/UX), `esl-ionic-senior-dev` (design), `esl-ionic-programmer` (implement). They load stack/commands from this file, `.cursor/rules/`, and `CLAUDE.md` (do not hardcode stack in agent prompts).
+
+Committed rules: [`.cursor/rules/`](./.cursor/rules/). Workspace-level `esl-all/.cursor/` is local-only — not source of truth for cloud agents.
 
 ## Deep context
 
