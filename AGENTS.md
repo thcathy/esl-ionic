@@ -44,7 +44,17 @@ Single test: `npx ng test --browsers=ChromeHeadlessCI --watch=false --include='*
 
 ## Cursor agents & rules
 
-Committed agents: [`.cursor/agents/`](./.cursor/agents/) — `esl-uiux` (UI/UX), `esl-ionic-senior-dev` (design), `esl-ionic-programmer` (implement). They load stack/commands from this file, `.cursor/rules/`, and `CLAUDE.md` (do not hardcode stack in agent prompts).
+Pipeline: **UI (if needed) → architect → implementer → reviewer → tester**
+
+| Stage | Agent |
+|-------|--------|
+| UX | `esl-uiux` |
+| Architect | `esl-ionic-senior-dev` |
+| Implementer | `esl-ionic-programmer` |
+| Reviewer | `esl-ionic-reviewer` |
+| Tester | `esl-ionic-tester` |
+
+Committed agents: [`.cursor/agents/`](./.cursor/agents/). They load stack/commands from this file, `.cursor/rules/`, and `CLAUDE.md` (do not hardcode stack in agent prompts).
 
 Committed rules: [`.cursor/rules/`](./.cursor/rules/). Workspace-level `esl-all/.cursor/` is local-only — not source of truth for cloud agents.
 
