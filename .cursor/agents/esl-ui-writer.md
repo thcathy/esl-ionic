@@ -7,7 +7,7 @@ description: >-
   empty/error/success messages for esl-ionic. Produces wording only — does not
   write app code. Prefer this over inventing labels inside esl-uiux or
   programmers.
-model: claude-opus-4-8[effort=high]
+model: cursor-grok-4.5-high
 readonly: true
 ---
 

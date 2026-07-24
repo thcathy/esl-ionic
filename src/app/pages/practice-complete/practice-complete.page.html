@@ -35,6 +35,11 @@
               <fa-icon [icon]="['fas', 'save']"></fa-icon>&nbsp;{{'Save'|translate}}
             </ion-button>
           }
+          @if (showEditButton()) {
+            <ion-button color="secondary" (click)="navigationService.editDictation(dictation)">
+              <fa-icon [icon]="['fas', 'edit']"></fa-icon>&nbsp;{{'Edit'|translate}}
+            </ion-button>
+          }
           @if (showOpenMyVocabulary()) {
             <ion-button class="open-my-vocab-button" color="secondary" (click)="navigationService.openMemberHome('vocabulary')">
               <fa-icon icon="folder-open"></fa-icon>&nbsp;{{'My Vocabulary'|translate}}

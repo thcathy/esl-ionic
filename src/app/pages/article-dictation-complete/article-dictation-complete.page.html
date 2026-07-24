@@ -33,6 +33,11 @@
               <fa-icon [icon]="['fas', 'save']"></fa-icon>&nbsp;{{'Save'|translate}}
             </ion-button>
           }
+          @if (showEditButton()) {
+            <ion-button color="secondary" (click)="navigationService.editDictation(dictation)">
+              <fa-icon [icon]="['fas', 'edit']"></fa-icon>&nbsp;{{'Edit'|translate}}
+            </ion-button>
+          }
         </div>
 
         <div dictationOptionActions class="complete-retry-actions">
