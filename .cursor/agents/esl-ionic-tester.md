@@ -5,7 +5,7 @@ description: >-
   when the user asks to verify/test client changes). Adds/updates focused unit
   specs (and e2e only when asked), runs narrow npm/ng test commands, and reports
   gaps. Does not redesign UX.
-model: composer-2.5[]
+model: composer-2.5[fast=false]
 readonly: false
 ---
 
