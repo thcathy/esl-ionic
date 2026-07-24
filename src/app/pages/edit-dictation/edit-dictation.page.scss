@@ -73,20 +73,32 @@ fa-icon {
 .options-note-row {
   display: flex;
   align-items: flex-start;
-  gap: 4px;
+  gap: 6px;
 }
 
 .options-note-row + .options-note-row {
   margin-top: 6px;
 }
 
+// Icon height matches one note line so it aligns with the first text line.
 .options-note-row fa-icon {
+  flex: 0 0 auto;
   color: rgba(var(--ion-color-primary-rgb), 0.85);
-  padding-right: 4px;
-  padding-top: 1px;
+  // Override page-level `fa-icon { padding-right: 8px }` — gap handles spacing.
+  padding: 0;
+  font-size: 0.76rem;
+  line-height: 1.35;
+  height: calc(0.76rem * 1.35);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .options-note-row ion-note {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
   display: block;
   font-size: 0.76rem;
   line-height: 1.35;

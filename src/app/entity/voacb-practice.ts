@@ -16,6 +16,7 @@ export interface VocabPractice {
   activePronounceLink?: string;
   picsFullPathsInString?: string;
   suffledWord?: string;
+  imageIsVerify?: boolean;
 }
 
 export enum VocabDifficulty {

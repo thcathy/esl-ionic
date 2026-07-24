@@ -93,7 +93,7 @@
                           <div class="options-notes">
                             <div class="options-note-row">
                               <fa-icon [icon]="['fas', 'circle-info']"></fa-icon>
-                              <ion-note color="medium">{{'QuickDictation.OptionAvailabilityNote1'|translate}}</ion-note>
+                              <ion-note color="medium">{{'QuickDictation.VoiceAvailabilityNote'|translate}}</ion-note>
                             </div>
                           </div>
                         }
@@ -115,6 +115,14 @@
                                 </ion-item>
                               </ion-col>
                             </ion-row>
+                            @if (mode === pageMode.Start) {
+                              <div class="options-notes">
+                                <div class="options-note-row">
+                                  <fa-icon [icon]="['fas', 'circle-info']"></fa-icon>
+                                  <ion-note color="medium">{{'QuickDictation.ImageAvailabilityNote'|translate}}</ion-note>
+                                </div>
+                              </div>
+                            }
                             <ion-item>
                               <ion-toggle formControlName="wordContainSpace">
                                 <fa-icon [icon]="['fas', 'window-minimize']" /> {{'Words Contain Space'|translate}}

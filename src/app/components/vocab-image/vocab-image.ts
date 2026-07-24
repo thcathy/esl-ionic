@@ -1,6 +1,6 @@
 import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {animate, state, style, transition, trigger} from '@angular/animations';
-import {AILoadingImage, defaultImage} from '../../entity/dictation';
+import {defaultImage} from '../../entity/dictation';
 import {CollectionUtils} from '../../utils/collection-utils';
 import {DictationUtils} from '../../utils/dictation-utils';
 
@@ -23,11 +23,12 @@ import {DictationUtils} from '../../utils/dictation-utils';
     standalone: false
 })
 export class VocabImageComponent implements OnChanges {
-  @Input() images: string[]
-  @Input() AIImage: boolean = false;
+  @Input() images: string[];
+  @Input() unverified = false;
   index: number;
   state = 'center';
   imageBase64 = '';
+  showingPlaceholder = false;
 
   constructor() {
     this.index = 0;
@@ -35,15 +36,18 @@ export class VocabImageComponent implements OnChanges {
 
   ngOnChanges(_changes: SimpleChanges) {
     if (DictationUtils.notValidImages(this.images)) {
-      if (this.images == null) {
-        this.images = this.AIImage ? AILoadingImage : defaultImage;
-      } else {
-        this.images = defaultImage;
-      }
+      this.images = defaultImage;
+      this.showingPlaceholder = true;
+    } else {
+      this.showingPlaceholder = false;
     }
     this.images = CollectionUtils.shuffle(this.images);
     this.index = 0;
     this.imageBase64 = this.images[0];
+  }
+
+  get showUnverifiedNote(): boolean {
+    return this.unverified && !this.showingPlaceholder;
   }
 
   nextImage() {

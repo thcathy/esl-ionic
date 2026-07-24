@@ -43,20 +43,22 @@ export class VocabPracticeService extends Service {
     console.log(`picsFullPaths from server: ${vocabPractice.picsFullPaths}`);
     if (!DictationUtils.notValidImages(vocabPractice.picsFullPaths)) {
       return of(vocabPractice);
-    } else {
-      return this.http.get<ImagesObject>(this.imageUrl(vocabPractice.word))
-        .pipe(
-          map(imagesObject => {
-            console.log(`imagesObject verified=${imagesObject.isVerify}`);
-            vocabPractice.picsFullPaths = (includeAIImage || imagesObject.isVerify) ? imagesObject.images : null;
-            return vocabPractice;
-          }),
-          catchError(error => {
-            vocabPractice.picsFullPaths = null;
-            return of(vocabPractice);
-          })
-        );
     }
+
+    return this.http.get<ImagesObject>(this.imageUrl(vocabPractice.word))
+      .pipe(
+        map(imagesObject => {
+          console.log(`imagesObject verified=${imagesObject.isVerify}`);
+          const acceptImages = includeAIImage || imagesObject.isVerify === true;
+          vocabPractice.imageIsVerify = imagesObject.isVerify;
+          vocabPractice.picsFullPaths = acceptImages ? imagesObject.images : [];
+          return vocabPractice;
+        }),
+        catchError(() => {
+          vocabPractice.picsFullPaths = null;
+          return of(vocabPractice);
+        })
+      );
   }
 
   imageUrl(phrase: string): string {
@@ -85,6 +87,7 @@ export class VocabPracticeService extends Service {
     return <Dictation>{
       id: -1,
       showImage: true,
+      includeAIImage: true,
       vocabs: words.map(s => <Vocab>{word: s}),
       source: Dictations.Source.Generate,
     };

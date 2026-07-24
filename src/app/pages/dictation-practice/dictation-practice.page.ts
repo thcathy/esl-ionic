@@ -3,7 +3,7 @@ import {IonInput} from '@ionic/angular';
 import {of, Subject} from 'rxjs';
 import {mergeMap, tap} from 'rxjs/operators';
 import {VirtualKeyboardEvent} from '../../components/virtual-keyboard/virtual-keyboard';
-import {DictationPreloadComponent, PreloadCategoryName, PreloadResult} from '../../components/dictation-preload/dictation-preload.component';
+import {DictationPreloadComponent, PreloadResult} from '../../components/dictation-preload/dictation-preload.component';
 import {Dictation, PuzzleControls} from '../../entity/dictation';
 import {VocabPractice} from '../../entity/voacb-practice';
 import {VocabPracticeHistory} from '../../entity/vocab-practice-history';
@@ -124,7 +124,7 @@ export class DictationPracticePage {
   private fetchImages(vocabPractice: VocabPractice) {
     return this.dictation.showImage
       ? this.vocabPracticeService.getImages(vocabPractice, this.dictation.includeAIImage).pipe(
-          tap(vp => this.preload.recordImage(!!vp?.picsFullPaths))
+          tap(vp => this.preload.recordImage(vp.picsFullPaths != null))
         )
       : of(vocabPractice);
   }
