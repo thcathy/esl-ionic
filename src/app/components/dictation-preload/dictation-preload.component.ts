@@ -63,6 +63,7 @@ export class DictationPreloadComponent implements OnDestroy {
     'Preload.Tip.PuzzleMode',
     'Preload.Tip.CreateDictation',
     'Preload.Tip.OfflineMode',
+    'Preload.Tip.Images',
   ];
 
   readonly lettersRow1 = [

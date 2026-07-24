@@ -10,6 +10,12 @@
             fill="clear" class="button ion-float-right" size="small" (click)="nextImage()"><fa-icon [icon]="['fas', 'angle-right']"></fa-icon></ion-button>
           </ion-col>
         </ion-row>
-        <img [@move]="state" (@move.done)="onDone($event)" [src]="imageBase64 | safeHtml" class="image" />
+        <img [@move]="state" (@move.done)="onDone($event)" [src]="imageBase64 | safeHtml" class="image" alt="" />
+        @if (showUnverifiedNote) {
+          <div class="unverified-note-row">
+            <fa-icon [icon]="['fas', 'circle-info']"></fa-icon>
+            <ion-note color="medium">{{ 'VocabImage.UnverifiedAiNote' | translate }}</ion-note>
+          </div>
+        }
       </ion-card>
     }

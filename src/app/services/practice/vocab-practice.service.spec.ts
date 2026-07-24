@@ -4,13 +4,14 @@ import {VocabPracticeHistory} from '../../entity/vocab-practice-history';
 import {vocab_apple, vocab_banana} from '../../../testing/test-data';
 import {HttpClient} from '@angular/common/http';
 import {Dictations, PuzzleControls} from '../../entity/dictation';
+import {of, throwError} from 'rxjs';
 
 describe('VocabPracticeService', () => {
   let service: VocabPracticeService;
   let httpClientSpy;
 
   beforeEach(() => {
-    httpClientSpy = jasmine.createSpyObj('HttpClient', ['post']);
+    httpClientSpy = jasmine.createSpyObj('HttpClient', ['post', 'get']);
 
     TestBed.configureTestingModule({
     imports: [],
@@ -68,6 +69,7 @@ describe('VocabPracticeService', () => {
     expect(result.id).toEqual(-1);
     expect(result.source).toEqual(Dictations.Source.Generate);
     expect(result.showImage).toBeTruthy();
+    expect(result.includeAIImage).toBeTrue();
     expect(result.vocabs.length).toEqual(1);
     expect(result.vocabs[0].word).toEqual('test');
     expect(result.source).toEqual(Dictations.Source.Generate);
@@ -86,6 +88,60 @@ describe('VocabPracticeService', () => {
 
   it('imageUrl can create correct url', () => {
     expect(service.imageUrl('i am ok')).toContain('images%2Fi-%2Fi-am-ok.json?alt=media');
+  });
+
+  it('getImages accepts unverified AI images when includeAIImage is true', (done) => {
+    const practice = { word: 'unicorn', picsFullPaths: null } as any;
+    httpClientSpy.get.and.returnValue(of({ images: ['img1'], isVerify: false }));
+
+    service.getImages(practice, true).subscribe(result => {
+      expect(result.picsFullPaths).toEqual(['img1']);
+      expect(result.imageIsVerify).toBeFalse();
+      done();
+    });
+  });
+
+  it('getImages hides unverified AI images with empty array when includeAIImage is false', (done) => {
+    const practice = { word: 'unicorn', picsFullPaths: null } as any;
+    httpClientSpy.get.and.returnValue(of({ images: ['img1'], isVerify: false }));
+
+    service.getImages(practice, false).subscribe(result => {
+      expect(result.picsFullPaths).toEqual([]);
+      expect(result.imageIsVerify).toBeFalse();
+      done();
+    });
+  });
+
+  it('getImages accepts verified images when includeAIImage is false', (done) => {
+    const practice = { word: 'apple', picsFullPaths: null } as any;
+    httpClientSpy.get.and.returnValue(of({ images: ['img1'], isVerify: true }));
+
+    service.getImages(practice, false).subscribe(result => {
+      expect(result.picsFullPaths).toEqual(['img1']);
+      expect(result.imageIsVerify).toBeTrue();
+      done();
+    });
+  });
+
+  it('getImages leaves imageIsVerify undefined when picsFullPaths already valid', (done) => {
+    const practice = { word: 'apple', picsFullPaths: ['existing.jpg'] } as any;
+
+    service.getImages(practice, true).subscribe(result => {
+      expect(result.picsFullPaths).toEqual(['existing.jpg']);
+      expect(result.imageIsVerify).toBeUndefined();
+      expect(httpClientSpy.get).not.toHaveBeenCalled();
+      done();
+    });
+  });
+
+  it('getImages sets picsFullPaths to null on error', (done) => {
+    const practice = { word: 'apple', picsFullPaths: null } as any;
+    httpClientSpy.get.and.returnValue(throwError(() => new Error('network')));
+
+    service.getImages(practice, true).subscribe(result => {
+      expect(result.picsFullPaths).toBeNull();
+      done();
+    });
   });
 
   describe('test receiveAnswer', () => {

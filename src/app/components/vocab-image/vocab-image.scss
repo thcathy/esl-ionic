@@ -1,5 +1,6 @@
 ion-card {
-  height: 274px;
+  min-height: 274px;
+  height: auto;
 }
 
 .button {
@@ -17,4 +18,33 @@ ion-card {
 
 .grey-text {
   color: gray;
+}
+
+.unverified-note-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 6px;
+  padding: 4px 12px 10px;
+}
+
+.unverified-note-row fa-icon {
+  flex: 0 0 auto;
+  color: var(--ion-color-medium);
+  font-size: 0.8rem;
+  line-height: 1.35;
+  height: calc(0.8rem * 1.35);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.unverified-note-row ion-note {
+  flex: 0 1 auto;
+  margin: 0;
+  padding: 0;
+  display: block;
+  font-size: 0.8rem;
+  line-height: 1.35;
+  text-align: start;
 }
