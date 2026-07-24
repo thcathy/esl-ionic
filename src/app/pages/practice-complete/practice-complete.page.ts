@@ -103,6 +103,14 @@ export class PracticeCompletePage implements OnInit {
     return this.dictation && !this.dictationHelper.isInstantDictation(this.dictation) && !this.historyStored && this.dictation.source === Dictations.Source.FillIn;
   }
 
+  showEditButton(): boolean {
+    return !!this.dictation
+      && this.authService.isAuthenticated()
+      && this.dictation.source === Dictations.Source.FillIn
+      && this.dictation.id > 0
+      && this.dictation.creator?.emailAddress === this.authService.userProfile?.email;
+  }
+
   recommendBtnText(): string {
     return this.translate.instant(this.recommended ? 'Recommended' : 'Recommend');
   }

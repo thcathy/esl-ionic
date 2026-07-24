@@ -1,5 +1,5 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {Dictation} from "../../entity/dictation";
+import {Dictation, Dictations} from "../../entity/dictation";
 import {SentenceHistory} from "../../entity/sentence-history";
 import {DictationService} from "../../services/dictation/dictation.service";
 import {NavigationService} from "../../services/navigation.service";
@@ -105,6 +105,14 @@ export class ArticleDictationCompletePage implements OnInit {
     console.warn(`Cannot get dictation: ${JSON.stringify(error)}`);
     if (this.loader) this.loader.dismiss();
     this.ionicComponentService.showToastMessage(this.translateService.instant('Dictation not found'), 'top');
+  }
+
+  showEditButton(): boolean {
+    return !!this.dictation
+      && this.authService.isAuthenticated()
+      && this.dictation.source === Dictations.Source.FillIn
+      && this.dictation.id > 0
+      && this.dictation.creator?.emailAddress === this.authService.userProfile?.email;
   }
 
 }

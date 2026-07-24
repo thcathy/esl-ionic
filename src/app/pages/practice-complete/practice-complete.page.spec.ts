@@ -13,6 +13,7 @@ import {
 } from '../../../testing/mocks-ionic';
 import {SharedTestModule} from '../../../testing/shared-test.module';
 import {TestData} from '../../../testing/test-data';
+import {member1} from '../../../testing/test-data';
 import {Dictation} from '../../entity/dictation';
 import {VocabPracticeType} from '../../enum/vocab-practice-type.enum';
 import {FFSAuthService} from '../../services/auth.service';
@@ -37,6 +38,7 @@ describe('PracticeCompletePage', () => {
     storageSpy = StorageSpy();
     authServiceSpy = FFSAuthServiceSpy();
     navigationServiceSpy = NavigationServiceSpy();
+    navigationServiceSpy.editDictation = jasmine.createSpy('editDictation');
     manageVocabHistoryServiceSpy = ManageVocabHistoryServiceSpy();
     ionicComponentServiceSpy = IonicComponentServiceSpy();
 
@@ -226,6 +228,66 @@ describe('PracticeCompletePage', () => {
       expect(manageVocabHistoryServiceSpy.classifyVocabulary.calls.count()).toEqual(1);
       expect(dictationServiceSpy.createVocabDictationHistory.calls.count()).toEqual(0);
     }));
+  });
+
+  describe('showEditButton', () => {
+    function ownerFillInDictation(): Dictation {
+      const dictation = TestData.fillInDictation();
+      dictation.id = 999;
+      dictation.creator = member1;
+      return dictation;
+    }
+
+    beforeEach(() => {
+      authServiceSpy.isAuthenticated.and.returnValue(true);
+      authServiceSpy.userProfile = { email: member1.emailAddress };
+    });
+
+    it('returns true for owner FillIn saved dictation', () => {
+      component.dictation = ownerFillInDictation();
+      expect(component.showEditButton()).toBeTrue();
+    });
+
+    it('returns false for non-owner', () => {
+      component.dictation = ownerFillInDictation();
+      authServiceSpy.userProfile = { email: 'other@gmail.com' };
+      expect(component.showEditButton()).toBeFalse();
+    });
+
+    it('returns false when unauthenticated', () => {
+      component.dictation = ownerFillInDictation();
+      authServiceSpy.isAuthenticated.and.returnValue(false);
+      expect(component.showEditButton()).toBeFalse();
+    });
+
+    it('returns false for non-FillIn source', () => {
+      const dictation = TestData.generateDictation();
+      dictation.id = 999;
+      dictation.creator = member1;
+      component.dictation = dictation;
+      expect(component.showEditButton()).toBeFalse();
+    });
+
+    it('returns false when id <= 0', () => {
+      const dictation = ownerFillInDictation();
+      dictation.id = 0;
+      component.dictation = dictation;
+      expect(component.showEditButton()).toBeFalse();
+    });
+
+    it('returns false when creator is undefined', () => {
+      const dictation = ownerFillInDictation();
+      dictation.creator = undefined;
+      component.dictation = dictation;
+      expect(component.showEditButton()).toBeFalse();
+    });
+
+    it('Edit tap calls navigationService.editDictation once', () => {
+      const dictation = ownerFillInDictation();
+      component.dictation = dictation;
+      component.navigationService.editDictation(dictation);
+      expect(navigationServiceSpy.editDictation).toHaveBeenCalledOnceWith(dictation);
+    });
   });
 
 });
