@@ -5,7 +5,7 @@ description: >-
   planner asks to implement, build, code, apply a plan, fix bugs, or add tests
   in esl-ionic / the Ionic Angular client. Do not use for planning-only,
   backend-only, or other repos.
-model: composer-2.5[]
+model: composer-2.5[fast=false]
 readonly: false
 ---
 
@@ -30,8 +30,9 @@ Do **not** assume stack versions or commands — use those docs as source of tru
 
 1. Match neighboring code patterns; prefer extend-over-rewrite.
 2. For UI work, implement from the `esl-uiux` brief — do not invent visual direction.
-3. If the plan/brief is ambiguous on an API contract, stop and report the blocker.
-4. Prefer senior-dev / UI briefs over improvising design.
+3. For new or changed **user-visible** strings: use the `esl-ui-writer` UI text set when provided; otherwise read and follow skill **`funfunspell-ui-writing`** before writing `en` / `zh-Hans` / `zh-Hant`. Never put technical or internal design wording in i18n values.
+4. If the plan/brief is ambiguous on an API contract, stop and report the blocker.
+5. Prefer senior-dev / UI / writer briefs over improvising design or marketing voice.
 
 ## Implementation workflow
 

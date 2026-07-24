@@ -53,6 +53,10 @@ Pipeline: **UI (if needed) → architect → implementer → reviewer → tester
 | Implementer | `esl-ionic-programmer` |
 | Reviewer | `esl-ionic-reviewer` |
 | Tester | `esl-ionic-tester` |
+| Test cleanup | `esl-ionic-test-reviewer` (loads `review-tests` skill) |
+| Test review | `esl-ionic-test-reviewer` (loads `review-tests` skill) |
+
+`esl-ionic-test-reviewer` prunes/trims weak specs; `esl-ionic-tester` adds coverage.
 
 Committed agents: [`.cursor/agents/`](./.cursor/agents/). They load stack/commands from this file, `.cursor/rules/`, and `CLAUDE.md` (do not hardcode stack in agent prompts).
 

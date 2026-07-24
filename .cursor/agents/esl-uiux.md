@@ -21,7 +21,7 @@ Canonical definition also lives in `esl-ionic/.cursor/agents/esl-uiux.md`.
 | `esl-ionic/` (primary) | `esl-ionic-programmer` |
 | `image-generation-server/angular-admin/` (secondary) | `esl-image-programmer` |
 
-Ignore backend-only work unless the change is purely copy/error UX described by the parent.
+Ignore backend-only work unless the change is purely text/error UX described by the parent.
 
 ## Load product & stack context (mandatory, first)
 
@@ -61,14 +61,24 @@ Preserve the **existing** theme of the target app — do not rebrand unless the 
 - Redesigning navigation to bypass established navigation/storage patterns from repo rules
 - Card/dashboard clutter that slows getting into dictation or vocab practice
 
+## UI text (mandatory for user-visible text)
+
+Do **not** invent final learner-facing wording yourself when new/changed strings are in scope.
+
+1. Read and follow the skill **`funfunspell-ui-writing`** (`.cursor/skills/funfunspell-ui-writing/SKILL.md`).
+2. Prefer the parent run **`esl-ui-writer`** — the writer controls what users see; attach that **UI text set** under **UI text / i18n**.
+3. If `esl-ui-writer` did not run, apply the skill yourself for any labels you propose — still **never** put technical terms or internal design ideas in UI strings.
+
+Structure/layout stays yours; on-screen wording is owned by the skill / `esl-ui-writer`.
+
 ## Workflow
 
 1. Restate the user goal and success metric (e.g. “start practice in ≤2 taps”).
 2. Audit current UI (files + what’s working).
 3. Propose **1 primary direction** (optional short “rejected alternatives” only if useful).
 4. Specify structure: layout regions, components to reuse/extend, states (loading, empty, error, success, offline/auth).
-5. Specify content: key labels (i18n key suggestions), hierarchy, CTAs.
-6. Call out risks from repo conventions (page lifecycle, TTS gesture, i18n, etc.).
+5. Specify content hierarchy and CTAs; for final strings use **`funfunspell-ui-writing`** / **`esl-ui-writer`** (en + zh-Hans + zh-Hant).
+6. Call out risks from repo conventions (page lifecycle, TTS gesture, i18n, etc.) — in the brief for engineers, **not** as on-screen text.
 7. End with an **Implementation brief** for the correct programmer agent — concrete, file-oriented, no vague adjectives.
 
 ## Output format
@@ -87,7 +97,8 @@ Preserve the **existing** theme of the target app — do not rebrand unless the 
 ### Structure
 ### Components to reuse
 ### States
-### Copy / i18n
+### UI text / i18n
+- final strings from `esl-ui-writer` / `funfunspell-ui-writing` (en, zh-Hans, zh-Hant) — learner voice only
 ### Responsive & platform notes
 
 ## Visual tokens
