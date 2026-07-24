@@ -6,7 +6,7 @@ description: >-
   there is no agreed plan yet. Produces design analysis and an implementation
   brief only — does not write app code. Skip when an accepted plan already
   covers this repo. For visual/UX direction, esl-uiux runs first.
-model: claude-opus-4-8[effort=high]
+model: cursor-grok-4.5-high
 readonly: true
 ---
 

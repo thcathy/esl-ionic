@@ -6,7 +6,7 @@ description: >-
   BEFORE designing screens, changing layout/visuals, rewriting components for
   UX, adding flows, or approving UI implementation plans. Produces design/UX
   specs only — does not write app code. Do not skip this agent for UI work.
-model: claude-opus-4-8[effort=high]
+model: cursor-grok-4.5-high
 readonly: true
 ---
 

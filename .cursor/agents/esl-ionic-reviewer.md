@@ -5,7 +5,7 @@ description: >-
   finishes implementation (or when the user asks to review a client PR/diff).
   Reviews correctness, UX fidelity to briefs, Ionic/platform pitfalls, and
   tests — does not write app code. Readonly.
-model: claude-opus-4-8[effort=high]
+model: cursor-grok-4.5-high
 readonly: true
 ---
 
