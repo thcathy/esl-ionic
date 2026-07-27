@@ -73,8 +73,8 @@ describe('SearchDictationPage', () => {
   }));
 
 
-  it('history is loaded from storage when init, and updated when search', fakeAsync(() => {
-    component.ionViewDidLoad();
+  it('history is loaded from storage when view enters, and updated when search', fakeAsync(() => {
+    component.ionViewDidEnter();
     tick();
     expect(component.history[0]).toBe('old search history');
 
