@@ -1,2 +1,10 @@
-json_key_file ENV["GCLOUD_SERVICE_ACCOUNT_KEY"]
-package_name   "com.esl.ionic"
+# Google Play identity
+# Secrets come from env — see android/fastlane/env.example (or repo-root .env)
+
+require_relative "load_env"
+
+package_name ENV.fetch("ANDROID_PACKAGE_NAME", "com.esl.ionic")
+
+# FFS uses GCLOUD_SERVICE_ACCOUNT_KEY; PLAY_STORE_JSON_KEY is the Earn Time alias.
+json_key = ENV["GCLOUD_SERVICE_ACCOUNT_KEY"] || ENV["PLAY_STORE_JSON_KEY"]
+json_key_file json_key unless json_key.to_s.strip.empty?

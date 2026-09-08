@@ -1,12 +1,233 @@
 require "fileutils"
+require "json"
+require_relative "load_env"
 
+opt_out_usage
 default_platform(:android)
 
 # Absolute paths — immune to fastlane's working directory changes
 ANDROID_DIR = File.expand_path("../..", __FILE__)   # android/
-ROOT_DIR     = File.expand_path("../../..", __FILE__) # project root
+ROOT_DIR    = File.expand_path("../../..", __FILE__) # project root
+AAB_PATH    = "#{ANDROID_DIR}/app/build/outputs/bundle/release/app-release.aab"
+PACKAGE_NAME = ENV.fetch("ANDROID_PACKAGE_NAME", "com.esl.ionic")
+
+PLAY_CHANGELOG_LOCALES = {
+  "en-US" => "en",
+  "en-GB" => "en",
+  "zh-TW" => "zh-Hant",
+  "zh-HK" => "zh-Hant",
+  "zh-CN" => "zh-Hans"
+}.freeze
+
+# ---------- helpers ----------
+
+def env_flag(name, default: false)
+  ENV.fetch(name, default ? "true" : "false") == "true"
+end
+
+def skip_build?
+  env_flag("SKIP_BUILD")
+end
+
+# Same formula as ./build.sh setVersion: major*100000 + minor*1000 + patch
+def package_version!
+  version = JSON.parse(File.read("#{ROOT_DIR}/package.json"))["version"]
+  UI.user_error!("package.json is missing version") if version.to_s.empty?
+
+  core = version.split("-").first
+  parts = core.split(".")
+  major = Integer(parts[0] || 0)
+  minor = Integer(parts[1] || 0)
+  patch = Integer(parts[2] || 0)
+  { marketing: version, build: (major * 100_000 + minor * 1_000 + patch).to_s }
+end
+
+def write_android_version!(version, version_code)
+  gradle_file = "#{ANDROID_DIR}/app/build.gradle"
+  content = File.read(gradle_file)
+  content = content.gsub(/versionName ".*"/, "versionName \"#{version}\"")
+  content = content.gsub(/versionCode \d+/, "versionCode #{version_code.to_i}")
+  File.write(gradle_file, content)
+
+  UI.success "Set versionName=#{version}, versionCode=#{version_code}"
+end
+
+def apply_package_version!
+  parsed = package_version!
+  write_android_version!(parsed[:marketing], parsed[:build])
+end
+
+def gradle_version!
+  gradle_file = "#{ANDROID_DIR}/app/build.gradle"
+  content = File.read(gradle_file)
+  name = content[/versionName\s+"([^"]+)"/, 1]
+  code = content[/versionCode\s+(\d+)/, 1]
+  UI.user_error!("Could not read versionName/versionCode from app/build.gradle") if name.to_s.empty? || code.to_s.empty?
+  { marketing: name, build: code }
+end
+
+def android_aab_path
+  AAB_PATH
+end
+
+def play_json_key_path
+  raw = (ENV["GCLOUD_SERVICE_ACCOUNT_KEY"] || ENV["PLAY_STORE_JSON_KEY"]).to_s.strip
+  return nil if raw.empty?
+  File.expand_path(raw, ROOT_DIR)
+end
+
+def play_store_upload_options(overrides = {})
+  options = {
+    package_name: PACKAGE_NAME,
+    metadata_path: File.join(ANDROID_DIR, "fastlane/metadata/android"),
+    skip_upload_apk: true,
+    skip_upload_metadata: env_flag("SKIP_UPLOAD_METADATA", default: true),
+    skip_upload_images: env_flag("SKIP_UPLOAD_IMAGES", default: true),
+    skip_upload_screenshots: env_flag("SKIP_UPLOAD_SCREENSHOTS", default: true),
+    skip_upload_changelogs: env_flag("SKIP_UPLOAD_CHANGELOGS", default: false),
+    validate_only: env_flag("PLAY_VALIDATE_ONLY", default: false),
+    changes_not_sent_for_review: env_flag("PLAY_CHANGES_NOT_SENT_FOR_REVIEW", default: false)
+  }
+  json_key = play_json_key_path
+  options[:json_key] = json_key if json_key
+  merged = options.merge(overrides)
+  merged[:skip_upload_aab] = false if merged[:aab]
+  merged
+end
+
+# Mirror root release_notes/*.txt into supply changelog locales.
+def prepare_release_changelogs!
+  PLAY_CHANGELOG_LOCALES.each do |play_locale, file_locale|
+    src = "#{ROOT_DIR}/release_notes/#{file_locale}.txt"
+    UI.user_error!("Missing #{src}") unless File.exist?(src)
+    dir = "#{ANDROID_DIR}/fastlane/metadata/android/#{play_locale}/changelogs"
+    FileUtils.mkdir_p(dir)
+    File.write("#{dir}/default.txt", File.read(src).strip)
+  end
+end
+
+def build_android_aab!
+  if skip_build?
+    UI.user_error!("SKIP_BUILD=true but #{android_aab_path} is missing. Run ./build.sh beta_android (or release_android) first.") unless File.exist?(android_aab_path)
+    UI.important("SKIP_BUILD=true — reusing #{android_aab_path}")
+    return
+  end
+
+  apply_package_version!
+  gradle(
+    task:        "bundle",
+    build_type:  "Release",
+    project_dir: ANDROID_DIR
+  )
+  UI.user_error!("AAB not found at #{android_aab_path}") unless File.exist?(android_aab_path)
+end
+
+def preflight_play_upload!
+  spec = package_version!
+  gradle = gradle_version!
+  UI.message("package.json #{spec[:marketing]} (#{spec[:build]}) · gradle #{gradle[:marketing]} (#{gradle[:build]})")
+
+  if gradle[:marketing] != spec[:marketing] || gradle[:build] != spec[:build]
+    UI.user_error!(
+      "app/build.gradle #{gradle[:marketing]}+#{gradle[:build]} does not match package.json #{spec[:marketing]}+#{spec[:build]}. " \
+      "Rebuild without SKIP_BUILD."
+    )
+  end
+
+  json_key = play_json_key_path
+  return unless json_key && File.exist?(json_key)
+
+  begin
+    track = ENV.fetch("PLAY_TRACK", "internal")
+    existing = google_play_track_version_codes(
+      json_key: json_key,
+      package_name: PACKAGE_NAME,
+      track: track
+    )
+    UI.message("Play #{track} versionCodes: #{existing.inspect}")
+    if existing.map(&:to_i).include?(gradle[:build].to_i)
+      UI.user_error!("versionCode #{gradle[:build]} is already on the Play #{track} track")
+    end
+  rescue StandardError => e
+    UI.important("Could not read Play track version codes (#{e.message}); skipping Play compare")
+  end
+end
+
+def play_draft_app_error?(error)
+  error.message.to_s.include?("Only releases with status draft may be created on draft app")
+end
+
+def production_release_status
+  return "inProgress" unless ENV["PLAY_ROLLOUT"].to_s.strip.empty?
+  # Draft-safe FunFunSpell default. Earn Time uses completed after the first Console publish.
+  ENV.fetch("PLAY_PRODUCTION_STATUS", "draft")
+end
+
+def announce_play_release!(track, status)
+  UI.success("Play #{track} (#{status})")
+  case status
+  when "draft"
+    UI.important(
+      "Saved as draft — Google will not review yet. Set PLAY_PRODUCTION_STATUS=completed " \
+      "to submit for review after the first Play Console publish."
+    )
+  when "completed", "inProgress"
+    UI.success("Submitted for Google review. It rolls out after approval unless Managed publishing is on.")
+  end
+end
+
+def upload_play_release!(options)
+  status = options[:release_status]
+  begin
+    upload_to_play_store(**options)
+    status
+  rescue StandardError => e
+    raise unless status != "draft" && play_draft_app_error?(e)
+
+    UI.important(
+      "Play app is still Draft, so #{status} is not allowed. Retrying as draft. " \
+      "Finish the first publish in Play Console; later android release can use PLAY_PRODUCTION_STATUS=completed."
+    )
+    options = options.merge(release_status: "draft")
+    options.delete(:rollout)
+    upload_to_play_store(**options)
+    "draft"
+  end
+end
+
+def promote_play_release!
+  from_track = ENV.fetch("PLAY_PROMOTE_FROM", "internal")
+  to_track = ENV.fetch("PLAY_PROMOTE_TO", "production")
+  status = production_release_status
+  rollout = ENV["PLAY_ROLLOUT"]
+
+  version_code = ENV["PLAY_VERSION_CODE"].to_s.strip
+  version_code = package_version![:build] if version_code.empty?
+  UI.message("Promoting versionCode #{version_code} from #{from_track} → #{to_track} (#{status})")
+
+  options = play_store_upload_options(
+    skip_upload_aab: true,
+    track: from_track,
+    track_promote_to: to_track,
+    release_status: status,
+    version_code: version_code.to_i
+  )
+  options[:rollout] = rollout if rollout && !rollout.empty?
+
+  applied = upload_play_release!(options)
+  UI.success("Promoted #{from_track} → #{to_track} (#{applied})")
+  announce_play_release!(to_track, applied)
+end
 
 platform :android do
+  desc "Set version name and code in build.gradle (defaults from package.json)"
+  lane :set_version do |options|
+    parsed       = package_version!
+    version      = options[:version]      || parsed[:marketing]
+    version_code = options[:version_code] || parsed[:build]
+    write_android_version!(version, version_code)
+  end
+
   desc "Build, sign and copy release APK"
   lane :build_apk do
     gradle(
@@ -27,7 +248,7 @@ platform :android do
     sh "cp \"#{ROOT_DIR}/esl-dictation.apk\" \"#{ENV['HOME']}/Google Drive/My Drive/apk/\""
   end
 
-  desc "Build signed release AAB"
+  desc "Build signed release AAB (always rebuilds; prefer `build` for SKIP_BUILD)"
   lane :build_bundle do
     gradle(
       task:        "bundle",
@@ -36,44 +257,104 @@ platform :android do
     )
   end
 
-  desc "Upload AAB to Play Store as draft"
-  lane :upload do |options|
-    aab_path = options[:aab] or UI.user_error!("aab is required")
+  desc "Build release AAB only (no upload). SKIP_BUILD=true reuses the existing AAB."
+  lane :build do
+    build_android_aab!
+    preflight_play_upload!
+    UI.success("AAB ready at #{android_aab_path}")
+  end
 
-    {
-      "en-US" => "en",
-      "en-GB" => "en",
-      "zh-TW" => "zh-Hant",
-      "zh-HK" => "zh-Hant",
-      "zh-CN" => "zh-Hans"
-    }.each do |play_locale, file_locale|
-      dir = "#{ANDROID_DIR}/fastlane/metadata/android/#{play_locale}/changelogs"
-      FileUtils.mkdir_p(dir)
-      File.write("#{dir}/default.txt", File.read("#{ROOT_DIR}/release_notes/#{file_locale}.txt").strip)
-    end
-
+  desc "Validate Play Store metadata + AAB (dry run, no upload)"
+  lane :validate do
+    build_android_aab!
+    preflight_play_upload!
+    prepare_release_changelogs! unless env_flag("SKIP_UPLOAD_CHANGELOGS")
     upload_to_play_store(
-      aab:                     aab_path,
-      track:                   "production",
-      release_status:          "draft",
-      skip_upload_images:      true,
-      skip_upload_screenshots: true,
-      skip_upload_metadata:    true,
-      skip_upload_changelogs:  false
+      **play_store_upload_options(
+        aab: android_aab_path,
+        track: ENV.fetch("PLAY_TRACK", "internal"),
+        release_status: ENV.fetch("PLAY_RELEASE_STATUS", "draft"),
+        validate_only: true
+      )
     )
   end
 
-  desc "Set version name and code in build.gradle"
-  lane :set_version do |options|
-    version      = options[:version]      or UI.user_error!("version is required")
-    version_code = options[:version_code] or UI.user_error!("version_code is required")
+  desc "Upload store listing metadata only (no binary). Listing files are optional; changelogs come from release_notes/."
+  lane :metadata do
+    prepare_release_changelogs!
+    upload_to_play_store(
+      **play_store_upload_options(
+        skip_upload_aab: true,
+        skip_upload_metadata: false,
+        skip_upload_changelogs: false
+      )
+    )
+    UI.success("Play Store metadata uploaded")
+  end
 
-    gradle_file = "#{ANDROID_DIR}/app/build.gradle"
-    content = File.read(gradle_file)
-    content = content.gsub(/versionName ".*"/, "versionName \"#{version}\"")
-    content = content.gsub(/versionCode \d+/, "versionCode #{version_code.to_i}")
-    File.write(gradle_file, content)
+  desc "Build and upload to Google Play Internal Testing (PLAY_TRACK, draft by default)"
+  lane :beta do
+    build_android_aab!
+    preflight_play_upload!
+    prepare_release_changelogs! unless env_flag("SKIP_UPLOAD_CHANGELOGS")
+    upload_to_play_store(
+      **play_store_upload_options(
+        aab: android_aab_path,
+        track: ENV.fetch("PLAY_TRACK", "internal"),
+        release_status: ENV.fetch("PLAY_RELEASE_STATUS", "draft")
+      )
+    )
+    UI.success("Uploaded to Play track: #{ENV.fetch('PLAY_TRACK', 'internal')}")
+  end
 
-    UI.success "Set versionName=#{version}, versionCode=#{version_code}"
+  desc "Promote to production (default) or PLAY_UPLOAD_AAB=true to build+upload. PLAY_PRODUCTION_STATUS defaults to draft."
+  lane :release do
+    unless env_flag("PLAY_UPLOAD_AAB")
+      UI.important("Promoting existing Play build (set PLAY_UPLOAD_AAB=true to build and upload a new AAB)")
+      promote_play_release!
+      next
+    end
+
+    build_android_aab!
+    preflight_play_upload!
+    prepare_release_changelogs! unless env_flag("SKIP_UPLOAD_CHANGELOGS")
+    track = ENV.fetch("PLAY_RELEASE_TRACK", "production")
+    status = production_release_status
+    rollout = ENV["PLAY_ROLLOUT"]
+
+    options = play_store_upload_options(
+      aab: android_aab_path,
+      track: track,
+      release_status: status
+    )
+    options[:rollout] = rollout if rollout && !rollout.empty?
+
+    applied = upload_play_release!(options)
+    UI.success("Uploaded to Play #{track} (#{applied})")
+    announce_play_release!(track, applied)
+  end
+
+  desc "Promote latest internal/closed build to production (no rebuild)"
+  lane :promote do
+    promote_play_release!
+  end
+
+  desc "Upload AAB to Play Store as production draft (legacy). Prefer beta / release."
+  lane :upload do |options|
+    aab_path = options[:aab] or UI.user_error!("aab is required")
+
+    prepare_release_changelogs!
+
+    upload_to_play_store(
+      **play_store_upload_options(
+        aab:                     aab_path,
+        track:                   "production",
+        release_status:          "draft",
+        skip_upload_images:      true,
+        skip_upload_screenshots: true,
+        skip_upload_metadata:    true,
+        skip_upload_changelogs:  false
+      )
+    )
   end
 end

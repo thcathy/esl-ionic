@@ -15,7 +15,8 @@ npm run e2e-ci         # Playwright e2e
 # Release (see build.sh)
 ./build.sh build_firebase
 ./build.sh release_ios
-./build.sh release_android
+./build.sh release_android   # Play production draft (new AAB)
+./build.sh beta_android      # Play internal testing
 ```
 
 Single test: `npx ng test --browsers=ChromeHeadlessCI --watch=false --include='**/speech.service.spec.ts'`

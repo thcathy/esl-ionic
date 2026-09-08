@@ -31,8 +31,22 @@ Commands:
   test_ios
   release_ios
   buildAndroidApk
-  release_android
+  build_android       AAB only (capacitor + set_version + fastlane build)
+  beta_android        Internal testing (draft; PLAY_TRACK configurable)
+  release_android     New AAB → production draft (PLAY_UPLOAD_AAB=true)
+  promote_android     Promote internal → production (no rebuild)
+  metadata_android    Store listing + changelogs (no binary)
+  validate_android    Play validate_only dry run
   help
+
+Android env (repo-root .env or android/fastlane/.env — see android/fastlane/env.example):
+  ESL_IONIC_KEYSTORE_PASSWORD   Signing (required for AAB/APK builds)
+  GCLOUD_SERVICE_ACCOUNT_KEY    Play JSON key path (or PLAY_STORE_JSON_KEY)
+  SKIP_BUILD=true               Reuse existing AAB; skip ionic capacitor + gradle
+  PLAY_TRACK                    beta/validate track (default: internal)
+  PLAY_RELEASE_STATUS           beta/validate status (default: draft)
+  PLAY_PRODUCTION_STATUS        release/promote status (default: draft)
+  PLAY_UPLOAD_AAB=true          release lane: upload a new AAB instead of promoting
 EOF
 }
 
@@ -46,6 +60,33 @@ require_env() {
   if [[ -z "${!name:-}" ]]; then
     die "$name is not set"
   fi
+}
+
+skip_build() {
+  [[ "${SKIP_BUILD:-false}" == "true" ]]
+}
+
+require_play_key() {
+  if [[ -z "${GCLOUD_SERVICE_ACCOUNT_KEY:-}" && -z "${PLAY_STORE_JSON_KEY:-}" ]]; then
+    die "Set GCLOUD_SERVICE_ACCOUNT_KEY (or PLAY_STORE_JSON_KEY) to the Play Console JSON key path"
+  fi
+}
+
+android_fastlane() {
+  pushd "${ROOT_DIR}/android" >/dev/null
+  fastlane "$@"
+  popd >/dev/null
+}
+
+# Capacitor sync + versionCode from package.json (unless SKIP_BUILD=true).
+prepare_android_native() {
+  setVersion
+  if skip_build; then
+    echo "SKIP_BUILD=true — skipping ionic capacitor build (reusing existing AAB)"
+    return
+  fi
+  ionic cap build android --configuration production --no-open
+  android_fastlane set_version version:"${VERSION}" version_code:"${ANDROID_VERSION}"
 }
 
 
@@ -86,24 +127,50 @@ buildAndroidApk() {
   require_env "ESL_IONIC_KEYSTORE_PASSWORD"
 
   ionic cap build android --configuration production --no-open
-  pushd "${ROOT_DIR}/android" >/dev/null
-  fastlane build_apk
-  popd >/dev/null
+  android_fastlane build_apk
+}
+
+build_android() {
+  require_env "ESL_IONIC_KEYSTORE_PASSWORD"
+  prepare_android_native
+  android_fastlane build
+}
+
+beta_android() {
+  require_env "ESL_IONIC_KEYSTORE_PASSWORD"
+  require_play_key
+  prepare_android_native
+  android_fastlane beta
 }
 
 release_android() {
-  local AAB_PATH="${ROOT_DIR}/android/app/build/outputs/bundle/release/app-release.aab"
-
+  # Historic FFS: new signed AAB → production as draft.
+  # Fastlane `release` promotes unless PLAY_UPLOAD_AAB=true (Earn Time default).
   require_env "ESL_IONIC_KEYSTORE_PASSWORD"
-  require_env "GCLOUD_SERVICE_ACCOUNT_KEY"
+  require_play_key
+  prepare_android_native
+  PLAY_UPLOAD_AAB="${PLAY_UPLOAD_AAB:-true}" \
+    PLAY_PRODUCTION_STATUS="${PLAY_PRODUCTION_STATUS:-draft}" \
+    android_fastlane release
+}
 
+promote_android() {
+  require_play_key
   setVersion
-  ionic cap build android --configuration production --no-open
-  pushd "${ROOT_DIR}/android" >/dev/null
-  fastlane set_version version:"${VERSION}" version_code:"${ANDROID_VERSION}"
-  fastlane build_bundle
-  fastlane upload aab:"${AAB_PATH}"
-  popd >/dev/null
+  android_fastlane promote
+}
+
+metadata_android() {
+  require_play_key
+  setVersion
+  android_fastlane metadata
+}
+
+validate_android() {
+  require_env "ESL_IONIC_KEYSTORE_PASSWORD"
+  require_play_key
+  prepare_android_native
+  android_fastlane validate
 }
 
 setVersion() {
@@ -135,12 +202,12 @@ main() {
     help|-h|--help)
       usage
       ;;
-    build_firebase|release_web_uat|release_web_prod|test_ios|release_ios|buildAndroidApk|release_android)
+    build_firebase|release_web_uat|release_web_prod|test_ios|release_ios|buildAndroidApk|build_android|beta_android|release_android|promote_android|metadata_android|validate_android)
       "$cmd" "$@"
       ;;
     *)
       usage
-      die "unknown command: $cmd"
+      die "unknown command: ${cmd}"
       ;;
   esac
 }

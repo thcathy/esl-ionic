@@ -57,4 +57,6 @@ my-release-key.jks
 # Fastlane
 /ios/App/fastlane/report.xml
 /ios/App/fastlane/metadata/
+/android/fastlane/.env
+/android/fastlane/play-store-key.json
 

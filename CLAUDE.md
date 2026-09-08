@@ -38,7 +38,12 @@ npm run e2e-ci         # Run e2e with line reporter
 ./build.sh test_ios              # Build iOS for testing
 ./build.sh release_ios           # Archive and upload to App Store
 ./build.sh buildAndroidApk       # Build signed APK (requires ESL_IONIC_KEYSTORE_PASSWORD)
-./build.sh release_android       # Bundle and publish to Play Store
+./build.sh build_android         # Signed AAB only (no upload)
+./build.sh beta_android          # Play Internal Testing (draft)
+./build.sh release_android       # New AAB → Play production draft (PLAY_PRODUCTION_STATUS defaults draft)
+./build.sh promote_android       # Promote internal → production (no rebuild)
+./build.sh metadata_android      # Play listing + changelogs
+./build.sh validate_android      # Play validate_only dry run
 ```
 
 ## Architecture
