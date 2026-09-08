@@ -1,85 +1,348 @@
 require "fileutils"
+require "json"
+require_relative "load_env"
 
+opt_out_usage
 default_platform(:ios)
 
 # Absolute paths — immune to fastlane's working directory changes
-IOS_APP_DIR = File.expand_path("../..", __FILE__)      # ios/App/
-ROOT_DIR     = File.expand_path("../../../..", __FILE__) # project root
+IOS_APP_DIR = File.expand_path("../..", __FILE__)       # ios/App/
+ROOT_DIR    = File.expand_path("../../../..", __FILE__) # project root
+IPA_PATH    = "#{ROOT_DIR}/tmp/App.ipa"
+APP_IDENTIFIER = ENV.fetch("APP_IDENTIFIER", "com.esl.ionic")
+
+def env_flag(name, default: false)
+  ENV.fetch(name, default ? "true" : "false") == "true"
+end
+
+def drop_blank_asc_env!
+  %w[
+    APP_STORE_CONNECT_API_KEY_ID
+    APP_STORE_CONNECT_API_ISSUER_ID
+    APP_STORE_CONNECT_API_KEY_PATH
+    APP_STORE_CONNECT_API_KEY_CONTENT
+    ASC_KEY_ID
+    ASC_ISSUER_ID
+    ASC_KEY_PATH
+    ASC_KEY_CONTENT
+  ].each { |k| ENV.delete(k) if ENV[k].to_s.strip.empty? }
+end
+
+# Optional App Store Connect API key. Empty/unset vars fall back to Apple ID
+# (APPLE_ID_APP_USERNAME + FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD).
+def app_store_api_key
+  drop_blank_asc_env!
+  key_id = ENV["APP_STORE_CONNECT_API_KEY_ID"] || ENV["ASC_KEY_ID"]
+  issuer_id = ENV["APP_STORE_CONNECT_API_ISSUER_ID"] || ENV["ASC_ISSUER_ID"]
+  key_path = ENV["APP_STORE_CONNECT_API_KEY_PATH"] || ENV["ASC_KEY_PATH"]
+  key_content = ENV["APP_STORE_CONNECT_API_KEY_CONTENT"] || ENV["ASC_KEY_CONTENT"]
+
+  if key_id.to_s.empty? || issuer_id.to_s.empty?
+    UI.message("No App Store Connect API key configured — using Apple ID login")
+    return nil
+  end
+
+  if key_content.to_s.empty? && (key_path.to_s.empty? || !File.exist?(key_path))
+    UI.user_error!(
+      "ASC API key id/issuer set, but key file/content missing. " \
+      "Set APP_STORE_CONNECT_API_KEY_PATH or APP_STORE_CONNECT_API_KEY_CONTENT."
+    )
+  end
+
+  app_store_connect_api_key(
+    key_id: key_id,
+    issuer_id: issuer_id,
+    key_filepath: key_content.to_s.empty? ? key_path : nil,
+    key_content: key_content.to_s.empty? ? nil : key_content.gsub("\\n", "\n"),
+    duration: 1200,
+    in_house: false
+  )
+end
+
+# Same formula as ./build.sh setVersion: major*100000 + minor*1000 + patch
+def package_version!
+  version = JSON.parse(File.read("#{ROOT_DIR}/package.json"))["version"]
+  UI.user_error!("package.json is missing version") if version.to_s.empty?
+
+  core = version.split("-").first
+  parts = core.split(".")
+  major = Integer(parts[0] || 0)
+  minor = Integer(parts[1] || 0)
+  patch = Integer(parts[2] || 0)
+  { marketing: version, build: (major * 100_000 + minor * 1_000 + patch).to_s }
+end
+
+def skip_build?
+  env_flag("SKIP_BUILD")
+end
+
+def ensure_ipa!
+  UI.user_error!("SKIP_BUILD=true but #{IPA_PATH} is missing. Run ./build.sh beta_ios (or release_ios) first.") unless File.exist?(IPA_PATH)
+  UI.important("SKIP_BUILD=true — reusing #{IPA_PATH}")
+end
+
+def write_ios_version!(version, build_number)
+  pbxproj = "#{IOS_APP_DIR}/App.xcodeproj/project.pbxproj"
+  content = File.read(pbxproj)
+  content = content.gsub(/MARKETING_VERSION = .*;/, "MARKETING_VERSION = #{version};")
+  content = content.gsub(/CURRENT_PROJECT_VERSION = .*;/, "CURRENT_PROJECT_VERSION = #{build_number};")
+  File.write(pbxproj, content)
+
+  info_plist = "#{IOS_APP_DIR}/App/Info.plist"
+  plist = File.read(info_plist)
+  plist = plist.gsub(%r{(<key>CFBundleShortVersionString</key>\s*<string>).*?(</string>)}, "\\1#{version}\\2")
+  plist = plist.gsub(%r{(<key>CFBundleVersion</key>\s*<string>).*?(</string>)}, "\\1#{build_number}\\2")
+  File.write(info_plist, plist)
+
+  UI.success "Set MARKETING_VERSION=#{version}, CFBundleVersion=#{build_number}"
+end
+
+def apply_package_version!
+  parsed = package_version!
+  write_ios_version!(parsed[:marketing], parsed[:build])
+end
+
+def build_ios_ipa!
+  if skip_build?
+    ensure_ipa!
+    return
+  end
+
+  apply_package_version!
+
+  UI.important("Using Xcode Automatic Signing (match is not configured for FunFunSpell)")
+  gym(
+    workspace:        "#{IOS_APP_DIR}/App.xcworkspace",
+    scheme:           "App",
+    export_method:    "app-store",
+    output_directory: "#{ROOT_DIR}/tmp",
+    output_name:      "App.ipa",
+    export_options: {
+      signingStyle:      "automatic",
+      compileBitcode:    true,
+      stripSwiftSymbols: true,
+      thinning:          "<none>"
+    }
+  )
+end
+
+# Mirror root release_notes/*.txt into deliver metadata locales.
+def prepare_release_notes!
+  {
+    "en-US"   => "en",
+    "zh-Hans" => "zh-Hans",
+    "zh-Hant" => "zh-Hant"
+  }.each do |store_locale, file_locale|
+    src = "#{ROOT_DIR}/release_notes/#{file_locale}.txt"
+    UI.user_error!("Missing #{src}") unless File.exist?(src)
+    dir = "#{IOS_APP_DIR}/fastlane/metadata/#{store_locale}"
+    FileUtils.mkdir_p(dir)
+    File.write("#{dir}/release_notes.txt", File.read(src).strip)
+  end
+end
+
+def testflight_changelog
+  env_notes = ENV["TESTFLIGHT_CHANGELOG"].to_s.strip
+  return env_notes unless env_notes.empty?
+
+  src = "#{ROOT_DIR}/release_notes/en.txt"
+  File.exist?(src) ? File.read(src).strip : nil
+end
+
+def submission_information
+  {
+    add_id_info_uses_idfa: false,
+    export_compliance_uses_encryption: false,
+    export_compliance_is_exempt: false,
+    export_compliance_contains_third_party_cryptography: false,
+    export_compliance_contains_proprietary_cryptography: false,
+    content_rights_contains_third_party_content: false,
+    content_rights_has_rights: true
+  }
+end
+
+def with_api_key(options, api_key)
+  options[:api_key] = api_key unless api_key.nil?
+  options
+end
+
+def common_deliver_options(api_key)
+  with_api_key(
+    {
+      ipa: IPA_PATH,
+      app_identifier: APP_IDENTIFIER,
+      app_version: package_version![:marketing],
+      force: true,
+      run_precheck_before_submit: false,
+      precheck_include_in_app_purchases: false,
+      skip_screenshots: env_flag("SKIP_SCREENSHOTS", default: true),
+      skip_metadata: env_flag("SKIP_METADATA", default: false),
+      automatic_release: env_flag("AUTOMATIC_RELEASE", default: false),
+      phased_release: env_flag("PHASED_RELEASE", default: false)
+    },
+    api_key
+  )
+end
 
 platform :ios do
+  before_all do
+    drop_blank_asc_env!
+  end
+
   desc "Set marketing version and build number in Xcode project"
   lane :set_version do |options|
-    version      = options[:version]      or UI.user_error!("version is required")
-    build_number = options[:build_number] or UI.user_error!("build_number is required")
-
-    pbxproj = "#{IOS_APP_DIR}/App.xcodeproj/project.pbxproj"
-    content = File.read(pbxproj)
-    content = content.gsub(/MARKETING_VERSION = .*;/, "MARKETING_VERSION = #{version};")
-    content = content.gsub(/CURRENT_PROJECT_VERSION = .*;/, "CURRENT_PROJECT_VERSION = #{build_number};")
-    File.write(pbxproj, content)
-
-    info_plist = "#{IOS_APP_DIR}/App/Info.plist"
-    plist = File.read(info_plist)
-    plist = plist.gsub(%r{(<key>CFBundleShortVersionString</key>\s*<string>).*?(</string>)}, "\\1#{version}\\2")
-    plist = plist.gsub(%r{(<key>CFBundleVersion</key>\s*<string>).*?(</string>)}, "\\1#{build_number}\\2")
-    File.write(info_plist, plist)
-
-    UI.success "Set MARKETING_VERSION=#{version}, CFBundleVersion=#{build_number}"
+    parsed       = package_version!
+    version      = options[:version]      || parsed[:marketing]
+    build_number = options[:build_number] || parsed[:build]
+    write_ios_version!(version, build_number)
   end
 
-  desc "Build and archive the app, output IPA to tmp/"
+  desc "Build IPA only (no upload). Output: tmp/App.ipa"
   lane :build do
-    gym(
-      workspace:        "#{IOS_APP_DIR}/App.xcworkspace",
-      scheme:           "App",
-      export_method:    "app-store",
-      output_directory: "#{ROOT_DIR}/tmp",
-      output_name:      "App.ipa",
-      export_options: {
-        signingStyle:      "automatic",
-        compileBitcode:    true,
-        stripSwiftSymbols: true,
-        thinning:          "<none>"
-      }
-    )
+    build_ios_ipa!
+    UI.success("IPA ready at #{IPA_PATH}")
   end
 
-  desc "Upload IPA and create App Store release"
-  lane :upload do |options|
-    ipa_path = options[:ipa]     or UI.user_error!("ipa is required")
-    version  = options[:version] or UI.user_error!("version is required")
+  desc "Build and upload to TestFlight (does not submit for App Store review)"
+  lane :beta do
+    api_key = app_store_api_key
+    build_ios_ipa!
 
-    # Mirror release notes into fastlane metadata so upload_to_app_store picks them up.
-    # `skip_metadata: true` would short-circuit release_notes uploads, so we let deliver
-    # read from the metadata dir — only release_notes.txt is present, so only that field
-    # is touched on App Store Connect.
-    {
-      "en-US"   => "en",
-      "zh-Hans" => "zh-Hans",
-      "zh-Hant" => "zh-Hant"
-    }.each do |store_locale, file_locale|
-      dir = "#{IOS_APP_DIR}/fastlane/metadata/#{store_locale}"
-      FileUtils.mkdir_p(dir)
-      File.write("#{dir}/release_notes.txt", File.read("#{ROOT_DIR}/release_notes/#{file_locale}.txt").strip)
+    tf_opts = with_api_key(
+      {
+        ipa: IPA_PATH,
+        app_identifier: APP_IDENTIFIER,
+        skip_waiting_for_build_processing: env_flag("SKIP_WAITING_FOR_BUILD_PROCESSING", default: true),
+        skip_submission: true,
+        distribute_external: false,
+        notify_external_testers: false
+      },
+      api_key
+    )
+    changelog = testflight_changelog
+    tf_opts[:changelog] = changelog unless changelog.to_s.empty?
+    upload_to_testflight(**tf_opts)
+    UI.success("Uploaded to TestFlight")
+  end
+
+  desc "Build, upload metadata + binary to App Store Connect. SUBMIT_FOR_REVIEW defaults to false."
+  lane :release do
+    api_key = app_store_api_key
+    build_ios_ipa!
+    prepare_release_notes! unless env_flag("SKIP_METADATA")
+
+    submit = env_flag("SUBMIT_FOR_REVIEW", default: false)
+    options = common_deliver_options(api_key).merge(
+      submit_for_review: submit,
+      skip_binary_upload: false
+    )
+    options[:submission_information] = submission_information if submit
+
+    upload_to_app_store(**options)
+
+    if submit
+      UI.success("Uploaded and submitted for App Store review")
+    else
+      UI.success("Uploaded to App Store Connect (not submitted). Set SUBMIT_FOR_REVIEW=true to submit.")
+    end
+  end
+
+  desc "Upload + submit for review. Builds unless SKIP_BUILD=true. SKIP_BINARY_UPLOAD=true submits the latest ASC build only."
+  lane :submit do
+    api_key = app_store_api_key
+    skip_binary = env_flag("SKIP_BINARY_UPLOAD")
+
+    unless skip_binary
+      build_ios_ipa!
+      prepare_release_notes! unless env_flag("SKIP_METADATA")
     end
 
-    # Upload build and wait for Apple to finish processing
-    pilot(
-      ipa:                               ipa_path,
-      skip_waiting_for_build_processing: false,
-      skip_submission:                   true
-    )
+    if skip_binary
+      UI.important("SKIP_BINARY_UPLOAD=true — submitting latest processed App Store Connect build (local IPA ignored)")
+      skip_opts = with_api_key(
+        {
+          app_identifier: APP_IDENTIFIER,
+          app_version: package_version![:marketing],
+          skip_binary_upload: true,
+          skip_screenshots: true,
+          skip_metadata: env_flag("SKIP_METADATA", default: false),
+          submit_for_review: true,
+          automatic_release: env_flag("AUTOMATIC_RELEASE", default: false),
+          phased_release: env_flag("PHASED_RELEASE", default: false),
+          force: true,
+          run_precheck_before_submit: false,
+          precheck_include_in_app_purchases: false,
+          submission_information: submission_information
+        },
+        api_key
+      )
+      upload_to_app_store(**skip_opts)
+    else
+      upload_to_app_store(
+        **common_deliver_options(api_key).merge(
+          submit_for_review: true,
+          skip_binary_upload: false,
+          submission_information: submission_information
+        )
+      )
+    end
+    UI.success("Submitted for App Store review")
+  end
 
-    # Create App Store version and link the processed build
-    upload_to_app_store(
-      app_version:                version,
-      skip_binary_upload:         true,
-      skip_screenshots:           true,
-      skip_metadata:              false,
-      submit_for_review:          false,
-      automatic_release:          false,
-      force:                      true,
-      run_precheck_before_submit: false
+  desc "Upload metadata only (What's New / release notes). Does not upload a binary."
+  lane :metadata do
+    api_key = app_store_api_key
+    prepare_release_notes!
+    meta_opts = with_api_key(
+      {
+        app_identifier: APP_IDENTIFIER,
+        app_version: package_version![:marketing],
+        skip_binary_upload: true,
+        skip_screenshots: env_flag("SKIP_SCREENSHOTS", default: true),
+        skip_metadata: false,
+        submit_for_review: false,
+        force: true,
+        run_precheck_before_submit: false
+      },
+      api_key
     )
+    upload_to_app_store(**meta_opts)
+    UI.success("Metadata uploaded")
+  end
+
+  desc "Upload IPA and create App Store version (legacy two-step: TestFlight wait + deliver). Prefer beta / release."
+  lane :upload do |options|
+    ipa_path = options[:ipa]     || IPA_PATH
+    version  = options[:version]  || package_version![:marketing]
+    UI.user_error!("ipa not found at #{ipa_path}") unless File.exist?(ipa_path)
+
+    prepare_release_notes!
+
+    api_key = app_store_api_key
+    pilot_opts = with_api_key(
+      {
+        ipa: ipa_path,
+        skip_waiting_for_build_processing: false,
+        skip_submission: true
+      },
+      api_key
+    )
+    # Upload build and wait for Apple to finish processing
+    pilot(**pilot_opts)
+
+    deliver_opts = with_api_key(
+      {
+        app_version:                version,
+        skip_binary_upload:         true,
+        skip_screenshots:           true,
+        skip_metadata:              false,
+        submit_for_review:          false,
+        automatic_release:          false,
+        force:                      true,
+        run_precheck_before_submit: false
+      },
+      api_key
+    )
+    upload_to_app_store(**deliver_opts)
   end
 end

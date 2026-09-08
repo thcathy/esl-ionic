@@ -1,5 +1,8 @@
 require "fileutils"
 
+# Play Store lanes stay as: set_version, build_apk, build_bundle, upload.
+# iOS Earn Time–style names (beta / release / metadata / submit) live in ios/App/fastlane.
+
 default_platform(:android)
 
 # Absolute paths — immune to fastlane's working directory changes

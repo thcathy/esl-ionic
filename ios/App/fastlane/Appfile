@@ -1,3 +1,9 @@
-app_identifier "com.esl.ionic"
-apple_id       ENV["APPLE_ID_APP_USERNAME"]
-team_id        "DU483K8F48"
+# App Store Connect / Apple Developer identity
+# Secrets come from env — see ios/App/fastlane/env.example (or repo-root .env)
+
+require_relative "load_env"
+
+app_identifier ENV.fetch("APP_IDENTIFIER", "com.esl.ionic")
+apple_id       ENV["APPLE_ID_APP_USERNAME"] || ENV["APPLE_ID"] || ENV["FASTLANE_USER"]
+team_id        ENV.fetch("APPLE_TEAM_ID", "DU483K8F48")
+itc_team_id    ENV["ITC_TEAM_ID"] if ENV["ITC_TEAM_ID"] && !ENV["ITC_TEAM_ID"].empty?

@@ -35,8 +35,11 @@ npm run e2e-ci         # Run e2e with line reporter
 ./build.sh build_firebase        # Production web build
 ./build.sh release_web_uat       # Deploy to UAT Firebase (batch4-161201)
 ./build.sh release_web_prod      # Deploy to prod Firebase (funfunspell-firebase)
-./build.sh test_ios              # Build iOS for testing
-./build.sh release_ios           # Archive and upload to App Store
+./build.sh test_ios              # Capacitor iOS build for testing (no upload)
+./build.sh beta_ios              # TestFlight
+./build.sh release_ios           # App Store metadata + IPA (SUBMIT_FOR_REVIEW defaults false)
+./build.sh submit_ios            # Upload + submit for App Store review
+./build.sh metadata_ios          # What's New only
 ./build.sh buildAndroidApk       # Build signed APK (requires ESL_IONIC_KEYSTORE_PASSWORD)
 ./build.sh release_android       # Bundle and publish to Play Store
 ```
