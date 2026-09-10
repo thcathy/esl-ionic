@@ -14,8 +14,9 @@ npm run e2e-ci         # Playwright e2e
 
 # Release (see build.sh)
 ./build.sh build_firebase
-./build.sh release_ios
-./build.sh release_android   # Play production draft (new AAB)
+./build.sh release_ios       # App Store: submit + auto-release after Apple approval
+./build.sh beta_ios          # TestFlight
+./build.sh release_android   # Play: new AAB, auto-publish after Google review
 ./build.sh beta_android      # Play internal testing
 ```
 

@@ -35,12 +35,15 @@ npm run e2e-ci         # Run e2e with line reporter
 ./build.sh build_firebase        # Production web build
 ./build.sh release_web_uat       # Deploy to UAT Firebase (batch4-161201)
 ./build.sh release_web_prod      # Deploy to prod Firebase (funfunspell-firebase)
-./build.sh test_ios              # Build iOS for testing
-./build.sh release_ios           # Archive and upload to App Store
+./build.sh test_ios              # Capacitor iOS build for testing (no upload)
+./build.sh beta_ios              # TestFlight
+./build.sh release_ios           # App Store: submit + auto-release after Apple approval
+./build.sh submit_ios            # Upload + submit (auto-release after Apple approval)
+./build.sh metadata_ios          # store listing metadata (SKIP_SCREENSHOTS=false for screenshots)
 ./build.sh buildAndroidApk       # Build signed APK (requires ESL_IONIC_KEYSTORE_PASSWORD)
 ./build.sh build_android         # Signed AAB only (no upload)
 ./build.sh beta_android          # Play Internal Testing (draft)
-./build.sh release_android       # New AAB → Play production draft (PLAY_PRODUCTION_STATUS defaults draft)
+./build.sh release_android       # New AAB → Play production; auto-publish after Google review
 ./build.sh promote_android       # Promote internal → production (no rebuild)
 ./build.sh metadata_android      # Play listing + changelogs
 ./build.sh validate_android      # Play validate_only dry run

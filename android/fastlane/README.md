@@ -8,7 +8,7 @@ version is applied (`major*100000 + minor*1000 + patch` → `versionCode`).
 
 ```sh
 ./build.sh beta_android          # Internal testing (draft)
-./build.sh release_android       # New AAB → production draft (historic FFS)
+./build.sh release_android       # New AAB → production; auto-publish after Google review
 ./build.sh promote_android       # internal → production, no rebuild
 ./build.sh metadata_android      # listing + changelogs (no binary)
 ./build.sh validate_android      # Play validate_only dry run
@@ -21,8 +21,10 @@ See `env.example` for `PLAY_TRACK`, `PLAY_RELEASE_STATUS`, `PLAY_PRODUCTION_STAT
 `PLAY_UPLOAD_AAB`, `SKIP_BUILD`, `GCLOUD_SERVICE_ACCOUNT_KEY` / `PLAY_STORE_JSON_KEY`.
 
 `fastlane android release` promotes by default (Earn Time). `./build.sh release_android`
-sets `PLAY_UPLOAD_AAB=true` and keeps production **draft**. Set
-`PLAY_PRODUCTION_STATUS=completed` when you intend to submit for Google review.
+sets `PLAY_UPLOAD_AAB=true` and `PLAY_PRODUCTION_STATUS=completed` so Google review
+is submitted and the app goes live after approval (Play Console → Publishing overview
+→ Managed publishing **OFF**). Override with `PLAY_PRODUCTION_STATUS=draft` for a
+Console-held draft.
 
 Direct Fastlane (after `ionic cap build android --configuration production --no-open`):
 
@@ -102,7 +104,7 @@ Build and upload to Google Play Internal Testing (PLAY_TRACK, draft by default)
 [bundle exec] fastlane android release
 ```
 
-Promote to production (default) or PLAY_UPLOAD_AAB=true to build+upload. PLAY_PRODUCTION_STATUS defaults to draft.
+Promote to production (default) or PLAY_UPLOAD_AAB=true to build+upload. PLAY_PRODUCTION_STATUS defaults to completed (auto-publish after Google review).
 
 ### android promote
 

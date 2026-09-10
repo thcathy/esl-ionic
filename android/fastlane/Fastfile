@@ -159,8 +159,10 @@ end
 
 def production_release_status
   return "inProgress" unless ENV["PLAY_ROLLOUT"].to_s.strip.empty?
-  # Draft-safe FunFunSpell default. Earn Time uses completed after the first Console publish.
-  ENV.fetch("PLAY_PRODUCTION_STATUS", "draft")
+  # completed = submit for Google review, then publish after approval
+  # (Play Console Managed publishing must be OFF). Falls back to draft if the
+  # Play app itself is still unpublished.
+  ENV.fetch("PLAY_PRODUCTION_STATUS", "completed")
 end
 
 def announce_play_release!(track, status)
@@ -168,8 +170,8 @@ def announce_play_release!(track, status)
   case status
   when "draft"
     UI.important(
-      "Saved as draft — Google will not review yet. Set PLAY_PRODUCTION_STATUS=completed " \
-      "to submit for review after the first Play Console publish."
+      "Saved as draft — Google will not review yet. PLAY_PRODUCTION_STATUS=completed " \
+      "submits for review and auto-publishes after approval (Managed publishing off)."
     )
   when "completed", "inProgress"
     UI.success("Submitted for Google review. It rolls out after approval unless Managed publishing is on.")
@@ -307,7 +309,7 @@ platform :android do
     UI.success("Uploaded to Play track: #{ENV.fetch('PLAY_TRACK', 'internal')}")
   end
 
-  desc "Promote to production (default) or PLAY_UPLOAD_AAB=true to build+upload. PLAY_PRODUCTION_STATUS defaults to draft."
+  desc "Promote to production (default) or PLAY_UPLOAD_AAB=true to build+upload. PLAY_PRODUCTION_STATUS defaults to completed (auto-publish after Google review)."
   lane :release do
     unless env_flag("PLAY_UPLOAD_AAB")
       UI.important("Promoting existing Play build (set PLAY_UPLOAD_AAB=true to build and upload a new AAB)")
