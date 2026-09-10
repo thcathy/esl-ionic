@@ -119,7 +119,6 @@ def build_ios_ipa!
     output_name:      "App.ipa",
     export_options: {
       signingStyle:      "automatic",
-      compileBitcode:    true,
       stripSwiftSymbols: true,
       thinning:          "<none>"
     }
@@ -151,11 +150,15 @@ end
 
 def submission_information
   {
-    add_id_info_uses_idfa: false,
-    export_compliance_uses_encryption: false,
-    export_compliance_is_exempt: false,
-    export_compliance_contains_third_party_cryptography: false,
-    export_compliance_contains_proprietary_cryptography: false,
+    add_id_info_uses_idfa: env_flag("ADD_ID_INFO_USES_IDFA", default: false),
+    export_compliance_uses_encryption: env_flag("EXPORT_COMPLIANCE_USES_ENCRYPTION", default: true),
+    export_compliance_is_exempt: env_flag("EXPORT_COMPLIANCE_IS_EXEMPT", default: true),
+    export_compliance_contains_third_party_cryptography: env_flag(
+      "EXPORT_COMPLIANCE_CONTAINS_THIRD_PARTY_CRYPTOGRAPHY", default: false
+    ),
+    export_compliance_contains_proprietary_cryptography: env_flag(
+      "EXPORT_COMPLIANCE_CONTAINS_PROPRIETARY_CRYPTOGRAPHY", default: false
+    ),
     content_rights_contains_third_party_content: false,
     content_rights_has_rights: true
   }
@@ -252,10 +255,8 @@ platform :ios do
     api_key = app_store_api_key
     skip_binary = env_flag("SKIP_BINARY_UPLOAD")
 
-    unless skip_binary
-      build_ios_ipa!
-      prepare_release_notes! unless env_flag("SKIP_METADATA")
-    end
+    build_ios_ipa! unless skip_binary
+    prepare_release_notes! unless env_flag("SKIP_METADATA")
 
     if skip_binary
       UI.important("SKIP_BINARY_UPLOAD=true — submitting latest processed App Store Connect build (local IPA ignored)")

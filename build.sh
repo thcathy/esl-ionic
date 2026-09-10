@@ -38,7 +38,7 @@ Commands:
   help
 
 iOS env (repo-root .env or ios/App/fastlane/.env — see ios/App/fastlane/env.example):
-  APPLE_ID_APP_USERNAME   Apple ID (required unless using an ASC API key)
+  APPLE_ID_APP_USERNAME   Apple ID (required unless using a complete ASC API key)
   SKIP_BUILD=true        Reuse tmp/App.ipa; skip ionic capacitor + gym
   SUBMIT_FOR_REVIEW=true Optional submit on release_ios (default: false)
 EOF
@@ -61,11 +61,25 @@ skip_build() {
 }
 
 require_apple_id() {
-  if [[ -z "${APPLE_ID_APP_USERNAME:-}" && -z "${APPLE_ID:-}" && -z "${FASTLANE_USER:-}" ]]; then
-    if [[ -z "${APP_STORE_CONNECT_API_KEY_ID:-}" && -z "${ASC_KEY_ID:-}" ]]; then
-      die "Set APPLE_ID_APP_USERNAME (or APPLE_ID) in .env, or configure an App Store Connect API key"
-    fi
+  if [[ -n "${APPLE_ID_APP_USERNAME:-}" || -n "${APPLE_ID:-}" || -n "${FASTLANE_USER:-}" ]]; then
+    return 0
   fi
+
+  local key_id issuer_id key_path key_content
+  key_id="${APP_STORE_CONNECT_API_KEY_ID:-${ASC_KEY_ID:-}}"
+  issuer_id="${APP_STORE_CONNECT_API_ISSUER_ID:-${ASC_ISSUER_ID:-}}"
+  key_path="${APP_STORE_CONNECT_API_KEY_PATH:-${ASC_KEY_PATH:-}}"
+  key_content="${APP_STORE_CONNECT_API_KEY_CONTENT:-${ASC_KEY_CONTENT:-}}"
+
+  if [[ -n "${key_id}" && -n "${issuer_id}" && ( -n "${key_content}" || ( -n "${key_path}" && -f "${key_path}" ) ) ]]; then
+    return 0
+  fi
+
+  if [[ -n "${key_id}" || -n "${issuer_id}" || -n "${key_path}" || -n "${key_content}" ]]; then
+    die "Incomplete App Store Connect API key: set key id, issuer id, and key path or content (APP_STORE_CONNECT_API_KEY_* or ASC_*)"
+  fi
+
+  die "Set APPLE_ID_APP_USERNAME (or APPLE_ID / FASTLANE_USER) in .env, or configure a complete App Store Connect API key"
 }
 
 ios_fastlane() {
