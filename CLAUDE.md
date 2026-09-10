@@ -39,7 +39,7 @@ npm run e2e-ci         # Run e2e with line reporter
 ./build.sh beta_ios              # TestFlight
 ./build.sh release_ios           # App Store metadata + IPA (SUBMIT_FOR_REVIEW defaults false)
 ./build.sh submit_ios            # Upload + submit for App Store review
-./build.sh metadata_ios          # What's New only
+./build.sh metadata_ios          # store listing metadata (SKIP_SCREENSHOTS=false for screenshots)
 ./build.sh buildAndroidApk       # Build signed APK (requires ESL_IONIC_KEYSTORE_PASSWORD)
 ./build.sh release_android       # Bundle and publish to Play Store
 ```

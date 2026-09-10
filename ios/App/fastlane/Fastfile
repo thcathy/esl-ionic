@@ -9,6 +9,8 @@ default_platform(:ios)
 IOS_APP_DIR = File.expand_path("../..", __FILE__)       # ios/App/
 ROOT_DIR    = File.expand_path("../../../..", __FILE__) # project root
 IPA_PATH    = "#{ROOT_DIR}/tmp/App.ipa"
+METADATA_PATH    = "#{IOS_APP_DIR}/fastlane/metadata"
+SCREENSHOTS_PATH = "#{IOS_APP_DIR}/fastlane/screenshots"
 APP_IDENTIFIER = ENV.fetch("APP_IDENTIFIER", "com.esl.ionic")
 
 def env_flag(name, default: false)
@@ -125,18 +127,21 @@ def build_ios_ipa!
   )
 end
 
-# Mirror root release_notes/*.txt into deliver metadata locales.
+# Seed metadata/*/release_notes.txt from root release_notes/*.txt only when missing.
 def prepare_release_notes!
   {
     "en-US"   => "en",
     "zh-Hans" => "zh-Hans",
     "zh-Hant" => "zh-Hant"
   }.each do |store_locale, file_locale|
+    dest = "#{METADATA_PATH}/#{store_locale}/release_notes.txt"
+    next if File.exist?(dest)
+
     src = "#{ROOT_DIR}/release_notes/#{file_locale}.txt"
-    UI.user_error!("Missing #{src}") unless File.exist?(src)
-    dir = "#{IOS_APP_DIR}/fastlane/metadata/#{store_locale}"
-    FileUtils.mkdir_p(dir)
-    File.write("#{dir}/release_notes.txt", File.read(src).strip)
+    UI.user_error!("Missing #{src} (needed to seed #{dest})") unless File.exist?(src)
+    FileUtils.mkdir_p(File.dirname(dest))
+    File.write(dest, File.read(src).strip)
+    UI.message("Seeded #{dest} from #{src}")
   end
 end
 
@@ -175,6 +180,8 @@ def common_deliver_options(api_key)
       ipa: IPA_PATH,
       app_identifier: APP_IDENTIFIER,
       app_version: package_version![:marketing],
+      metadata_path: METADATA_PATH,
+      screenshots_path: SCREENSHOTS_PATH,
       force: true,
       run_precheck_before_submit: false,
       precheck_include_in_app_purchases: false,
@@ -264,6 +271,8 @@ platform :ios do
         {
           app_identifier: APP_IDENTIFIER,
           app_version: package_version![:marketing],
+          metadata_path: METADATA_PATH,
+          screenshots_path: SCREENSHOTS_PATH,
           skip_binary_upload: true,
           skip_screenshots: true,
           skip_metadata: env_flag("SKIP_METADATA", default: false),
@@ -290,7 +299,7 @@ platform :ios do
     UI.success("Submitted for App Store review")
   end
 
-  desc "Upload metadata only (What's New / release notes). Does not upload a binary."
+  desc "Upload store metadata (name/subtitle/keywords/description/promo/URLs/release notes). Screenshots if SKIP_SCREENSHOTS=false. No binary."
   lane :metadata do
     api_key = app_store_api_key
     prepare_release_notes!
@@ -298,6 +307,8 @@ platform :ios do
       {
         app_identifier: APP_IDENTIFIER,
         app_version: package_version![:marketing],
+        metadata_path: METADATA_PATH,
+        screenshots_path: SCREENSHOTS_PATH,
         skip_binary_upload: true,
         skip_screenshots: env_flag("SKIP_SCREENSHOTS", default: true),
         skip_metadata: false,
@@ -334,6 +345,8 @@ platform :ios do
     deliver_opts = with_api_key(
       {
         app_version:                version,
+        metadata_path:                METADATA_PATH,
+        screenshots_path:             SCREENSHOTS_PATH,
         skip_binary_upload:         true,
         skip_screenshots:           true,
         skip_metadata:              false,

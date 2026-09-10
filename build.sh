@@ -32,7 +32,7 @@ Commands:
   beta_ios          TestFlight (capacitor + set_version + fastlane beta)
   release_ios       App Store metadata + binary (SUBMIT_FOR_REVIEW defaults false)
   submit_ios        Upload + submit for App Store review
-  metadata_ios      What's New / release notes only (no IPA)
+  metadata_ios      Store listing metadata from ios/App/fastlane/metadata (no IPA)
   buildAndroidApk
   release_android
   help
@@ -41,6 +41,7 @@ iOS env (repo-root .env or ios/App/fastlane/.env — see ios/App/fastlane/env.ex
   APPLE_ID_APP_USERNAME   Apple ID (required unless using a complete ASC API key)
   SKIP_BUILD=true        Reuse tmp/App.ipa; skip ionic capacitor + gym
   SUBMIT_FOR_REVIEW=true Optional submit on release_ios (default: false)
+  SKIP_SCREENSHOTS=false Include screenshots on metadata_ios / release_ios (default: true = skip)
 EOF
 }
 

@@ -10,12 +10,15 @@ is applied (`major*100000 + minor*1000 + patch` → `CFBundleVersion`).
 ./build.sh beta_ios        # TestFlight
 ./build.sh release_ios     # metadata + binary (SUBMIT_FOR_REVIEW defaults false)
 ./build.sh submit_ios      # upload + submit for review
-./build.sh metadata_ios    # What's New only
+./build.sh metadata_ios    # store listing metadata from fastlane/metadata (no IPA)
+SKIP_SCREENSHOTS=false ./build.sh metadata_ios   # include fastlane/screenshots
 SKIP_BUILD=true ./build.sh submit_ios   # reuse tmp/App.ipa
 ```
 
 Env: copy `env.example` → `.env` (this folder) and/or fill repo-root `.env`.
-See `env.example` for `SUBMIT_FOR_REVIEW`, `SKIP_BUILD`, optional ASC API key.
+See `env.example` for `SUBMIT_FOR_REVIEW`, `SKIP_SCREENSHOTS`, `SKIP_BUILD`, optional ASC API key.
+
+Metadata and screenshots are read from `fastlane/metadata` and `fastlane/screenshots` (locale subfolders). 6.9″ screenshots (1320×2868) are detected by resolution — no `APP_IPHONE_67` subfolders needed.
 
 Direct Fastlane (after `ionic capacitor build ios --configuration production --no-open`):
 
@@ -79,7 +82,7 @@ Upload + submit for review. Builds unless SKIP_BUILD=true. SKIP_BINARY_UPLOAD=tr
 [bundle exec] fastlane ios metadata
 ```
 
-Upload metadata only (What's New / release notes). Does not upload a binary.
+Upload store metadata (name/subtitle/keywords/description/promo/URLs/release notes). Screenshots if SKIP_SCREENSHOTS=false. No binary.
 
 ### ios upload
 

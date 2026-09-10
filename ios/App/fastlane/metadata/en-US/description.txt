@@ -1,0 +1,24 @@
+School English dictation again? Parents shouldn’t have to read the list aloud every night. FunFunSpell lets you build the practice, listen, spell, and fix weak words—at home.
+
+Great for:
+• School English dictation / listen-and-spell practice
+• Exam revision for textbook words and sentences
+• Drilling words you keep misspelling
+
+How it works (four beats)
+1. Create your list — word cards or full sentences that match class content
+2. Listen — AI voice reads any English word or sentence
+3. Spell — practice the dictation, repeat as needed
+4. Weak words — track learned words and ones you often misspell
+
+Why FunFunSpell
+• Free forever — all core features free; no ads, no subscription
+• Unlimited custom dictations you can save and reuse
+• Images and phonetic symbols in single-word practice
+• 4,000+ commonly used English words included
+• Web version at funfunspell.com
+
+About the developer
+FunFunSpell is built and maintained in free time by Timmy Wong (Wong Hau Luen), a one-person developer in Sha Tin, Hong Kong. It stays free because it’s a personal learning tool—not a subscription product.
+
+Some features require an internet connection.
