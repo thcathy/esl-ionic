@@ -1,7 +1,7 @@
 # App Store Connect / Apple Developer identity
 # Secrets come from env — see ios/App/fastlane/env.example (or repo-root .env)
 
-require_relative "load_env"
+require File.join(Dir.pwd, "load_env")
 
 app_identifier ENV.fetch("APP_IDENTIFIER", "com.esl.ionic")
 apple_id       ENV["APPLE_ID_APP_USERNAME"] || ENV["APPLE_ID"] || ENV["FASTLANE_USER"]

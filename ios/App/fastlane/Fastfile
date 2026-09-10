@@ -1,6 +1,6 @@
 require "fileutils"
 require "json"
-require_relative "load_env"
+require File.join(Dir.pwd, "load_env")
 
 opt_out_usage
 default_platform(:ios)
