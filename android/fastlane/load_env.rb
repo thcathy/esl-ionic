@@ -1,5 +1,8 @@
-# Load .env files without clobbering vars already in the environment.
+# Load repo-root .env without clobbering vars already in the environment.
 # Appfile is evaluated before Fastfile, so Play JSON key must be available here.
+# Fastlane auto-loads android/fastlane/.env; do not duplicate that here (match iOS load_env.rb).
+ROOT_DIR = File.expand_path("../../..", __FILE__)
+
 def load_dotenv(path)
   return unless File.exist?(path)
 
@@ -16,5 +19,11 @@ def load_dotenv(path)
   end
 end
 
+def play_json_key_path
+  raw = (ENV["GCLOUD_SERVICE_ACCOUNT_KEY"] || ENV["PLAY_STORE_JSON_KEY"]).to_s.strip
+  return nil if raw.empty?
+
+  File.expand_path(raw, ROOT_DIR)
+end
+
 load_dotenv(File.expand_path("../../../.env", __FILE__))
-load_dotenv(File.expand_path("../.env", __FILE__))

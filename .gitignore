@@ -63,4 +63,5 @@ my-release-key.jks
 *.p8
 /android/fastlane/.env
 /android/fastlane/play-store-key.json
+/android/fastlane/metadata/android/*/changelogs/*.txt
 

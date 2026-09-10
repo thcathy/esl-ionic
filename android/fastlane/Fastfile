@@ -70,12 +70,6 @@ def android_aab_path
   AAB_PATH
 end
 
-def play_json_key_path
-  raw = (ENV["GCLOUD_SERVICE_ACCOUNT_KEY"] || ENV["PLAY_STORE_JSON_KEY"]).to_s.strip
-  return nil if raw.empty?
-  File.expand_path(raw, ROOT_DIR)
-end
-
 def play_store_upload_options(overrides = {})
   options = {
     package_name: PACKAGE_NAME,
@@ -144,12 +138,14 @@ def preflight_play_upload!
       package_name: PACKAGE_NAME,
       track: track
     )
-    UI.message("Play #{track} versionCodes: #{existing.inspect}")
-    if existing.map(&:to_i).include?(gradle[:build].to_i)
-      UI.user_error!("versionCode #{gradle[:build]} is already on the Play #{track} track")
-    end
   rescue StandardError => e
     UI.important("Could not read Play track version codes (#{e.message}); skipping Play compare")
+    return
+  end
+
+  UI.message("Play #{track} versionCodes: #{existing.inspect}")
+  if existing.map(&:to_i).include?(gradle[:build].to_i)
+    UI.user_error!("versionCode #{gradle[:build]} is already on the Play #{track} track")
   end
 end
 
@@ -162,7 +158,7 @@ def production_release_status
   # completed = submit for Google review, then publish after approval
   # (Play Console Managed publishing must be OFF). Falls back to draft if the
   # Play app itself is still unpublished.
-  ENV.fetch("PLAY_PRODUCTION_STATUS", "completed")
+  ENV.fetch("PLAY_PRODUCTION_STATUS", "draft")
 end
 
 def announce_play_release!(track, status)
@@ -190,7 +186,7 @@ def upload_play_release!(options)
       "Play app is still Draft, so #{status} is not allowed. Retrying as draft. " \
       "Finish the first publish in Play Console; later android release can use PLAY_PRODUCTION_STATUS=completed."
     )
-    options = options.merge(release_status: "draft")
+    options = options.merge(release_status: "draft", track_promote_release_status: "draft")
     options.delete(:rollout)
     upload_to_play_store(**options)
     "draft"
@@ -211,7 +207,7 @@ def promote_play_release!
     skip_upload_aab: true,
     track: from_track,
     track_promote_to: to_track,
-    release_status: status,
+    track_promote_release_status: status,
     version_code: version_code.to_i
   )
   options[:rollout] = rollout if rollout && !rollout.empty?
@@ -250,8 +246,9 @@ platform :android do
     sh "cp \"#{ROOT_DIR}/esl-dictation.apk\" \"#{ENV['HOME']}/Google Drive/My Drive/apk/\""
   end
 
-  desc "Build signed release AAB (always rebuilds; prefer `build` for SKIP_BUILD)"
+  desc "Build signed release AAB (deprecated — use `build`)"
   lane :build_bundle do
+    UI.important("build_bundle is deprecated; use `build` (respects SKIP_BUILD) or ./build.sh build_android")
     gradle(
       task:        "bundle",
       build_type:  "Release",
@@ -281,14 +278,15 @@ platform :android do
     )
   end
 
-  desc "Upload store listing metadata only (no binary). Listing files are optional; changelogs come from release_notes/."
+  desc "Upload store listing metadata only (no binary). Listing files are optional."
   lane :metadata do
-    prepare_release_changelogs!
+    parsed = package_version!
     upload_to_play_store(
       **play_store_upload_options(
         skip_upload_aab: true,
         skip_upload_metadata: false,
-        skip_upload_changelogs: false
+        skip_upload_changelogs: true,
+        version_code: parsed[:build].to_i
       )
     )
     UI.success("Play Store metadata uploaded")
@@ -309,14 +307,8 @@ platform :android do
     UI.success("Uploaded to Play track: #{ENV.fetch('PLAY_TRACK', 'internal')}")
   end
 
-  desc "Promote to production (default) or PLAY_UPLOAD_AAB=true to build+upload. PLAY_PRODUCTION_STATUS defaults to completed (auto-publish after Google review)."
-  lane :release do
-    unless env_flag("PLAY_UPLOAD_AAB")
-      UI.important("Promoting existing Play build (set PLAY_UPLOAD_AAB=true to build and upload a new AAB)")
-      promote_play_release!
-      next
-    end
-
+  desc "Build and upload new AAB to production (PLAY_PRODUCTION_STATUS defaults to draft)"
+  lane :upload_production do
     build_android_aab!
     preflight_play_upload!
     prepare_release_changelogs! unless env_flag("SKIP_UPLOAD_CHANGELOGS")
@@ -336,12 +328,23 @@ platform :android do
     announce_play_release!(track, applied)
   end
 
+  desc "Promote internal → production (PLAY_PRODUCTION_STATUS defaults to draft)"
+  lane :release do
+    if env_flag("PLAY_UPLOAD_AAB")
+      UI.important("PLAY_UPLOAD_AAB is deprecated; use upload_production or ./build.sh release_android")
+      upload_production
+      next
+    end
+
+    promote_play_release!
+  end
+
   desc "Promote latest internal/closed build to production (no rebuild)"
   lane :promote do
     promote_play_release!
   end
 
-  desc "Upload AAB to Play Store as production draft (legacy). Prefer beta / release."
+  desc "Upload AAB to Play Store (legacy). Prefer beta or upload_production."
   lane :upload do |options|
     aab_path = options[:aab] or UI.user_error!("aab is required")
 

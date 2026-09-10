@@ -7,7 +7,7 @@ This is the funfunspell dictation app
 
 ## Android release (Fastlane)
 
-Same lane names as Earn Time To Play: `beta` (internal testing), `release` (promote or upload AAB), `promote`, `metadata`, `validate`. FunFunSpell is Capacitor/Ionic — run Capacitor via `./build.sh`, not Flutter.
+Same lane names as Earn Time To Play: `beta` (internal testing), `release` (promote), `upload_production` (new AAB), `promote`, `metadata`, `validate`. FunFunSpell is Capacitor/Ionic — run Capacitor via `./build.sh`, not Flutter.
 
 ```bash
 # One-time: copy android/fastlane/env.example → android/fastlane/.env
@@ -21,7 +21,7 @@ Same lane names as Earn Time To Play: `beta` (internal testing), `release` (prom
 SKIP_BUILD=true ./build.sh beta_android   # reuse existing AAB
 ```
 
-`release_android` maps to `fastlane android release` with `PLAY_UPLOAD_AAB=true`. Direct `fastlane android release` **promotes** (Earn Time). `PLAY_PRODUCTION_STATUS` defaults to **completed**: Google reviews the release, then it publishes automatically if Managed publishing is **off** (Play Console → Publishing overview). Use `PLAY_PRODUCTION_STATUS=draft` to hold the release in Console.
+`release_android` maps to `fastlane android upload_production`. `promote_android` and direct `fastlane android release` **promote** internal → production (no rebuild). `PLAY_PRODUCTION_STATUS` defaults to **draft** so a normal release does not submit for Google review. Set `PLAY_PRODUCTION_STATUS=completed` when you intend to submit.
 
 `versionCode` is still `major*100000 + minor*1000 + patch` from `package.json`. Changelogs still come from `release_notes/{en,zh-Hant,zh-Hans}.txt`. Play listing copy lives under `android/fastlane/metadata/android` and **uploads with beta/release/upload by default**; set `SKIP_UPLOAD_METADATA=true` for a binary-only upload.
 
