@@ -29,10 +29,19 @@ Commands:
   release_web_uat
   release_web_prod
   test_ios
-  release_ios
+  beta_ios          TestFlight (capacitor + set_version + fastlane beta)
+  release_ios       App Store metadata + binary (SUBMIT_FOR_REVIEW defaults false)
+  submit_ios        Upload + submit for App Store review
+  metadata_ios      Store listing metadata from ios/App/fastlane/metadata (no IPA)
   buildAndroidApk
   release_android
   help
+
+iOS env (repo-root .env or ios/App/fastlane/.env — see ios/App/fastlane/env.example):
+  APPLE_ID_APP_USERNAME   Apple ID (required unless using a complete ASC API key)
+  SKIP_BUILD=true        Reuse tmp/App.ipa; skip ionic capacitor + gym
+  SUBMIT_FOR_REVIEW=true Optional submit on release_ios (default: false)
+  SKIP_SCREENSHOTS=false Include screenshots on metadata_ios / release_ios (default: true = skip)
 EOF
 }
 
@@ -48,6 +57,49 @@ require_env() {
   fi
 }
 
+skip_build() {
+  [[ "${SKIP_BUILD:-false}" == "true" ]]
+}
+
+require_apple_id() {
+  if [[ -n "${APPLE_ID_APP_USERNAME:-}" || -n "${APPLE_ID:-}" || -n "${FASTLANE_USER:-}" ]]; then
+    return 0
+  fi
+
+  local key_id issuer_id key_path key_content
+  key_id="${APP_STORE_CONNECT_API_KEY_ID:-${ASC_KEY_ID:-}}"
+  issuer_id="${APP_STORE_CONNECT_API_ISSUER_ID:-${ASC_ISSUER_ID:-}}"
+  key_path="${APP_STORE_CONNECT_API_KEY_PATH:-${ASC_KEY_PATH:-}}"
+  key_content="${APP_STORE_CONNECT_API_KEY_CONTENT:-${ASC_KEY_CONTENT:-}}"
+
+  if [[ -n "${key_id}" && -n "${issuer_id}" && ( -n "${key_content}" || ( -n "${key_path}" && -f "${key_path}" ) ) ]]; then
+    return 0
+  fi
+
+  if [[ -n "${key_id}" || -n "${issuer_id}" || -n "${key_path}" || -n "${key_content}" ]]; then
+    die "Incomplete App Store Connect API key: set key id, issuer id, and key path or content (APP_STORE_CONNECT_API_KEY_* or ASC_*)"
+  fi
+
+  die "Set APPLE_ID_APP_USERNAME (or APPLE_ID / FASTLANE_USER) in .env, or configure a complete App Store Connect API key"
+}
+
+ios_fastlane() {
+  pushd "${ROOT_DIR}/ios/App" >/dev/null
+  fastlane "$@"
+  popd >/dev/null
+}
+
+# Capacitor sync + CFBundleVersion from package.json (unless SKIP_BUILD=true).
+prepare_ios_native() {
+  setVersion
+  if skip_build; then
+    echo "SKIP_BUILD=true — skipping ionic capacitor build (reusing tmp/App.ipa)"
+    return
+  fi
+  ionic capacitor build ios --configuration production --no-open
+  ios_fastlane set_version version:"${VERSION}" build_number:"${ANDROID_VERSION}"
+}
+
 
 release_web_uat() {
   firebase deploy -P batch4-161201
@@ -61,17 +113,28 @@ build_firebase() {
   ionic build --configuration production
 }
 
+beta_ios() {
+  require_apple_id
+  prepare_ios_native
+  ios_fastlane beta
+}
+
 release_ios() {
-  require_env "APPLE_ID_APP_USERNAME"
+  require_apple_id
+  prepare_ios_native
+  ios_fastlane release
+}
 
+submit_ios() {
+  require_apple_id
+  prepare_ios_native
+  ios_fastlane submit
+}
+
+metadata_ios() {
+  require_apple_id
   setVersion
-  ionic capacitor build ios --configuration production --no-open
-
-  pushd "${ROOT_DIR}/ios/App" >/dev/null
-  fastlane set_version version:"${VERSION}" build_number:"${ANDROID_VERSION}"
-  fastlane build
-  fastlane upload ipa:"${ROOT_DIR}/tmp/App.ipa" version:"${VERSION}"
-  popd >/dev/null
+  ios_fastlane metadata
 }
 
 test_ios() {
@@ -135,12 +198,12 @@ main() {
     help|-h|--help)
       usage
       ;;
-    build_firebase|release_web_uat|release_web_prod|test_ios|release_ios|buildAndroidApk|release_android)
+    build_firebase|release_web_uat|release_web_prod|test_ios|beta_ios|release_ios|submit_ios|metadata_ios|buildAndroidApk|release_android)
       "$cmd" "$@"
       ;;
     *)
       usage
-      die "unknown command: $cmd"
+      die "unknown command: ${cmd}"
       ;;
   esac
 }

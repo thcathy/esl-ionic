@@ -56,5 +56,10 @@ my-release-key.jks
 
 # Fastlane
 /ios/App/fastlane/report.xml
-/ios/App/fastlane/metadata/
+# metadata is source of truth for store listings (was ignored)
+# /ios/App/fastlane/metadata/
+/ios/App/fastlane/screenshots/**/*.png.meta
+
+/ios/App/fastlane/.env
+*.p8
 

@@ -14,7 +14,8 @@ npm run e2e-ci         # Playwright e2e
 
 # Release (see build.sh)
 ./build.sh build_firebase
-./build.sh release_ios
+./build.sh release_ios    # App Store metadata + IPA (does not submit by default)
+./build.sh beta_ios       # TestFlight
 ./build.sh release_android
 ```
 
