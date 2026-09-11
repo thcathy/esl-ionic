@@ -170,14 +170,6 @@ prepare_ios_native() {
 }
 
 # Capacitor sync only (unless SKIP_BUILD=true). versionCode is written by fastlane build via gradle.
-prepare_android_native() {
-  setVersion
-  if skip_build; then
-    echo "SKIP_BUILD=true — skipping ionic capacitor build (reusing existing AAB)"
-    return
-  fi
-  ionic cap build android --configuration production --no-open
-}
 
 
 release_web_uat() {

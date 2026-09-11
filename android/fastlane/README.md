@@ -65,7 +65,7 @@ Build, sign and copy release APK
 [bundle exec] fastlane android build_bundle
 ```
 
-Build signed release AAB (always rebuilds; prefer `build` for SKIP_BUILD)
+Build signed release AAB (deprecated — use `build`)
 
 ### android build
 
@@ -89,7 +89,7 @@ Validate Play Store metadata + AAB (dry run, no upload)
 [bundle exec] fastlane android metadata
 ```
 
-Upload store listing metadata only (no binary). Listing files are optional; changelogs come from release_notes/.
+Upload store listing metadata only (no binary). Listing files are optional.
 
 ### android beta
 
@@ -99,13 +99,21 @@ Upload store listing metadata only (no binary). Listing files are optional; chan
 
 Build and upload to Google Play Internal Testing (PLAY_TRACK, draft by default)
 
+### android upload_production
+
+```sh
+[bundle exec] fastlane android upload_production
+```
+
+Build and upload new AAB to production (PLAY_PRODUCTION_STATUS defaults to draft)
+
 ### android release
 
 ```sh
 [bundle exec] fastlane android release
 ```
 
-Promote to production (default) or PLAY_UPLOAD_AAB=true to build+upload. PLAY_PRODUCTION_STATUS defaults to completed (auto-publish after Google review).
+Promote internal → production (PLAY_PRODUCTION_STATUS defaults to draft)
 
 ### android promote
 
@@ -121,7 +129,7 @@ Promote latest internal/closed build to production (no rebuild)
 [bundle exec] fastlane android upload
 ```
 
-Upload AAB to Play Store as production draft (legacy). Prefer beta / release.
+Upload AAB to Play Store (legacy). Prefer beta or upload_production.
 
 ----
 
