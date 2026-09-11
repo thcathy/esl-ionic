@@ -57,6 +57,7 @@ Android env (repo-root .env or android/fastlane/.env — see android/fastlane/en
   PLAY_RELEASE_STATUS           beta/validate status (default: draft)
   PLAY_PRODUCTION_STATUS        release/promote status (default: completed)
   PLAY_UPLOAD_AAB=true          release lane: upload a new AAB instead of promoting
+  SKIP_UPLOAD_METADATA=true     binary-only upload (default: false = push listing)
 EOF
 }
 

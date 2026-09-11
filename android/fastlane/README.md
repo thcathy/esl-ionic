@@ -18,7 +18,8 @@ SKIP_BUILD=true ./build.sh beta_android   # reuse existing AAB
 
 Env: copy `env.example` → `.env` (this folder) and/or fill repo-root `.env`.
 See `env.example` for `PLAY_TRACK`, `PLAY_RELEASE_STATUS`, `PLAY_PRODUCTION_STATUS`,
-`PLAY_UPLOAD_AAB`, `SKIP_BUILD`, `GCLOUD_SERVICE_ACCOUNT_KEY` / `PLAY_STORE_JSON_KEY`.
+`PLAY_UPLOAD_AAB`, `SKIP_BUILD`, `SKIP_UPLOAD_METADATA` (default **false** — listing
+text uploads unless you opt out), `GCLOUD_SERVICE_ACCOUNT_KEY` / `PLAY_STORE_JSON_KEY`.
 
 `fastlane android release` promotes by default (Earn Time). `./build.sh release_android`
 sets `PLAY_UPLOAD_AAB=true` and `PLAY_PRODUCTION_STATUS=completed` so Google review

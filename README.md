@@ -23,7 +23,7 @@ SKIP_BUILD=true ./build.sh beta_android   # reuse existing AAB
 
 `release_android` maps to `fastlane android release` with `PLAY_UPLOAD_AAB=true`. Direct `fastlane android release` **promotes** (Earn Time). `PLAY_PRODUCTION_STATUS` defaults to **completed**: Google reviews the release, then it publishes automatically if Managed publishing is **off** (Play Console → Publishing overview). Use `PLAY_PRODUCTION_STATUS=draft` to hold the release in Console.
 
-`versionCode` is still `major*100000 + minor*1000 + patch` from `package.json`. Changelogs still come from `release_notes/{en,zh-Hant,zh-Hans}.txt`.
+`versionCode` is still `major*100000 + minor*1000 + patch` from `package.json`. Changelogs still come from `release_notes/{en,zh-Hant,zh-Hans}.txt`. Play listing copy lives under `android/fastlane/metadata/android` and **uploads with beta/release/upload by default**; set `SKIP_UPLOAD_METADATA=true` for a binary-only upload.
 
 ## Major Dependency
 * [Ionic framework](https://ionicframework.com/): application framework

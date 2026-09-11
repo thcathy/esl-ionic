@@ -81,7 +81,7 @@ def play_store_upload_options(overrides = {})
     package_name: PACKAGE_NAME,
     metadata_path: File.join(ANDROID_DIR, "fastlane/metadata/android"),
     skip_upload_apk: true,
-    skip_upload_metadata: env_flag("SKIP_UPLOAD_METADATA", default: true),
+    skip_upload_metadata: env_flag("SKIP_UPLOAD_METADATA", default: false),
     skip_upload_images: env_flag("SKIP_UPLOAD_IMAGES", default: true),
     skip_upload_screenshots: env_flag("SKIP_UPLOAD_SCREENSHOTS", default: true),
     skip_upload_changelogs: env_flag("SKIP_UPLOAD_CHANGELOGS", default: false),
@@ -353,9 +353,7 @@ platform :android do
         track:                   "production",
         release_status:          "draft",
         skip_upload_images:      true,
-        skip_upload_screenshots: true,
-        skip_upload_metadata:    true,
-        skip_upload_changelogs:  false
+        skip_upload_screenshots: true
       )
     )
   end

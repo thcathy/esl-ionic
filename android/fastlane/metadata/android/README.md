@@ -9,16 +9,16 @@ into these locales before upload:
 | zh-TW, zh-HK | `release_notes/zh-Hant.txt` |
 | zh-CN | `release_notes/zh-Hans.txt` |
 
-Store listing text (title, short description, full description) is optional.
-Add files under `{locale}/` when you want `./build.sh metadata_android` to
-push them:
+Store listing text (title, short description, full description) lives in this
+tree and is the Play listing source of truth. Add files under `{locale}/`:
 
 - `title.txt`
 - `short_description.txt`
 - `full_description.txt`
 
 Binary lanes (`beta`, `release` with `PLAY_UPLOAD_AAB=true`, legacy `upload`)
-skip listing metadata by default (`SKIP_UPLOAD_METADATA=true`) and still
-upload changelogs unless `SKIP_UPLOAD_CHANGELOGS=true`.
+and `./build.sh metadata_android` **upload listing metadata by default**.
+Set `SKIP_UPLOAD_METADATA=true` for a binary-only upload. Changelogs still
+upload unless `SKIP_UPLOAD_CHANGELOGS=true`.
 Images and screenshots stay skipped unless you set `SKIP_UPLOAD_IMAGES=false`
 / `SKIP_UPLOAD_SCREENSHOTS=false` and add files under `{locale}/images/`.
