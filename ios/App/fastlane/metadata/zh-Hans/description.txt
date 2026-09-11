@@ -19,6 +19,6 @@
 • 网页版：funfunspell.com
 
 关于开发者
-FunFunSpell 由香港沙田一人开发者 Timmy Wong（Wong Hau Luen）利用空余时间维护。永久免费，是因为这是个人学习工具，不是订阅生意。
+FunFunSpell 是利用空余时间维护的独立学习项目。永久免费，是因为这是个人学习工具，不是订阅生意。
 
 部分功能需要网络连线。

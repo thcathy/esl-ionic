@@ -12,12 +12,43 @@ if [[ "${DEBUG}" == "1" || "${DEBUG}" == "true" ]]; then
   set -x
 fi
 
-if [[ -f "${ROOT_DIR}/.env" ]]; then
-  # shellcheck source=.env
-  set -o allexport
-  source "${ROOT_DIR}/.env"
-  set +o allexport
-fi
+# Load .env files without clobbering vars already in the environment.
+load_env_file() {
+  local file="$1"
+  [[ -f "${file}" ]] || return 0
+
+  local line key value
+  while IFS= read -r line || [[ -n "${line}" ]]; do
+    line="${line#"${line%%[![:space:]]*}"}"
+    line="${line%"${line##*[![:space:]]}"}"
+    [[ -z "${line}" || "${line}" == \#* ]] && continue
+
+    key="${line%%=*}"
+    value="${line#*=}"
+    key="${key%"${key##*[![:space:]]}"}"
+    value="${value#"${value%%[![:space:]]*}"}"
+    value="${value%"${value##*[![:space:]]}"}"
+    value="${value#\"}"
+    value="${value%\"}"
+    value="${value#\'}"
+    value="${value%\'}"
+
+    [[ -z "${key}" ]] && continue
+    if [[ -z "${!key:-}" ]]; then
+      export "${key}=${value}"
+    fi
+  done < "${file}"
+}
+
+load_env_file "${ROOT_DIR}/.env"
+
+load_ios_env() {
+  load_env_file "${ROOT_DIR}/ios/App/fastlane/.env"
+}
+
+load_android_env() {
+  load_env_file "${ROOT_DIR}/android/fastlane/.env"
+}
 
 usage() {
   cat <<'EOF'
@@ -30,18 +61,33 @@ Commands:
   release_web_prod
   test_ios
   beta_ios          TestFlight (capacitor + set_version + fastlane beta)
-  release_ios       App Store metadata + binary (SUBMIT_FOR_REVIEW defaults false)
-  submit_ios        Upload + submit for App Store review
+  release_ios       App Store: submit + auto-release after Apple approval
+  submit_ios        Upload + submit for App Store review (auto-release after approval)
   metadata_ios      Store listing metadata from ios/App/fastlane/metadata (no IPA)
   buildAndroidApk
-  release_android
+  build_android       AAB only (capacitor + fastlane build)
+  beta_android        Internal testing (draft; PLAY_TRACK configurable)
+  release_android     New AAB → production draft (upload_production)
+  promote_android     Promote internal → production (no rebuild)
+  metadata_android    Store listing + changelogs (no binary)
+  validate_android    Play validate_only dry run
   help
 
 iOS env (repo-root .env or ios/App/fastlane/.env — see ios/App/fastlane/env.example):
   APPLE_ID_APP_USERNAME   Apple ID (required unless using a complete ASC API key)
   SKIP_BUILD=true        Reuse tmp/App.ipa; skip ionic capacitor + gym
-  SUBMIT_FOR_REVIEW=true Optional submit on release_ios (default: false)
+  SUBMIT_FOR_REVIEW      Default true on release_ios
+  AUTOMATIC_RELEASE      Default true — live after Apple approval (no extra click)
   SKIP_SCREENSHOTS=false Include screenshots on metadata_ios / release_ios (default: true = skip)
+
+Android env (repo-root .env or android/fastlane/.env — see android/fastlane/env.example):
+  ESL_IONIC_KEYSTORE_PASSWORD   Signing (required for AAB/APK builds)
+  GCLOUD_SERVICE_ACCOUNT_KEY    Play JSON key path (or PLAY_STORE_JSON_KEY)
+  SKIP_BUILD=true               Reuse existing AAB; skip ionic capacitor + gradle
+  PLAY_TRACK                    beta/validate track (default: internal)
+  PLAY_RELEASE_STATUS           beta/validate status (default: draft)
+  PLAY_PRODUCTION_STATUS        upload_production / promote status (default: draft)
+  SKIP_UPLOAD_METADATA=true     binary-only upload (default: false = push listing)
 EOF
 }
 
@@ -59,6 +105,29 @@ require_env() {
 
 skip_build() {
   [[ "${SKIP_BUILD:-false}" == "true" ]]
+}
+
+require_play_key() {
+  if [[ -z "${GCLOUD_SERVICE_ACCOUNT_KEY:-}" && -z "${PLAY_STORE_JSON_KEY:-}" ]]; then
+    die "Set GCLOUD_SERVICE_ACCOUNT_KEY (or PLAY_STORE_JSON_KEY) to the Play Console JSON key path"
+  fi
+}
+
+android_fastlane() {
+  pushd "${ROOT_DIR}/android" >/dev/null
+  fastlane "$@"
+  popd >/dev/null
+}
+
+# Capacitor sync + versionCode from package.json (unless SKIP_BUILD=true).
+prepare_android_native() {
+  setVersion
+  if skip_build; then
+    echo "SKIP_BUILD=true — skipping ionic capacitor build (reusing existing AAB)"
+    return
+  fi
+  ionic cap build android --configuration production --no-open
+  android_fastlane set_version version:"${VERSION}" version_code:"${ANDROID_VERSION}"
 }
 
 require_apple_id() {
@@ -100,6 +169,8 @@ prepare_ios_native() {
   ios_fastlane set_version version:"${VERSION}" build_number:"${ANDROID_VERSION}"
 }
 
+# Capacitor sync only (unless SKIP_BUILD=true). versionCode is written by fastlane build via gradle.
+
 
 release_web_uat() {
   firebase deploy -P batch4-161201
@@ -114,30 +185,35 @@ build_firebase() {
 }
 
 beta_ios() {
+  load_ios_env
   require_apple_id
   prepare_ios_native
   ios_fastlane beta
 }
 
 release_ios() {
+  load_ios_env
   require_apple_id
   prepare_ios_native
   ios_fastlane release
 }
 
 submit_ios() {
+  load_ios_env
   require_apple_id
   prepare_ios_native
   ios_fastlane submit
 }
 
 metadata_ios() {
+  load_ios_env
   require_apple_id
   setVersion
   ios_fastlane metadata
 }
 
 test_ios() {
+  load_ios_env
   setVersion
   ionic capacitor build ios --configuration production
   pushd "${ROOT_DIR}/ios/App" >/dev/null
@@ -146,27 +222,57 @@ test_ios() {
 }
 
 buildAndroidApk() {
+  load_android_env
   require_env "ESL_IONIC_KEYSTORE_PASSWORD"
 
   ionic cap build android --configuration production --no-open
-  pushd "${ROOT_DIR}/android" >/dev/null
-  fastlane build_apk
-  popd >/dev/null
+  android_fastlane build_apk
+}
+
+build_android() {
+  load_android_env
+  require_env "ESL_IONIC_KEYSTORE_PASSWORD"
+  prepare_android_native
+  android_fastlane build
+}
+
+beta_android() {
+  load_android_env
+  require_env "ESL_IONIC_KEYSTORE_PASSWORD"
+  require_play_key
+  prepare_android_native
+  android_fastlane beta
 }
 
 release_android() {
-  local AAB_PATH="${ROOT_DIR}/android/app/build/outputs/bundle/release/app-release.aab"
-
+  load_android_env
   require_env "ESL_IONIC_KEYSTORE_PASSWORD"
-  require_env "GCLOUD_SERVICE_ACCOUNT_KEY"
+  require_play_key
+  prepare_android_native
+  PLAY_PRODUCTION_STATUS="${PLAY_PRODUCTION_STATUS:-draft}" \
+    android_fastlane upload_production
+}
 
+promote_android() {
+  load_android_env
+  require_play_key
   setVersion
-  ionic cap build android --configuration production --no-open
-  pushd "${ROOT_DIR}/android" >/dev/null
-  fastlane set_version version:"${VERSION}" version_code:"${ANDROID_VERSION}"
-  fastlane build_bundle
-  fastlane upload aab:"${AAB_PATH}"
-  popd >/dev/null
+  android_fastlane promote
+}
+
+metadata_android() {
+  load_android_env
+  require_play_key
+  setVersion
+  android_fastlane metadata
+}
+
+validate_android() {
+  load_android_env
+  require_env "ESL_IONIC_KEYSTORE_PASSWORD"
+  require_play_key
+  prepare_android_native
+  android_fastlane validate
 }
 
 setVersion() {
@@ -198,7 +304,7 @@ main() {
     help|-h|--help)
       usage
       ;;
-    build_firebase|release_web_uat|release_web_prod|test_ios|beta_ios|release_ios|submit_ios|metadata_ios|buildAndroidApk|release_android)
+    build_firebase|release_web_uat|release_web_prod|test_ios|beta_ios|release_ios|submit_ios|metadata_ios|buildAndroidApk|build_android|beta_android|release_android|promote_android|metadata_android|validate_android)
       "$cmd" "$@"
       ;;
     *)

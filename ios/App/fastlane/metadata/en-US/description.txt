@@ -19,6 +19,6 @@ Why FunFunSpell
 • Web version at funfunspell.com
 
 About the developer
-FunFunSpell is built and maintained in free time by Timmy Wong (Wong Hau Luen), a one-person developer in Sha Tin, Hong Kong. It stays free because it’s a personal learning tool—not a subscription product.
+FunFunSpell is an indie project maintained in free time. It stays free because it’s a personal learning tool—not a subscription product.
 
 Some features require an internet connection.

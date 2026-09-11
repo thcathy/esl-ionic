@@ -8,15 +8,15 @@ is applied (`major*100000 + minor*1000 + patch` → `CFBundleVersion`).
 
 ```sh
 ./build.sh beta_ios        # TestFlight
-./build.sh release_ios     # metadata + binary (SUBMIT_FOR_REVIEW defaults false)
-./build.sh submit_ios      # upload + submit for review
+./build.sh release_ios     # submit + auto-release after Apple approval
+./build.sh submit_ios      # upload + submit (auto-release after approval)
 ./build.sh metadata_ios    # store listing metadata from fastlane/metadata (no IPA)
 SKIP_SCREENSHOTS=false ./build.sh metadata_ios   # include fastlane/screenshots
 SKIP_BUILD=true ./build.sh submit_ios   # reuse tmp/App.ipa
 ```
 
 Env: copy `env.example` → `.env` (this folder) and/or fill repo-root `.env`.
-See `env.example` for `SUBMIT_FOR_REVIEW`, `SKIP_SCREENSHOTS`, `SKIP_BUILD`, optional ASC API key.
+See `env.example` for `SUBMIT_FOR_REVIEW` (default true), `AUTOMATIC_RELEASE` (default true), `SKIP_SCREENSHOTS`, `SKIP_BUILD`, optional ASC API key.
 
 Metadata and screenshots are read from `fastlane/metadata` and `fastlane/screenshots` (locale subfolders). 6.9″ screenshots (1320×2868) are detected by resolution — no `APP_IPHONE_67` subfolders needed.
 
@@ -66,7 +66,7 @@ Build and upload to TestFlight (does not submit for App Store review)
 [bundle exec] fastlane ios release
 ```
 
-Build, upload metadata + binary to App Store Connect. SUBMIT_FOR_REVIEW defaults to false.
+Build, upload metadata + binary, submit for review. AUTOMATIC_RELEASE defaults true (live after Apple approval).
 
 ### ios submit
 

@@ -59,7 +59,9 @@ my-release-key.jks
 # metadata is source of truth for store listings (was ignored)
 # /ios/App/fastlane/metadata/
 /ios/App/fastlane/screenshots/**/*.png.meta
-
 /ios/App/fastlane/.env
 *.p8
+/android/fastlane/.env
+/android/fastlane/play-store-key.json
+/android/fastlane/metadata/android/*/changelogs/*.txt
 

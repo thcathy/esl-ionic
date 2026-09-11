@@ -14,9 +14,10 @@ npm run e2e-ci         # Playwright e2e
 
 # Release (see build.sh)
 ./build.sh build_firebase
-./build.sh release_ios    # App Store metadata + IPA (does not submit by default)
-./build.sh beta_ios       # TestFlight
-./build.sh release_android
+./build.sh release_ios       # App Store: submit + auto-release after Apple approval
+./build.sh beta_ios          # TestFlight
+./build.sh release_android   # Play: new AAB, auto-publish after Google review
+./build.sh beta_android      # Play internal testing
 ```
 
 Single test: `npx ng test --browsers=ChromeHeadlessCI --watch=false --include='**/speech.service.spec.ts'`
