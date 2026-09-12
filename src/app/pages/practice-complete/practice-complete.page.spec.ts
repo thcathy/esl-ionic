@@ -5,6 +5,7 @@ import {of} from 'rxjs';
 import {
   DictationServiceSpy,
   FFSAuthServiceSpy,
+  InAppReviewServiceSpy,
   IonicComponentServiceSpy,
   ManageVocabHistoryServiceSpy,
   NavigationServiceSpy,
@@ -23,13 +24,15 @@ import {ManageVocabHistoryService} from '../../services/member/manage-vocab-hist
 import {NavigationService} from '../../services/navigation.service';
 import {VocabPracticeService} from '../../services/practice/vocab-practice.service';
 import {StorageService} from '../../services/storage.service';
+import {InAppReviewService} from '../../services/in-app-review.service';
 import {PracticeCompletePage, PracticeCompletePageInput} from './practice-complete.page';
 
 describe('PracticeCompletePage', () => {
   let component: PracticeCompletePage;
   let fixture: ComponentFixture<PracticeCompletePage>;
   let dictationServiceSpy, vocabPracticeServiceSpy, storageSpy,
-    authServiceSpy, navigationServiceSpy, manageVocabHistoryServiceSpy, ionicComponentServiceSpy;
+    authServiceSpy, navigationServiceSpy, manageVocabHistoryServiceSpy, ionicComponentServiceSpy,
+    inAppReviewServiceSpy;
   let defaultInput;
 
   beforeEach(waitForAsync(() => {
@@ -41,6 +44,7 @@ describe('PracticeCompletePage', () => {
     navigationServiceSpy.editDictation = jasmine.createSpy('editDictation');
     manageVocabHistoryServiceSpy = ManageVocabHistoryServiceSpy();
     ionicComponentServiceSpy = IonicComponentServiceSpy();
+    inAppReviewServiceSpy = InAppReviewServiceSpy();
 
     TestBed.configureTestingModule({
       declarations: [ PracticeCompletePage ],
@@ -56,6 +60,7 @@ describe('PracticeCompletePage', () => {
         { provide: NavigationService, useValue: navigationServiceSpy },
         { provide: ManageVocabHistoryService, useValue: manageVocabHistoryServiceSpy },
         { provide: IonicComponentService, useValue: ionicComponentServiceSpy },
+        { provide: InAppReviewService, useValue: inAppReviewServiceSpy },
       ]
     })
     .compileComponents();
@@ -227,6 +232,35 @@ describe('PracticeCompletePage', () => {
       expect(vocabPracticeServiceSpy.saveHistory.calls.count()).toEqual(1);
       expect(manageVocabHistoryServiceSpy.classifyVocabulary.calls.count()).toEqual(1);
       expect(dictationServiceSpy.createVocabDictationHistory.calls.count()).toEqual(0);
+    }));
+  });
+
+  describe('in-app review', () => {
+    it('calls considerReview after init regardless of history HTTP', fakeAsync(() => {
+      defaultInput.dictation = TestData.fillInDictation();
+      defaultInput.dictation.options = { practiceType: VocabPracticeType.Spell };
+      const params = { 'practiceCompletePageInput': defaultInput };
+      storageSpy.get.and.callFake((param) => params[param]);
+      authServiceSpy.isAuthenticated.and.returnValue(true);
+      dictationServiceSpy.createVocabDictationHistory.and.returnValue({ subscribe: () => ({}) });
+
+      component.ionViewWillEnter();
+      tick();
+
+      expect(inAppReviewServiceSpy.considerReview).toHaveBeenCalledTimes(1);
+      expect(inAppReviewServiceSpy.considerReview).toHaveBeenCalledWith();
+    }));
+
+    it('calls considerReview even when puzzle mode skips history save', fakeAsync(() => {
+      defaultInput.dictation.options.practiceType = VocabPracticeType.Puzzle;
+      const params = { 'practiceCompletePageInput': defaultInput };
+      storageSpy.get.and.callFake((param) => params[param]);
+
+      component.ionViewWillEnter();
+      tick();
+
+      expect(dictationServiceSpy.createVocabDictationHistory).not.toHaveBeenCalled();
+      expect(inAppReviewServiceSpy.considerReview).toHaveBeenCalledTimes(1);
     }));
   });
 

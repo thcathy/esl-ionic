@@ -1,10 +1,10 @@
 import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
-import {ComponentFixture, fakeAsync, TestBed, waitForAsync} from '@angular/core/testing';
+import {ComponentFixture, fakeAsync, TestBed, tick, waitForAsync} from '@angular/core/testing';
 
 import {ArticleDictationCompletePage} from './article-dictation-complete.page';
 import {SharedTestModule} from '../../../testing/shared-test.module';
 import {dictation1, dictation1Histories, member1} from '../../../testing/test-data';
-import {FFSAuthServiceSpy, ManageVocabHistoryServiceSpy, NavigationServiceSpy, StorageSpy} from '../../../testing/mocks-ionic';
+import {FFSAuthServiceSpy, InAppReviewServiceSpy, ManageVocabHistoryServiceSpy, NavigationServiceSpy, StorageSpy} from '../../../testing/mocks-ionic';
 import {DictationService} from '../../services/dictation/dictation.service';
 import {ActivatedRoute, convertToParamMap} from '@angular/router';
 import {ManageVocabHistoryService} from '../../services/member/manage-vocab-history.service';
@@ -12,6 +12,7 @@ import {StorageService} from '../../services/storage.service';
 import {FFSAuthService} from '../../services/auth.service';
 import {NavigationService} from '../../services/navigation.service';
 import {Dictation, Dictations} from '../../entity/dictation';
+import {InAppReviewService} from '../../services/in-app-review.service';
 
 describe('ArticleDictationCompletePage', () => {
   let component: ArticleDictationCompletePage;
@@ -19,6 +20,7 @@ describe('ArticleDictationCompletePage', () => {
   let dictationServiceSpy;
   let authServiceSpy;
   let navigationServiceSpy;
+  let inAppReviewServiceSpy;
 
   beforeEach(waitForAsync(() => {
     dictationServiceSpy = jasmine.createSpyObj('DictationService', ['createSentenceDictationHistory', 'isInstantDictation']);
@@ -29,6 +31,7 @@ describe('ArticleDictationCompletePage', () => {
 
     navigationServiceSpy = NavigationServiceSpy();
     navigationServiceSpy.editDictation = jasmine.createSpy('editDictation');
+    inAppReviewServiceSpy = InAppReviewServiceSpy();
 
     const params = {
       'dictation': dictation1,
@@ -49,6 +52,7 @@ describe('ArticleDictationCompletePage', () => {
         { provide: ManageVocabHistoryService, useValue: ManageVocabHistoryServiceSpy},
         { provide: FFSAuthService, useValue: authServiceSpy },
         { provide: NavigationService, useValue: navigationServiceSpy },
+        { provide: InAppReviewService, useValue: inAppReviewServiceSpy },
         { provide: ActivatedRoute, useValue: {
             snapshot: {
               queryParamMap: convertToParamMap({
@@ -82,6 +86,32 @@ describe('ArticleDictationCompletePage', () => {
     component.init();
     expect(dictationServiceSpy.createSentenceDictationHistory.calls.count()).toEqual(0);
   }));
+
+  describe('in-app review', () => {
+    it('calls considerReview after ionViewDidEnter regardless of history HTTP', fakeAsync(() => {
+      dictationServiceSpy.createSentenceDictationHistory.and.returnValue({ subscribe: () => ({}) });
+      component.ionViewDidEnter();
+      tick();
+
+      expect(inAppReviewServiceSpy.considerReview).toHaveBeenCalledTimes(1);
+    }));
+
+    it('calls considerReview when historyStored skips history HTTP', fakeAsync(() => {
+      const params = {
+        'dictation': dictation1,
+        'histories': dictation1Histories,
+        'historyStored': true,
+      };
+      const storageSpy = TestBed.inject(StorageService) as jasmine.SpyObj<StorageService>;
+      storageSpy.get.and.callFake((key: string) => Promise.resolve(params[key]));
+
+      component.ionViewDidEnter();
+      tick();
+
+      expect(dictationServiceSpy.createSentenceDictationHistory).not.toHaveBeenCalled();
+      expect(inAppReviewServiceSpy.considerReview).toHaveBeenCalledTimes(1);
+    }));
+  });
 
   describe('showEditButton', () => {
     function ownerFillInDictation(): Dictation {

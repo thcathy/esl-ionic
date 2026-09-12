@@ -5,6 +5,8 @@ PODS:
     - Capacitor
   - CapacitorBrowser (8.0.0):
     - Capacitor
+  - CapacitorCommunityInAppReview (8.0.0):
+    - Capacitor
   - CapacitorCommunityTextToSpeech (8.0.0):
     - Capacitor
   - CapacitorCordova (8.0.2)
@@ -23,6 +25,7 @@ DEPENDENCIES:
   - "Capacitor (from `../../node_modules/@capacitor/ios`)"
   - "CapacitorApp (from `../../node_modules/@capacitor/app`)"
   - "CapacitorBrowser (from `../../node_modules/@capacitor/browser`)"
+  - "CapacitorCommunityInAppReview (from `../../node_modules/@capacitor-community/in-app-review`)"
   - "CapacitorCommunityTextToSpeech (from `../../node_modules/@capacitor-community/text-to-speech`)"
   - "CapacitorCordova (from `../../node_modules/@capacitor/ios`)"
   - "CapacitorHaptics (from `../../node_modules/@capacitor/haptics`)"
@@ -38,6 +41,8 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/@capacitor/app"
   CapacitorBrowser:
     :path: "../../node_modules/@capacitor/browser"
+  CapacitorCommunityInAppReview:
+    :path: "../../node_modules/@capacitor-community/in-app-review"
   CapacitorCommunityTextToSpeech:
     :path: "../../node_modules/@capacitor-community/text-to-speech"
   CapacitorCordova:
@@ -57,6 +62,7 @@ SPEC CHECKSUMS:
   Capacitor: 2b79172ad27f3be2d103cce88b8eb9803fdcc744
   CapacitorApp: 3963a84197280757b84f126afd1520a85ae3b092
   CapacitorBrowser: b7d7f05f840fe042e46f6528bb8db853e3058fb2
+  CapacitorCommunityInAppReview: 4492bdd34aad4d27ed87949376022cc93b294ea1
   CapacitorCommunityTextToSpeech: 43cd3c04174f38b8766f160830ee474cd5596439
   CapacitorCordova: 921bdb690ebe82421b24fce45552fd3dea2ae43a
   CapacitorHaptics: 2079d9fa04c5a71e18663b4722323c304c58245c
@@ -65,6 +71,6 @@ SPEC CHECKSUMS:
   CapacitorSplashScreen: 422880d7117605c30699eb4b21644b62db42e86c
   CapacitorStatusBar: 312e2e67928dfe9514c4a8916a1fd610552f5f35
 
-PODFILE CHECKSUM: b0fcfee5443cbd88557914c0b67740284308bf2b
+PODFILE CHECKSUM: 4da52af4514582f3a2f4fdbc4b4d2aa95be610d3
 
 COCOAPODS: 1.16.2

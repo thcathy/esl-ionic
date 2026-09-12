@@ -13,6 +13,7 @@ import {VocabPracticeType} from '../../enum/vocab-practice-type.enum';
 import {DictationHelper} from '../../services/dictation/dictation-helper.service';
 import {StorageService} from '../../services/storage.service';
 import {DictationCardComponent} from '../../components/dictation-card/dictation-card';
+import {InAppReviewService} from '../../services/in-app-review.service';
 
 @Component({
     selector: 'app-practice-complete',
@@ -43,6 +44,7 @@ export class PracticeCompletePage implements OnInit {
     public authService: FFSAuthService,
     public manageVocabHistoryService: ManageVocabHistoryService,
     private log: NGXLogger,
+    private inAppReview: InAppReviewService,
   ) { }
 
   ngOnInit() {}
@@ -54,6 +56,7 @@ export class PracticeCompletePage implements OnInit {
   async init() {
     await this.getNavParams();
     this.createHistory();
+    this.inAppReview.considerReview();
   }
 
   async getNavParams() {

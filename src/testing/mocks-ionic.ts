@@ -160,6 +160,8 @@ export const ManageVocabHistoryServiceSpy = () => {
 
 export const AppServiceSpy = () => jasmine.createSpyObj('AppService', ['isApp']);
 
+export const InAppReviewServiceSpy = () => jasmine.createSpyObj('InAppReviewService', ['considerReview']);
+
 export const SpeechServiceSpy = () => jasmine.createSpyObj('SpeechServiceSpy', ['speak']);
 
 export const IonicComponentServiceSpy = () => jasmine.createSpyObj('IonicComponentServiceSpy', ['presentVocabPracticeTypeActionSheet']);
