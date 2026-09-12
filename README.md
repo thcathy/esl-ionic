@@ -49,7 +49,7 @@ SKIP_BUILD=true ./build.sh submit_ios   # reuse tmp/App.ipa
 
 `release_ios` maps to `fastlane ios release`. `SUBMIT_FOR_REVIEW` and `AUTOMATIC_RELEASE` default to **true**: Apple reviews the app, then it goes live without an extra App Store Connect click. Set `SUBMIT_FOR_REVIEW=false` to upload without submitting, or `AUTOMATIC_RELEASE=false` to hold after approval.
 
-Store listing text and screenshots live under `ios/App/fastlane/metadata` and `ios/App/fastlane/screenshots`. Deliver detects 6.9″ iPhone screenshots (1320×2868) by resolution — device subfolders like `APP_IPHONE_67` are not required.
+Store listing text and screenshots live under `ios/App/fastlane/metadata` and `ios/App/fastlane/screenshots`. Deliver detects 6.9″ iPhone screenshots (1320×2868) by resolution — device subfolders like `APP_IPHONE_67` are not required. iPad 13″ screenshots (2064×2752) use `APP_IPAD_PRO_3GEN_129-*.png` filenames in the same locale folders. Play 10″ tablet shots live under `android/fastlane/metadata/android/{locale}/images/tenInchScreenshots/` (1600×2560); 7″ is not used.
 
 CFBundleVersion is still `major*100000 + minor*1000 + patch` from `package.json`. Signing stays Xcode Automatic Signing (no match).
 

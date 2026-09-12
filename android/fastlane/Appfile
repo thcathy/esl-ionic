@@ -1,7 +1,7 @@
 # Google Play identity
 # Secrets come from env — see android/fastlane/env.example (or repo-root .env)
 
-require_relative "load_env"
+require File.join(Dir.pwd, "load_env")
 
 package_name ENV.fetch("ANDROID_PACKAGE_NAME", "com.esl.ionic")
 

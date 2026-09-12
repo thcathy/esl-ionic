@@ -186,6 +186,7 @@ def common_deliver_options(api_key)
       run_precheck_before_submit: false,
       precheck_include_in_app_purchases: false,
       skip_screenshots: env_flag("SKIP_SCREENSHOTS", default: true),
+      overwrite_screenshots: env_flag("OVERWRITE_SCREENSHOTS", default: true),
       skip_metadata: env_flag("SKIP_METADATA", default: false),
       automatic_release: env_flag("AUTOMATIC_RELEASE", default: true),
       phased_release: env_flag("PHASED_RELEASE", default: false)
@@ -311,6 +312,8 @@ platform :ios do
         screenshots_path: SCREENSHOTS_PATH,
         skip_binary_upload: true,
         skip_screenshots: env_flag("SKIP_SCREENSHOTS", default: true),
+        overwrite_screenshots: env_flag("OVERWRITE_SCREENSHOTS", default: true),
+        skip_app_version_update: true,
         skip_metadata: false,
         submit_for_review: false,
         force: true,

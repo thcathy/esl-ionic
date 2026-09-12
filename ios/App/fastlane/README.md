@@ -16,9 +16,18 @@ SKIP_BUILD=true ./build.sh submit_ios   # reuse tmp/App.ipa
 ```
 
 Env: copy `env.example` → `.env` (this folder) and/or fill repo-root `.env`.
-See `env.example` for `SUBMIT_FOR_REVIEW` (default true), `AUTOMATIC_RELEASE` (default true), `SKIP_SCREENSHOTS`, `SKIP_BUILD`, optional ASC API key.
+See `env.example` for `SUBMIT_FOR_REVIEW` (default true), `AUTOMATIC_RELEASE` (default true), `SKIP_SCREENSHOTS` (default true), `OVERWRITE_SCREENSHOTS` (default true when screenshots are uploaded), `SKIP_BUILD`, optional ASC API key.
 
-Metadata and screenshots are read from `fastlane/metadata` and `fastlane/screenshots` (locale subfolders). 6.9″ screenshots (1320×2868) are detected by resolution — no `APP_IPHONE_67` subfolders needed.
+Metadata and screenshots are read from `fastlane/metadata` and `fastlane/screenshots` (locale subfolders). 6.9″ iPhone screenshots (1320×2868) are detected by resolution — no `APP_IPHONE_67` subfolders needed. iPad 13″ screenshots (2064×2752) use filenames `APP_IPAD_PRO_3GEN_129-*.png` in the same locale folders alongside iPhone shots.
+
+The `metadata` lane uses `skip_app_version_update: true` — it does **not** create or bump an App Store Connect version. Screenshot and metadata upload require an **editable** ASC iOS version for the `package.json` marketing version. If deliver fails with `Cannot update languages - could not find an editable version for 'IOS'`, create the next draft version in App Store Connect or wait for the next binary upload — do **not** bump `package.json` or reuse an already-submitted version solely for screenshots.
+
+`SKIP_SCREENSHOTS` defaults to true (no screenshot upload on release). When screenshots are uploaded (`SKIP_SCREENSHOTS=false`), `OVERWRITE_SCREENSHOTS` defaults to true so existing ASC wells are replaced.
+
+Re-run screenshot upload:
+```sh
+SKIP_SCREENSHOTS=false ./build.sh metadata_ios
+```
 
 Direct Fastlane (after `ionic capacitor build ios --configuration production --no-open`):
 
