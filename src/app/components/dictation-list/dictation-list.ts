@@ -29,6 +29,7 @@ export class DictationListComponent implements OnChanges {
   @Input() showCreateButton: boolean;
   @Input() title: string;
   @Input() loading: boolean;
+  @Input() openById = false;
 
   viewDictations: Array<Dictation>;
   page: number;
@@ -76,6 +77,14 @@ export class DictationListComponent implements OnChanges {
 
   sliceDictations() {
     this.viewDictations = this.dictations.slice(this.page * this.dictationPerPage, (this.page + 1) * this.dictationPerPage);
+  }
+
+  viewDictation(dictation: Dictation) {
+    if (this.openById) {
+      this.navService.openDictationById(dictation.id, true);
+    } else {
+      this.navService.pushOpenDictation(dictation);
+    }
   }
 
   onDone($event) {

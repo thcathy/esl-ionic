@@ -69,4 +69,20 @@ describe('DictationViewPage', () => {
     expect(component.dictation.title).toEqual('test dictation 1');
     expect(component.showBackButton).toEqual(true);
   }));
+
+  it('dictation id loads the dictation and keeps the back button', fakeAsync(() => {
+    dictationServiceSpy.getById.calls.reset();
+    routerSpy.currentNavigation.and.returnValue({
+      extras: {
+        state: {
+          showBackButton: true,
+        }
+      }
+    });
+    activateRouteStub.setParamMap({ dictationId: 1 });
+    tick();
+    expect(dictationServiceSpy.getById.calls.count()).toEqual(1);
+    expect(component.dictation.id).toEqual(1);
+    expect(component.showBackButton).toEqual(true);
+  }));
 });

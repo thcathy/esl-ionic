@@ -30,18 +30,18 @@ export class DictationViewPage implements OnInit {
 
   ngOnInit() {
     this.route.paramMap.subscribe(params => {
-      this.showBackButton = false;
-      if (this.router.currentNavigation() && this.router.currentNavigation().extras.state) {
-        const state = this.router.currentNavigation().extras.state;
+      const state = this.router.currentNavigation()?.extras?.state;
+      this.showBackButton = !!state?.showBackButton;
+      if (state?.toastMessage != null) {
+        this.ionicComponentService.showToastMessage(state.toastMessage);
+      }
+      if (state?.dictation) {
         this.dictation = JSON.parse(state.dictation);
-        this.showBackButton = state.showBackButton;
-        const toastMessage = state.toastMessage;
-        if (toastMessage != null) { this.ionicComponentService.showToastMessage(toastMessage); }
       } else if (params.has('dictationId')) {
-        console.log(`params.get('dictationId') ${params.get('dictationId')}`);
+        this.dictation = null;
         this.dictationService.getById(Number(params.get('dictationId'))).toPromise()
           .then(d => this.dictation = d)
-          .catch(e => this.navigationService.openHomePage());
+          .catch(_e => this.navigationService.openHomePage());
       }
     });
   }

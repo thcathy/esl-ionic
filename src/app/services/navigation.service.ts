@@ -112,6 +112,15 @@ export class NavigationService {
     this.openDictation(dictation, toastMessage, true);
   }
 
+  openDictationById(dictationId: number, showBackButton: boolean = false) {
+    const navigationExtras: NavigationExtras = {
+      state: {
+        showBackButton: showBackButton
+      }
+    };
+    return this.router.navigate(['/dictation-view', dictationId], navigationExtras);
+  }
+
   editDictation(dictation: Dictation = null, mode: string = 'Edit') {
     this.setParam(NavigationService.storageKeys.editDictation, dictation);
     return this.router.navigate(['/edit-dictation/' + mode]);

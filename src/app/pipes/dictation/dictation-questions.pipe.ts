@@ -15,12 +15,15 @@ export class DictationQuestionsPipe implements PipeTransform {
               public translate: TranslateService) {
   }
 
-  transform(value: Dictation, args?: any): string {
-    if (this.dictationHelper.isSentenceDictation(value)) {
-      return this.articleDictationService.divideToSentences(value.article).length + ' ' + this.translate.instant('Sentence');
-    } else {
-      return value.vocabs.length + ' ' + this.translate.instant('Vocab(s)');
-    }
+  transform(value: Dictation, _args?: any): string {
+    const sentence = this.dictationHelper.isSentenceDictation(value);
+    const count = value.questionCount != null
+      ? value.questionCount
+      : sentence
+        ? this.articleDictationService.divideToSentences(value.article).length
+        : value.vocabs.length;
+    const unit = sentence ? 'Sentence' : 'Vocab(s)';
+    return count + ' ' + this.translate.instant(unit);
   }
 
 }

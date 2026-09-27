@@ -1,5 +1,6 @@
 import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import {ComponentFixture, fakeAsync, TestBed, waitForAsync} from '@angular/core/testing';
+import {By} from '@angular/platform-browser';
 
 import {SharedTestModule} from '../../../testing/shared-test.module';
 import {TestData} from '../../../testing/test-data';
@@ -33,6 +34,31 @@ describe('DictationListComponent', () => {
       expect(fixture.nativeElement.querySelector('ion-col .recommended-col')).toBeNull();
       expect(fixture.nativeElement.querySelector('ion-row .suitable-student-row')).toBeNull();
     }));
+  });
+
+  it('view passes the dictation through when openById is off', () => {
+    const dictation = TestData.fillInDictation();
+    component.dictations = [dictation];
+    component.ngOnChanges({});
+    fixture.detectChanges();
+
+    fixture.debugElement.query(By.css('#dictation-list ion-button')).triggerEventHandler('click', null);
+
+    expect(component.navService.pushOpenDictation).toHaveBeenCalledWith(dictation);
+    expect(component.navService.openDictationById).not.toHaveBeenCalled();
+  });
+
+  it('view from search opens the dictation by id', () => {
+    const dictation = TestData.fillInDictation();
+    component.openById = true;
+    component.dictations = [dictation];
+    component.ngOnChanges({});
+    fixture.detectChanges();
+
+    fixture.debugElement.query(By.css('#dictation-list ion-button')).triggerEventHandler('click', null);
+
+    expect(component.navService.openDictationById).toHaveBeenCalledWith(dictation.id, true);
+    expect(component.navService.pushOpenDictation).not.toHaveBeenCalled();
   });
 
 });
