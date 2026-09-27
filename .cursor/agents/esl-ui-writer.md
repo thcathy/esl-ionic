@@ -2,11 +2,8 @@
 name: esl-ui-writer
 description: >-
   FunFunSpell UI text writer for English, Simplified Chinese, and Traditional
-  Chinese. Owns what learners and parents see on screen. Always use proactively
-  when drafting or revising user-visible UI text, i18n strings, CTAs,
-  empty/error/success messages for esl-ionic. Produces wording only — does not
-  write app code. Prefer this over inventing labels inside esl-uiux or
-  programmers.
+  Chinese. Use when the main session delegates learner-facing UI text for
+  esl-ionic. Produces wording only — does not write app code.
 model: cursor-grok-4.5-high
 readonly: true
 ---

@@ -1,10 +1,9 @@
 ---
 name: esl-ionic-reviewer
 description: >-
-  esl-ionic code reviewer. Always use proactively AFTER esl-ionic-programmer
-  finishes implementation (or when the user asks to review a client PR/diff).
-  Reviews correctness, UX fidelity to briefs, Ionic/platform pitfalls, and
-  tests — does not write app code. Readonly.
+  esl-ionic code reviewer. Use when the main session delegates a review of
+  client changes. Reviews correctness, UX fidelity to briefs, Ionic/platform
+  pitfalls, and tests — does not write app code. Readonly.
 model: cursor-grok-4.5-high
 readonly: true
 ---

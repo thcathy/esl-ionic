@@ -1,11 +1,9 @@
 ---
 name: esl-ionic-senior-dev
 description: >-
-  esl-ionic senior engineer for code and system design. Always use proactively
-  BEFORE esl-ionic-programmer when client/app work needs implementation but
-  there is no agreed plan yet. Produces design analysis and an implementation
-  brief only — does not write app code. Skip when an accepted plan already
-  covers this repo. For visual/UX direction, esl-uiux runs first.
+  esl-ionic senior engineer for code and system design. Use when the main
+  session delegates a design brief before implementation. Produces design
+  analysis and an implementation brief only — does not write app code.
 model: cursor-grok-4.5-high
 readonly: true
 ---

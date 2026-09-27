@@ -1,10 +1,9 @@
 ---
 name: esl-ionic-programmer
 description: >-
-  esl-ionic implementation specialist. Always use proactively when the user or
-  planner asks to implement, build, code, apply a plan, fix bugs, or add tests
-  in esl-ionic / the Ionic Angular client. Do not use for planning-only,
-  backend-only, or other repos.
+  esl-ionic implementation specialist. Use when the main session delegates
+  implementation, bug fixes, or tests in esl-ionic / the Ionic Angular client.
+  Do not use for planning-only, backend-only, or other repos.
 model: composer-2.5[fast=false]
 readonly: false
 ---

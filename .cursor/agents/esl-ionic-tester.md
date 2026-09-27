@@ -1,10 +1,9 @@
 ---
 name: esl-ionic-tester
 description: >-
-  esl-ionic test specialist. Always use proactively AFTER review (or with review
-  when the user asks to verify/test client changes). Adds/updates focused unit
-  specs (and e2e only when asked), runs narrow npm/ng test commands, and reports
-  gaps. Does not redesign UX.
+  esl-ionic test specialist. Use when the main session delegates verification
+  of client changes. Adds/updates focused unit specs (and e2e only when asked),
+  runs narrow npm/ng test commands, and reports gaps. Does not redesign UX.
 model: composer-2.5[fast=false]
 readonly: false
 ---

@@ -2,10 +2,9 @@
 name: esl-uiux
 description: >-
   FunFunSpell UI/UX design specialist for esl-ionic (primary) and
-  image-generation-server angular-admin (secondary). Always use proactively
-  BEFORE designing screens, changing layout/visuals, rewriting components for
-  UX, adding flows, or approving UI implementation plans. Produces design/UX
-  specs only — does not write app code. Do not skip this agent for UI work.
+  image-generation-server angular-admin (secondary). Use when the main session
+  delegates a design spec. Produces design/UX specs only — does not write app
+  code.
 model: cursor-grok-4.5-high
 readonly: true
 ---
