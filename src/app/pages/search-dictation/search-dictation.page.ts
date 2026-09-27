@@ -76,7 +76,7 @@ export class SearchDictationPage implements OnInit {
       keyword: this.keyword.value,
       minDate: this.minDate.value.date,
       creator: this.creator.value,
-      suitableStudent: this.suitableStudent.value,
+      suitableStudent: !this.suitableStudent.value || this.suitableStudent.value === 'Any' ? null : this.suitableStudent.value,
       type: this.type.value === 'Any' ? null : this.type.value,
     }).subscribe(r => {
       loader.dismiss();

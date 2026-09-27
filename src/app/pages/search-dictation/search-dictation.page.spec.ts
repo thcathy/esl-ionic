@@ -6,15 +6,20 @@ import {SharedTestModule} from '../../../testing/shared-test.module';
 import {ManageVocabHistoryServiceSpy, StorageSpy} from '../../../testing/mocks-ionic';
 import {ManageVocabHistoryService} from '../../services/member/manage-vocab-history.service';
 import {StorageService} from '../../services/storage.service';
+import {DictationService} from '../../services/dictation/dictation.service';
+import {of} from 'rxjs';
 
 describe('SearchDictationPage', () => {
   let component: SearchDictationPage;
   let fixture: ComponentFixture<SearchDictationPage>;
   let storageSpy;
+  let dictationServiceSpy: jasmine.SpyObj<DictationService>;
 
   beforeEach(waitForAsync(() => {
     storageSpy = StorageSpy();
     storageSpy.get.and.returnValue(Promise.resolve(['old search history']));
+    dictationServiceSpy = jasmine.createSpyObj('DictationService', ['search']);
+    dictationServiceSpy.search.and.returnValue(of([]));
 
     TestBed.configureTestingModule({
       declarations: [ SearchDictationPage ],
@@ -25,6 +30,7 @@ describe('SearchDictationPage', () => {
       providers: [
         { provide: StorageService, useValue: storageSpy },
         { provide: ManageVocabHistoryService, useValue: ManageVocabHistoryServiceSpy},
+        { provide: DictationService, useValue: dictationServiceSpy },
       ]
     })
     .compileComponents();
@@ -115,5 +121,25 @@ describe('SearchDictationPage', () => {
 
     expect(component.history.length).toBe(1);
     expect(component.history[0]).toBe('new search');
+  }));
+
+  it('search maps Suitable Any and Type Any to null in the request', fakeAsync(() => {
+    component.keyword.setValue('apple');
+    component.suitableStudent.setValue('Any');
+    component.type.setValue('Any');
+    component.search();
+    tick();
+
+    let request = dictationServiceSpy.search.calls.mostRecent().args[0];
+    expect(request.suitableStudent).toBeNull();
+    expect(request.type).toBeNull();
+
+    component.suitableStudent.setValue('JuniorPrimary');
+    component.search();
+    tick();
+
+    request = dictationServiceSpy.search.calls.mostRecent().args[0];
+    expect(request.suitableStudent).toBe('JuniorPrimary');
+    expect(request.type).toBeNull();
   }));
 });
