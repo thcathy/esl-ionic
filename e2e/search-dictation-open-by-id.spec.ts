@@ -22,6 +22,10 @@ test.describe('search dictation opens by id', () => {
     const title = (await firstResult.locator('.heading').innerText()).trim();
     expect(title.length).toBeGreaterThan(0);
 
+    await page.locator('ion-card.dictation-list').screenshot({
+      path: 'test-results/demo-search-results.png',
+    });
+
     await firstResult.locator('ion-button', { hasText: 'View' }).click();
 
     await expect(page).toHaveURL(/\/dictation-view\/\d+$/);
@@ -32,6 +36,10 @@ test.describe('search dictation opens by id', () => {
     await expect(card).toBeVisible();
     await expect(card).toContainText(title);
     await expect(card.locator('strong').filter({ hasText: dictationId })).toBeVisible();
+
+    await page.screenshot({
+      path: 'test-results/demo-dictation-view-by-id.png',
+    });
 
     const backButton = page.locator('ion-header ion-button', {
       has: page.locator('fa-icon[icon="angle-left"]'),
