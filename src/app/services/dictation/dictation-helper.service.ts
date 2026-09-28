@@ -14,12 +14,13 @@ export function isSentenceDictationHit(dictation: Dictation): boolean {
       return false;
     case undefined:
       return !ValidationUtils.isBlankString(dictation.article);
-    default: {
-      const unexpected: never = dictation.type;
-      void unexpected;
-      return !ValidationUtils.isBlankString(dictation.article);
-    }
+    default:
+      return sentenceFromUnlistedType(dictation.type, dictation.article);
   }
+}
+
+function sentenceFromUnlistedType(type: never, article?: string): boolean {
+  return type === 'Article' || (type !== 'Vocab' && !ValidationUtils.isBlankString(article));
 }
 
 @Injectable({ providedIn: 'root' })
