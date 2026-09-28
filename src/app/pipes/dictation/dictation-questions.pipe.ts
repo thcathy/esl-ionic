@@ -17,13 +17,16 @@ export class DictationQuestionsPipe implements PipeTransform {
 
   transform(value: Dictation, _args?: any): string {
     const sentence = this.dictationHelper.isSentenceDictation(value);
-    const count = value.questionCount != null
-      ? value.questionCount
-      : sentence
-        ? this.articleDictationService.divideToSentences(value.article).length
-        : value.vocabs.length;
+    const count = value.questionCount ?? this.countFromContent(value, sentence);
     const unit = sentence ? 'Sentence' : 'Vocab(s)';
     return count + ' ' + this.translate.instant(unit);
+  }
+
+  private countFromContent(value: Dictation, sentence: boolean): number {
+    if (sentence) {
+      return this.articleDictationService.divideToSentences(value.article).length;
+    }
+    return value.vocabs.length;
   }
 
 }

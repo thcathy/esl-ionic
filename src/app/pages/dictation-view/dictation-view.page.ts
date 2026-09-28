@@ -1,10 +1,11 @@
 import {Component, OnInit} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
+import {firstValueFrom} from 'rxjs';
 import {Dictation} from '../../entity/dictation';
 import {FFSAuthService} from '../../services/auth.service';
 import {DictationService} from '../../services/dictation/dictation.service';
 import {IonicComponentService} from '../../services/ionic-component.service';
 import {NavigationService} from '../../services/navigation.service';
-import {ActivatedRoute, Router} from '@angular/router';
 import {StorageService} from '../../services/storage.service';
 
 @Component({
@@ -39,9 +40,9 @@ export class DictationViewPage implements OnInit {
         this.dictation = JSON.parse(state.dictation);
       } else if (params.has('dictationId')) {
         this.dictation = null;
-        this.dictationService.getById(Number(params.get('dictationId'))).toPromise()
+        firstValueFrom(this.dictationService.getById(Number(params.get('dictationId'))))
           .then(d => this.dictation = d)
-          .catch(_e => this.navigationService.openHomePage());
+          .catch(() => this.navigationService.openHomePage());
       }
     });
   }
