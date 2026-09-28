@@ -12,8 +12,8 @@ export class Dictation {
   isPublicAccess?: boolean;
   totalAttempt?: number;
   questionCount?: number;
-  /** Set on short search hits, which omit article. */
-  sentenceDictation?: boolean;
+  /** Vocab or Article. Same value as the server getType(). Short hits omit article and set this. */
+  type?: string;
   password?: string;
   notAllowIPA?: boolean;
   notAllowRandomCharacters?: boolean;

@@ -79,7 +79,7 @@ describe('DictationQuestionsPipe', () => {
       id: 3,
       title: 'A sentence',
       questionCount: 1,
-      sentenceDictation: true,
+      type: 'Article',
     };
 
     expect(pipe.transform(dictation)).toBe('1 Sentence');
@@ -95,7 +95,7 @@ describe('DictationQuestionsPipe', () => {
       id: 1,
       title: 'Testing 1',
       questionCount: 2,
-      sentenceDictation: false,
+      type: 'Vocab',
     };
 
     expect(pipe.transform(dictation)).toBe('2 Vocab(s)');

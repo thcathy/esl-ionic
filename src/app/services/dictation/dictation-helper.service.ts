@@ -3,12 +3,15 @@ import {Dictation, Dictations} from '../../entity/dictation';
 import {ValidationUtils} from '../../utils/validation-utils';
 
 /**
- * Word vs Sentence. Full dictations use article text.
- * Short search hits omit article and set sentenceDictation instead.
+ * Word vs Sentence.
+ * Server type Vocab or Article wins. Objects built in the app, which have no type, use article text.
  */
 export function isSentenceDictationHit(dictation: Dictation): boolean {
-  if (dictation.article == null) {
-    return dictation.sentenceDictation === true;
+  if (dictation.type === 'Article') {
+    return true;
+  }
+  if (dictation.type === 'Vocab') {
+    return false;
   }
   return !ValidationUtils.isBlankString(dictation.article);
 }

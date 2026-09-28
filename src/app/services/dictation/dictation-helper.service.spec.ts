@@ -10,25 +10,25 @@ describe('DictationHelper', () => {
   });
 
   describe('isSentenceDictation', () => {
-    it('treats a non-blank article as a sentence dictation', () => {
+    it('treats a non-blank article as a sentence dictation when type is absent', () => {
       expect(service.isSentenceDictation(<Dictation>{ article: 'It is a sentence dictation.' })).toBeTrue();
     });
 
-    it('treats a blank article as vocabulary', () => {
+    it('treats a blank article as vocabulary when type is absent', () => {
       expect(service.isSentenceDictation(<Dictation>{ article: '' })).toBeFalse();
       expect(service.isSentenceDictation(<Dictation>{ article: ' ' })).toBeFalse();
     });
 
-    it('uses sentenceDictation when the short hit omits article', () => {
-      expect(service.isSentenceDictation(<Dictation>{ sentenceDictation: true })).toBeTrue();
-      expect(service.isSentenceDictation(<Dictation>{ sentenceDictation: false })).toBeFalse();
-      expect(service.isSentenceDictation(<Dictation>{ article: null, sentenceDictation: true })).toBeTrue();
+    it('uses type when the short hit omits article', () => {
+      expect(service.isSentenceDictation(<Dictation>{ type: 'Article' })).toBeTrue();
+      expect(service.isSentenceDictation(<Dictation>{ type: 'Vocab' })).toBeFalse();
+      expect(service.isSentenceDictation(<Dictation>{ article: null, type: 'Article' })).toBeTrue();
       expect(service.isSentenceDictation(<Dictation>{})).toBeFalse();
     });
 
-    it('prefers article text over a conflicting sentenceDictation flag', () => {
-      expect(service.isSentenceDictation(<Dictation>{ article: 'Hello.', sentenceDictation: false })).toBeTrue();
-      expect(service.isSentenceDictation(<Dictation>{ article: '', sentenceDictation: true })).toBeFalse();
+    it('uses server type when it disagrees with article text', () => {
+      expect(service.isSentenceDictation(<Dictation>{ article: 'Hello.', type: 'Vocab' })).toBeFalse();
+      expect(service.isSentenceDictation(<Dictation>{ article: '', type: 'Article' })).toBeTrue();
     });
   });
 

@@ -72,9 +72,9 @@ describe('DictationService', () => {
     expect(httpClientSpy.post.calls.mostRecent().args[1].shortPayload).toBeTrue();
   });
 
-  it('isSentenceDictation uses the short-hit flag when article is missing', () => {
-    expect(service.isSentenceDictation(<Dictation>{ sentenceDictation: true })).toBeTrue();
-    expect(service.isSentenceDictation(<Dictation>{ sentenceDictation: false })).toBeFalse();
+  it('isSentenceDictation uses type when article is missing', () => {
+    expect(service.isSentenceDictation(<Dictation>{ type: 'Article' })).toBeTrue();
+    expect(service.isSentenceDictation(<Dictation>{ type: 'Vocab' })).toBeFalse();
     expect(service.isSentenceDictation(<Dictation>{ article: 'It is a sentence dictation.' })).toBeTrue();
   });
 
