@@ -13,7 +13,7 @@ export class Dictation {
   totalAttempt?: number;
   questionCount?: number;
   /** Vocab or Article. Same value as the server getType(). Short hits omit article and set this. */
-  type?: string;
+  type?: 'Vocab' | 'Article';
   password?: string;
   notAllowIPA?: boolean;
   notAllowRandomCharacters?: boolean;

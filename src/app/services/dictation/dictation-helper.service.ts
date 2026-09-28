@@ -7,13 +7,19 @@ import {ValidationUtils} from '../../utils/validation-utils';
  * Server type Vocab or Article wins. Objects built in the app, which have no type, use article text.
  */
 export function isSentenceDictationHit(dictation: Dictation): boolean {
-  if (dictation.type === 'Article') {
-    return true;
+  switch (dictation.type) {
+    case 'Article':
+      return true;
+    case 'Vocab':
+      return false;
+    case undefined:
+      return !ValidationUtils.isBlankString(dictation.article);
+    default: {
+      const unexpected: never = dictation.type;
+      void unexpected;
+      return !ValidationUtils.isBlankString(dictation.article);
+    }
   }
-  if (dictation.type === 'Vocab') {
-    return false;
-  }
-  return !ValidationUtils.isBlankString(dictation.article);
 }
 
 @Injectable({ providedIn: 'root' })

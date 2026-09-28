@@ -100,4 +100,14 @@ describe('DictationQuestionsPipe', () => {
 
     expect(pipe.transform(dictation)).toBe('2 Vocab(s)');
   });
+
+  it('labels a short vocab hit with no question count as zero vocabs', () => {
+    const pipe = new DictationQuestionsPipe(
+      new DictationHelper(),
+      new ArticleDictationService(NGXLoggerSpy()),
+      translateServiceSpy
+    );
+
+    expect(pipe.transform(<Dictation>{ type: 'Vocab' })).toBe('0 Vocab(s)');
+  });
 });
