@@ -11,6 +11,7 @@ export class Dictation {
   tags?: string;
   isPublicAccess?: boolean;
   totalAttempt?: number;
+  questionCount?: number;
   password?: string;
   notAllowIPA?: boolean;
   notAllowRandomCharacters?: boolean;

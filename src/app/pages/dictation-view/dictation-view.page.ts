@@ -1,10 +1,11 @@
 import {Component, OnInit} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
+import {firstValueFrom} from 'rxjs';
 import {Dictation} from '../../entity/dictation';
 import {FFSAuthService} from '../../services/auth.service';
 import {DictationService} from '../../services/dictation/dictation.service';
 import {IonicComponentService} from '../../services/ionic-component.service';
 import {NavigationService} from '../../services/navigation.service';
-import {ActivatedRoute, Router} from '@angular/router';
 import {StorageService} from '../../services/storage.service';
 
 @Component({
@@ -30,18 +31,18 @@ export class DictationViewPage implements OnInit {
 
   ngOnInit() {
     this.route.paramMap.subscribe(params => {
-      this.showBackButton = false;
-      if (this.router.currentNavigation() && this.router.currentNavigation().extras.state) {
-        const state = this.router.currentNavigation().extras.state;
+      const state = this.router.currentNavigation()?.extras?.state;
+      this.showBackButton = !!state?.showBackButton;
+      if (state?.toastMessage != null) {
+        this.ionicComponentService.showToastMessage(state.toastMessage);
+      }
+      if (state?.dictation) {
         this.dictation = JSON.parse(state.dictation);
-        this.showBackButton = state.showBackButton;
-        const toastMessage = state.toastMessage;
-        if (toastMessage != null) { this.ionicComponentService.showToastMessage(toastMessage); }
       } else if (params.has('dictationId')) {
-        console.log(`params.get('dictationId') ${params.get('dictationId')}`);
-        this.dictationService.getById(Number(params.get('dictationId'))).toPromise()
+        this.dictation = null;
+        firstValueFrom(this.dictationService.getById(Number(params.get('dictationId'))))
           .then(d => this.dictation = d)
-          .catch(e => this.navigationService.openHomePage());
+          .catch(() => this.navigationService.openHomePage());
       }
     });
   }
