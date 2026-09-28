@@ -11,10 +11,8 @@ import {VocabPracticeService} from '../practice/vocab-practice.service';
 import {isSentenceDictationHit} from './dictation-helper.service';
 
 /**
- * Opt search into short rows (no vocabs, article, or creator).
- * UAT and production return that shape only after esl-rest #11 is deployed.
- * Until then, hosts that ignore unknown JSON fields still return full dictations.
- * Set this to false if a host rejects the field before that deploy.
+ * Sent on every POST /dictation/search.
+ * esl-rest #11 is deployed, so true asks production for short rows (no vocabs, article, or creator).
  */
 export const DICTATION_SEARCH_SHORT_PAYLOAD = true;
 
@@ -27,7 +25,10 @@ export interface SearchDictationRequest {
   creator?: string;
   suitableStudent?: string;
   type?: string;
-  /** See {@link DICTATION_SEARCH_SHORT_PAYLOAD}. The search call always sends the flag value. */
+  /**
+   * Ignored on the input object. {@link DictationService.search} always overwrites this
+   * with {@link DICTATION_SEARCH_SHORT_PAYLOAD}.
+   */
   shortPayload?: boolean;
 }
 
