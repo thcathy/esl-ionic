@@ -12,6 +12,8 @@ export class Dictation {
   isPublicAccess?: boolean;
   totalAttempt?: number;
   questionCount?: number;
+  /** Set on short search hits, which omit article. */
+  sentenceDictation?: boolean;
   password?: string;
   notAllowIPA?: boolean;
   notAllowRandomCharacters?: boolean;

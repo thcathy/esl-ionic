@@ -3,12 +3,20 @@ import {HttpClient} from '@angular/common/http';
 
 import {DictationStatistics} from '../../entity/dictation-statistics';
 import {Dictation} from '../../entity/dictation';
-import {ValidationUtils} from '../../utils/validation-utils';
 import {SentenceHistory} from '../../entity/sentence-history';
 import {environment} from '../../../environments/environment';
 import {VocabPracticeHistory} from '../../entity/vocab-practice-history';
 import {Observable} from 'rxjs/internal/Observable';
 import {VocabPracticeService} from '../practice/vocab-practice.service';
+import {isSentenceDictationHit} from './dictation-helper.service';
+
+/**
+ * Opt search into short rows (no vocabs, article, or creator).
+ * UAT and production return that shape only after esl-rest #11 is deployed.
+ * Until then, hosts that ignore unknown JSON fields still return full dictations.
+ * Set this to false if a host rejects the field before that deploy.
+ */
+export const DICTATION_SEARCH_SHORT_PAYLOAD = true;
 
 export interface SearchDictationRequest {
   keyword?: string;
@@ -19,6 +27,8 @@ export interface SearchDictationRequest {
   creator?: string;
   suitableStudent?: string;
   type?: string;
+  /** See {@link DICTATION_SEARCH_SHORT_PAYLOAD}. The search call always sends the flag value. */
+  shortPayload?: boolean;
 }
 
 export interface CreateDictationHistoryRequest {
@@ -98,10 +108,13 @@ export class DictationService {
   }
 
   isSentenceDictation(dictation: Dictation): boolean {
-    return !ValidationUtils.isBlankString(dictation.article);
+    return isSentenceDictationHit(dictation);
   }
 
   search(request: SearchDictationRequest): Observable<Dictation[]> {
-    return this.http.post<Dictation[]>(this.searchDictationUrl, request);
+    return this.http.post<Dictation[]>(this.searchDictationUrl, {
+      ...request,
+      shortPayload: DICTATION_SEARCH_SHORT_PAYLOAD,
+    });
   }
 }

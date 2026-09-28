@@ -1,4 +1,4 @@
-import {Dictations} from '../../entity/dictation';
+import {Dictation, Dictations} from '../../entity/dictation';
 import {VocabPracticeType} from '../../enum/vocab-practice-type.enum';
 import {TestData} from '../../../testing/test-data';
 import {DictationHelper} from './dictation-helper.service';
@@ -7,6 +7,29 @@ describe('DictationHelper', () => {
   let service: DictationHelper = new DictationHelper();
 
   beforeEach(() => {
+  });
+
+  describe('isSentenceDictation', () => {
+    it('treats a non-blank article as a sentence dictation', () => {
+      expect(service.isSentenceDictation(<Dictation>{ article: 'It is a sentence dictation.' })).toBeTrue();
+    });
+
+    it('treats a blank article as vocabulary', () => {
+      expect(service.isSentenceDictation(<Dictation>{ article: '' })).toBeFalse();
+      expect(service.isSentenceDictation(<Dictation>{ article: ' ' })).toBeFalse();
+    });
+
+    it('uses sentenceDictation when the short hit omits article', () => {
+      expect(service.isSentenceDictation(<Dictation>{ sentenceDictation: true })).toBeTrue();
+      expect(service.isSentenceDictation(<Dictation>{ sentenceDictation: false })).toBeFalse();
+      expect(service.isSentenceDictation(<Dictation>{ article: null, sentenceDictation: true })).toBeTrue();
+      expect(service.isSentenceDictation(<Dictation>{})).toBeFalse();
+    });
+
+    it('prefers article text over a conflicting sentenceDictation flag', () => {
+      expect(service.isSentenceDictation(<Dictation>{ article: 'Hello.', sentenceDictation: false })).toBeTrue();
+      expect(service.isSentenceDictation(<Dictation>{ article: '', sentenceDictation: true })).toBeFalse();
+    });
   });
 
   describe('test wordsToPractice', () => {

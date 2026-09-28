@@ -3,6 +3,7 @@ import { dictation1 } from '../../../testing/test-data';
 import { Dictation } from '../../entity/dictation';
 import { Vocab } from '../../entity/vocab';
 import { ArticleDictationService } from '../../services/dictation/article-dictation.service';
+import { DictationHelper } from '../../services/dictation/dictation-helper.service';
 import { DictationQuestionsPipe } from './dictation-questions.pipe';
 
 describe('DictationQuestionsPipe', () => {
@@ -66,5 +67,37 @@ describe('DictationQuestionsPipe', () => {
     const dictation = <Dictation>{...dictation1, questionCount: 4};
 
     expect(pipe.transform(dictation)).toBe('4 Sentence');
+  });
+
+  it('labels a short sentence hit Sentence when article is omitted', () => {
+    const pipe = new DictationQuestionsPipe(
+      new DictationHelper(),
+      new ArticleDictationService(NGXLoggerSpy()),
+      translateServiceSpy
+    );
+    const dictation = <Dictation>{
+      id: 3,
+      title: 'A sentence',
+      questionCount: 1,
+      sentenceDictation: true,
+    };
+
+    expect(pipe.transform(dictation)).toBe('1 Sentence');
+  });
+
+  it('labels a short vocab hit Vocab(s) when article and vocabs are omitted', () => {
+    const pipe = new DictationQuestionsPipe(
+      new DictationHelper(),
+      new ArticleDictationService(NGXLoggerSpy()),
+      translateServiceSpy
+    );
+    const dictation = <Dictation>{
+      id: 1,
+      title: 'Testing 1',
+      questionCount: 2,
+      sentenceDictation: false,
+    };
+
+    expect(pipe.transform(dictation)).toBe('2 Vocab(s)');
   });
 });

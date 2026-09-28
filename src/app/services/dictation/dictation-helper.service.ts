@@ -2,6 +2,17 @@ import {Injectable} from '@angular/core';
 import {Dictation, Dictations} from '../../entity/dictation';
 import {ValidationUtils} from '../../utils/validation-utils';
 
+/**
+ * Word vs Sentence. Full dictations use article text.
+ * Short search hits omit article and set sentenceDictation instead.
+ */
+export function isSentenceDictationHit(dictation: Dictation): boolean {
+  if (dictation.article == null) {
+    return dictation.sentenceDictation === true;
+  }
+  return !ValidationUtils.isBlankString(dictation.article);
+}
+
 @Injectable({ providedIn: 'root' })
 export class DictationHelper {
 
@@ -12,7 +23,7 @@ export class DictationHelper {
   }
 
   isSentenceDictation(dictation: Dictation): boolean {
-    return !ValidationUtils.isBlankString(dictation.article);
+    return isSentenceDictationHit(dictation);
   }
 
   isSelectVocabExercise(dictation: Dictation): boolean {

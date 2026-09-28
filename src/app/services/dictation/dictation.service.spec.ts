@@ -1,4 +1,4 @@
-import {CreateDictationHistoryRequest, DictationService} from './dictation.service';
+import {CreateDictationHistoryRequest, DictationService, SearchDictationRequest} from './dictation.service';
 import {dictation1, vocab_apple, vocab_banana} from '../../../testing/test-data';
 import {Dictation} from '../../entity/dictation';
 import {SentenceHistory} from '../../entity/sentence-history';
@@ -48,6 +48,34 @@ describe('DictationService', () => {
     expect(callArg.wrong).toEqual(1);
     expect(callArg.histories).toBeUndefined();
     expect(callArg.historyJSON.length).toBeGreaterThan(20);
+  });
+
+  it('search sends shortPayload so the list can use short hits', () => {
+    const request: SearchDictationRequest = { keyword: 'school', suitableStudent: 'Any', type: 'Article' };
+
+    service.search(request);
+
+    const [url, body] = httpClientSpy.post.calls.mostRecent().args;
+    expect(url).toContain('/dictation/search');
+    expect(body).toEqual({
+      keyword: 'school',
+      suitableStudent: 'Any',
+      type: 'Article',
+      shortPayload: true,
+    });
+    expect(request.shortPayload).toBeUndefined();
+  });
+
+  it('search forces shortPayload true', () => {
+    service.search({ keyword: '1', shortPayload: false });
+
+    expect(httpClientSpy.post.calls.mostRecent().args[1].shortPayload).toBeTrue();
+  });
+
+  it('isSentenceDictation uses the short-hit flag when article is missing', () => {
+    expect(service.isSentenceDictation(<Dictation>{ sentenceDictation: true })).toBeTrue();
+    expect(service.isSentenceDictation(<Dictation>{ sentenceDictation: false })).toBeFalse();
+    expect(service.isSentenceDictation(<Dictation>{ article: 'It is a sentence dictation.' })).toBeTrue();
   });
 
 });
