@@ -1,1 +1,1 @@
-After you finish a dictation, you can rate FunFunSpell if you like the app.
+Fixed a crash when opening the app on the latest iOS, and made dictation search faster.
