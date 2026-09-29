@@ -8,13 +8,7 @@ import {environment} from '../../../environments/environment';
 import {VocabPracticeHistory} from '../../entity/vocab-practice-history';
 import {Observable} from 'rxjs/internal/Observable';
 import {VocabPracticeService} from '../practice/vocab-practice.service';
-import {isSentenceDictationHit} from './dictation-helper.service';
-
-/**
- * Sent on every POST /dictation/search.
- * esl-rest #11 is deployed, so true asks production for short rows (no vocabs, article, or creator).
- */
-export const DICTATION_SEARCH_SHORT_PAYLOAD = true;
+import {DictationHelper} from './dictation-helper.service';
 
 export interface SearchDictationRequest {
   keyword?: string;
@@ -25,10 +19,7 @@ export interface SearchDictationRequest {
   creator?: string;
   suitableStudent?: string;
   type?: string;
-  /**
-   * Ignored on the input object. {@link DictationService.search} always overwrites this
-   * with {@link DICTATION_SEARCH_SHORT_PAYLOAD}.
-   */
+  /** Ignored on the input object. search() always sends true. */
   shortPayload?: boolean;
 }
 
@@ -47,6 +38,7 @@ export class DictationService {
   constructor (
     private http: HttpClient,
     private vocabPracticeService: VocabPracticeService,
+    private dictationHelper: DictationHelper,
   ) {
   }
 
@@ -109,13 +101,13 @@ export class DictationService {
   }
 
   isSentenceDictation(dictation: Dictation): boolean {
-    return isSentenceDictationHit(dictation);
+    return this.dictationHelper.isSentenceDictation(dictation);
   }
 
   search(request: SearchDictationRequest): Observable<Dictation[]> {
     return this.http.post<Dictation[]>(this.searchDictationUrl, {
       ...request,
-      shortPayload: DICTATION_SEARCH_SHORT_PAYLOAD,
+      shortPayload: true,
     });
   }
 }
