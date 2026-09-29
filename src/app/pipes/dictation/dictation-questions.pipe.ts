@@ -26,7 +26,7 @@ export class DictationQuestionsPipe implements PipeTransform {
     if (sentence) {
       return this.articleDictationService.divideToSentences(value.article).length;
     }
-    return value.vocabs.length;
+    return value.vocabs?.length ?? 0;
   }
 
 }

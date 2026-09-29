@@ -3,12 +3,12 @@ import {HttpClient} from '@angular/common/http';
 
 import {DictationStatistics} from '../../entity/dictation-statistics';
 import {Dictation} from '../../entity/dictation';
-import {ValidationUtils} from '../../utils/validation-utils';
 import {SentenceHistory} from '../../entity/sentence-history';
 import {environment} from '../../../environments/environment';
 import {VocabPracticeHistory} from '../../entity/vocab-practice-history';
 import {Observable} from 'rxjs/internal/Observable';
 import {VocabPracticeService} from '../practice/vocab-practice.service';
+import {DictationHelper} from './dictation-helper.service';
 
 export interface SearchDictationRequest {
   keyword?: string;
@@ -19,6 +19,8 @@ export interface SearchDictationRequest {
   creator?: string;
   suitableStudent?: string;
   type?: string;
+  /** Ignored on the input object. search() always sends true. */
+  shortPayload?: boolean;
 }
 
 export interface CreateDictationHistoryRequest {
@@ -36,6 +38,7 @@ export class DictationService {
   constructor (
     private http: HttpClient,
     private vocabPracticeService: VocabPracticeService,
+    private dictationHelper: DictationHelper,
   ) {
   }
 
@@ -98,10 +101,13 @@ export class DictationService {
   }
 
   isSentenceDictation(dictation: Dictation): boolean {
-    return !ValidationUtils.isBlankString(dictation.article);
+    return this.dictationHelper.isSentenceDictation(dictation);
   }
 
   search(request: SearchDictationRequest): Observable<Dictation[]> {
-    return this.http.post<Dictation[]>(this.searchDictationUrl, request);
+    return this.http.post<Dictation[]>(this.searchDictationUrl, {
+      ...request,
+      shortPayload: true,
+    });
   }
 }

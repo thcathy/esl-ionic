@@ -11,7 +11,17 @@ export class DictationHelper {
     return dictation.id < 0;
   }
 
+  /**
+   * Word vs Sentence.
+   * Server type Vocab or Article wins. Objects built in the app, which have no type, use article text.
+   */
   isSentenceDictation(dictation: Dictation): boolean {
+    if (dictation.type === 'Article') {
+      return true;
+    }
+    if (dictation.type === 'Vocab') {
+      return false;
+    }
     return !ValidationUtils.isBlankString(dictation.article);
   }
 

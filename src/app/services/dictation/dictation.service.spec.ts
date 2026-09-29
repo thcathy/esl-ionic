@@ -1,9 +1,10 @@
-import {CreateDictationHistoryRequest, DictationService} from './dictation.service';
+import {CreateDictationHistoryRequest, DictationService, SearchDictationRequest} from './dictation.service';
 import {dictation1, vocab_apple, vocab_banana} from '../../../testing/test-data';
 import {Dictation} from '../../entity/dictation';
 import {SentenceHistory} from '../../entity/sentence-history';
 import {VocabPracticeHistory} from '../../entity/vocab-practice-history';
 import {VocabPracticeService} from '../practice/vocab-practice.service';
+import {DictationHelper} from './dictation-helper.service';
 
 describe('DictationService', () => {
   let service: DictationService;
@@ -11,7 +12,7 @@ describe('DictationService', () => {
 
   beforeEach(() => {
     httpClientSpy = jasmine.createSpyObj('HttpClient', ['post']);
-    service = new DictationService(httpClientSpy, new VocabPracticeService(httpClientSpy));
+    service = new DictationService(httpClientSpy, new VocabPracticeService(httpClientSpy), new DictationHelper());
   });
 
   it('createVocabDictationHistory will call http post with expected parameters', () => {
@@ -48,6 +49,34 @@ describe('DictationService', () => {
     expect(callArg.wrong).toEqual(1);
     expect(callArg.histories).toBeUndefined();
     expect(callArg.historyJSON.length).toBeGreaterThan(20);
+  });
+
+  it('search sends shortPayload so the list can use short hits', () => {
+    const request: SearchDictationRequest = { keyword: 'school', suitableStudent: 'Any', type: 'Article' };
+
+    service.search(request);
+
+    const [url, body] = httpClientSpy.post.calls.mostRecent().args;
+    expect(url).toContain('/dictation/search');
+    expect(body).toEqual({
+      keyword: 'school',
+      suitableStudent: 'Any',
+      type: 'Article',
+      shortPayload: true,
+    });
+    expect(request.shortPayload).toBeUndefined();
+  });
+
+  it('search forces shortPayload true', () => {
+    service.search({ keyword: '1', shortPayload: false });
+
+    expect(httpClientSpy.post.calls.mostRecent().args[1].shortPayload).toBeTrue();
+  });
+
+  it('isSentenceDictation uses type when article is missing', () => {
+    expect(service.isSentenceDictation(<Dictation>{ type: 'Article' })).toBeTrue();
+    expect(service.isSentenceDictation(<Dictation>{ type: 'Vocab' })).toBeFalse();
+    expect(service.isSentenceDictation(<Dictation>{ article: 'It is a sentence dictation.' })).toBeTrue();
   });
 
 });
