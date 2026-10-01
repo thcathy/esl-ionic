@@ -19,8 +19,6 @@ export interface SearchDictationRequest {
   creator?: string;
   suitableStudent?: string;
   type?: string;
-  /** Ignored on the input object. search() always sends true. */
-  shortPayload?: boolean;
 }
 
 export interface CreateDictationHistoryRequest {
@@ -104,10 +102,12 @@ export class DictationService {
     return this.dictationHelper.isSentenceDictation(dictation);
   }
 
+  /**
+   * List preview needs description, vocabs, and article, which the short row drops.
+   */
   search(request: SearchDictationRequest): Observable<Dictation[]> {
-    return this.http.post<Dictation[]>(this.searchDictationUrl, {
-      ...request,
-      shortPayload: true,
-    });
+    const body = {...request} as SearchDictationRequest & { shortPayload?: boolean };
+    delete body.shortPayload;
+    return this.http.post<Dictation[]>(this.searchDictationUrl, body);
   }
 }

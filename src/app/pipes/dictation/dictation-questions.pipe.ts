@@ -17,7 +17,7 @@ export class DictationQuestionsPipe implements PipeTransform {
 
   transform(value: Dictation, _args?: any): string {
     const sentence = this.dictationHelper.isSentenceDictation(value);
-    const count = value.questionCount ?? this.countFromContent(value, sentence);
+    const count = this.countFromContent(value, sentence);
     const unit = sentence ? 'Sentence' : 'Vocab(s)';
     return count + ' ' + this.translate.instant(unit);
   }

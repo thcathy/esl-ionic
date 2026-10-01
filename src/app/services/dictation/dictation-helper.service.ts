@@ -1,5 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Dictation, Dictations} from '../../entity/dictation';
+import {Vocab} from '../../entity/vocab';
 import {ValidationUtils} from '../../utils/validation-utils';
 
 @Injectable({ providedIn: 'root' })
@@ -23,6 +24,21 @@ export class DictationHelper {
       return false;
     }
     return !ValidationUtils.isBlankString(dictation.article);
+  }
+
+  /**
+   * One line for a list row. Description wins. Otherwise vocab words or article text.
+   * CSS ellipsizes; this string is not cut to a word count and has no ellipsis.
+   */
+  previewLine(dictation: Dictation): string {
+    const description = (dictation.description ?? '').trim();
+    if (description.length > 0) {
+      return description;
+    }
+    if (this.isSentenceDictation(dictation)) {
+      return (dictation.article ?? '').trim().replace(/\s+/g, ' ');
+    }
+    return this.vocabPreview(dictation.vocabs);
   }
 
   isSelectVocabExercise(dictation: Dictation): boolean {
@@ -67,5 +83,12 @@ export class DictationHelper {
         .filter(h => !h.correct)
         .map(h => h.question.word)
       : (dictation.vocabs ?? []).map(v => v.word);
+  }
+
+  private vocabPreview(vocabs: Vocab[] | undefined): string {
+    return (vocabs ?? [])
+      .map((vocab) => (vocab.word ?? '').trim())
+      .filter((word) => word.length > 0)
+      .join(', ');
   }
 }
