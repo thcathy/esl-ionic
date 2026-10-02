@@ -11,7 +11,7 @@ export class Dictation {
   tags?: string;
   isPublicAccess?: boolean;
   totalAttempt?: number;
-  /** Vocab or Article. Same value as the server getType(). Short hits omit article and set this. */
+  /** Vocab or Article. Same value as the server getType(). */
   type?: 'Vocab' | 'Article';
   password?: string;
   notAllowIPA?: boolean;

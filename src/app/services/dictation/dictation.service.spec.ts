@@ -51,28 +51,14 @@ describe('DictationService', () => {
     expect(callArg.historyJSON.length).toBeGreaterThan(20);
   });
 
-  it('search posts the request and does not set shortPayload', () => {
+  it('search posts the request body', () => {
     const request: SearchDictationRequest = { keyword: 'school', suitableStudent: 'Any', type: 'Article' };
 
     service.search(request);
 
     const [url, body] = httpClientSpy.post.calls.mostRecent().args;
     expect(url).toContain('/dictation/search');
-    expect(body).toEqual({
-      keyword: 'school',
-      suitableStudent: 'Any',
-      type: 'Article',
-    });
-    expect(Object.hasOwn(body, 'shortPayload')).toBeFalse();
-    expect(request).toEqual({ keyword: 'school', suitableStudent: 'Any', type: 'Article' });
-  });
-
-  it('search omits shortPayload when a caller still passes false', () => {
-    service.search({ keyword: '1', shortPayload: false } as SearchDictationRequest);
-
-    const body = httpClientSpy.post.calls.mostRecent().args[1];
-    expect(body).toEqual({ keyword: '1' });
-    expect(Object.hasOwn(body, 'shortPayload')).toBeFalse();
+    expect(body).toBe(request);
   });
 
   it('isSentenceDictation uses type when article is missing', () => {

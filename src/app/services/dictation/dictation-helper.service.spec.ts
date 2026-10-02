@@ -20,7 +20,7 @@ describe('DictationHelper', () => {
       expect(service.isSentenceDictation(<Dictation>{ article: ' ' })).toBeFalse();
     });
 
-    it('uses type when the short hit omits article', () => {
+    it('uses type when article is absent', () => {
       expect(service.isSentenceDictation(<Dictation>{ type: 'Article' })).toBeTrue();
       expect(service.isSentenceDictation(<Dictation>{ type: 'Vocab' })).toBeFalse();
       expect(service.isSentenceDictation(<Dictation>{ article: null, type: 'Article' })).toBeTrue();

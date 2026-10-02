@@ -102,12 +102,7 @@ export class DictationService {
     return this.dictationHelper.isSentenceDictation(dictation);
   }
 
-  /**
-   * List preview needs description, vocabs, and article, which the short row drops.
-   */
   search(request: SearchDictationRequest): Observable<Dictation[]> {
-    const body = {...request} as SearchDictationRequest & { shortPayload?: boolean };
-    delete body.shortPayload;
-    return this.http.post<Dictation[]>(this.searchDictationUrl, body);
+    return this.http.post<Dictation[]>(this.searchDictationUrl, request);
   }
 }
