@@ -12,3 +12,20 @@ ion-col {
 .heading {
   color: #000;
 }
+
+.preview-row ion-col {
+  min-width: 0;
+}
+
+.preview-line {
+  display: block;
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+ion-label {
+  min-width: 0;
+}

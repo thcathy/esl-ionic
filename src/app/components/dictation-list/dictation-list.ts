@@ -1,5 +1,6 @@
 import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {Dictation, Dictations} from '../../entity/dictation';
+import {DictationHelper} from '../../services/dictation/dictation-helper.service';
 import {NavigationService} from '../../services/navigation.service';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {AppService} from '../../services/app.service';
@@ -48,6 +49,7 @@ export class DictationListComponent implements OnChanges {
   constructor(
     public navService: NavigationService,
     public appService: AppService,
+    private dictationHelper: DictationHelper,
   ) {
     this.page = 0;
     this.showCreateButton = false;
@@ -77,6 +79,10 @@ export class DictationListComponent implements OnChanges {
 
   sliceDictations() {
     this.viewDictations = this.dictations.slice(this.page * this.dictationPerPage, (this.page + 1) * this.dictationPerPage);
+  }
+
+  previewLine(dictation: Dictation): string {
+    return this.dictationHelper.previewLine(dictation);
   }
 
   viewDictation(dictation: Dictation) {

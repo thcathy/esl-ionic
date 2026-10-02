@@ -1,4 +1,5 @@
 import {Dictation, Dictations} from '../../entity/dictation';
+import {Vocab} from '../../entity/vocab';
 import {VocabPracticeType} from '../../enum/vocab-practice-type.enum';
 import {TestData} from '../../../testing/test-data';
 import {DictationHelper} from './dictation-helper.service';
@@ -19,7 +20,7 @@ describe('DictationHelper', () => {
       expect(service.isSentenceDictation(<Dictation>{ article: ' ' })).toBeFalse();
     });
 
-    it('uses type when the short hit omits article', () => {
+    it('uses type when article is absent', () => {
       expect(service.isSentenceDictation(<Dictation>{ type: 'Article' })).toBeTrue();
       expect(service.isSentenceDictation(<Dictation>{ type: 'Vocab' })).toBeFalse();
       expect(service.isSentenceDictation(<Dictation>{ article: null, type: 'Article' })).toBeTrue();
@@ -44,6 +45,68 @@ describe('DictationHelper', () => {
       const dictation = TestData.fillInDictation();
       const words = service.wordsToPractice(dictation);
       expect(words.length).toEqual(dictation.vocabs.length);
+    });
+  });
+
+  describe('previewLine', () => {
+    it('uses a trimmed description even when vocabs and article are present', () => {
+      expect(service.previewLine(<Dictation>{
+        description: '  Hi  ',
+        type: 'Vocab',
+        vocabs: [<Vocab>{word: 'apple'}, <Vocab>{word: 'banana'}],
+        article: 'This article must not win.',
+      })).toBe('Hi');
+    });
+
+    it('falls through a whitespace-only description to the vocab words', () => {
+      const line = service.previewLine(<Dictation>{
+        description: '  \n  ',
+        type: 'Vocab',
+        article: 'Article must not win for a vocab row.',
+        vocabs: [
+          <Vocab>{word: 'ice cream'},
+          <Vocab>{word: ' '},
+          <Vocab>{word: ''},
+          <Vocab>{word: 'apple'},
+        ],
+      });
+
+      expect(line).toBe('ice cream, apple');
+    });
+
+    it('falls through a whitespace-only description to article text', () => {
+      const line = service.previewLine(<Dictation>{
+        description: '   ',
+        type: 'Article',
+        vocabs: [<Vocab>{word: 'apple'}],
+        article: '  Cats\nsit.  ',
+      });
+
+      expect(line).toBe('Cats sit.');
+    });
+
+    it('joins every non-blank vocab in order and does not cap the count', () => {
+      const words = ['one', 'two', 'three', 'four', 'five', 'six'];
+      expect(service.previewLine(<Dictation>{
+        type: 'Vocab',
+        article: 'Must not use the article.',
+        vocabs: words.map((word) => <Vocab>{word}),
+      })).toBe(words.join(', '));
+    });
+
+    it('keeps a long article with whitespace collapsed and does not cap the word count', () => {
+      expect(service.previewLine(<Dictation>{
+        type: 'Article',
+        vocabs: [<Vocab>{word: 'apple'}, <Vocab>{word: 'banana'}],
+        article: '  One two\tthree\nfour   five six seven eight  ',
+      })).toBe('One two three four five six seven eight');
+    });
+
+    it('uses article text when type is absent and the article is non-blank', () => {
+      expect(service.previewLine(<Dictation>{
+        article: 'No type on this row.',
+        vocabs: [<Vocab>{word: 'apple'}],
+      })).toBe('No type on this row.');
     });
   });
 

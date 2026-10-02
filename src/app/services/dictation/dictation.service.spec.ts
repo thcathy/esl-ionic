@@ -51,26 +51,14 @@ describe('DictationService', () => {
     expect(callArg.historyJSON.length).toBeGreaterThan(20);
   });
 
-  it('search sends shortPayload so the list can use short hits', () => {
+  it('search posts the request body', () => {
     const request: SearchDictationRequest = { keyword: 'school', suitableStudent: 'Any', type: 'Article' };
 
     service.search(request);
 
     const [url, body] = httpClientSpy.post.calls.mostRecent().args;
     expect(url).toContain('/dictation/search');
-    expect(body).toEqual({
-      keyword: 'school',
-      suitableStudent: 'Any',
-      type: 'Article',
-      shortPayload: true,
-    });
-    expect(request.shortPayload).toBeUndefined();
-  });
-
-  it('search forces shortPayload true', () => {
-    service.search({ keyword: '1', shortPayload: false });
-
-    expect(httpClientSpy.post.calls.mostRecent().args[1].shortPayload).toBeTrue();
+    expect(body).toBe(request);
   });
 
   it('isSentenceDictation uses type when article is missing', () => {

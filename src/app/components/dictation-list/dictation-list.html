@@ -21,6 +21,12 @@
                 <ion-col class="heading">{{dictation.title}}</ion-col>
                 <ion-col class="ion-text-right">{{ dictation.createdDate | date: 'yyyy-MM-dd' }}</ion-col>
               </ion-row>
+              @let line = previewLine(dictation);
+              <ion-row class="preview-row">
+                <ion-col>
+                  <div class="preview-line" [title]="line">{{ line }}</div>
+                </ion-col>
+              </ion-row>
               <ion-row>
                 <ion-col style="min-width: 120px;">
                   <fa-icon [icon]="['fas', 'list-ol']"></fa-icon> {{ dictation | dictationQuestions }}
