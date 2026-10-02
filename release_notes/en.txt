@@ -1,1 +1,1 @@
-Fixed a crash when opening the app on the latest iOS, and made dictation search faster.
+Each dictation in a list now shows a short preview under the title, so you can pick the right practice without opening it.
