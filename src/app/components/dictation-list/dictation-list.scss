@@ -13,6 +13,10 @@ ion-col {
   color: #000;
 }
 
+.preview-row ion-col {
+  min-width: 0;
+}
+
 .preview-line {
   display: block;
   min-width: 0;
