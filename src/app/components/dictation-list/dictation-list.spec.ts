@@ -48,7 +48,7 @@ describe('DictationListComponent', () => {
     expect(component.navService.openDictationById).not.toHaveBeenCalled();
   });
 
-  it('renders one preview line under the heading on every row', () => {
+  it('renders one preview line at the bottom of every row', () => {
     const described = TestData.fillInDictation();
     described.description = 'Fruit words';
     described.suitableStudent = 'Kindergarten';
@@ -67,6 +67,7 @@ describe('DictationListComponent', () => {
       expect(previews.length).toBe(1);
       const heading = label.querySelector('.heading');
       expect(heading.compareDocumentPosition(previews[0]) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+      expect(label.lastElementChild.classList.contains('preview-row')).toBeTrue();
     });
     expect(labels[0].querySelector('.preview-line').textContent.trim()).toBe('Fruit words');
     expect(labels[0].querySelector('.preview-line').getAttribute('title')).toBe('Fruit words');

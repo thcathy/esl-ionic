@@ -1,5 +1,8 @@
 import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import {ComponentFixture, fakeAsync, TestBed, tick, waitForAsync} from '@angular/core/testing';
+import {By} from '@angular/platform-browser';
+import {TranslateService} from '@ngx-translate/core';
+import {of} from 'rxjs';
 
 import {SearchDictationPage} from './search-dictation.page';
 import {SharedTestModule} from '../../../testing/shared-test.module';
@@ -97,6 +100,7 @@ describe('SearchDictationPage', () => {
   }));
 
   it('showHistory only contain history which is started with input keyword', () => {
+    spyOn(component.dictationService, 'search');
     component.history = ['apple', 'banana', 'await'];
     component.keyword.setValue('a');
     component.filterHistory(null);
@@ -104,6 +108,99 @@ describe('SearchDictationPage', () => {
     expect(component.filteredHistory.length).toBe(2);
     expect(component.filteredHistory[0]).toBe('apple');
     expect(component.filteredHistory[1]).toBe('await');
+    expect(component.dictationService.search).not.toHaveBeenCalled();
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelectorAll('.autocomplete ion-item').length).toBe(2);
+  });
+
+  it('uses the short keyword placeholder', () => {
+    const keyword = fixture.nativeElement.querySelector('ion-input[formcontrolname="keyword"]');
+    expect(keyword.label).toBe('Search');
+    expect(keyword.placeholder).toBe('Title, words, or ID');
+  });
+
+  it('Enter searches only when the form is valid', fakeAsync(() => {
+    const search = spyOn(component.dictationService, 'search').and.returnValue(of([]));
+    const keywordInput = fixture.debugElement.query(By.css('ion-input[formcontrolname="keyword"]'));
+
+    component.keyword.setValue('ab');
+    fixture.detectChanges();
+    keywordInput.triggerEventHandler('keydown.enter', new KeyboardEvent('keydown', {key: 'Enter'}));
+    tick();
+    expect(search).not.toHaveBeenCalled();
+    expect(component.results).toBeUndefined();
+
+    for (const value of ['abc', '1', '']) {
+      search.calls.reset();
+      component.keyword.setValue(value);
+      fixture.detectChanges();
+      keywordInput.triggerEventHandler('keydown.enter', new KeyboardEvent('keydown', {key: 'Enter'}));
+      tick();
+      expect(search).toHaveBeenCalled();
+    }
+  }));
+
+  it('shows Created By without a More Options toggle', () => {
+    expect(fixture.nativeElement.textContent).not.toContain('More Options');
+    const creator = fixture.nativeElement.querySelector('ion-input[formcontrolname="creator"]');
+    const filters = fixture.nativeElement.querySelector('.filters');
+    expect(creator).toBeTruthy();
+    expect(creator.compareDocumentPosition(filters) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  });
+
+  it('shows the active option as a chip and chooses it from a popover', () => {
+    const search = spyOn(component.dictationService, 'search');
+    expect(fixture.nativeElement.querySelectorAll('.filter-chip').length).toBe(3);
+    expect(chipText('suitable')).toBe('Suitable (Age): SuitableStudent.Any');
+    expect(chipText('type')).toBe('Type: Any');
+    expect(chipText('date')).toBe('Date: Any');
+    expect(fixture.nativeElement.querySelector('ion-popover[trigger="suitable-filter"]')).toBeTruthy();
+    expect(fixture.nativeElement.querySelector('ion-popover[trigger="type-filter"]')).toBeTruthy();
+    expect(fixture.nativeElement.querySelector('ion-popover[trigger="date-filter"]')).toBeTruthy();
+    expect(fixture.nativeElement.querySelector('ion-select')).toBeNull();
+    expect(fixture.nativeElement.querySelector('.filter-choices')).toBeNull();
+
+    component.chooseType('Vocab');
+    fixture.detectChanges();
+    expect(component.type.value).toBe('Vocab');
+    expect(chipText('type')).toBe('Type: Word');
+
+    component.chooseSuitable('JuniorPrimary');
+    fixture.detectChanges();
+    expect(component.suitableStudent.value).toBe('JuniorPrimary');
+    expect(chipText('suitable')).toBe('Suitable (Age): SuitableStudent.JuniorPrimary');
+
+    component.chooseDate(component.dateOptions[2]);
+    fixture.detectChanges();
+    expect(component.minDate.value).toBe(component.dateOptions[2]);
+    expect(chipText('date')).toBe('Date: Within 3 Month');
+    expect(search).not.toHaveBeenCalled();
+  });
+
+  function chipText(group: string): string {
+    return fixture.nativeElement.querySelector(`[data-filter="${group}"]`).textContent.replace(/\s+/g, ' ').trim();
+  }
+
+  it('shows the 3-character message for a too-short keyword', () => {
+    const translate = TestBed.inject(TranslateService);
+    translate.setTranslation('en', {
+      CharactersTooShort: 'cannot less than {{length}} characters',
+    });
+    translate.use('en');
+
+    component.keyword.setValue('ab');
+    component.keyword.markAsDirty();
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('.error-text').textContent)
+      .toContain('cannot less than 3 characters');
+
+    component.history = ['apple'];
+    component.filterHistory(null);
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('.autocomplete')).toBeNull();
+    expect(fixture.nativeElement.querySelector('.error-text').textContent)
+      .toContain('cannot less than 3 characters');
   });
 
   it('do not store duplicate search history', fakeAsync(() => {
