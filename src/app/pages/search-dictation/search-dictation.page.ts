@@ -113,7 +113,7 @@ export class SearchDictationPage implements OnInit, OnDestroy {
     if (this.inputForm.invalid) {
       return;
     }
-    this.search();
+    void this.search();
   }
 
   async search() {
