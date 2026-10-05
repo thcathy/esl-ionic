@@ -61,7 +61,7 @@
             <ng-template>
               <ion-list>
                 @for (state of suitableStudentOptions; track state) {
-                  <ion-item button (click)="chooseSuitable(state)">{{'SuitableStudent.' + state|translate}}</ion-item>
+                  <ion-item button (click)="chooseSuitable(state)"><ion-label class="ion-text-nowrap">{{'SuitableStudent.' + state|translate}}</ion-label></ion-item>
                 }
               </ion-list>
             </ng-template>
@@ -70,7 +70,7 @@
             <ng-template>
               <ion-list>
                 @for (option of typeOptions; track option.value) {
-                  <ion-item button (click)="chooseType(option.value)">{{option.label|translate}}</ion-item>
+                  <ion-item button (click)="chooseType(option.value)"><ion-label class="ion-text-nowrap">{{option.label|translate}}</ion-label></ion-item>
                 }
               </ion-list>
             </ng-template>
@@ -79,7 +79,7 @@
             <ng-template>
               <ion-list>
                 @for (option of dateOptions; track option.option) {
-                  <ion-item button (click)="chooseDate(option)">{{option.option|translate}}</ion-item>
+                  <ion-item button (click)="chooseDate(option)"><ion-label class="ion-text-nowrap">{{option.option|translate}}</ion-label></ion-item>
                 }
               </ion-list>
             </ng-template>

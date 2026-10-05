@@ -71,6 +71,11 @@ ion-button {
   font-weight: 400;
 }
 
+ion-popover {
+  --width: max-content;
+  --max-width: calc(100vw - 32px);
+}
+
 .form-actions {
   display: flex;
   justify-content: flex-end;
