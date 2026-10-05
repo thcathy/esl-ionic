@@ -1,7 +1,8 @@
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
+import {Subscription} from 'rxjs';
 import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
-import {Dictation, Dictations, SuitableStudentOptions} from '../../entity/dictation';
 import {TranslateService} from '@ngx-translate/core';
+import {Dictation, Dictations, SuitableStudentOptions} from '../../entity/dictation';
 import {DictationService} from '../../services/dictation/dictation.service';
 import {ValidationUtils} from '../../utils/validation-utils';
 import {IonicComponentService} from '../../services/ionic-component.service';
@@ -18,18 +19,26 @@ export interface DateSearchOption {
     styleUrls: ['./search-dictation.page.scss'],
     standalone: false
 })
-export class SearchDictationPage implements OnInit {
+export class SearchDictationPage implements OnInit, OnDestroy {
   SEARCH_HISTORY_KEY = 'SEARCH_HISTORY_KEY';
   MAX_HISTORY = 10;
 
   inputForm: UntypedFormGroup;
-  moreOptions = false;
   results: Dictation[];
   suitableStudentOptions = SuitableStudentOptions;
+  typeOptions = [
+    {value: 'Any', label: 'Any'},
+    {value: 'Vocab', label: 'Word'},
+    {value: 'Article', label: 'Sentence'},
+  ];
   dateOptions = this.createDateOptions();
   history: String[] = [];
   filteredHistory: String[] = [];
   showHistory = false;
+  suitableChipLabel = '';
+  typeChipLabel = '';
+  dateChipLabel = '';
+  private langChange: Subscription;
 
   constructor(
     public formBuilder: UntypedFormBuilder,
@@ -37,10 +46,17 @@ export class SearchDictationPage implements OnInit {
     public translateService: TranslateService,
     public storage: StorageService,
     public ionicComponentService: IonicComponentService,
+    private cdr: ChangeDetectorRef,
   ) { }
 
   ngOnInit() {
     this.createForm();
+    this.refreshChipLabels();
+    this.langChange = this.translateService.onLangChange.subscribe(() => this.refreshChipLabels());
+  }
+
+  ngOnDestroy() {
+    this.langChange?.unsubscribe();
   }
 
   get keyword() { return this.inputForm.get('keyword'); }
@@ -65,6 +81,39 @@ export class SearchDictationPage implements OnInit {
     this.storage.get(this.SEARCH_HISTORY_KEY).then(h => {
       this.history = h ? h : [];
     });
+  }
+
+  chooseSuitable(state: string) {
+    this.suitableStudent.setValue(state);
+    this.refreshChipLabels();
+  }
+
+  chooseType(value: string) {
+    this.type.setValue(value);
+    this.refreshChipLabels();
+  }
+
+  chooseDate(option: DateSearchOption) {
+    this.minDate.setValue(option);
+    this.refreshChipLabels();
+  }
+
+  private refreshChipLabels() {
+    this.suitableChipLabel = this.translateService.instant('SuitableStudent.' + this.suitableStudent.value);
+    const typeKey = this.typeOptions.find(option => option.value === this.type.value)?.label ?? '';
+    this.typeChipLabel = typeKey ? this.translateService.instant(typeKey) : '';
+    const dateKey = this.minDate.value?.option ?? '';
+    this.dateChipLabel = dateKey ? this.translateService.instant(dateKey) : '';
+    // The dev-mode double check skips this view, then fails when it re-reads the new label.
+    this.cdr.markForCheck();
+  }
+
+  searchOnEnter(event: Event) {
+    event.preventDefault();
+    if (this.inputForm.invalid) {
+      return;
+    }
+    void this.search();
   }
 
   async search() {

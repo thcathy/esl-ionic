@@ -10,8 +10,10 @@
     <ion-card class="card">
       <ion-card-content>
         <form class="input-form" [formGroup]="inputForm" novalidate>
-          <ion-searchbar (ionInput)="filterHistory($event)" formControlName="keyword" placeholder="{{'ID or part of title / description' | translate}}" (ionBlur)="stopShowHistory()" (keydown.enter)="search()"></ion-searchbar>
-          @if (filteredHistory && showHistory) {
+          <ion-item>
+            <ion-input formControlName="keyword" label="{{'Search'|translate}}" [clearInput]="true" placeholder="{{'Title, words, or ID' | translate}}" (ionInput)="filterHistory($event)" (ionBlur)="stopShowHistory()" (keydown.enter)="searchOnEnter($event)"></ion-input>
+          </ion-item>
+          @if (showHistory && filteredHistory.length) {
             <ion-list class="autocomplete">
               @for (h of filteredHistory; track h) {
                 <ion-item (mousedown)="setKeyword(h)">{{h}} <fa-icon item-end [icon]="['fas', 'history']"></fa-icon></ion-item>
@@ -20,7 +22,7 @@
           }
           @if (keyword.invalid && (keyword.dirty || keyword.touched)) {
             <div class="error-text">
-              @if (keyword.errors.minlength) {
+              @if (keyword.errors.pattern) {
                 <div>{{'CharactersTooShort'|translate:{length: '3'} }}</div>
               }
               @if (keyword.errors.maxlength) {
@@ -28,11 +30,9 @@
               }
             </div>
           }
-          @if (moreOptions) {
-            <ion-item>
-              <ion-input type="text" label="{{'Created By'|translate}}" formControlName="creator"></ion-input>
-            </ion-item>
-          }
+          <ion-item>
+            <ion-input type="text" label="{{'Created By'|translate}}" formControlName="creator"></ion-input>
+          </ion-item>
           @if (creator.invalid && (creator.dirty || creator.touched)) {
             <div class="error-text">
               @if (creator.errors.minlength) {
@@ -43,42 +43,52 @@
               }
             </div>
           }
-          @if (moreOptions) {
-            <ion-item>
-              <ion-select formControlName="suitableStudent" interface="popover"
-                label="{{'Suitable'|translate}} ({{'Age'|translate}})">
+          <div class="filters">
+            <button type="button" id="suitable-filter" class="filter-chip" data-filter="suitable">
+              <span class="chip-title">{{'Suitable'|translate}} ({{'Age'|translate}}):&nbsp;</span>
+              <span class="chip-value">{{ suitableChipLabel }}</span>
+            </button>
+            <button type="button" id="type-filter" class="filter-chip" data-filter="type">
+              <span class="chip-title">{{'Type'|translate}}:&nbsp;</span>
+              <span class="chip-value">{{ typeChipLabel }}</span>
+            </button>
+            <button type="button" id="date-filter" class="filter-chip" data-filter="date">
+              <span class="chip-title">{{'Date'|translate}}:&nbsp;</span>
+              <span class="chip-value">{{ dateChipLabel }}</span>
+            </button>
+          </div>
+          <ion-popover trigger="suitable-filter" triggerAction="click" [dismissOnSelect]="true" alignment="start">
+            <ng-template>
+              <ion-list>
                 @for (state of suitableStudentOptions; track state) {
-                  <ion-select-option [value]="state">{{'SuitableStudent.' + state|translate}}</ion-select-option>
+                  <ion-item button (click)="chooseSuitable(state)"><ion-label class="ion-text-nowrap">{{'SuitableStudent.' + state|translate}}</ion-label></ion-item>
                 }
-              </ion-select>
-            </ion-item>
-          }
-          @if (moreOptions) {
-            <ion-item>
-              <ion-select label="{{'Type'|translate}}" formControlName="type" interface="popover">
-                <ion-select-option value="Any">{{'Any'|translate}}</ion-select-option>
-                <ion-select-option value="Vocab">{{'Word'|translate}}</ion-select-option>
-                <ion-select-option value="Article">{{'Sentence'|translate}}</ion-select-option>
-              </ion-select>
-            </ion-item>
-          }
-          @if (moreOptions) {
-            <ion-item>
-              <ion-select label="{{'Date'|translate}}" formControlName="minDate" interface="popover">
-                @for (option of dateOptions; track option) {
-                  <ion-select-option [value]="option">{{option.option|translate}}</ion-select-option>
+              </ion-list>
+            </ng-template>
+          </ion-popover>
+          <ion-popover trigger="type-filter" triggerAction="click" [dismissOnSelect]="true" alignment="start">
+            <ng-template>
+              <ion-list>
+                @for (option of typeOptions; track option.value) {
+                  <ion-item button (click)="chooseType(option.value)"><ion-label class="ion-text-nowrap">{{option.label|translate}}</ion-label></ion-item>
                 }
-              </ion-select>
-            </ion-item>
-          }
-
-          <ion-button fill="outline" class="ion-float-left" (click)="moreOptions = !moreOptions">
-            {{'More Options'|translate}}
-          </ion-button>
-
-          <ion-button class="ion-float-right" (click)="search()" [disabled]="inputForm.invalid">
-            <fa-icon icon="search"></fa-icon>&nbsp;{{'Search'|translate}}
-          </ion-button>
+              </ion-list>
+            </ng-template>
+          </ion-popover>
+          <ion-popover trigger="date-filter" triggerAction="click" [dismissOnSelect]="true" alignment="start">
+            <ng-template>
+              <ion-list>
+                @for (option of dateOptions; track option.option) {
+                  <ion-item button (click)="chooseDate(option)"><ion-label class="ion-text-nowrap">{{option.option|translate}}</ion-label></ion-item>
+                }
+              </ion-list>
+            </ng-template>
+          </ion-popover>
+          <div class="form-actions">
+            <ion-button (click)="search()" [disabled]="inputForm.invalid">
+              <fa-icon icon="search"></fa-icon>&nbsp;{{'Search'|translate}}
+            </ion-button>
+          </div>
 
         </form>
       </ion-card-content>

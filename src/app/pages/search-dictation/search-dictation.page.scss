@@ -1,5 +1,9 @@
+ion-input {
+  --placeholder-color: #a0a0a0;
+}
+
 .autocomplete {
-  width: calc(100% - 48px);
+  width: 100%;
   position: absolute;
   z-index: 999;
   background: #f1f1f1;
@@ -33,4 +37,46 @@ ion-button {
 
 .error-text {
   padding-left: 16px;
+}
+
+.filters {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 12px 16px;
+}
+
+.filter-chip {
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 auto;
+  border: 0;
+  border-radius: 16px;
+  margin: 0;
+  padding: 0 10px;
+  height: 32px;
+  background: var(--ion-color-primary);
+  color: var(--ion-color-primary-contrast, #fff);
+  font-size: 14px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.chip-title {
+  font-weight: 600;
+}
+
+.chip-value {
+  font-weight: 400;
+}
+
+ion-popover {
+  --width: max-content;
+  --max-width: calc(100vw - 32px);
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
 }

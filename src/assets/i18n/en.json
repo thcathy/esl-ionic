@@ -97,5 +97,6 @@
   "Preload.Tip.CreateDictation": "Create your own dictation from any word list.",
   "Preload.Tip.OfflineMode": "Local voice works offline — great for practice on the go.",
   "Preload.Tip.Images": "AI images are generated only when a dictation is saved.",
-  "VocabImage.UnverifiedAiNote": "AI image — may not match this word"
+  "VocabImage.UnverifiedAiNote": "AI image — may not match this word",
+  "Title, words, or ID": "Title, words, or ID"
 }

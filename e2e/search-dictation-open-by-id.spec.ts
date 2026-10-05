@@ -10,7 +10,7 @@ test.describe('search dictation opens by id', () => {
   test('view the first search result on /dictation-view/:id', async ({ page }) => {
     await page.goto('/search-dictation');
 
-    const keyword = page.locator('ion-searchbar input');
+    const keyword = page.locator('ion-input[formcontrolname="keyword"] input');
     await keyword.click();
     await keyword.fill('apple');
 

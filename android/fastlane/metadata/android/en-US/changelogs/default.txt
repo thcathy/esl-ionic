@@ -1,1 +1,1 @@
-Each dictation in a list now shows a short preview under the title, so you can pick the right practice without opening it.
+Search by title, words, or ID, then press Enter. Age, type, and date are chips you can tap to change, and each list row now shows its preview at the bottom.
