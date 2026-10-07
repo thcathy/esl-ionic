@@ -205,55 +205,19 @@ describe('SearchDictationPage', () => {
       .toContain('cannot less than 3 characters');
   });
 
-  it('names the keyword when nothing matches', fakeAsync(() => {
+  it('says no dictation matched when the search has no hits', fakeAsync(() => {
     useNoResultsCopy();
     spyOn(component.dictationService, 'search').and.returnValue(of([]));
-    component.keyword.setValue('  apple  ');
-    runSearch();
-
-    expect(noResultsMessage()).toBe('No dictations match “apple”.');
-    expect(fixture.nativeElement.querySelector('.no-results-filters')).toBeNull();
-    expect(fixture.nativeElement.querySelector('[data-action="clear-search"]')).toBeTruthy();
-    expect(fixture.nativeElement.querySelector('.no-results').textContent).not.toContain('Soften');
-    expect(fixture.nativeElement.querySelector('app-dictation-list')).toBeNull();
-
-    component.keyword.setValue('pear');
-    fixture.detectChanges();
-    expect(noResultsMessage()).toBe('No dictations match “apple”.');
-  }));
-
-  it('mentions Suitable, type, and date from the search, and ignores Created By', fakeAsync(() => {
-    useNoResultsCopy();
-    spyOn(component.dictationService, 'search').and.returnValue(of([]));
-
     component.keyword.setValue('apple');
-    component.creator.setValue('ann');
-    runSearch();
-    expect(fixture.nativeElement.querySelector('.no-results-filters')).toBeNull();
-
     component.chooseSuitable('JuniorPrimary');
     component.chooseType('Vocab');
     component.chooseDate(component.dateOptions[2]);
     runSearch();
 
-    expect(noResultsMessage()).toBe('No dictations match “apple”.');
-    expect(filterLine()).toBe('Filtered by Junior Primary (6-8) · Word · Within 3 Month.');
-
-    component.chooseSuitable('Any');
-    fixture.detectChanges();
-    expect(filterLine()).toBe('Filtered by Junior Primary (6-8) · Word · Within 3 Month.');
-  }));
-
-  it('describes a filter-only search when the keyword is empty', fakeAsync(() => {
-    useNoResultsCopy();
-    spyOn(component.dictationService, 'search').and.returnValue(of([]));
-    component.keyword.setValue('');
-    component.chooseType('Article');
-    component.chooseDate(component.dateOptions[1]);
-    runSearch();
-
-    expect(noResultsMessage()).toBe('No dictations match this search.');
-    expect(filterLine()).toBe('Filtered by Sentence · Within 1 Month.');
+    expect(noResultsMessage()).toBe('No dictation matched.');
+    expect(fixture.nativeElement.querySelector('.no-results-filters')).toBeNull();
+    expect(fixture.nativeElement.querySelector('[data-action="clear-search"]')).toBeTruthy();
+    expect(fixture.nativeElement.querySelector('app-dictation-list')).toBeNull();
   }));
 
   it('clear resets the keyword and filters and leaves the empty state', fakeAsync(() => {
@@ -316,14 +280,6 @@ describe('SearchDictationPage', () => {
   }
 
   function noResultsMessage(): string {
-    return text('.no-results-message');
-  }
-
-  function filterLine(): string {
-    return text('.no-results-filters');
-  }
-
-  function text(selector: string): string {
-    return fixture.nativeElement.querySelector(selector)?.textContent.replace(/\s+/g, ' ').trim() ?? '';
+    return fixture.nativeElement.querySelector('.no-results-message')?.textContent.replace(/\s+/g, ' ').trim() ?? '';
   }
 });

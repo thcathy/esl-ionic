@@ -103,16 +103,7 @@
           </ion-card-title>
         </ion-card-header>
         <ion-card-content>
-          <p class="no-results-message">
-            @if (noMatchKeyword) {
-              {{ 'SearchDictation.NoMatch' | translate:{ keyword: noMatchKeyword } }}
-            } @else {
-              {{ 'SearchDictation.NoMatchNoKeyword' | translate }}
-            }
-          </p>
-          @if (noMatchFilterKeys.length) {
-            <p class="no-results-filters">{{ 'SearchDictation.FilteredBy' | translate:{ filters: noMatchFilterText } }}</p>
-          }
+          <p class="no-results-message">{{ 'SearchDictation.NoMatch' | translate }}</p>
           <div class="no-results-actions">
             <ion-button data-action="clear-search" (click)="clearSearch()">{{ 'SearchDictation.Clear' | translate }}</ion-button>
           </div>

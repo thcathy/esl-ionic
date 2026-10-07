@@ -38,8 +38,6 @@ export class SearchDictationPage implements OnInit, OnDestroy {
   suitableChipLabel = '';
   typeChipLabel = '';
   dateChipLabel = '';
-  noMatchKeyword = '';
-  noMatchFilterKeys: string[] = [];
   private langChange: Subscription;
 
   constructor(
@@ -69,11 +67,6 @@ export class SearchDictationPage implements OnInit, OnDestroy {
   get source() { return Dictations.Source; }
   get noResults(): boolean {
     return Array.isArray(this.results) && this.results.length === 0;
-  }
-  get noMatchFilterText(): string {
-    return this.noMatchFilterKeys
-      .map(key => this.translateService.instant(key))
-      .join(' · ');
   }
 
   createForm() {
@@ -138,49 +131,23 @@ export class SearchDictationPage implements OnInit, OnDestroy {
     this.showHistory = false;
     this.filteredHistory = [];
     this.results = null;
-    this.noMatchKeyword = '';
-    this.noMatchFilterKeys = [];
   }
 
   async search() {
-    const noMatchKeyword = (this.keyword.value || '').trim();
-    const noMatchFilterKeys = this.activeFilterKeys();
-    const request = {
-      keyword: this.keyword.value,
-      minDate: this.minDate.value?.date,
-      creator: this.creator.value,
-      suitableStudent: this.suitableStudent.value,
-      type: this.type.value === 'Any' ? null : this.type.value,
-    };
     this.results = null;
     const loader = await this.ionicComponentService.showLoading();
 
-    this.addToHistory(request.keyword);
-    this.dictationService.search(request).subscribe(r => {
+    this.addToHistory(this.keyword.value);
+    this.dictationService.search({
+      keyword: this.keyword.value,
+      minDate: this.minDate.value.date,
+      creator: this.creator.value,
+      suitableStudent: this.suitableStudent.value,
+      type: this.type.value === 'Any' ? null : this.type.value,
+    }).subscribe(r => {
       loader.dismiss();
       this.results = r;
-      this.noMatchKeyword = noMatchKeyword;
-      this.noMatchFilterKeys = noMatchFilterKeys;
-    }, () => loader.dismiss());
-  }
-
-  private activeFilterKeys(): string[] {
-    const keys: string[] = [];
-    const suitable = this.suitableStudent.value;
-    if (suitable && suitable !== 'Any') {
-      keys.push('SuitableStudent.' + suitable);
-    }
-    if (this.type.value && this.type.value !== 'Any') {
-      const typeKey = this.typeOptions.find(option => option.value === this.type.value)?.label;
-      if (typeKey) {
-        keys.push(typeKey);
-      }
-    }
-    const dateKey = this.minDate.value?.option;
-    if (dateKey && dateKey !== 'Any') {
-      keys.push(dateKey);
-    }
-    return keys;
+    }, _e => loader.dismiss());
   }
 
   createDateOptions(): DateSearchOption[] {

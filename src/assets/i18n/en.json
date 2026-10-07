@@ -99,8 +99,6 @@
   "Preload.Tip.Images": "AI images are generated only when a dictation is saved.",
   "VocabImage.UnverifiedAiNote": "AI image — may not match this word",
   "Title, words, or ID": "Title, words, or ID",
-  "SearchDictation.NoMatch": "No dictations match “{{keyword}}”.",
-  "SearchDictation.NoMatchNoKeyword": "No dictations match this search.",
-  "SearchDictation.FilteredBy": "Filtered by {{filters}}.",
+  "SearchDictation.NoMatch": "No dictation matched.",
   "SearchDictation.Clear": "Clear"
 }
