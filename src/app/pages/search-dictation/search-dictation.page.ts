@@ -65,6 +65,9 @@ export class SearchDictationPage implements OnInit, OnDestroy {
   get suitableStudent() { return this.inputForm.get('suitableStudent'); }
   get type() { return this.inputForm.get('type'); }
   get source() { return Dictations.Source; }
+  get noResults(): boolean {
+    return Array.isArray(this.results) && this.results.length === 0;
+  }
 
   createForm() {
     this.inputForm = this.formBuilder.group({
@@ -114,6 +117,20 @@ export class SearchDictationPage implements OnInit, OnDestroy {
       return;
     }
     void this.search();
+  }
+
+  clearSearch() {
+    this.keyword.setValue('');
+    this.creator.setValue('');
+    this.suitableStudent.setValue('Any');
+    this.type.setValue('Any');
+    this.minDate.setValue(this.dateOptions[0]);
+    this.refreshChipLabels();
+    this.inputForm.markAsPristine();
+    this.inputForm.markAsUntouched();
+    this.showHistory = false;
+    this.filteredHistory = [];
+    this.results = null;
   }
 
   async search() {

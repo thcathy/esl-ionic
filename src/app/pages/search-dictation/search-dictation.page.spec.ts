@@ -9,6 +9,8 @@ import {SharedTestModule} from '../../../testing/shared-test.module';
 import {ManageVocabHistoryServiceSpy, StorageSpy} from '../../../testing/mocks-ionic';
 import {ManageVocabHistoryService} from '../../services/member/manage-vocab-history.service';
 import {StorageService} from '../../services/storage.service';
+import {TestData} from '../../../testing/test-data';
+import en from '../../../assets/i18n/en.json';
 
 describe('SearchDictationPage', () => {
   let component: SearchDictationPage;
@@ -203,6 +205,57 @@ describe('SearchDictationPage', () => {
       .toContain('cannot less than 3 characters');
   });
 
+  it('says no dictation matched when the search has no hits', fakeAsync(() => {
+    useNoResultsCopy();
+    spyOn(component.dictationService, 'search').and.returnValue(of([]));
+    component.keyword.setValue('apple');
+    component.chooseSuitable('JuniorPrimary');
+    component.chooseType('Vocab');
+    component.chooseDate(component.dateOptions[2]);
+    runSearch();
+
+    expect(noResultsMessage()).toBe('No dictation matched.');
+    expect(fixture.nativeElement.querySelector('.no-results-filters')).toBeNull();
+    expect(fixture.nativeElement.querySelector('[data-action="clear-search"]')).toBeTruthy();
+    expect(fixture.nativeElement.querySelector('app-dictation-list')).toBeNull();
+  }));
+
+  it('clear resets the keyword and filters and leaves the empty state', fakeAsync(() => {
+    useNoResultsCopy();
+    const search = spyOn(component.dictationService, 'search').and.returnValue(of([]));
+    component.keyword.setValue('apple');
+    component.creator.setValue('ann');
+    component.chooseSuitable('JuniorPrimary');
+    component.chooseType('Vocab');
+    component.chooseDate(component.dateOptions[2]);
+    component.history = ['apple pie'];
+    component.filterHistory(null);
+    runSearch();
+    search.calls.reset();
+
+    fixture.debugElement.query(By.css('[data-action="clear-search"]')).triggerEventHandler('click', null);
+    fixture.detectChanges();
+
+    expect(component.keyword.value).toBe('');
+    expect(component.creator.value).toBe('');
+    expect(chipText('suitable')).toBe('Suitable (Age): Any');
+    expect(chipText('type')).toBe('Type: Any');
+    expect(chipText('date')).toBe('Date: Any');
+    expect(fixture.nativeElement.querySelector('.no-results')).toBeNull();
+    expect(fixture.nativeElement.querySelector('.autocomplete')).toBeNull();
+    expect(search).not.toHaveBeenCalled();
+  }));
+
+  it('shows matching dictations instead of the empty state', fakeAsync(() => {
+    useNoResultsCopy();
+    spyOn(component.dictationService, 'search').and.returnValue(of([TestData.fillInDictation()]));
+    component.keyword.setValue('apple');
+    runSearch();
+
+    expect(fixture.nativeElement.querySelector('.no-results')).toBeNull();
+    expect(fixture.nativeElement.querySelector('#dictation-list ion-item')).toBeTruthy();
+  }));
+
   it('do not store duplicate search history', fakeAsync(() => {
     component.keyword.setValue(`new search`);
     component.search();
@@ -213,4 +266,20 @@ describe('SearchDictationPage', () => {
     expect(component.history.length).toBe(1);
     expect(component.history[0]).toBe('new search');
   }));
+
+  function useNoResultsCopy() {
+    const translate = TestBed.inject(TranslateService);
+    translate.setTranslation('en', en, true);
+    translate.use('en');
+  }
+
+  function runSearch() {
+    component.search();
+    tick();
+    fixture.detectChanges();
+  }
+
+  function noResultsMessage(): string {
+    return fixture.nativeElement.querySelector('.no-results-message')?.textContent.replace(/\s+/g, ' ').trim() ?? '';
+  }
 });

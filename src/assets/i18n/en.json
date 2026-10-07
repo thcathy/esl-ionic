@@ -98,5 +98,7 @@
   "Preload.Tip.OfflineMode": "Local voice works offline — great for practice on the go.",
   "Preload.Tip.Images": "AI images are generated only when a dictation is saved.",
   "VocabImage.UnverifiedAiNote": "AI image — may not match this word",
-  "Title, words, or ID": "Title, words, or ID"
+  "Title, words, or ID": "Title, words, or ID",
+  "SearchDictation.NoMatch": "No dictation matched.",
+  "SearchDictation.Clear": "Clear"
 }
