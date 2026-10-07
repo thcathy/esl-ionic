@@ -80,3 +80,33 @@ ion-popover {
   display: flex;
   justify-content: flex-end;
 }
+
+.no-results {
+  margin-top: 12px;
+
+  ion-card-content {
+    padding: 8px 16px 12px;
+    text-align: center;
+  }
+}
+
+.no-results-message {
+  margin: 8px 0 4px;
+  overflow-wrap: anywhere;
+}
+
+.no-results-filters {
+  margin: 0 0 4px;
+  color: var(--ion-color-medium, #666);
+}
+
+.no-results-actions {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  align-items: center;
+
+  ion-button {
+    margin: 8px;
+  }
+}

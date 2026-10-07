@@ -38,7 +38,10 @@ export class SearchDictationPage implements OnInit, OnDestroy {
   suitableChipLabel = '';
   typeChipLabel = '';
   dateChipLabel = '';
+  noMatchKeyword = '';
+  noMatchFilterKeys: string[] = [];
   private langChange: Subscription;
+  private searchRequestId = 0;
 
   constructor(
     public formBuilder: UntypedFormBuilder,
@@ -116,21 +119,95 @@ export class SearchDictationPage implements OnInit, OnDestroy {
     void this.search();
   }
 
-  async search() {
-    this.results = null;
-    const loader = await this.ionicComponentService.showLoading();
+  get noResults(): boolean {
+    return Array.isArray(this.results) && this.results.length === 0;
+  }
 
-    this.addToHistory(this.keyword.value);
-    this.dictationService.search({
+  get noMatchMessageKey(): string {
+    return this.noMatchKeyword ? 'SearchDictation.NoMatch' : 'SearchDictation.NoMatchNoKeyword';
+  }
+
+  get noMatchMessageParams(): { keyword: string } {
+    return { keyword: this.noMatchKeyword };
+  }
+
+  get noMatchFilterText(): string {
+    return this.noMatchFilterKeys
+      .map(key => this.translateService.instant(key))
+      .join(' · ');
+  }
+
+  softenFilters() {
+    this.chooseSuitable('Any');
+    this.chooseType('Any');
+    this.chooseDate(this.dateOptions[0]);
+    if (this.inputForm.invalid) {
+      return;
+    }
+    void this.search();
+  }
+
+  clearSearch() {
+    this.searchRequestId++;
+    this.keyword.setValue('');
+    this.creator.setValue('');
+    this.chooseSuitable('Any');
+    this.chooseType('Any');
+    this.chooseDate(this.dateOptions[0]);
+    this.inputForm.markAsPristine();
+    this.inputForm.markAsUntouched();
+    this.showHistory = false;
+    this.filteredHistory = [];
+    this.results = null;
+    this.noMatchKeyword = '';
+    this.noMatchFilterKeys = [];
+    this.cdr.markForCheck();
+  }
+
+  async search() {
+    const requestId = ++this.searchRequestId;
+    const noMatchKeyword = `${this.keyword.value ?? ''}`.trim();
+    const noMatchFilterKeys = this.activeFilterKeys();
+    const request = {
       keyword: this.keyword.value,
-      minDate: this.minDate.value.date,
+      minDate: this.minDate.value?.date,
       creator: this.creator.value,
       suitableStudent: this.suitableStudent.value,
       type: this.type.value === 'Any' ? null : this.type.value,
-    }).subscribe(r => {
+    };
+    this.results = null;
+    const loader = await this.ionicComponentService.showLoading();
+
+    this.addToHistory(request.keyword);
+    this.dictationService.search(request).subscribe(r => {
       loader.dismiss();
+      if (requestId !== this.searchRequestId) {
+        return;
+      }
       this.results = r;
+      this.noMatchKeyword = noMatchKeyword;
+      this.noMatchFilterKeys = noMatchFilterKeys;
+      this.cdr.markForCheck();
     }, _e => loader.dismiss());
+  }
+
+  private activeFilterKeys(): string[] {
+    const keys: string[] = [];
+    const suitable = this.suitableStudent.value;
+    if (suitable && suitable !== 'Any') {
+      keys.push('SuitableStudent.' + suitable);
+    }
+    if (this.type.value && this.type.value !== 'Any') {
+      const typeKey = this.typeOptions.find(option => option.value === this.type.value)?.label;
+      if (typeKey) {
+        keys.push(typeKey);
+      }
+    }
+    const dateKey = this.minDate.value?.option;
+    if (dateKey && dateKey !== 'Any') {
+      keys.push(dateKey);
+    }
+    return keys;
   }
 
   createDateOptions(): DateSearchOption[] {

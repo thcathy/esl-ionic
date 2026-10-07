@@ -77,6 +77,15 @@ describe('DictationListComponent', () => {
     expect(labels[1].innerHTML).toContain('1 Sentence');
   });
 
+  it('still tells other screens when the list is empty', () => {
+    component.dictations = [];
+    component.ngOnChanges({});
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.textContent).toContain('No dictation');
+    expect(fixture.nativeElement.querySelector('.no-results')).toBeNull();
+  });
+
   it('view from search opens the dictation by id', () => {
     const dictation = TestData.fillInDictation();
     component.openById = true;

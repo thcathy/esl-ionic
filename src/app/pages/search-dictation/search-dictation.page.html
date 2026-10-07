@@ -94,7 +94,32 @@
       </ion-card-content>
     </ion-card>
 
-    <app-dictation-list [dictations]="results" [openById]="true" title="Search Result"></app-dictation-list>
+    @if (noResults) {
+      <ion-card class="card no-results">
+        <ion-card-header>
+          <ion-card-title>
+            <fa-icon [icon]="['fas', 'edit']"></fa-icon>
+            {{ 'Search Result' | translate }}
+          </ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <div class="no-results-copy" role="status">
+            <p class="no-results-message">{{ noMatchMessageKey | translate: noMatchMessageParams }}</p>
+            @if (noMatchFilterKeys.length) {
+              <p class="no-results-filters">{{ 'SearchDictation.FilteredBy' | translate:{ filters: noMatchFilterText } }}</p>
+            }
+          </div>
+          <div class="no-results-actions">
+            @if (noMatchFilterKeys.length) {
+              <ion-button data-action="soften-filters" (click)="softenFilters()">{{ 'SearchDictation.SoftenFilters' | translate }}</ion-button>
+            }
+            <ion-button fill="outline" data-action="clear-search" (click)="clearSearch()">{{ 'SearchDictation.Clear' | translate }}</ion-button>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    } @else {
+      <app-dictation-list [dictations]="results" [openById]="true" title="Search Result"></app-dictation-list>
+    }
 
   </div>
   <app-footer></app-footer>
