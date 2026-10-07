@@ -102,6 +102,5 @@
   "SearchDictation.NoMatch": "No dictations match “{{keyword}}”.",
   "SearchDictation.NoMatchNoKeyword": "No dictations match this search.",
   "SearchDictation.FilteredBy": "Filtered by {{filters}}.",
-  "SearchDictation.SoftenFilters": "Soften filters",
   "SearchDictation.Clear": "Clear"
 }

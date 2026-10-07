@@ -114,10 +114,7 @@
             <p class="no-results-filters">{{ 'SearchDictation.FilteredBy' | translate:{ filters: noMatchFilterText } }}</p>
           }
           <div class="no-results-actions">
-            @if (noMatchFilterKeys.length) {
-              <ion-button data-action="soften-filters" [disabled]="inputForm.invalid" (click)="softenFilters()">{{ 'SearchDictation.SoftenFilters' | translate }}</ion-button>
-            }
-            <ion-button fill="outline" data-action="clear-search" (click)="clearSearch()">{{ 'SearchDictation.Clear' | translate }}</ion-button>
+            <ion-button data-action="clear-search" (click)="clearSearch()">{{ 'SearchDictation.Clear' | translate }}</ion-button>
           </div>
         </ion-card-content>
       </ion-card>

@@ -126,18 +126,13 @@ export class SearchDictationPage implements OnInit, OnDestroy {
     void this.search();
   }
 
-  softenFilters() {
-    if (this.inputForm.invalid) {
-      return;
-    }
-    this.resetSearchFilters();
-    void this.search();
-  }
-
   clearSearch() {
     this.keyword.setValue('');
     this.creator.setValue('');
-    this.resetSearchFilters();
+    this.suitableStudent.setValue('Any');
+    this.type.setValue('Any');
+    this.minDate.setValue(this.dateOptions[0]);
+    this.refreshChipLabels();
     this.inputForm.markAsPristine();
     this.inputForm.markAsUntouched();
     this.showHistory = false;
@@ -167,13 +162,6 @@ export class SearchDictationPage implements OnInit, OnDestroy {
       this.noMatchKeyword = noMatchKeyword;
       this.noMatchFilterKeys = noMatchFilterKeys;
     }, () => loader.dismiss());
-  }
-
-  private resetSearchFilters() {
-    this.suitableStudent.setValue('Any');
-    this.type.setValue('Any');
-    this.minDate.setValue(this.dateOptions[0]);
-    this.refreshChipLabels();
   }
 
   private activeFilterKeys(): string[] {

@@ -157,7 +157,6 @@
   "SearchDictation.NoMatch": "沒有符合「{{keyword}}」的練習。",
   "SearchDictation.NoMatchNoKeyword": "沒有符合的練習。",
   "SearchDictation.FilteredBy": "篩選：{{filters}}",
-  "SearchDictation.SoftenFilters": "放寬篩選",
   "SearchDictation.Clear": "清除",
   "Date": "日期",
   "Any": "所有",
