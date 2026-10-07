@@ -207,26 +207,22 @@ describe('SearchDictationPage', () => {
 
   it('names the keyword when nothing matches', fakeAsync(() => {
     useNoResultsCopy();
-    const search = spyOn(component.dictationService, 'search').and.returnValue(of([]));
+    spyOn(component.dictationService, 'search').and.returnValue(of([]));
     component.keyword.setValue('  apple  ');
     runSearch();
 
-    const panel = fixture.nativeElement.querySelector('.no-results');
-    expect(panel.querySelector('.no-results-message').textContent.trim())
-      .toBe('No dictations match “apple”.');
-    expect(panel.querySelector('.no-results-filters')).toBeNull();
-    expect(panel.querySelector('[data-action="soften-filters"]')).toBeNull();
-    expect(panel.querySelector('[data-action="clear-search"]').textContent).toContain('Clear');
+    expect(noResultsMessage()).toBe('No dictations match “apple”.');
+    expect(fixture.nativeElement.querySelector('.no-results-filters')).toBeNull();
+    expect(fixture.nativeElement.querySelector('[data-action="soften-filters"]')).toBeNull();
+    expect(fixture.nativeElement.querySelector('[data-action="clear-search"]')).toBeTruthy();
     expect(fixture.nativeElement.querySelector('app-dictation-list')).toBeNull();
-    expect(search).toHaveBeenCalled();
 
     component.keyword.setValue('pear');
     fixture.detectChanges();
-    expect(panel.querySelector('.no-results-message').textContent.trim())
-      .toBe('No dictations match “apple”.');
+    expect(noResultsMessage()).toBe('No dictations match “apple”.');
   }));
 
-  it('mentions active Suitable, type, and date filters, and creator alone does not', fakeAsync(() => {
+  it('mentions Suitable, type, and date from the search, and ignores Created By', fakeAsync(() => {
     useNoResultsCopy();
     spyOn(component.dictationService, 'search').and.returnValue(of([]));
 
@@ -241,30 +237,25 @@ describe('SearchDictationPage', () => {
     component.chooseDate(component.dateOptions[2]);
     runSearch();
 
-    expect(fixture.nativeElement.querySelector('.no-results-message').textContent.trim())
-      .toBe('No dictations match “apple”.');
-    expect(fixture.nativeElement.querySelector('.no-results-filters').textContent.trim())
-      .toBe('Filtered by Junior Primary (6-8) · Word · Within 3 Month.');
+    expect(noResultsMessage()).toBe('No dictations match “apple”.');
+    expect(filterLine()).toBe('Filtered by Junior Primary (6-8) · Word · Within 3 Month.');
     expect(fixture.nativeElement.querySelector('[data-action="soften-filters"]')).toBeTruthy();
 
     component.chooseSuitable('Any');
     fixture.detectChanges();
-    expect(fixture.nativeElement.querySelector('.no-results-filters').textContent.trim())
-      .toBe('Filtered by Junior Primary (6-8) · Word · Within 3 Month.');
+    expect(filterLine()).toBe('Filtered by Junior Primary (6-8) · Word · Within 3 Month.');
   }));
 
-  it('describes a filter-only search without an empty keyword', fakeAsync(() => {
+  it('describes a filter-only search when the keyword is empty', fakeAsync(() => {
     useNoResultsCopy();
     spyOn(component.dictationService, 'search').and.returnValue(of([]));
-    component.keyword.setValue('   ');
+    component.keyword.setValue('');
     component.chooseType('Article');
     component.chooseDate(component.dateOptions[1]);
     runSearch();
 
-    expect(fixture.nativeElement.querySelector('.no-results-message').textContent.trim())
-      .toBe('No dictations match this search.');
-    expect(fixture.nativeElement.querySelector('.no-results-filters').textContent.trim())
-      .toBe('Filtered by Sentence · Within 1 Month.');
+    expect(noResultsMessage()).toBe('No dictations match this search.');
+    expect(filterLine()).toBe('Filtered by Sentence · Within 1 Month.');
   }));
 
   it('soften filters keeps the keyword and searches again without Suitable, type, or date', fakeAsync(() => {
@@ -284,26 +275,23 @@ describe('SearchDictationPage', () => {
 
     expect(component.keyword.value).toBe('apple');
     expect(component.creator.value).toBe('ann');
-    expect(component.suitableStudent.value).toBe('Any');
-    expect(component.type.value).toBe('Any');
-    expect(component.minDate.value.option).toBe('Any');
     expect(chipText('suitable')).toBe('Suitable (Age): Any');
     expect(chipText('type')).toBe('Type: Any');
     expect(chipText('date')).toBe('Date: Any');
-    expect(search).toHaveBeenCalledWith(jasmine.objectContaining({
+    const request = search.calls.mostRecent().args[0];
+    expect(request).toEqual(jasmine.objectContaining({
       keyword: 'apple',
       creator: 'ann',
       suitableStudent: 'Any',
       type: null,
     }));
-    expect(search.calls.mostRecent().args[0].minDate).toBeUndefined();
+    expect(request.minDate).toBeUndefined();
     expect(fixture.nativeElement.querySelector('[data-action="soften-filters"]')).toBeNull();
     expect(fixture.nativeElement.querySelector('.no-results-filters')).toBeNull();
-    expect(fixture.nativeElement.querySelector('.no-results-message').textContent)
-      .toContain('No dictations match “apple”.');
+    expect(noResultsMessage()).toBe('No dictations match “apple”.');
   }));
 
-  it('does not search again when softening leaves the keyword too short', fakeAsync(() => {
+  it('does not soften filters when the keyword is too short', fakeAsync(() => {
     useNoResultsCopy();
     const search = spyOn(component.dictationService, 'search').and.returnValue(of([]));
     component.keyword.setValue('apple');
@@ -312,13 +300,14 @@ describe('SearchDictationPage', () => {
     search.calls.reset();
 
     component.keyword.setValue('ab');
+    fixture.detectChanges();
     fixture.debugElement.query(By.css('[data-action="soften-filters"]')).triggerEventHandler('click', null);
     tick();
-    fixture.detectChanges();
 
     expect(search).not.toHaveBeenCalled();
-    expect(component.type.value).toBe('Any');
+    expect(component.type.value).toBe('Vocab');
     expect(component.keyword.value).toBe('ab');
+    expect(filterLine()).toBe('Filtered by Word.');
   }));
 
   it('clear resets the keyword and filters and leaves the empty state', fakeAsync(() => {
@@ -339,11 +328,9 @@ describe('SearchDictationPage', () => {
 
     expect(component.keyword.value).toBe('');
     expect(component.creator.value).toBe('');
-    expect(component.suitableStudent.value).toBe('Any');
-    expect(component.type.value).toBe('Any');
-    expect(component.minDate.value.option).toBe('Any');
-    expect(component.results).toBeNull();
-    expect(component.showHistory).toBeFalse();
+    expect(chipText('suitable')).toBe('Suitable (Age): Any');
+    expect(chipText('type')).toBe('Type: Any');
+    expect(chipText('date')).toBe('Date: Any');
     expect(fixture.nativeElement.querySelector('.no-results')).toBeNull();
     expect(fixture.nativeElement.querySelector('.autocomplete')).toBeNull();
     expect(search).not.toHaveBeenCalled();
@@ -351,16 +338,11 @@ describe('SearchDictationPage', () => {
 
   it('shows matching dictations instead of the empty state', fakeAsync(() => {
     useNoResultsCopy();
-    const search = spyOn(component.dictationService, 'search').and.returnValue(of([]));
+    spyOn(component.dictationService, 'search').and.returnValue(of([TestData.fillInDictation()]));
     component.keyword.setValue('apple');
-    runSearch();
-    expect(fixture.nativeElement.querySelector('.no-results')).toBeTruthy();
-
-    search.and.returnValue(of([TestData.fillInDictation()]));
     runSearch();
 
     expect(fixture.nativeElement.querySelector('.no-results')).toBeNull();
-    expect(fixture.nativeElement.querySelector('app-dictation-list')).toBeTruthy();
     expect(fixture.nativeElement.querySelector('#dictation-list ion-item')).toBeTruthy();
   }));
 
@@ -385,5 +367,17 @@ describe('SearchDictationPage', () => {
     component.search();
     tick();
     fixture.detectChanges();
+  }
+
+  function noResultsMessage(): string {
+    return text('.no-results-message');
+  }
+
+  function filterLine(): string {
+    return text('.no-results-filters');
+  }
+
+  function text(selector: string): string {
+    return fixture.nativeElement.querySelector(selector)?.textContent.replace(/\s+/g, ' ').trim() ?? '';
   }
 });

@@ -103,15 +103,19 @@
           </ion-card-title>
         </ion-card-header>
         <ion-card-content>
-          <div class="no-results-copy" role="status">
-            <p class="no-results-message">{{ noMatchMessageKey | translate: noMatchMessageParams }}</p>
-            @if (noMatchFilterKeys.length) {
-              <p class="no-results-filters">{{ 'SearchDictation.FilteredBy' | translate:{ filters: noMatchFilterText } }}</p>
+          <p class="no-results-message">
+            @if (noMatchKeyword) {
+              {{ 'SearchDictation.NoMatch' | translate:{ keyword: noMatchKeyword } }}
+            } @else {
+              {{ 'SearchDictation.NoMatchNoKeyword' | translate }}
             }
-          </div>
+          </p>
+          @if (noMatchFilterKeys.length) {
+            <p class="no-results-filters">{{ 'SearchDictation.FilteredBy' | translate:{ filters: noMatchFilterText } }}</p>
+          }
           <div class="no-results-actions">
             @if (noMatchFilterKeys.length) {
-              <ion-button data-action="soften-filters" (click)="softenFilters()">{{ 'SearchDictation.SoftenFilters' | translate }}</ion-button>
+              <ion-button data-action="soften-filters" [disabled]="inputForm.invalid" (click)="softenFilters()">{{ 'SearchDictation.SoftenFilters' | translate }}</ion-button>
             }
             <ion-button fill="outline" data-action="clear-search" (click)="clearSearch()">{{ 'SearchDictation.Clear' | translate }}</ion-button>
           </div>

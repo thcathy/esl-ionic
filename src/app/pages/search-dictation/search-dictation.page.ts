@@ -41,7 +41,6 @@ export class SearchDictationPage implements OnInit, OnDestroy {
   noMatchKeyword = '';
   noMatchFilterKeys: string[] = [];
   private langChange: Subscription;
-  private searchRequestId = 0;
 
   constructor(
     public formBuilder: UntypedFormBuilder,
@@ -68,6 +67,14 @@ export class SearchDictationPage implements OnInit, OnDestroy {
   get suitableStudent() { return this.inputForm.get('suitableStudent'); }
   get type() { return this.inputForm.get('type'); }
   get source() { return Dictations.Source; }
+  get noResults(): boolean {
+    return Array.isArray(this.results) && this.results.length === 0;
+  }
+  get noMatchFilterText(): string {
+    return this.noMatchFilterKeys
+      .map(key => this.translateService.instant(key))
+      .join(' · ');
+  }
 
   createForm() {
     this.inputForm = this.formBuilder.group({
@@ -119,41 +126,18 @@ export class SearchDictationPage implements OnInit, OnDestroy {
     void this.search();
   }
 
-  get noResults(): boolean {
-    return Array.isArray(this.results) && this.results.length === 0;
-  }
-
-  get noMatchMessageKey(): string {
-    return this.noMatchKeyword ? 'SearchDictation.NoMatch' : 'SearchDictation.NoMatchNoKeyword';
-  }
-
-  get noMatchMessageParams(): { keyword: string } {
-    return { keyword: this.noMatchKeyword };
-  }
-
-  get noMatchFilterText(): string {
-    return this.noMatchFilterKeys
-      .map(key => this.translateService.instant(key))
-      .join(' · ');
-  }
-
   softenFilters() {
-    this.chooseSuitable('Any');
-    this.chooseType('Any');
-    this.chooseDate(this.dateOptions[0]);
     if (this.inputForm.invalid) {
       return;
     }
+    this.resetSearchFilters();
     void this.search();
   }
 
   clearSearch() {
-    this.searchRequestId++;
     this.keyword.setValue('');
     this.creator.setValue('');
-    this.chooseSuitable('Any');
-    this.chooseType('Any');
-    this.chooseDate(this.dateOptions[0]);
+    this.resetSearchFilters();
     this.inputForm.markAsPristine();
     this.inputForm.markAsUntouched();
     this.showHistory = false;
@@ -161,12 +145,10 @@ export class SearchDictationPage implements OnInit, OnDestroy {
     this.results = null;
     this.noMatchKeyword = '';
     this.noMatchFilterKeys = [];
-    this.cdr.markForCheck();
   }
 
   async search() {
-    const requestId = ++this.searchRequestId;
-    const noMatchKeyword = `${this.keyword.value ?? ''}`.trim();
+    const noMatchKeyword = (this.keyword.value || '').trim();
     const noMatchFilterKeys = this.activeFilterKeys();
     const request = {
       keyword: this.keyword.value,
@@ -181,14 +163,17 @@ export class SearchDictationPage implements OnInit, OnDestroy {
     this.addToHistory(request.keyword);
     this.dictationService.search(request).subscribe(r => {
       loader.dismiss();
-      if (requestId !== this.searchRequestId) {
-        return;
-      }
       this.results = r;
       this.noMatchKeyword = noMatchKeyword;
       this.noMatchFilterKeys = noMatchFilterKeys;
-      this.cdr.markForCheck();
-    }, _e => loader.dismiss());
+    }, () => loader.dismiss());
+  }
+
+  private resetSearchFilters() {
+    this.suitableStudent.setValue('Any');
+    this.type.setValue('Any');
+    this.minDate.setValue(this.dateOptions[0]);
+    this.refreshChipLabels();
   }
 
   private activeFilterKeys(): string[] {
