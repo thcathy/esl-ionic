@@ -4,14 +4,14 @@
       <ion-card-title>
         <fa-icon [icon]="['fas', 'edit']"></fa-icon>
         {{ title | translate }}
+        @if (showResultSummary && dictations.length > 0) {
+          <span class="result-summary" data-result-summary>{{ resultSummaryText }}</span>
+        }
       </ion-card-title>
     </ion-card-header>
     <ion-card-content>
       @if (loading) {
         <ion-progress-bar type="indeterminate"></ion-progress-bar>
-      }
-      @if (showResultSummary && dictations.length > 0) {
-        <p class="result-summary" data-result-summary>{{ resultSummaryText }}</p>
       }
       @if (dictations?.length == 0) {
         <div class="ion-text-center" style="padding: 16px;">{{ 'No dictation' | translate}}</div>
