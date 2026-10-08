@@ -1,6 +1,8 @@
 import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
+import {TranslateService} from '@ngx-translate/core';
 import {Dictation, Dictations} from '../../entity/dictation';
 import {DictationHelper} from '../../services/dictation/dictation-helper.service';
+import {DICTATION_SEARCH_MAX_RESULTS} from '../../services/dictation/dictation.service';
 import {NavigationService} from '../../services/navigation.service';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {AppService} from '../../services/app.service';
@@ -31,10 +33,13 @@ export class DictationListComponent implements OnChanges {
   @Input() title: string;
   @Input() loading: boolean;
   @Input() openById = false;
+  /** Search results: match count above the list, and Previous / Next instead of Newer / Older. */
+  @Input() showResultSummary = false;
+  /** When the held list reaches this size, the total is a cap, not an exact count. */
+  @Input() resultCap = DICTATION_SEARCH_MAX_RESULTS;
 
   viewDictations: Array<Dictation>;
   page: number;
-  showOlder: boolean;
   state = 'center';
 
   get DictationSource() { return Dictations.Source; }
@@ -50,29 +55,63 @@ export class DictationListComponent implements OnChanges {
     public navService: NavigationService,
     public appService: AppService,
     private dictationHelper: DictationHelper,
+    private translate: TranslateService,
   ) {
     this.page = 0;
     this.showCreateButton = false;
+  }
+
+  get showOlder(): boolean {
+    return this.dictations != null && this.dictations.length > this.dictationPerPage * (this.page + 1);
+  }
+
+  get hasPreviousPage(): boolean {
+    return this.page > 0;
+  }
+
+  get hitsResultCap(): boolean {
+    return this.resultCap > 0 && (this.dictations?.length ?? 0) >= this.resultCap;
+  }
+
+  get resultSummaryKey(): string {
+    return this.hitsResultCap ? 'SearchDictation.ShowingCapped' : 'SearchDictation.Showing';
+  }
+
+  get resultSummaryText(): string {
+    return this.translate.instant(this.resultSummaryKey, this.resultSummaryParams);
+  }
+
+  get resultSummaryParams(): {range: string; count: number} {
+    const total = this.dictations?.length ?? 0;
+    const from = this.page * this.dictationPerPage + 1;
+    const to = Math.min(total, (this.page + 1) * this.dictationPerPage);
+    return {
+      range: from === to ? `${from}` : `${from}\u2013${to}`,
+      count: this.hitsResultCap ? this.resultCap : total,
+    };
   }
 
   ngOnChanges(_changes: SimpleChanges) {
     this.page = 0;
     if (this.dictations != null) {
       this.sliceDictations();
-      this.showOlder = this.dictations.length > this.dictationPerPage;
     }
   }
 
   older() {
+    if (!this.showOlder) {
+      return;
+    }
     this.page++;
-    this.showOlder = this.dictations.length >  this.dictationPerPage * (this.page + 1);
     this.state = 'right';
     this.sliceDictations();
   }
 
   newer() {
+    if (!this.hasPreviousPage) {
+      return;
+    }
     this.page--;
-    this.showOlder = true;
     this.state = 'left';
     this.sliceDictations();
   }

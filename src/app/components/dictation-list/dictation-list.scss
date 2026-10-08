@@ -5,6 +5,18 @@
   }
 }
 
+.result-summary {
+  margin: 0 0 8px;
+  color: #475062;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.result-paging ion-button {
+  margin-top: 4px;
+  margin-bottom: 4px;
+}
+
 ion-col {
   padding: 0px 5px 0px 5px;
 }

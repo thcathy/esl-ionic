@@ -100,5 +100,9 @@
   "VocabImage.UnverifiedAiNote": "AI image — may not match this word",
   "Title, words, or ID": "Title, words, or ID",
   "SearchDictation.NoMatch": "No dictation matched.",
-  "SearchDictation.Clear": "Clear"
+  "SearchDictation.Clear": "Clear",
+  "SearchDictation.Showing": "Showing {{range}} of {{count}}",
+  "SearchDictation.ShowingCapped": "Showing {{range}} of {{count}}+",
+  "Previous": "Previous",
+  "Next": "Next"
 }
