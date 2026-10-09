@@ -2,11 +2,15 @@
   <ion-card class="card dictation-list" style="margin-top: 12px;">
     <ion-card-header>
       <ion-card-title>
-        <fa-icon [icon]="['fas', 'edit']"></fa-icon>
-        {{ title | translate }}
-        @if (showResultSummary && dictations.length > 0) {
-          <span class="result-summary" data-result-summary>{{ resultSummaryText }}</span>
-        }
+        <span class="title-row">
+          <span class="title-label">
+            <fa-icon [icon]="['fas', 'edit']"></fa-icon>
+            {{ title | translate }}
+          </span>
+          @if (showResultSummary && dictations.length > 0) {
+            <span class="result-summary" data-result-summary>{{ resultSummaryText }}</span>
+          }
+        </span>
       </ion-card-title>
     </ion-card-header>
     <ion-card-content>

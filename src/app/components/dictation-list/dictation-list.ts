@@ -33,7 +33,7 @@ export class DictationListComponent implements OnChanges {
   @Input() title: string;
   @Input() loading: boolean;
   @Input() openById = false;
-  /** Search results: match count above the list, and Previous / Next instead of Newer / Older. */
+  /** Search results: match count on the right of the title bar, and Previous / Next instead of Newer / Older. */
   @Input() showResultSummary = false;
   /** When the held list reaches this size, the total is a cap, not an exact count. */
   @Input() resultCap = DICTATION_SEARCH_MAX_RESULTS;
