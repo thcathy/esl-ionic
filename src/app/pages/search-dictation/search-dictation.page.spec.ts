@@ -254,7 +254,7 @@ describe('SearchDictationPage', () => {
     component.keyword.setValue('apple');
     runSearch();
 
-    expect(resultSummary()).toBe('Showing 1\u20135 of 23');
+    expect(resultSummary()).toBe('1\u20135 of 23');
     expect(isPageDisabled('previous')).toBeTrue();
     expect(isPageDisabled('next')).toBeFalse();
     expect(fixture.nativeElement.textContent).not.toContain('Older');
@@ -262,7 +262,7 @@ describe('SearchDictationPage', () => {
 
     fixture.debugElement.query(By.css('[data-page="next"]')).triggerEventHandler('click', null);
     fixture.detectChanges();
-    expect(resultSummary()).toBe('Showing 6\u201310 of 23');
+    expect(resultSummary()).toBe('6\u201310 of 23');
     expect(isPageDisabled('previous')).toBeFalse();
   }));
 
@@ -272,7 +272,7 @@ describe('SearchDictationPage', () => {
     component.keyword.setValue('apple');
     runSearch();
 
-    expect(resultSummary()).toBe('Showing 1\u20133 of 3');
+    expect(resultSummary()).toBe('1\u20133 of 3');
     expect(isPageDisabled('previous')).toBeTrue();
     expect(isPageDisabled('next')).toBeTrue();
     expect(fixture.nativeElement.querySelector('.no-results')).toBeNull();
@@ -284,7 +284,7 @@ describe('SearchDictationPage', () => {
     component.keyword.setValue('apple');
     runSearch();
 
-    expect(resultSummary()).toBe(`Showing 1\u20135 of ${DICTATION_SEARCH_MAX_RESULTS}+`);
+    expect(resultSummary()).toBe(`1\u20135 of ${DICTATION_SEARCH_MAX_RESULTS}+`);
     expect(isPageDisabled('next')).toBeFalse();
   }));
 

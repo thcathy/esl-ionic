@@ -93,7 +93,7 @@ describe('DictationListComponent', () => {
     it('counts a normal multi-page result and disables Previous on the first page', () => {
       showDictations(23);
 
-      expect(summaryText()).toBe('Showing 1\u20135 of 23');
+      expect(summaryText()).toBe('1\u20135 of 23');
       expect(buttonText('previous')).toBe('Previous');
       expect(buttonText('next')).toBe('Next');
       expect(isDisabled('previous')).toBeTrue();
@@ -102,10 +102,10 @@ describe('DictationListComponent', () => {
       expect(fixture.nativeElement.textContent).not.toContain('Newer');
 
       clickPage('previous');
-      expect(summaryText()).toBe('Showing 1\u20135 of 23');
+      expect(summaryText()).toBe('1\u20135 of 23');
 
       clickPage('next');
-      expect(summaryText()).toBe('Showing 6\u201310 of 23');
+      expect(summaryText()).toBe('6\u201310 of 23');
       expect(isDisabled('previous')).toBeFalse();
       expect(isDisabled('next')).toBeFalse();
     });
@@ -113,7 +113,7 @@ describe('DictationListComponent', () => {
     it('counts a single page and disables both ends', () => {
       showDictations(3);
 
-      expect(summaryText()).toBe('Showing 1\u20133 of 3');
+      expect(summaryText()).toBe('1\u20133 of 3');
       expect(isDisabled('previous')).toBeTrue();
       expect(isDisabled('next')).toBeTrue();
       expect(fixture.nativeElement.querySelectorAll('#dictation-list ion-item').length).toBe(3);
@@ -121,20 +121,20 @@ describe('DictationListComponent', () => {
 
     it('counts every match when the list is under the cap', () => {
       showDictations(DICTATION_SEARCH_MAX_RESULTS - 1);
-      expect(summaryText()).toBe(`Showing 1\u20135 of ${DICTATION_SEARCH_MAX_RESULTS - 1}`);
+      expect(summaryText()).toBe(`1\u20135 of ${DICTATION_SEARCH_MAX_RESULTS - 1}`);
       expect(fixture.nativeElement.textContent).not.toContain('+');
     });
 
     it('says the 50 cap was hit instead of an exact total', () => {
       showDictations(DICTATION_SEARCH_MAX_RESULTS);
-      expect(summaryText()).toBe(`Showing 1\u20135 of ${DICTATION_SEARCH_MAX_RESULTS}+`);
+      expect(summaryText()).toBe(`1\u20135 of ${DICTATION_SEARCH_MAX_RESULTS}+`);
       expect(isDisabled('previous')).toBeTrue();
       expect(isDisabled('next')).toBeFalse();
 
       for (let page = 0; page < 9; page++) {
         clickPage('next');
       }
-      expect(summaryText()).toBe(`Showing 46\u201350 of ${DICTATION_SEARCH_MAX_RESULTS}+`);
+      expect(summaryText()).toBe(`46\u201350 of ${DICTATION_SEARCH_MAX_RESULTS}+`);
       expect(isDisabled('next')).toBeTrue();
       expect(isDisabled('previous')).toBeFalse();
     });
