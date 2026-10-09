@@ -9,6 +9,8 @@ import {SharedTestModule} from '../../../testing/shared-test.module';
 import {ManageVocabHistoryServiceSpy, StorageSpy} from '../../../testing/mocks-ionic';
 import {ManageVocabHistoryService} from '../../services/member/manage-vocab-history.service';
 import {StorageService} from '../../services/storage.service';
+import {Dictation} from '../../entity/dictation';
+import {DICTATION_SEARCH_MAX_RESULTS} from '../../services/dictation/dictation.service';
 import {TestData} from '../../../testing/test-data';
 import en from '../../../assets/i18n/en.json';
 
@@ -246,6 +248,46 @@ describe('SearchDictationPage', () => {
     expect(search).not.toHaveBeenCalled();
   }));
 
+  it('shows how many matched and pages with Previous and Next', fakeAsync(() => {
+    useNoResultsCopy();
+    spyOn(component.dictationService, 'search').and.returnValue(of(searchHits(23)));
+    component.keyword.setValue('apple');
+    runSearch();
+
+    expect(resultSummary()).toBe('1\u20135 of 23');
+    expect(isPageDisabled('previous')).toBeTrue();
+    expect(isPageDisabled('next')).toBeFalse();
+    expect(fixture.nativeElement.textContent).not.toContain('Older');
+    expect(fixture.nativeElement.textContent).not.toContain('Newer');
+
+    fixture.debugElement.query(By.css('[data-page="next"]')).triggerEventHandler('click', null);
+    fixture.detectChanges();
+    expect(resultSummary()).toBe('6\u201310 of 23');
+    expect(isPageDisabled('previous')).toBeFalse();
+  }));
+
+  it('counts a single page of matches', fakeAsync(() => {
+    useNoResultsCopy();
+    spyOn(component.dictationService, 'search').and.returnValue(of(searchHits(3)));
+    component.keyword.setValue('apple');
+    runSearch();
+
+    expect(resultSummary()).toBe('1\u20133 of 3');
+    expect(isPageDisabled('previous')).toBeTrue();
+    expect(isPageDisabled('next')).toBeTrue();
+    expect(fixture.nativeElement.querySelector('.no-results')).toBeNull();
+  }));
+
+  it('says the search cap was hit when 50 dictations come back', fakeAsync(() => {
+    useNoResultsCopy();
+    spyOn(component.dictationService, 'search').and.returnValue(of(searchHits(DICTATION_SEARCH_MAX_RESULTS)));
+    component.keyword.setValue('apple');
+    runSearch();
+
+    expect(resultSummary()).toBe(`1\u20135 of ${DICTATION_SEARCH_MAX_RESULTS}+`);
+    expect(isPageDisabled('next')).toBeFalse();
+  }));
+
   it('shows matching dictations instead of the empty state', fakeAsync(() => {
     useNoResultsCopy();
     spyOn(component.dictationService, 'search').and.returnValue(of([TestData.fillInDictation()]));
@@ -281,5 +323,23 @@ describe('SearchDictationPage', () => {
 
   function noResultsMessage(): string {
     return fixture.nativeElement.querySelector('.no-results-message')?.textContent.replace(/\s+/g, ' ').trim() ?? '';
+  }
+
+  function searchHits(count: number): Dictation[] {
+    return Array.from({length: count}, (_, index) => {
+      const dictation = TestData.fillInDictation();
+      dictation.id = index + 1;
+      dictation.title = `Dictation ${index + 1}`;
+      return dictation;
+    });
+  }
+
+  function resultSummary(): string {
+    return fixture.nativeElement.querySelector('[data-result-summary]')?.textContent.replace(/\s+/g, ' ').trim() ?? '';
+  }
+
+  function isPageDisabled(which: 'previous' | 'next'): boolean {
+    const button = fixture.debugElement.query(By.css(`[data-page="${which}"]`));
+    return button.componentInstance.disabled === true || button.nativeElement.disabled === true;
   }
 });
