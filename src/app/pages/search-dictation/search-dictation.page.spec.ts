@@ -1,8 +1,16 @@
 import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import {ComponentFixture, fakeAsync, TestBed, tick, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
+import {ActivatedRoute, convertToParamMap, Params, Router} from '@angular/router';
 import {TranslateService} from '@ngx-translate/core';
 import {of} from 'rxjs';
+
+class SearchQueryRoute {
+  query: Params = {};
+  get snapshot() {
+    return { queryParamMap: convertToParamMap(this.query) };
+  }
+}
 
 import {SearchDictationPage} from './search-dictation.page';
 import {SharedTestModule} from '../../../testing/shared-test.module';
@@ -18,10 +26,13 @@ describe('SearchDictationPage', () => {
   let component: SearchDictationPage;
   let fixture: ComponentFixture<SearchDictationPage>;
   let storageSpy;
+  let queryRoute: SearchQueryRoute;
+  let navigateSpy: jasmine.Spy;
 
   beforeEach(waitForAsync(() => {
     storageSpy = StorageSpy();
     storageSpy.get.and.returnValue(Promise.resolve(['old search history']));
+    queryRoute = new SearchQueryRoute();
 
     TestBed.configureTestingModule({
       declarations: [ SearchDictationPage ],
@@ -32,12 +43,14 @@ describe('SearchDictationPage', () => {
       providers: [
         { provide: StorageService, useValue: storageSpy },
         { provide: ManageVocabHistoryService, useValue: ManageVocabHistoryServiceSpy},
+        { provide: ActivatedRoute, useValue: queryRoute },
       ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
+    navigateSpy = spyOn(TestBed.inject(Router), 'navigate').and.returnValue(Promise.resolve(true));
     fixture = TestBed.createComponent(SearchDictationPage);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -179,6 +192,11 @@ describe('SearchDictationPage', () => {
     expect(component.minDate.value).toBe(component.dateOptions[2]);
     expect(chipText('date')).toBe('Date: Within 3 Month');
     expect(search).not.toHaveBeenCalled();
+    expect(navigateSpy).toHaveBeenCalledTimes(2);
+    const lastParams = navigateSpy.calls.mostRecent().args[1].queryParams;
+    expect(lastParams).toEqual({ suitable: 'JuniorPrimary', type: 'Vocab' });
+    expect(navigateSpy.calls.mostRecent().args[1].replaceUrl).toBeTrue();
+    expect(navigateSpy.calls.mostRecent().args[1].queryParamsHandling).toBe('merge');
   });
 
   function chipText(group: string): string {
@@ -298,6 +316,117 @@ describe('SearchDictationPage', () => {
     expect(fixture.nativeElement.querySelector('#dictation-list ion-item')).toBeTruthy();
   }));
 
+  it('loads q, suitable, and type from the URL and searches', fakeAsync(() => {
+    const search = spyOn(component.dictationService, 'search').and.returnValue(of([TestData.fillInDictation()]));
+    component.creator.setValue('ann');
+    component.chooseDate(component.dateOptions[2]);
+    queryRoute.query = { q: ' apple ', suitable: 'JuniorPrimary', type: 'Vocab', sort: 'new' };
+    openFromUrl();
+
+    expect(component.keyword.value).toBe('apple');
+    expect(component.suitableStudent.value).toBe('JuniorPrimary');
+    expect(component.type.value).toBe('Vocab');
+    expect(component.creator.value).toBe('');
+    expect(component.minDate.value).toBe(component.dateOptions[0]);
+    expect(search).toHaveBeenCalledTimes(1);
+    expect(search.calls.mostRecent().args[0]).toEqual(jasmine.objectContaining({
+      keyword: 'apple',
+      suitableStudent: 'JuniorPrimary',
+      type: 'Vocab',
+      creator: '',
+    }));
+    expect(search.calls.mostRecent().args[0].minDate).toBeUndefined();
+    expect(component.history[0]).toBe('apple');
+    expect(component.history[1]).toBe('old search history');
+    expect(navigateSpy).toHaveBeenCalledWith([], jasmine.objectContaining({
+      replaceUrl: true,
+      queryParamsHandling: 'merge',
+      queryParams: { suitable: 'JuniorPrimary', type: 'Vocab', q: 'apple' },
+    }));
+    fixture.detectChanges();
+    expect(chipText('suitable')).toBe('Suitable (Age): SuitableStudent.JuniorPrimary');
+    expect(chipText('type')).toBe('Type: Word');
+
+    const results = component.results;
+    openFromUrl();
+    expect(search).toHaveBeenCalledTimes(1);
+    expect(component.results).toBe(results);
+  }));
+
+  it('drops unknown suitable and type and skips a blank search', fakeAsync(() => {
+    const search = spyOn(component.dictationService, 'search').and.returnValue(of([]));
+    queryRoute.query = { q: '  ', suitable: 'nope', type: 'Sentence' };
+    openFromUrl();
+
+    expect(component.keyword.value).toBe('');
+    expect(component.suitableStudent.value).toBe('Any');
+    expect(component.type.value).toBe('Any');
+    expect(search).not.toHaveBeenCalled();
+    expect(navigateSpy).toHaveBeenCalledWith([], jasmine.objectContaining({
+      replaceUrl: true,
+      queryParamsHandling: 'merge',
+      queryParams: { q: null, suitable: null, type: null },
+    }));
+  }));
+
+  it('shows the keyword error and does not search a too-short q', fakeAsync(() => {
+    useNoResultsCopy();
+    const search = spyOn(component.dictationService, 'search').and.returnValue(of([]));
+    queryRoute.query = { q: 'ab', suitable: 'JuniorPrimary' };
+    openFromUrl();
+    fixture.detectChanges();
+
+    expect(search).not.toHaveBeenCalled();
+    expect(component.keyword.errors.pattern).toBeDefined();
+    expect(fixture.nativeElement.querySelector('.error-text').textContent)
+      .toContain('cannot less than 3 characters');
+    expect(navigateSpy).not.toHaveBeenCalled();
+  }));
+
+  it('writes q, suitable, and type when search runs', fakeAsync(() => {
+    spyOn(component.dictationService, 'search').and.returnValue(of([]));
+    component.keyword.setValue(' apple ');
+    component.chooseSuitable('JuniorPrimary');
+    component.chooseType('Article');
+    navigateSpy.calls.reset();
+    runSearch();
+
+    expect(component.keyword.value).toBe('apple');
+    expect(navigateSpy).toHaveBeenCalledWith([], jasmine.objectContaining({
+      replaceUrl: true,
+      queryParamsHandling: 'merge',
+      queryParams: { q: 'apple', suitable: 'JuniorPrimary', type: 'Article' },
+    }));
+  }));
+
+  it('clears q, suitable, and type from the URL', () => {
+    component.keyword.setValue('apple');
+    component.chooseType('Vocab');
+    queryRoute.query = { q: 'apple', type: 'Vocab' };
+    navigateSpy.calls.reset();
+
+    component.clearSearch();
+
+    expect(navigateSpy).toHaveBeenCalledWith([], jasmine.objectContaining({
+      replaceUrl: true,
+      queryParamsHandling: 'merge',
+      queryParams: { q: null, suitable: null, type: null },
+    }));
+  });
+
+  it('a later visit with no params clears a previous filtered search', fakeAsync(() => {
+    const search = spyOn(component.dictationService, 'search').and.returnValue(of([TestData.fillInDictation()]));
+    queryRoute.query = { q: 'apple' };
+    openFromUrl();
+    expect(search).toHaveBeenCalledTimes(1);
+
+    queryRoute.query = {};
+    openFromUrl();
+    expect(component.keyword.value).toBe('');
+    expect(component.results).toBeNull();
+    expect(search).toHaveBeenCalledTimes(1);
+  }));
+
   it('do not store duplicate search history', fakeAsync(() => {
     component.keyword.setValue(`new search`);
     component.search();
@@ -319,6 +448,11 @@ describe('SearchDictationPage', () => {
     component.search();
     tick();
     fixture.detectChanges();
+  }
+
+  function openFromUrl() {
+    component.ionViewWillEnter();
+    tick();
   }
 
   function noResultsMessage(): string {

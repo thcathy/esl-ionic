@@ -1,6 +1,7 @@
 import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {Subscription} from 'rxjs';
 import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
+import {ActivatedRoute, Router} from '@angular/router';
 import {TranslateService} from '@ngx-translate/core';
 import {Dictation, Dictations, SuitableStudentOptions} from '../../entity/dictation';
 import {DICTATION_SEARCH_MAX_RESULTS, DictationService} from '../../services/dictation/dictation.service';
@@ -40,6 +41,10 @@ export class SearchDictationPage implements OnInit, OnDestroy {
   typeChipLabel = '';
   dateChipLabel = '';
   private langChange: Subscription;
+  private historyReady: Promise<void> | null = null;
+  /** Last q / suitable / type applied from the URL or a committed search. */
+  private appliedQuery: string | null = null;
+  private applyingQuery = false;
 
   constructor(
     public formBuilder: UntypedFormBuilder,
@@ -47,6 +52,8 @@ export class SearchDictationPage implements OnInit, OnDestroy {
     public translateService: TranslateService,
     public storage: StorageService,
     public ionicComponentService: IonicComponentService,
+    private route: ActivatedRoute,
+    private router: Router,
     private cdr: ChangeDetectorRef,
   ) { }
 
@@ -81,20 +88,24 @@ export class SearchDictationPage implements OnInit, OnDestroy {
     this.inputForm.get('suitableStudent').setValue('Any');
   }
 
+  ionViewWillEnter() {
+    void this.applyRouteQuery();
+  }
+
   ionViewDidEnter() {
-    this.storage.get(this.SEARCH_HISTORY_KEY).then(h => {
-      this.history = h ? h : [];
-    });
+    void this.ensureHistory();
   }
 
   chooseSuitable(state: string) {
     this.suitableStudent.setValue(state);
     this.refreshChipLabels();
+    this.replaceQueryParams(false);
   }
 
   chooseType(value: string) {
     this.type.setValue(value);
     this.refreshChipLabels();
+    this.replaceQueryParams(false);
   }
 
   chooseDate(option: DateSearchOption) {
@@ -132,9 +143,17 @@ export class SearchDictationPage implements OnInit, OnDestroy {
     this.showHistory = false;
     this.filteredHistory = [];
     this.results = null;
+    this.appliedQuery = this.formSignature();
+    this.replaceQueryParams(true);
   }
 
   async search() {
+    const trimmed = `${this.keyword.value ?? ''}`.trim();
+    if (this.keyword.value !== trimmed) {
+      this.keyword.setValue(trimmed);
+    }
+    this.replaceQueryParams(true);
+    this.appliedQuery = this.formSignature();
     this.results = null;
     const loader = await this.ionicComponentService.showLoading();
 
@@ -178,6 +197,142 @@ export class SearchDictationPage implements OnInit, OnDestroy {
     });
 
     return options;
+  }
+
+  private ensureHistory(): Promise<void> {
+    if (!this.historyReady) {
+      this.historyReady = this.storage.get(this.SEARCH_HISTORY_KEY).then(h => {
+        this.history = h ? h : [];
+      });
+    }
+    return this.historyReady;
+  }
+
+  private async applyRouteQuery(): Promise<void> {
+    if (this.applyingQuery) {
+      return;
+    }
+    this.applyingQuery = true;
+    try {
+      // History must be in memory before search() stores this keyword.
+      await this.ensureHistory();
+      const incoming = this.readQuery();
+      const signature = this.signature(incoming.q, incoming.suitable, incoming.type);
+      // Back from a dictation keeps the same URL, so keep the list and its page.
+      if (signature === this.appliedQuery) {
+        return;
+      }
+
+      const hadQuery = this.appliedQuery !== null;
+      this.keyword.setValue(incoming.q);
+      this.suitableStudent.setValue(incoming.suitable);
+      this.type.setValue(incoming.type);
+      this.creator.setValue('');
+      this.minDate.setValue(this.dateOptions[0]);
+      this.refreshChipLabels();
+      this.showHistory = false;
+      this.filteredHistory = [];
+      this.appliedQuery = this.formSignature();
+      this.replaceQueryParams(true);
+
+      if (!this.inputForm.valid) {
+        this.keyword.markAsDirty();
+        this.keyword.markAsTouched();
+        this.results = null;
+        return;
+      }
+      if (!this.hasSearchCriteria()) {
+        if (hadQuery) {
+          this.results = null;
+        }
+        return;
+      }
+      await this.search();
+    } finally {
+      this.applyingQuery = false;
+    }
+  }
+
+  private readQuery(): { q: string; suitable: string; type: string } {
+    const params = this.route.snapshot.queryParamMap;
+    const suitableRaw = params.get('suitable');
+    const typeRaw = params.get('type');
+    return {
+      q: (params.get('q') ?? '').trim(),
+      suitable: suitableRaw && this.suitableStudentOptions.includes(suitableRaw) ? suitableRaw : 'Any',
+      type: typeRaw && this.typeOptions.some(option => option.value === typeRaw) ? typeRaw : 'Any',
+    };
+  }
+
+  private hasSearchCriteria(): boolean {
+    const q = `${this.keyword.value ?? ''}`.trim();
+    return q.length > 0 || this.suitableStudent.value !== 'Any' || this.type.value !== 'Any';
+  }
+
+  private formSignature(): string {
+    return this.signature(
+      `${this.keyword.value ?? ''}`,
+      this.suitableStudent.value,
+      this.type.value,
+    );
+  }
+
+  private signature(q: string, suitable: string, type: string): string {
+    return `${(q ?? '').trim()}\n${this.canonicalSuitable(suitable)}\n${this.canonicalType(type)}`;
+  }
+
+  private canonicalSuitable(value: string | null): string {
+    if (value && value !== 'Any' && this.suitableStudentOptions.includes(value)) {
+      return value;
+    }
+    return '';
+  }
+
+  private canonicalType(value: string | null): string {
+    if (value === 'Vocab' || value === 'Article') {
+      return value;
+    }
+    return '';
+  }
+
+  private optionalParam(value: string | null): string | null {
+    return value && value !== 'Any' ? value : null;
+  }
+
+  private replaceQueryParams(commitKeyword: boolean) {
+    const queryParams: { q?: string | null; suitable: string | null; type: string | null } = {
+      suitable: this.optionalParam(this.suitableStudent.value),
+      type: this.optionalParam(this.type.value),
+    };
+    if (commitKeyword) {
+      const q = `${this.keyword.value ?? ''}`.trim();
+      queryParams.q = q.length > 0 ? q : null;
+    }
+    if (this.queryMatches(queryParams, commitKeyword)) {
+      return;
+    }
+    void this.router.navigate([], {
+      relativeTo: this.route,
+      replaceUrl: true,
+      queryParamsHandling: 'merge',
+      queryParams,
+    });
+  }
+
+  private queryMatches(
+    next: { q?: string | null; suitable: string | null; type: string | null },
+    includeKeyword: boolean,
+  ): boolean {
+    const current = this.route.snapshot.queryParamMap;
+    const same = (key: string, expected: string | null) => {
+      const actual = current.get(key);
+      const normalized = actual == null || actual === '' ? null : actual;
+      return normalized === expected;
+    };
+    if (includeKeyword && !same('q', next.q ?? null)) {
+      return false;
+    }
+    return same('suitable', next.suitable) && same('type', next.type);
   }
 
   private addToHistory(value: String) {
