@@ -156,6 +156,8 @@
   "No dictation": "沒有練習",
   "SearchDictation.NoMatch": "沒有符合的練習。",
   "SearchDictation.Clear": "清除",
+  "SearchDictation.Showing": "{{range}} / {{count}}",
+  "SearchDictation.ShowingCapped": "{{range}} / {{count}}+",
   "Date": "日期",
   "Any": "所有",
   "Within 1 Month": "一個月內",

@@ -3,7 +3,7 @@ import {Subscription} from 'rxjs';
 import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
 import {TranslateService} from '@ngx-translate/core';
 import {Dictation, Dictations, SuitableStudentOptions} from '../../entity/dictation';
-import {DictationService} from '../../services/dictation/dictation.service';
+import {DICTATION_SEARCH_MAX_RESULTS, DictationService} from '../../services/dictation/dictation.service';
 import {ValidationUtils} from '../../utils/validation-utils';
 import {IonicComponentService} from '../../services/ionic-component.service';
 import {StorageService} from '../../services/storage.service';
@@ -22,6 +22,7 @@ export interface DateSearchOption {
 export class SearchDictationPage implements OnInit, OnDestroy {
   SEARCH_HISTORY_KEY = 'SEARCH_HISTORY_KEY';
   MAX_HISTORY = 10;
+  readonly searchResultCap = DICTATION_SEARCH_MAX_RESULTS;
 
   inputForm: UntypedFormGroup;
   results: Dictation[];

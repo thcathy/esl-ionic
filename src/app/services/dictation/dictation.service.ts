@@ -10,6 +10,9 @@ import {Observable} from 'rxjs/internal/Observable';
 import {VocabPracticeService} from '../practice/vocab-practice.service';
 import {DictationHelper} from './dictation-helper.service';
 
+/** esl-rest `Dictation.MaxSearchResult`: `/dictation/search` returns at most this many rows. */
+export const DICTATION_SEARCH_MAX_RESULTS = 50;
+
 export interface SearchDictationRequest {
   keyword?: string;
   searchTitle?: boolean;
