@@ -5,13 +5,6 @@ import {ActivatedRoute, convertToParamMap, Params, Router} from '@angular/router
 import {TranslateService} from '@ngx-translate/core';
 import {of} from 'rxjs';
 
-class SearchQueryRoute {
-  query: Params = {};
-  get snapshot() {
-    return { queryParamMap: convertToParamMap(this.query) };
-  }
-}
-
 import {SearchDictationPage} from './search-dictation.page';
 import {SharedTestModule} from '../../../testing/shared-test.module';
 import {ManageVocabHistoryServiceSpy, StorageSpy} from '../../../testing/mocks-ionic';
@@ -21,6 +14,13 @@ import {Dictation} from '../../entity/dictation';
 import {DICTATION_SEARCH_MAX_RESULTS} from '../../services/dictation/dictation.service';
 import {TestData} from '../../../testing/test-data';
 import en from '../../../assets/i18n/en.json';
+
+class SearchQueryRoute {
+  query: Params = {};
+  get snapshot() {
+    return { queryParamMap: convertToParamMap(this.query) };
+  }
+}
 
 describe('SearchDictationPage', () => {
   let component: SearchDictationPage;
@@ -372,15 +372,19 @@ describe('SearchDictationPage', () => {
   it('shows the keyword error and does not search a too-short q', fakeAsync(() => {
     useNoResultsCopy();
     const search = spyOn(component.dictationService, 'search').and.returnValue(of([]));
-    queryRoute.query = { q: 'ab', suitable: 'JuniorPrimary' };
+    queryRoute.query = { q: 'ab', suitable: 'nope' };
     openFromUrl();
     fixture.detectChanges();
 
     expect(search).not.toHaveBeenCalled();
     expect(component.keyword.errors.pattern).toBeDefined();
+    expect(component.suitableStudent.value).toBe('Any');
     expect(fixture.nativeElement.querySelector('.error-text').textContent)
       .toContain('cannot less than 3 characters');
-    expect(navigateSpy).not.toHaveBeenCalled();
+    expect(navigateSpy).toHaveBeenCalledWith([], jasmine.objectContaining({
+      replaceUrl: true,
+      queryParams: { q: 'ab', suitable: null, type: null },
+    }));
   }));
 
   it('writes q, suitable, and type when search runs', fakeAsync(() => {
@@ -413,6 +417,33 @@ describe('SearchDictationPage', () => {
       queryParams: { q: null, suitable: null, type: null },
     }));
   });
+
+  it('does not store a blank keyword for a filter-only link', fakeAsync(() => {
+    const search = spyOn(component.dictationService, 'search').and.returnValue(of([]));
+    queryRoute.query = { type: 'Vocab' };
+    openFromUrl();
+
+    expect(search).toHaveBeenCalledTimes(1);
+    expect(search.calls.mostRecent().args[0]).toEqual(jasmine.objectContaining({
+      keyword: '',
+      type: 'Vocab',
+    }));
+    expect(component.history).toEqual(['old search history']);
+  }));
+
+  it('searches the updated URL when a chip changed before leaving', fakeAsync(() => {
+    const search = spyOn(component.dictationService, 'search').and.returnValue(of([TestData.fillInDictation()]));
+    queryRoute.query = { q: 'apple' };
+    openFromUrl();
+
+    component.chooseType('Article');
+    queryRoute.query = { q: 'apple', type: 'Article' };
+    openFromUrl();
+
+    expect(search).toHaveBeenCalledTimes(2);
+    expect(search.calls.mostRecent().args[0].type).toBe('Article');
+    expect(component.type.value).toBe('Article');
+  }));
 
   it('a later visit with no params clears a previous filtered search', fakeAsync(() => {
     const search = spyOn(component.dictationService, 'search').and.returnValue(of([TestData.fillInDictation()]));

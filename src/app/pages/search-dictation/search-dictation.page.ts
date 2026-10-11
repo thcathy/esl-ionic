@@ -14,6 +14,12 @@ export interface DateSearchOption {
   date?: Date;
 }
 
+interface SearchLink {
+  q: string;
+  suitable: string;
+  type: string;
+}
+
 @Component({
     selector: 'app-search-dictation',
     templateUrl: './search-dictation.page.html',
@@ -42,8 +48,8 @@ export class SearchDictationPage implements OnInit, OnDestroy {
   dateChipLabel = '';
   private langChange: Subscription;
   private historyReady: Promise<void> | null = null;
-  /** Last q / suitable / type applied from the URL or a committed search. */
-  private appliedQuery: string | null = null;
+  /** Last q / suitable / type taken from the URL or committed by search or clear. */
+  private appliedLink: SearchLink | null = null;
   private applyingQuery = false;
 
   constructor(
@@ -143,8 +149,7 @@ export class SearchDictationPage implements OnInit, OnDestroy {
     this.showHistory = false;
     this.filteredHistory = [];
     this.results = null;
-    this.appliedQuery = this.formSignature();
-    this.replaceQueryParams(true);
+    this.rememberLink(true);
   }
 
   async search() {
@@ -152,22 +157,8 @@ export class SearchDictationPage implements OnInit, OnDestroy {
     if (this.keyword.value !== trimmed) {
       this.keyword.setValue(trimmed);
     }
-    this.replaceQueryParams(true);
-    this.appliedQuery = this.formSignature();
-    this.results = null;
-    const loader = await this.ionicComponentService.showLoading();
-
-    this.addToHistory(this.keyword.value);
-    this.dictationService.search({
-      keyword: this.keyword.value,
-      minDate: this.minDate.value.date,
-      creator: this.creator.value,
-      suitableStudent: this.suitableStudent.value,
-      type: this.type.value === 'Any' ? null : this.type.value,
-    }).subscribe(r => {
-      loader.dismiss();
-      this.results = r;
-    }, _e => loader.dismiss());
+    this.rememberLink(true);
+    await this.fetchResults();
   }
 
   createDateOptions(): DateSearchOption[] {
@@ -214,16 +205,15 @@ export class SearchDictationPage implements OnInit, OnDestroy {
     }
     this.applyingQuery = true;
     try {
-      // History must be in memory before search() stores this keyword.
+      // History must be in memory before a search stores this keyword.
       await this.ensureHistory();
-      const incoming = this.readQuery();
-      const signature = this.signature(incoming.q, incoming.suitable, incoming.type);
-      // Back from a dictation keeps the same URL, so keep the list and its page.
-      if (signature === this.appliedQuery) {
+      const incoming = this.routeLink();
+      // Same URL on the way back from a dictation: keep the list and its page.
+      if (this.appliedLink && this.sameLink(incoming, this.appliedLink)) {
         return;
       }
 
-      const hadQuery = this.appliedQuery !== null;
+      const hadLink = this.appliedLink !== null;
       this.keyword.setValue(incoming.q);
       this.suitableStudent.setValue(incoming.suitable);
       this.type.setValue(incoming.type);
@@ -232,8 +222,7 @@ export class SearchDictationPage implements OnInit, OnDestroy {
       this.refreshChipLabels();
       this.showHistory = false;
       this.filteredHistory = [];
-      this.appliedQuery = this.formSignature();
-      this.replaceQueryParams(true);
+      this.rememberLink(true);
 
       if (!this.inputForm.valid) {
         this.keyword.markAsDirty();
@@ -241,76 +230,78 @@ export class SearchDictationPage implements OnInit, OnDestroy {
         this.results = null;
         return;
       }
-      if (!this.hasSearchCriteria()) {
-        if (hadQuery) {
+      if (!this.hasCriteria(incoming)) {
+        if (hadLink) {
           this.results = null;
         }
         return;
       }
-      await this.search();
+      await this.fetchResults();
     } finally {
       this.applyingQuery = false;
     }
   }
 
-  private readQuery(): { q: string; suitable: string; type: string } {
+  private async fetchResults() {
+    this.results = null;
+    const loader = await this.ionicComponentService.showLoading();
+
+    this.addToHistory(this.keyword.value);
+    this.dictationService.search({
+      keyword: this.keyword.value,
+      minDate: this.minDate.value.date,
+      creator: this.creator.value,
+      suitableStudent: this.suitableStudent.value,
+      type: this.type.value === 'Any' ? null : this.type.value,
+    }).subscribe(r => {
+      loader.dismiss();
+      this.results = r;
+    }, _e => loader.dismiss());
+  }
+
+  private routeLink(): SearchLink {
     const params = this.route.snapshot.queryParamMap;
-    const suitableRaw = params.get('suitable');
-    const typeRaw = params.get('type');
+    return this.toLink(params.get('q'), params.get('suitable'), params.get('type'));
+  }
+
+  private formLink(): SearchLink {
+    return this.toLink(this.keyword.value, this.suitableStudent.value, this.type.value);
+  }
+
+  private toLink(q: string | null, suitable: string | null, type: string | null): SearchLink {
     return {
-      q: (params.get('q') ?? '').trim(),
-      suitable: suitableRaw && this.suitableStudentOptions.includes(suitableRaw) ? suitableRaw : 'Any',
-      type: typeRaw && this.typeOptions.some(option => option.value === typeRaw) ? typeRaw : 'Any',
+      q: (q ?? '').trim(),
+      suitable: suitable && this.suitableStudentOptions.includes(suitable) ? suitable : 'Any',
+      type: type && this.typeOptions.some(option => option.value === type) ? type : 'Any',
     };
   }
 
-  private hasSearchCriteria(): boolean {
-    const q = `${this.keyword.value ?? ''}`.trim();
-    return q.length > 0 || this.suitableStudent.value !== 'Any' || this.type.value !== 'Any';
+  private sameLink(left: SearchLink, right: SearchLink): boolean {
+    return left.q === right.q && left.suitable === right.suitable && left.type === right.type;
   }
 
-  private formSignature(): string {
-    return this.signature(
-      `${this.keyword.value ?? ''}`,
-      this.suitableStudent.value,
-      this.type.value,
-    );
+  private hasCriteria(link: SearchLink): boolean {
+    return link.q.length > 0 || link.suitable !== 'Any' || link.type !== 'Any';
   }
 
-  private signature(q: string, suitable: string, type: string): string {
-    return `${(q ?? '').trim()}\n${this.canonicalSuitable(suitable)}\n${this.canonicalType(type)}`;
-  }
-
-  private canonicalSuitable(value: string | null): string {
-    if (value && value !== 'Any' && this.suitableStudentOptions.includes(value)) {
-      return value;
-    }
-    return '';
-  }
-
-  private canonicalType(value: string | null): string {
-    if (value === 'Vocab' || value === 'Article') {
-      return value;
-    }
-    return '';
-  }
-
-  private optionalParam(value: string | null): string | null {
-    return value && value !== 'Any' ? value : null;
+  private rememberLink(commitKeyword: boolean) {
+    this.appliedLink = this.formLink();
+    this.replaceQueryParams(commitKeyword);
   }
 
   private replaceQueryParams(commitKeyword: boolean) {
+    const link = this.formLink();
     const queryParams: { q?: string | null; suitable: string | null; type: string | null } = {
-      suitable: this.optionalParam(this.suitableStudent.value),
-      type: this.optionalParam(this.type.value),
+      suitable: link.suitable === 'Any' ? null : link.suitable,
+      type: link.type === 'Any' ? null : link.type,
     };
     if (commitKeyword) {
-      const q = `${this.keyword.value ?? ''}`.trim();
-      queryParams.q = q.length > 0 ? q : null;
+      queryParams.q = link.q.length > 0 ? link.q : null;
     }
     if (this.queryMatches(queryParams, commitKeyword)) {
       return;
     }
+    // Same-page query update. NavigationService.navigate would push a history entry.
     void this.router.navigate([], {
       relativeTo: this.route,
       replaceUrl: true,
@@ -336,9 +327,12 @@ export class SearchDictationPage implements OnInit, OnDestroy {
   }
 
   private addToHistory(value: String) {
-    if (this.history.find(h => h == value)) { return; }
+    const term = `${value ?? ''}`.trim();
+    if (term.length === 0 || this.history.find(h => h == term)) {
+      return;
+    }
 
-    this.history.unshift(value);
+    this.history.unshift(term);
     if (this.history.length > this.MAX_HISTORY) { this.history.pop(); }
     this.storage.set(this.SEARCH_HISTORY_KEY, this.history);
   }
