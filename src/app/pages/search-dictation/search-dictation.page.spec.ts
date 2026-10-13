@@ -189,7 +189,7 @@ describe('SearchDictationPage', () => {
 
     component.chooseDate(component.dateOptions[2]);
     fixture.detectChanges();
-    expect(component.minDate.value).toBe(component.dateOptions[2]);
+    expect(component.date.value).toBe(component.dateOptions[2]);
     expect(chipText('date')).toBe('Date: Within 3 Month');
     expect(search).not.toHaveBeenCalled();
     expect(navigateSpy).toHaveBeenCalledTimes(2);
@@ -327,7 +327,7 @@ describe('SearchDictationPage', () => {
     expect(component.suitableStudent.value).toBe('JuniorPrimary');
     expect(component.type.value).toBe('Vocab');
     expect(component.creator.value).toBe('');
-    expect(component.minDate.value).toBe(component.dateOptions[0]);
+    expect(component.date.value).toBe(component.dateOptions[0]);
     expect(search).toHaveBeenCalledTimes(1);
     expect(search.calls.mostRecent().args[0]).toEqual(jasmine.objectContaining({
       keyword: 'apple',

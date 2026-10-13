@@ -60,8 +60,8 @@
           <ion-popover trigger="suitable-filter" triggerAction="click" [dismissOnSelect]="true" alignment="start">
             <ng-template>
               <ion-list>
-                @for (state of suitableStudentOptions; track state) {
-                  <ion-item button (click)="chooseSuitable(state)"><ion-label class="ion-text-nowrap">{{'SuitableStudent.' + state|translate}}</ion-label></ion-item>
+                @for (option of suitableStudentOptions; track option) {
+                  <ion-item button (click)="chooseSuitable(option)"><ion-label class="ion-text-nowrap">{{'SuitableStudent.' + option|translate}}</ion-label></ion-item>
                 }
               </ion-list>
             </ng-template>
