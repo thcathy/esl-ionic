@@ -328,7 +328,7 @@ export class SearchDictationPage implements OnInit, OnDestroy {
 
   private addToHistory(value: String) {
     const term = `${value ?? ''}`.trim();
-    if (term.length === 0 || this.history.find(h => h == term)) {
+    if (term.length === 0 || this.history.some(h => h == term)) {
       return;
     }
 
