@@ -107,6 +107,7 @@ describe('SearchDictationPage', () => {
   }));
 
   it('keep last 10 history at max', fakeAsync(() => {
+    spyOn(component.dictationService, 'search').and.returnValue(of([]));
     for (let i = 0; i < 15; i++) {
       component.keyword.setValue(`new search ${i}`);
       component.search();
@@ -490,26 +491,25 @@ describe('SearchDictationPage', () => {
     expect(headings()).toEqual(['Created later', 'Practiced first']);
   }));
 
-  it('drops a slower search when search runs again', fakeAsync(() => {
+  it('does not start a second search while one is running', fakeAsync(() => {
     const first = new Subject<Dictation[]>();
-    const second = new Subject<Dictation[]>();
-    spyOn(component.dictationService, 'search').and.returnValues(first.asObservable(), second.asObservable());
-    const stale = TestData.fillInDictation();
-    stale.title = 'Stale';
-    const fresh = TestData.fillInDictation();
-    fresh.id = 2;
-    fresh.title = 'Fresh';
+    const search = spyOn(component.dictationService, 'search').and.returnValue(first.asObservable());
+    const kept = TestData.fillInDictation();
+    kept.title = 'Kept';
 
     component.keyword.setValue('apple');
     component.search();
     tick();
+    component.keyword.setValue('banana');
     component.search();
     tick();
 
-    first.next([stale]);
-    expect(component.results).toBeNull();
-    second.next([fresh]);
-    expect(component.results.map(item => item.title)).toEqual(['Fresh']);
+    expect(search).toHaveBeenCalledTimes(1);
+    expect(search.calls.mostRecent().args[0].keyword).toBe('apple');
+    expect(component.searchInFlight).toBeTrue();
+    first.next([kept]);
+    expect(component.results.map(item => item.title)).toEqual(['Kept']);
+    expect(component.searchInFlight).toBeFalse();
   }));
 
   it('loads sort from the URL and searches with that value', fakeAsync(() => {
@@ -613,6 +613,7 @@ describe('SearchDictationPage', () => {
   }));
 
   it('do not store duplicate search history', fakeAsync(() => {
+    spyOn(component.dictationService, 'search').and.returnValue(of([]));
     component.keyword.setValue(`new search`);
     component.search();
     tick();

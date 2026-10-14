@@ -98,7 +98,7 @@
             </ng-template>
           </ion-popover>
           <div class="form-actions">
-            <ion-button (click)="search()" [disabled]="inputForm.invalid">
+            <ion-button (click)="search()" [disabled]="inputForm.invalid || searchInFlight">
               <fa-icon icon="search"></fa-icon>&nbsp;{{'Search'|translate}}
             </ion-button>
           </div>

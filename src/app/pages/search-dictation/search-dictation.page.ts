@@ -70,7 +70,8 @@ export class SearchDictationPage implements OnInit, OnDestroy {
   /** q / suitable / type / sort last read from or written to the URL. */
   private query: SearchQuery | null = null;
   private applyingQuery = false;
-  private searchSeq = 0;
+  private destroyed = false;
+  searchInFlight = false;
   private activeSearch: Subscription | null = null;
   private searchLoader: { dismiss: () => void } | null = null;
 
@@ -92,9 +93,10 @@ export class SearchDictationPage implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.destroyed = true;
     this.langChange?.unsubscribe();
-    this.searchSeq++;
-    this.stopSearch();
+    this.activeSearch?.unsubscribe();
+    void this.searchLoader?.dismiss();
   }
 
   get keyword() { return this.inputForm.get('keyword'); }
@@ -190,6 +192,9 @@ export class SearchDictationPage implements OnInit, OnDestroy {
   }
 
   async search() {
+    if (this.searchInFlight) {
+      return;
+    }
     const trimmed = `${this.keyword.value ?? ''}`.trim();
     if (this.keyword.value !== trimmed) {
       this.keyword.setValue(trimmed);
@@ -281,11 +286,14 @@ export class SearchDictationPage implements OnInit, OnDestroy {
   }
 
   private async fetchResults() {
-    this.stopSearch();
-    const requestId = ++this.searchSeq;
+    if (this.searchInFlight || this.destroyed) {
+      return;
+    }
+    this.searchInFlight = true;
     this.results = null;
     const loader = await this.ionicComponentService.showLoading();
-    if (requestId !== this.searchSeq) {
+    if (this.destroyed) {
+      this.searchInFlight = false;
       void loader.dismiss();
       return;
     }
@@ -293,25 +301,19 @@ export class SearchDictationPage implements OnInit, OnDestroy {
     this.searchLoader = loader;
     this.addToHistory(this.keyword.value);
     this.activeSearch = this.dictationService.search(this.searchRequest()).subscribe(results => {
-      this.finishSearch(requestId, loader, results);
-    }, () => this.finishSearch(requestId, loader));
+      this.results = results;
+      this.endSearch(loader);
+    }, () => this.endSearch(loader));
   }
 
-  private stopSearch() {
-    this.activeSearch?.unsubscribe();
+  private endSearch(loader: { dismiss: () => void }) {
     this.activeSearch = null;
-    void this.searchLoader?.dismiss();
-    this.searchLoader = null;
-  }
-
-  private finishSearch(requestId: number, loader: { dismiss: () => void }, results?: Dictation[]) {
     if (this.searchLoader === loader) {
       this.searchLoader = null;
     }
+    this.searchInFlight = false;
     void loader.dismiss();
-    if (results !== undefined && requestId === this.searchSeq) {
-      this.results = results;
-    }
+    this.cdr.markForCheck();
   }
 
   private searchRequest(): SearchDictationRequest {
