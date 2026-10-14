@@ -38,7 +38,7 @@ test.describe('search dictation query params', () => {
     expect(await page.evaluate(() => history.length)).toBe(historyLength);
   });
 
-  test('changing sort rewrites sort= and keeps server order in the list', async ({ page }) => {
+  test('changing sort rewrites sort= without adding a history entry', async ({ page }) => {
     await page.goto('/search-dictation?q=apple&sort=mostPracticed');
 
     await expect(page.locator('[data-filter="sort"]')).toContainText('Most practiced');

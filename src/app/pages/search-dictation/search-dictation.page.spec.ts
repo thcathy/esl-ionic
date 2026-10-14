@@ -3,7 +3,7 @@ import {ComponentFixture, fakeAsync, TestBed, tick, waitForAsync} from '@angular
 import {By} from '@angular/platform-browser';
 import {ActivatedRoute, convertToParamMap, Params, Router} from '@angular/router';
 import {TranslateService} from '@ngx-translate/core';
-import {of} from 'rxjs';
+import {of, Subject} from 'rxjs';
 
 import {SearchDictationPage} from './search-dictation.page';
 import {SharedTestModule} from '../../../testing/shared-test.module';
@@ -484,6 +484,29 @@ describe('SearchDictationPage', () => {
       queryParamsHandling: 'merge',
       queryParams: { q: 'apple', suitable: null, type: null, sort: null },
     }));
+  }));
+
+  it('drops a slower search after sort changes again', fakeAsync(() => {
+    const first = new Subject<Dictation[]>();
+    const second = new Subject<Dictation[]>();
+    spyOn(component.dictationService, 'search').and.returnValues(first.asObservable(), second.asObservable());
+    const stale = TestData.fillInDictation();
+    stale.title = 'Stale';
+    const fresh = TestData.fillInDictation();
+    fresh.id = 2;
+    fresh.title = 'Fresh';
+
+    component.keyword.setValue('apple');
+    component.chooseSort('mostPracticed');
+    tick();
+    component.chooseSort('mostRecommended');
+    tick();
+
+    first.next([stale]);
+    expect(component.results).toBeNull();
+    second.next([fresh]);
+    expect(component.results.map(item => item.title)).toEqual(['Fresh']);
+    expect(component.sort.value).toBe('mostRecommended');
   }));
 
   it('loads sort from the URL and searches with that value', fakeAsync(() => {
