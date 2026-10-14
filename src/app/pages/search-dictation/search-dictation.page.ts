@@ -70,10 +70,7 @@ export class SearchDictationPage implements OnInit, OnDestroy {
   /** q / suitable / type / sort last read from or written to the URL. */
   private query: SearchQuery | null = null;
   private applyingQuery = false;
-  private destroyed = false;
   searchInFlight = false;
-  private activeSearch: Subscription | null = null;
-  private searchLoader: { dismiss: () => void } | null = null;
 
   constructor(
     public formBuilder: UntypedFormBuilder,
@@ -93,10 +90,7 @@ export class SearchDictationPage implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.destroyed = true;
     this.langChange?.unsubscribe();
-    this.activeSearch?.unsubscribe();
-    void this.searchLoader?.dismiss();
   }
 
   get keyword() { return this.inputForm.get('keyword'); }
@@ -286,31 +280,20 @@ export class SearchDictationPage implements OnInit, OnDestroy {
   }
 
   private async fetchResults() {
-    if (this.searchInFlight || this.destroyed) {
+    if (this.searchInFlight) {
       return;
     }
     this.searchInFlight = true;
     this.results = null;
     const loader = await this.ionicComponentService.showLoading();
-    if (this.destroyed) {
-      this.searchInFlight = false;
-      void loader.dismiss();
-      return;
-    }
-
-    this.searchLoader = loader;
     this.addToHistory(this.keyword.value);
-    this.activeSearch = this.dictationService.search(this.searchRequest()).subscribe(results => {
+    this.dictationService.search(this.searchRequest()).subscribe(results => {
       this.results = results;
       this.endSearch(loader);
     }, () => this.endSearch(loader));
   }
 
   private endSearch(loader: { dismiss: () => void }) {
-    this.activeSearch = null;
-    if (this.searchLoader === loader) {
-      this.searchLoader = null;
-    }
     this.searchInFlight = false;
     void loader.dismiss();
     this.cdr.markForCheck();
