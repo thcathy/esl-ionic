@@ -193,10 +193,16 @@ describe('SearchDictationPage', () => {
     fixture.detectChanges();
     expect(component.date.value).toBe(component.dateOptions[2]);
     expect(chipText('date')).toBe('Date: Within 3 Month');
+
+    component.chooseSort('mostPracticed');
+    fixture.detectChanges();
+    expect(component.sort.value).toBe('mostPracticed');
+    expect(chipText('sort')).toBe('Sort: SearchSort.mostPracticed');
     expect(search).not.toHaveBeenCalled();
-    expect(navigateSpy).toHaveBeenCalledTimes(2);
+    expect(navigateSpy).toHaveBeenCalledTimes(3);
     const lastParams = navigateSpy.calls.mostRecent().args[1].queryParams;
-    expect(lastParams).toEqual({ suitable: 'JuniorPrimary', type: 'Vocab' });
+    expect(lastParams).toEqual({ sort: 'mostPracticed' });
+    expect(navigateSpy.calls.argsFor(1)[1].queryParams).toEqual({ suitable: 'JuniorPrimary', type: 'Vocab' });
     expect(navigateSpy.calls.mostRecent().args[1].replaceUrl).toBeTrue();
     expect(navigateSpy.calls.mostRecent().args[1].queryParamsHandling).toBe('merge');
   });
@@ -440,7 +446,7 @@ describe('SearchDictationPage', () => {
     expect(component.history).toEqual(['old search history']);
   }));
 
-  it('does not sort the returned page on the client', fakeAsync(() => {
+  it('keeps the current list until Search, then uses the server order', fakeAsync(() => {
     const practicedFirst = TestData.fillInDictation();
     practicedFirst.id = 11;
     practicedFirst.title = 'Practiced first';
@@ -457,36 +463,34 @@ describe('SearchDictationPage', () => {
 
     component.keyword.setValue('apple');
     component.chooseSort('mostPracticed');
-    tick();
-    fixture.detectChanges();
 
+    expect(search).not.toHaveBeenCalled();
+    expect(component.results).toBeUndefined();
+    expect(navigateSpy).toHaveBeenCalledWith([], jasmine.objectContaining({
+      replaceUrl: true,
+      queryParamsHandling: 'merge',
+      queryParams: { sort: 'mostPracticed' },
+    }));
+
+    runSearch();
     expect(search).toHaveBeenCalledTimes(1);
     expect(search.calls.mostRecent().args[0].sort).toBe('mostPracticed');
     expect(component.results.map(item => item.id)).toEqual([11, 22]);
     expect(headings()).toEqual(['Practiced first', 'Created later']);
-    expect(navigateSpy).toHaveBeenCalledWith([], jasmine.objectContaining({
-      replaceUrl: true,
-      queryParamsHandling: 'merge',
-      queryParams: { q: 'apple', suitable: null, type: null, sort: 'mostPracticed' },
-    }));
 
     search.and.returnValue(of([createdLater, practicedFirst]));
     component.chooseSort('newest');
-    tick();
-    fixture.detectChanges();
+    expect(search).toHaveBeenCalledTimes(1);
+    expect(component.results.map(item => item.id)).toEqual([11, 22]);
 
+    runSearch();
     expect(search).toHaveBeenCalledTimes(2);
     expect(search.calls.mostRecent().args[0].sort).toBeUndefined();
     expect(component.results.map(item => item.id)).toEqual([22, 11]);
     expect(headings()).toEqual(['Created later', 'Practiced first']);
-    expect(navigateSpy).toHaveBeenCalledWith([], jasmine.objectContaining({
-      replaceUrl: true,
-      queryParamsHandling: 'merge',
-      queryParams: { q: 'apple', suitable: null, type: null, sort: null },
-    }));
   }));
 
-  it('drops a slower search after sort changes again', fakeAsync(() => {
+  it('drops a slower search when search runs again', fakeAsync(() => {
     const first = new Subject<Dictation[]>();
     const second = new Subject<Dictation[]>();
     spyOn(component.dictationService, 'search').and.returnValues(first.asObservable(), second.asObservable());
@@ -497,16 +501,15 @@ describe('SearchDictationPage', () => {
     fresh.title = 'Fresh';
 
     component.keyword.setValue('apple');
-    component.chooseSort('mostPracticed');
+    component.search();
     tick();
-    component.chooseSort('mostRecommended');
+    component.search();
     tick();
 
     first.next([stale]);
     expect(component.results).toBeNull();
     second.next([fresh]);
     expect(component.results.map(item => item.title)).toEqual(['Fresh']);
-    expect(component.sort.value).toBe('mostRecommended');
   }));
 
   it('loads sort from the URL and searches with that value', fakeAsync(() => {
@@ -555,20 +558,19 @@ describe('SearchDictationPage', () => {
     expect(navigateSpy).not.toHaveBeenCalled();
   }));
 
-  it('does not search when sort changes on an invalid keyword', fakeAsync(() => {
+  it('writes sort without searching when the keyword is too short', () => {
     const search = spyOn(component.dictationService, 'search').and.returnValue(of([]));
     component.keyword.setValue('ab');
     component.chooseSort('mostPracticed');
-    tick();
 
     expect(search).not.toHaveBeenCalled();
     expect(component.sort.value).toBe('mostPracticed');
     expect(navigateSpy).toHaveBeenCalledWith([], jasmine.objectContaining({
       replaceUrl: true,
       queryParamsHandling: 'merge',
-      queryParams: { q: 'ab', suitable: null, type: null, sort: 'mostPracticed' },
+      queryParams: { sort: 'mostPracticed' },
     }));
-  }));
+  });
 
   it('searches again when the URL sort changes', fakeAsync(() => {
     const search = spyOn(component.dictationService, 'search').and.returnValue(of([TestData.fillInDictation()]));

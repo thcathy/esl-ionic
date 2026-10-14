@@ -44,8 +44,9 @@ test.describe('search dictation query params', () => {
     await expect(page.locator('[data-filter="sort"]')).toContainText('Most practiced');
     await expect(page).toHaveURL(/sort=mostPracticed/);
     await expect(page).toHaveURL(/q=apple/);
-    const firstResult = page.locator('#dictation-list ion-item').first();
-    await expect(firstResult).toBeVisible({ timeout: 20_000 });
+    const firstTitle = page.locator('#dictation-list .heading').first();
+    await expect(firstTitle).toBeVisible({ timeout: 20_000 });
+    const beforeSearch = (await firstTitle.innerText()).trim();
 
     const historyLength = await page.evaluate(() => history.length);
     await page.locator('#sort-filter').click();
@@ -53,7 +54,12 @@ test.describe('search dictation query params', () => {
     await expect(page).not.toHaveURL(/sort=/);
     await expect(page).toHaveURL(/q=apple/);
     await expect(page.locator('[data-filter="sort"]')).toContainText('Newest');
-    await expect(page.locator('#dictation-list ion-item').first()).toBeVisible({ timeout: 20_000 });
+    await expect(firstTitle).toHaveText(beforeSearch);
+    expect(await page.evaluate(() => history.length)).toBe(historyLength);
+
+    await page.locator('ion-button', { hasText: 'Search' }).click();
+    await expect(firstTitle).not.toHaveText(beforeSearch, { timeout: 20_000 });
+    await expect(page).not.toHaveURL(/sort=/);
     expect(await page.evaluate(() => history.length)).toBe(historyLength);
   });
 });

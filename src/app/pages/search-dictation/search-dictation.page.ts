@@ -150,11 +150,8 @@ export class SearchDictationPage implements OnInit, OnDestroy {
     }
     this.sort.setValue(value);
     this.refreshChipLabels();
-    if (this.inputForm.invalid) {
-      this.saveQuery();
-      return;
-    }
-    void this.search();
+    const {sort} = this.urlParams(this.queryFromForm());
+    this.replaceUrl({sort});
   }
 
   private refreshChipLabels() {
