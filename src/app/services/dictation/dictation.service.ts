@@ -13,6 +13,10 @@ import {DictationHelper} from './dictation-helper.service';
 /** esl-rest `Dictation.MaxSearchResult`: `/dictation/search` returns at most this many rows. */
 export const DICTATION_SEARCH_MAX_RESULTS = 50;
 
+/** `POST /dictation/search` sort. Omit for newest. */
+export const DICTATION_SEARCH_SORTS = ['newest', 'mostPracticed', 'mostRecommended', 'lastModified'] as const;
+export type DictationSearchSort = typeof DICTATION_SEARCH_SORTS[number];
+
 export interface SearchDictationRequest {
   keyword?: string;
   searchTitle?: boolean;
@@ -22,6 +26,7 @@ export interface SearchDictationRequest {
   creator?: string;
   suitableStudent?: string;
   type?: string;
+  sort?: DictationSearchSort;
 }
 
 export interface CreateDictationHistoryRequest {

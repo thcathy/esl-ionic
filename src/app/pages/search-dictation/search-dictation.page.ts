@@ -4,7 +4,7 @@ import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} fr
 import {ActivatedRoute, Router} from '@angular/router';
 import {TranslateService} from '@ngx-translate/core';
 import {Dictation, SuitableStudentOptions} from '../../entity/dictation';
-import {DICTATION_SEARCH_MAX_RESULTS, DictationService} from '../../services/dictation/dictation.service';
+import {DICTATION_SEARCH_MAX_RESULTS, DICTATION_SEARCH_SORTS, DictationSearchSort, DictationService, SearchDictationRequest} from '../../services/dictation/dictation.service';
 import {ValidationUtils} from '../../utils/validation-utils';
 import {IonicComponentService} from '../../services/ionic-component.service';
 import {StorageService} from '../../services/storage.service';
@@ -18,6 +18,7 @@ interface SearchQuery {
   keyword: string;
   suitable: string;
   type: string;
+  sort: DictationSearchSort;
 }
 
 @Component({
@@ -39,6 +40,7 @@ export class SearchDictationPage implements OnInit, OnDestroy {
     {value: 'Vocab', label: 'Word'},
     {value: 'Article', label: 'Sentence'},
   ];
+  readonly sortOptions = DICTATION_SEARCH_SORTS;
   dateOptions = this.createDateOptions();
   history: String[] = [];
   filteredHistory: String[] = [];
@@ -46,9 +48,10 @@ export class SearchDictationPage implements OnInit, OnDestroy {
   suitableChipLabel = '';
   typeChipLabel = '';
   dateChipLabel = '';
+  sortChipLabel = '';
   private langChange: Subscription;
   private historyReady: Promise<void> | null = null;
-  /** q / suitable / type last read from or written to the URL. */
+  /** q / suitable / type / sort last read from or written to the URL. */
   private query: SearchQuery | null = null;
   private applyingQuery = false;
 
@@ -78,6 +81,7 @@ export class SearchDictationPage implements OnInit, OnDestroy {
   get creator() { return this.inputForm.get('creator'); }
   get suitableStudent() { return this.inputForm.get('suitableStudent'); }
   get type() { return this.inputForm.get('type'); }
+  get sort() { return this.inputForm.get('sort'); }
   get noResults(): boolean {
     return Array.isArray(this.results) && this.results.length === 0;
   }
@@ -89,6 +93,7 @@ export class SearchDictationPage implements OnInit, OnDestroy {
       'creator': new UntypedFormControl('', [Validators.minLength(3), Validators.maxLength(50)]),
       'suitableStudent': 'Any',
       'type': 'Any',
+      'sort': 'newest',
     });
     this.inputForm.get('suitableStudent').setValue('Any');
   }
@@ -118,12 +123,26 @@ export class SearchDictationPage implements OnInit, OnDestroy {
     this.refreshChipLabels();
   }
 
+  chooseSort(value: DictationSearchSort) {
+    if (this.sort.value === value) {
+      return;
+    }
+    this.sort.setValue(value);
+    this.refreshChipLabels();
+    if (this.inputForm.invalid) {
+      this.saveQuery();
+      return;
+    }
+    void this.search();
+  }
+
   private refreshChipLabels() {
     this.suitableChipLabel = this.translateService.instant('SuitableStudent.' + this.suitableStudent.value);
     const typeKey = this.typeOptions.find(option => option.value === this.type.value)?.label ?? '';
     this.typeChipLabel = typeKey ? this.translateService.instant(typeKey) : '';
     const dateKey = this.date.value?.option ?? '';
     this.dateChipLabel = dateKey ? this.translateService.instant(dateKey) : '';
+    this.sortChipLabel = this.translateService.instant('SearchSort.' + this.sort.value);
     // The dev-mode double check skips this view, then fails when it re-reads the new label.
     this.cdr.markForCheck();
   }
@@ -141,6 +160,7 @@ export class SearchDictationPage implements OnInit, OnDestroy {
     this.creator.setValue('');
     this.suitableStudent.setValue('Any');
     this.type.setValue('Any');
+    this.sort.setValue('newest');
     this.date.setValue(this.dateOptions[0]);
     this.refreshChipLabels();
     this.inputForm.markAsPristine();
@@ -216,6 +236,7 @@ export class SearchDictationPage implements OnInit, OnDestroy {
       this.keyword.setValue(incoming.keyword);
       this.suitableStudent.setValue(incoming.suitable);
       this.type.setValue(incoming.type);
+      this.sort.setValue(incoming.sort);
       this.creator.setValue('');
       this.date.setValue(this.dateOptions[0]);
       this.refreshChipLabels();
@@ -229,7 +250,7 @@ export class SearchDictationPage implements OnInit, OnDestroy {
         this.results = null;
         return;
       }
-      if (incoming.keyword.length === 0 && incoming.suitable === 'Any' && incoming.type === 'Any') {
+      if (incoming.keyword.length === 0 && incoming.suitable === 'Any' && incoming.type === 'Any' && incoming.sort === 'newest') {
         if (hadQuery) {
           this.results = null;
         }
@@ -246,37 +267,53 @@ export class SearchDictationPage implements OnInit, OnDestroy {
     const loader = await this.ionicComponentService.showLoading();
 
     this.addToHistory(this.keyword.value);
-    this.dictationService.search({
-      keyword: this.keyword.value,
-      minDate: this.date.value.date,
-      creator: this.creator.value,
-      suitableStudent: this.suitableStudent.value,
-      type: this.type.value === 'Any' ? null : this.type.value,
-    }).subscribe(r => {
+    this.dictationService.search(this.searchRequest()).subscribe(r => {
       loader.dismiss();
       this.results = r;
     }, _e => loader.dismiss());
   }
 
+  private searchRequest(): SearchDictationRequest {
+    const request: SearchDictationRequest = {
+      keyword: this.keyword.value,
+      minDate: this.date.value.date,
+      creator: this.creator.value,
+      suitableStudent: this.suitableStudent.value,
+      type: this.type.value === 'Any' ? null : this.type.value,
+    };
+    if (this.isSearchSort(this.sort.value) && this.sort.value !== 'newest') {
+      request.sort = this.sort.value;
+    }
+    return request;
+  }
+
   private queryFromUrl(): SearchQuery {
     const params = this.route.snapshot.queryParamMap;
-    return this.toQuery(params.get('q'), params.get('suitable'), params.get('type'));
+    return this.toQuery(params.get('q'), params.get('suitable'), params.get('type'), params.get('sort'));
   }
 
   private queryFromForm(): SearchQuery {
-    return this.toQuery(this.keyword.value, this.suitableStudent.value, this.type.value);
+    return this.toQuery(this.keyword.value, this.suitableStudent.value, this.type.value, this.sort.value);
   }
 
-  private toQuery(keyword: string | null, suitable: string | null, type: string | null): SearchQuery {
+  private toQuery(keyword: string | null, suitable: string | null, type: string | null, sort: string | null): SearchQuery {
     return {
       keyword: (keyword ?? '').trim(),
       suitable: suitable && this.suitableStudentOptions.includes(suitable) ? suitable : 'Any',
       type: type && this.typeOptions.some(option => option.value === type) ? type : 'Any',
+      sort: this.isSearchSort(sort) ? sort : 'newest',
     };
   }
 
+  private isSearchSort(sort: unknown): sort is DictationSearchSort {
+    return typeof sort === 'string' && (DICTATION_SEARCH_SORTS as readonly string[]).includes(sort);
+  }
+
   private sameQuery(left: SearchQuery, right: SearchQuery): boolean {
-    return left.keyword === right.keyword && left.suitable === right.suitable && left.type === right.type;
+    return left.keyword === right.keyword
+      && left.suitable === right.suitable
+      && left.type === right.type
+      && left.sort === right.sort;
   }
 
   private saveQuery() {
@@ -286,6 +323,7 @@ export class SearchDictationPage implements OnInit, OnDestroy {
       q: query.keyword.length > 0 ? query.keyword : null,
       suitable: query.suitable === 'Any' ? null : query.suitable,
       type: query.type === 'Any' ? null : query.type,
+      sort: query.sort === 'newest' ? null : query.sort,
     });
   }
 
@@ -297,11 +335,13 @@ export class SearchDictationPage implements OnInit, OnDestroy {
     });
   }
 
-  private replaceUrl(queryParams: { q?: string | null; suitable: string | null; type: string | null }) {
+  private replaceUrl(queryParams: { q?: string | null; suitable: string | null; type: string | null; sort?: string | null }) {
     const param = (key: string) => this.route.snapshot.queryParamMap.get(key) || null;
+    const sortMatches = !('sort' in queryParams) || param('sort') === (queryParams.sort ?? null);
     if ((!('q' in queryParams) || param('q') === (queryParams.q ?? null))
         && param('suitable') === queryParams.suitable
-        && param('type') === queryParams.type) {
+        && param('type') === queryParams.type
+        && sortMatches) {
       return;
     }
     // Same-page query update. NavigationService.navigate would push a history entry.

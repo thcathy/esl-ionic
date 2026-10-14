@@ -52,7 +52,12 @@ describe('DictationService', () => {
   });
 
   it('search posts the request body', () => {
-    const request: SearchDictationRequest = { keyword: 'school', suitableStudent: 'Any', type: 'Article' };
+    const request: SearchDictationRequest = {
+      keyword: 'school',
+      suitableStudent: 'Any',
+      type: 'Article',
+      sort: 'mostPracticed',
+    };
 
     service.search(request);
 
