@@ -162,7 +162,7 @@ export class SearchDictationPage implements OnInit, OnDestroy {
     if (this.inputForm.invalid) {
       return;
     }
-    void this.search();
+    void this.submitSearch();
   }
 
   clearSearch() {
@@ -181,7 +181,7 @@ export class SearchDictationPage implements OnInit, OnDestroy {
     this.saveQuery();
   }
 
-  async search() {
+  async submitSearch() {
     if (this.searchInFlight) {
       return;
     }
@@ -190,7 +190,7 @@ export class SearchDictationPage implements OnInit, OnDestroy {
       this.keyword.setValue(trimmed);
     }
     this.saveQuery();
-    await this.fetchResults();
+    await this.search();
   }
 
   createDateOptions(): DateSearchOption[] {
@@ -269,13 +269,13 @@ export class SearchDictationPage implements OnInit, OnDestroy {
         }
         return;
       }
-      await this.fetchResults();
+      await this.search();
     } finally {
       this.applyingQuery = false;
     }
   }
 
-  private async fetchResults() {
+  private async search() {
     if (this.searchInFlight) {
       return;
     }

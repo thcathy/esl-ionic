@@ -99,7 +99,7 @@ describe('SearchDictationPage', () => {
     expect(component.history[0]).toBe('old search history');
 
     component.keyword.setValue('new search');
-    component.search();
+    component.submitSearch();
     tick();
     expect(component.history.length).toBe(2);
     expect(component.history[0]).toBe('new search');
@@ -110,7 +110,7 @@ describe('SearchDictationPage', () => {
     spyOn(component.dictationService, 'search').and.returnValue(of([]));
     for (let i = 0; i < 15; i++) {
       component.keyword.setValue(`new search ${i}`);
-      component.search();
+      component.submitSearch();
       tick();
     }
     expect(component.history.length).toBe(10);
@@ -498,10 +498,10 @@ describe('SearchDictationPage', () => {
     kept.title = 'Kept';
 
     component.keyword.setValue('apple');
-    component.search();
+    component.submitSearch();
     tick();
     component.keyword.setValue('banana');
-    component.search();
+    component.submitSearch();
     tick();
 
     expect(search).toHaveBeenCalledTimes(1);
@@ -615,9 +615,9 @@ describe('SearchDictationPage', () => {
   it('do not store duplicate search history', fakeAsync(() => {
     spyOn(component.dictationService, 'search').and.returnValue(of([]));
     component.keyword.setValue(`new search`);
-    component.search();
+    component.submitSearch();
     tick();
-    component.search();
+    component.submitSearch();
     tick();
 
     expect(component.history.length).toBe(1);
@@ -631,7 +631,7 @@ describe('SearchDictationPage', () => {
   }
 
   function runSearch() {
-    component.search();
+    component.submitSearch();
     tick();
     fixture.detectChanges();
   }
