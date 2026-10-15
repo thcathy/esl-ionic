@@ -10,7 +10,6 @@ import {
   DictationSearchSort,
   DictationService,
   isDictationSearchSort,
-  SearchDictationRequest,
 } from '../../services/dictation/dictation.service';
 import {ValidationUtils} from '../../utils/validation-utils';
 import {IonicComponentService} from '../../services/ionic-component.service';
@@ -141,9 +140,6 @@ export class SearchDictationPage implements OnInit, OnDestroy {
   }
 
   chooseSort(value: DictationSearchSort) {
-    if (this.sort.value === value) {
-      return;
-    }
     this.sort.setValue(value);
     this.refreshChipLabels();
     const {sort} = this.urlParams(this.queryFromForm());
@@ -287,7 +283,14 @@ export class SearchDictationPage implements OnInit, OnDestroy {
     this.results = null;
     const loader = await this.ionicComponentService.showLoading();
     this.addToHistory(this.keyword.value);
-    this.dictationService.search(this.searchRequest()).subscribe(results => {
+    this.dictationService.search({
+      keyword: this.keyword.value,
+      minDate: this.date.value.date,
+      creator: this.creator.value,
+      suitableStudent: this.suitableStudent.value,
+      type: this.type.value === 'Any' ? null : this.type.value,
+      sort: this.sort.value,
+    }).subscribe(results => {
       this.results = results;
       this.endSearch(loader);
     }, () => this.endSearch(loader));
@@ -297,19 +300,6 @@ export class SearchDictationPage implements OnInit, OnDestroy {
     this.searchInFlight = false;
     void loader.dismiss();
     this.cdr.markForCheck();
-  }
-
-  private searchRequest(): SearchDictationRequest {
-    const query = this.queryFromForm();
-    const request: SearchDictationRequest = {
-      keyword: this.keyword.value,
-      minDate: this.date.value.date,
-      creator: this.creator.value,
-      suitableStudent: query.suitable,
-      type: query.type === 'Any' ? null : query.type,
-      sort: query.sort,
-    };
-    return request;
   }
 
   private queryFromUrl(): SearchQuery {
