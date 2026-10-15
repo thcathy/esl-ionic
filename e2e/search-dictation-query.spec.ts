@@ -1,6 +1,6 @@
 /**
  * A filtered /search-dictation URL fills the form and runs the search.
- * Changing a filter rewrites the query with replaceUrl.
+ * Changing a filter or sort rewrites the query with replaceUrl.
  * Run: PLAYWRIGHT_BASE_URL=http://localhost:4200 npx playwright test e2e/search-dictation-query.spec.ts
  */
 import {expect, test} from '@playwright/test';
@@ -35,6 +35,31 @@ test.describe('search dictation query params', () => {
     await page.locator('ion-button', { hasText: 'Search' }).click();
     await expect(page.locator('#dictation-list ion-item').first()).toBeVisible({ timeout: 20_000 });
     await expect(page).toHaveURL(/type=Article/);
+    expect(await page.evaluate(() => history.length)).toBe(historyLength);
+  });
+
+  test('changing sort rewrites sort= without adding a history entry', async ({ page }) => {
+    await page.goto('/search-dictation?q=apple&sort=mostPracticed');
+
+    await expect(page.locator('[data-filter="sort"]')).toContainText('Most practiced');
+    await expect(page).toHaveURL(/sort=mostPracticed/);
+    await expect(page).toHaveURL(/q=apple/);
+    const firstTitle = page.locator('#dictation-list .heading').first();
+    await expect(firstTitle).toBeVisible({ timeout: 20_000 });
+    const beforeSearch = (await firstTitle.innerText()).trim();
+
+    const historyLength = await page.evaluate(() => history.length);
+    await page.locator('#sort-filter').click();
+    await page.locator('[data-sort="newest"]').click();
+    await expect(page).not.toHaveURL(/sort=/);
+    await expect(page).toHaveURL(/q=apple/);
+    await expect(page.locator('[data-filter="sort"]')).toContainText('Newest');
+    await expect(firstTitle).toHaveText(beforeSearch);
+    expect(await page.evaluate(() => history.length)).toBe(historyLength);
+
+    await page.locator('ion-button', { hasText: 'Search' }).click();
+    await expect(firstTitle).not.toHaveText(beforeSearch, { timeout: 20_000 });
+    await expect(page).not.toHaveURL(/sort=/);
     expect(await page.evaluate(() => history.length)).toBe(historyLength);
   });
 });

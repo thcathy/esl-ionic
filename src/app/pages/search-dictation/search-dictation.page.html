@@ -56,6 +56,10 @@
               <span class="chip-title">{{'Date'|translate}}:&nbsp;</span>
               <span class="chip-value">{{ dateChipLabel }}</span>
             </button>
+            <button type="button" id="sort-filter" class="filter-chip" data-filter="sort">
+              <span class="chip-title">{{'Sort'|translate}}:&nbsp;</span>
+              <span class="chip-value">{{ sortChipLabel }}</span>
+            </button>
           </div>
           <ion-popover trigger="suitable-filter" triggerAction="click" [dismissOnSelect]="true" alignment="start">
             <ng-template>
@@ -84,8 +88,17 @@
               </ion-list>
             </ng-template>
           </ion-popover>
+          <ion-popover trigger="sort-filter" triggerAction="click" [dismissOnSelect]="true" alignment="start">
+            <ng-template>
+              <ion-list>
+                @for (option of sortOptions; track option) {
+                  <ion-item button (click)="chooseSort(option)" [attr.data-sort]="option"><ion-label class="ion-text-nowrap">{{'SearchSort.' + option|translate}}</ion-label></ion-item>
+                }
+              </ion-list>
+            </ng-template>
+          </ion-popover>
           <div class="form-actions">
-            <ion-button (click)="search()" [disabled]="inputForm.invalid">
+            <ion-button (click)="submitSearch()" [disabled]="inputForm.invalid || searchInFlight">
               <fa-icon icon="search"></fa-icon>&nbsp;{{'Search'|translate}}
             </ion-button>
           </div>

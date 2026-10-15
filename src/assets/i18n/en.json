@@ -103,6 +103,11 @@
   "SearchDictation.Clear": "Clear",
   "SearchDictation.Showing": "{{range}} of {{count}}",
   "SearchDictation.ShowingCapped": "{{range}} of {{count}}+",
+  "Sort": "Sort",
+  "SearchSort.newest": "Newest",
+  "SearchSort.mostPracticed": "Most practiced",
+  "SearchSort.mostRecommended": "Most recommended",
+  "SearchSort.lastModified": "Last modified",
   "Previous": "Previous",
   "Next": "Next"
 }
