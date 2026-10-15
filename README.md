@@ -14,14 +14,14 @@ Same lane names as Earn Time To Play: `beta` (internal testing), `release` (prom
 # (or keep using repo-root .env with GCLOUD_SERVICE_ACCOUNT_KEY)
 
 ./build.sh beta_android         # Internal testing (draft)
-./build.sh release_android      # New AAB → production; live after Google review
+./build.sh release_android      # New AAB → production; submits for review, live after Google approval
 ./build.sh promote_android      # Promote internal → production (no rebuild)
 ./build.sh metadata_android     # Listing + changelogs only
 ./build.sh validate_android     # Play validate_only dry run
 SKIP_BUILD=true ./build.sh beta_android   # reuse existing AAB
 ```
 
-`release_android` maps to `fastlane android upload_production`. `promote_android` and direct `fastlane android release` **promote** internal → production (no rebuild). `PLAY_PRODUCTION_STATUS` defaults to **draft** so a normal release does not submit for Google review. Set `PLAY_PRODUCTION_STATUS=completed` when you intend to submit.
+`release_android` maps to `fastlane android upload_production`. `promote_android` and direct `fastlane android release` **promote** internal → production (no rebuild). `PLAY_PRODUCTION_STATUS` defaults to **completed**: Google reviews the release, then it goes live (Managed publishing must be OFF — same idea as iOS `AUTOMATIC_RELEASE`). Set `PLAY_PRODUCTION_STATUS=draft` to upload without submitting for review.
 
 `versionCode` is still `major*100000 + minor*1000 + patch` from `package.json`. Changelogs still come from `release_notes/{en,zh-Hant,zh-Hans}.txt`. Play listing copy lives under `android/fastlane/metadata/android` and **uploads with beta/release/upload by default**; set `SKIP_UPLOAD_METADATA=true` for a binary-only upload.
 

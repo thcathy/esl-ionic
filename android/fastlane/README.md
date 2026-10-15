@@ -105,7 +105,7 @@ Build and upload to Google Play Internal Testing (PLAY_TRACK, draft by default)
 [bundle exec] fastlane android upload_production
 ```
 
-Build and upload new AAB to production (PLAY_PRODUCTION_STATUS defaults to draft)
+Build and upload new AAB to production (PLAY_PRODUCTION_STATUS defaults to completed)
 
 ### android release
 
@@ -113,7 +113,7 @@ Build and upload new AAB to production (PLAY_PRODUCTION_STATUS defaults to draft
 [bundle exec] fastlane android release
 ```
 
-Promote internal → production (PLAY_PRODUCTION_STATUS defaults to draft)
+Promote internal → production (PLAY_PRODUCTION_STATUS defaults to completed)
 
 ### android promote
 

@@ -158,7 +158,7 @@ def production_release_status
   # completed = submit for Google review, then publish after approval
   # (Play Console Managed publishing must be OFF). Falls back to draft if the
   # Play app itself is still unpublished.
-  ENV.fetch("PLAY_PRODUCTION_STATUS", "draft")
+  ENV.fetch("PLAY_PRODUCTION_STATUS", "completed")
 end
 
 def announce_play_release!(track, status)
@@ -307,7 +307,7 @@ platform :android do
     UI.success("Uploaded to Play track: #{ENV.fetch('PLAY_TRACK', 'internal')}")
   end
 
-  desc "Build and upload new AAB to production (PLAY_PRODUCTION_STATUS defaults to draft)"
+  desc "Build and upload new AAB to production (PLAY_PRODUCTION_STATUS defaults to completed)"
   lane :upload_production do
     build_android_aab!
     preflight_play_upload!
@@ -328,7 +328,7 @@ platform :android do
     announce_play_release!(track, applied)
   end
 
-  desc "Promote internal → production (PLAY_PRODUCTION_STATUS defaults to draft)"
+  desc "Promote internal → production (PLAY_PRODUCTION_STATUS defaults to completed)"
   lane :release do
     if env_flag("PLAY_UPLOAD_AAB")
       UI.important("PLAY_UPLOAD_AAB is deprecated; use upload_production or ./build.sh release_android")

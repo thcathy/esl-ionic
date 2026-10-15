@@ -67,7 +67,7 @@ Commands:
   buildAndroidApk
   build_android       AAB only (capacitor + fastlane build)
   beta_android        Internal testing (draft; PLAY_TRACK configurable)
-  release_android     New AAB → production draft (upload_production)
+  release_android     New AAB → production (upload_production; review after Google approval)
   promote_android     Promote internal → production (no rebuild)
   metadata_android    Store listing + changelogs (no binary)
   validate_android    Play validate_only dry run
@@ -86,7 +86,7 @@ Android env (repo-root .env or android/fastlane/.env — see android/fastlane/en
   SKIP_BUILD=true               Reuse existing AAB; skip ionic capacitor + gradle
   PLAY_TRACK                    beta/validate track (default: internal)
   PLAY_RELEASE_STATUS           beta/validate status (default: draft)
-  PLAY_PRODUCTION_STATUS        upload_production / promote status (default: draft)
+  PLAY_PRODUCTION_STATUS        upload_production / promote status (default: completed)
   SKIP_UPLOAD_METADATA=true     binary-only upload (default: false = push listing)
 EOF
 }
@@ -249,7 +249,7 @@ release_android() {
   require_env "ESL_IONIC_KEYSTORE_PASSWORD"
   require_play_key
   prepare_android_native
-  PLAY_PRODUCTION_STATUS="${PLAY_PRODUCTION_STATUS:-draft}" \
+  PLAY_PRODUCTION_STATUS="${PLAY_PRODUCTION_STATUS:-completed}" \
     android_fastlane upload_production
 }
 
