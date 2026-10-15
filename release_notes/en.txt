@@ -1,1 +1,1 @@
-Search by title, words, or ID, then press Enter. Age, type, and date are chips you can tap to change, and each list row now shows its preview at the bottom.
+See how many exercises matched and page with Previous/Next. Sort by newest, most practiced, most recommended, or last modified. Filters and sort stay in the link; empty searches say No dictation matched.
