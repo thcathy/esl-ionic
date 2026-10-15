@@ -307,10 +307,8 @@ export class SearchDictationPage implements OnInit, OnDestroy {
       creator: this.creator.value,
       suitableStudent: query.suitable,
       type: query.type === 'Any' ? null : query.type,
+      sort: query.sort,
     };
-    if (query.sort !== 'newest') {
-      request.sort = query.sort;
-    }
     return request;
   }
 

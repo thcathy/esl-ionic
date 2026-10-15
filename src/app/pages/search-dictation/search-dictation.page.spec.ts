@@ -347,7 +347,7 @@ describe('SearchDictationPage', () => {
       creator: '',
     }));
     expect(search.calls.mostRecent().args[0].minDate).toBeUndefined();
-    expect(search.calls.mostRecent().args[0].sort).toBeUndefined();
+    expect(search.calls.mostRecent().args[0].sort).toBe('newest');
     expect(component.sort.value).toBe('newest');
     expect(component.history[0]).toBe('apple');
     expect(component.history[1]).toBe('old search history');
@@ -443,7 +443,7 @@ describe('SearchDictationPage', () => {
       keyword: '',
       type: 'Vocab',
     }));
-    expect(search.calls.mostRecent().args[0].sort).toBeUndefined();
+    expect(search.calls.mostRecent().args[0].sort).toBe('newest');
     expect(component.history).toEqual(['old search history']);
   }));
 
@@ -486,7 +486,7 @@ describe('SearchDictationPage', () => {
 
     runSearch();
     expect(search).toHaveBeenCalledTimes(2);
-    expect(search.calls.mostRecent().args[0].sort).toBeUndefined();
+    expect(search.calls.mostRecent().args[0].sort).toBe('newest');
     expect(component.results.map(item => item.id)).toEqual([22, 11]);
     expect(headings()).toEqual(['Created later', 'Practiced first']);
   }));
@@ -536,7 +536,7 @@ describe('SearchDictationPage', () => {
     openFromUrl();
 
     expect(component.sort.value).toBe('newest');
-    expect(search.calls.mostRecent().args[0].sort).toBeUndefined();
+    expect(search.calls.mostRecent().args[0].sort).toBe('newest');
     expect(navigateSpy).toHaveBeenCalledWith([], jasmine.objectContaining({
       replaceUrl: true,
       queryParamsHandling: 'merge',
