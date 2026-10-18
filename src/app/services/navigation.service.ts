@@ -147,7 +147,7 @@ export class NavigationService {
   }
 
   openContactUs() {
-    window.open(this.translate.instant('ContactUsUrl'), '_system');
+    this.navigate('/contact-us');
   }
 
   changeLanguage(lang: string) {

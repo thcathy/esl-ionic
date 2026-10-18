@@ -6,7 +6,7 @@
         <hr>
           <p>{{'About_Us_Content'|translate}}</p>
           <a href="mailto: contactfunfunspell@gmail.com"><fa-icon class="square-button" [icon]="['fas', 'envelope']"></fa-icon></a>
-          <a (click)="navigationService.openContactUs()"><fa-icon class="square-button" [icon]="['fas', 'question-circle']"></fa-icon></a>
+          <a (click)="navigationService.openContactUs()" role="button" tabindex="0" [attr.aria-label]="'Contact Us' | translate"><fa-icon class="square-button" [icon]="['fas', 'question-circle']"></fa-icon></a>
         </ion-col>
         <ion-col size="6" size-sm="6" size-md="3" size-lg="3">
           <h5><fa-icon [icon]="['fas', 'link']"></fa-icon> {{'Links'|translate}}</h5>

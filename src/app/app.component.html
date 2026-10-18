@@ -77,8 +77,7 @@
 
           <ion-item-divider></ion-item-divider>
           <ion-item (click)="navigationService.openContactUs()">
-            <ion-label>{{'Contact Us'|translate}}</ion-label>
-            <fa-icon class="ion-float-end" [icon]="['fas', 'external-link-alt']"></fa-icon>
+            <ion-label><fa-icon [icon]="['fas', 'envelope']"></fa-icon>&nbsp; {{'Contact Us'|translate}}</ion-label>
           </ion-item>
           @if (platform.is('cordova') || platform.is('capacitor')) {
             <ion-item (click)="navigationService.openFunFunSpell()">
