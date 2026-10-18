@@ -9,7 +9,6 @@
   <div class="inner-content">
     <ion-card>
       <ion-card-content>
-        <p class="intro">{{'ContactUs.Intro' | translate}}</p>
         @if (inputForm) {
           <form class="input-form" [formGroup]="inputForm" (ngSubmit)="submit()" novalidate>
             <ion-item>
@@ -53,9 +52,11 @@
                 }
               </div>
             }
-            <ion-button type="submit" expand="block" [disabled]="submitting" [attr.aria-busy]="submitting">
-              {{ (submitting ? 'Please wait' : 'ContactUs.Send') | translate }}
-            </ion-button>
+            <div class="form-actions">
+              <ion-button type="submit" [disabled]="submitting" [attr.aria-busy]="submitting">
+                <fa-icon icon="paper-plane"></fa-icon>&nbsp;{{ (submitting ? 'Please wait' : 'ContactUs.Send') | translate }}
+              </ion-button>
+            </div>
           </form>
         }
       </ion-card-content>
