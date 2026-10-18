@@ -1,0 +1,66 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start"><ion-menu-button></ion-menu-button></ion-buttons>
+    <ion-title>{{'Contact Us' | translate}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="inner-content">
+    <ion-card>
+      <ion-card-content>
+        @if (inputForm) {
+          <form class="input-form" [formGroup]="inputForm" (ngSubmit)="submit()" novalidate>
+            <ion-item>
+              <ion-input
+                formControlName="email"
+                type="email"
+                inputmode="email"
+                autocomplete="email"
+                labelPlacement="stacked"
+                label="{{'Email' | translate}}"
+                [attr.aria-invalid]="emailInvalid"
+                [attr.aria-describedby]="emailInvalid ? 'contact-email-error' : null">
+              </ion-input>
+            </ion-item>
+            @if (emailInvalid) {
+              <div id="contact-email-error" class="error-text" role="alert">
+                @if (email.errors.required) {
+                  <div>{{'ContactUs.EmailRequired' | translate}}</div>
+                }
+                @if (email.errors.email) {
+                  <div>{{'ContactUs.EmailInvalid' | translate}}</div>
+                }
+              </div>
+            }
+            <ion-item>
+              <ion-textarea
+                formControlName="message"
+                labelPlacement="stacked"
+                rows="6"
+                [autoGrow]="true"
+                label="{{'ContactUs.Message' | translate}}"
+                placeholder="{{'ContactUs.MessagePlaceholder' | translate}}"
+                [attr.aria-invalid]="messageInvalid"
+                [attr.aria-describedby]="messageInvalid ? 'contact-message-error' : null">
+              </ion-textarea>
+            </ion-item>
+            @if (messageInvalid) {
+              <div id="contact-message-error" class="error-text" role="alert">
+                @if (message.errors.required) {
+                  <div>{{'ContactUs.MessageRequired' | translate}}</div>
+                }
+              </div>
+            }
+            <div class="form-actions">
+              <ion-button type="submit" [disabled]="submitting" [attr.aria-busy]="submitting">
+                <fa-icon icon="paper-plane"></fa-icon>&nbsp;{{ (submitting ? 'Please wait' : 'ContactUs.Send') | translate }}
+              </ion-button>
+            </div>
+          </form>
+        }
+      </ion-card-content>
+    </ion-card>
+  </div>
+  <app-footer></app-footer>
+</ion-content>

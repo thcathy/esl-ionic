@@ -5,8 +5,16 @@
         <h5><fa-icon [icon]="['fas', 'info-circle']"></fa-icon> {{'About Us'|translate}}</h5>
         <hr>
           <p>{{'About_Us_Content'|translate}}</p>
-          <a href="mailto: contactfunfunspell@gmail.com"><fa-icon class="square-button" [icon]="['fas', 'envelope']"></fa-icon></a>
-          <a (click)="navigationService.openContactUs()"><fa-icon class="square-button" [icon]="['fas', 'question-circle']"></fa-icon></a>
+          <div class="contact-actions">
+            <a class="contact-action" href="mailto:contactfunfunspell@gmail.com">
+              <fa-icon [icon]="['fas', 'envelope']"></fa-icon>
+              <span>{{'ContactUs.EmailLink'|translate}}</span>
+            </a>
+            <button type="button" class="contact-action" (click)="navigationService.openContactUs()">
+              <fa-icon [icon]="['fas', 'comment']"></fa-icon>
+              <span>{{'Contact Us'|translate}}</span>
+            </button>
+          </div>
         </ion-col>
         <ion-col size="6" size-sm="6" size-md="3" size-lg="3">
           <h5><fa-icon [icon]="['fas', 'link']"></fa-icon> {{'Links'|translate}}</h5>
