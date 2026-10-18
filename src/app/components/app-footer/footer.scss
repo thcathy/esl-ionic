@@ -71,6 +71,24 @@
   font-size: 1.2rem;
 }
 
+button.icon-button {
+  appearance: none;
+  background: none;
+  border: 0;
+  margin: 0;
+  padding: 0;
+  color: inherit;
+  font: inherit;
+  line-height: inherit;
+  cursor: pointer;
+  vertical-align: baseline;
+}
+
+button.icon-button:hover,
+button.icon-button:focus-visible {
+  color: var(--ion-color-secondary-tint);
+}
+
 .appImage {
   max-width: 135px;
   align-items: center;

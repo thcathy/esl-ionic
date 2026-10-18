@@ -19,12 +19,12 @@ export class ContactUsPage implements OnInit {
   private viewActive = true;
 
   constructor(
-    private formBuilder: UntypedFormBuilder,
-    private feedbackService: FeedbackService,
-    private authService: FFSAuthService,
-    private ionicComponentService: IonicComponentService,
-    private translate: TranslateService,
-    private navigationService: NavigationService,
+    private readonly formBuilder: UntypedFormBuilder,
+    private readonly feedbackService: FeedbackService,
+    private readonly authService: FFSAuthService,
+    private readonly ionicComponentService: IonicComponentService,
+    private readonly translate: TranslateService,
+    private readonly navigationService: NavigationService,
   ) {}
 
   ngOnInit() {
@@ -81,7 +81,7 @@ export class ContactUsPage implements OnInit {
     this.message.setValue('');
     this.message.markAsPristine();
     this.message.markAsUntouched();
-    this.ionicComponentService.showToastMessage(this.translate.instant('ContactUs.Sent'));
+    void this.ionicComponentService.showToastMessage(this.translate.instant('ContactUs.Sent'));
     if (this.viewActive) {
       this.navigationService.goBack();
     }
@@ -89,6 +89,6 @@ export class ContactUsPage implements OnInit {
 
   private onFailed() {
     this.submitting = false;
-    this.ionicComponentService.showToastMessage(this.translate.instant('ContactUs.Failed'));
+    void this.ionicComponentService.showToastMessage(this.translate.instant('ContactUs.Failed'));
   }
 }

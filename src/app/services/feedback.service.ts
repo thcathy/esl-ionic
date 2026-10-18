@@ -14,7 +14,7 @@ export interface FeedbackRequest {
 export class FeedbackService {
   private readonly feedbackUrl = environment.apiHost + '/feedback';
 
-  constructor(private http: HttpClient) {}
+  constructor(private readonly http: HttpClient) {}
 
   /** Posts to esl-rest `POST /feedback`. An empty 200 body is success. */
   submit(request: FeedbackRequest): Observable<void> {
