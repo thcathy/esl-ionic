@@ -45,9 +45,12 @@
   font-size: 0.9rem;
 }
 
-.footer a {
+.footer a,
+.footer a:link,
+.footer a:visited {
   color: white;
   cursor: pointer;
+  text-decoration: none;
 }
 
 .footer a:hover {
@@ -71,7 +74,14 @@
   font-size: 1.2rem;
 }
 
-button.icon-button {
+.contact-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 0.75rem;
+}
+
+.contact-action {
   appearance: none;
   background: none;
   border: 0;
@@ -79,13 +89,24 @@ button.icon-button {
   padding: 0;
   color: inherit;
   font: inherit;
-  line-height: inherit;
+  font-size: 0.85rem;
+  line-height: 1.2;
   cursor: pointer;
-  vertical-align: baseline;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  text-decoration: none;
 }
 
-button.icon-button:hover,
-button.icon-button:focus-visible {
+.contact-action fa-icon {
+  font-size: 1.35rem;
+}
+
+.footer button.contact-action:hover,
+.footer button.contact-action:focus-visible,
+.footer a.contact-action:hover,
+.footer a.contact-action:focus-visible {
   color: var(--ion-color-secondary-tint);
 }
 

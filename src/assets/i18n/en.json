@@ -53,6 +53,7 @@
   "CharactersTooLong": " cannot over {{length}} characters",
   "ContactUs.Message": "Message",
   "ContactUs.MessagePlaceholder": "Report a problem, suggest a feature, or other feedback",
+  "ContactUs.EmailLink": "Email us",
   "ContactUs.Send": "Send",
   "ContactUs.EmailRequired": "Enter your email so we can reply.",
   "ContactUs.EmailInvalid": "That email doesn't look right.",
