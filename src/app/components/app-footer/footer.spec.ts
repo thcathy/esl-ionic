@@ -16,7 +16,7 @@ describe('FooterComponent', () => {
   let component: FooterComponent;
   let appService: jasmine.SpyObj<AppService>;
   let platform: jasmine.SpyObj<Platform>;
-  let router: {url: string};
+  let router: {url: string | undefined};
 
   beforeEach(waitForAsync(() => {
     appService = jasmine.createSpyObj('AppService', ['isApp']);
@@ -104,6 +104,22 @@ describe('FooterComponent', () => {
     expect(component.showFullFooter).toBeFalse();
     expect(component.showBanner).toBeFalse();
     expect(component.showSlimFooter).toBeTrue();
+    expect(dom()).toEqual({columns: false, banner: false, badges: false, credit: true, version: true});
+  });
+
+  it('treats a missing width or url as not wide and not home', () => {
+    fixture?.destroy();
+    appService.isApp.and.returnValue(false);
+    (platform as {width?: jasmine.Spy}).width = undefined;
+    router.url = undefined;
+    fixture = TestBed.createComponent(FooterComponent);
+    component = fixture.componentInstance;
+
+    expect(component.isWide).toBeFalse();
+    expect(component.isHome).toBeFalse();
+    expect(component.showFullFooter).toBeFalse();
+    expect(component.showSlimFooter).toBeTrue();
+    fixture.detectChanges();
     expect(dom()).toEqual({columns: false, banner: false, badges: false, credit: true, version: true});
   });
 

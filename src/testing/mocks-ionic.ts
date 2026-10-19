@@ -132,7 +132,7 @@ export const ToastControllerSpy = () => jasmine.createSpyObj('ToastController', 
 
 export const SplashScreenSpy = () => jasmine.createSpyObj('SplashScreen', ['hide']);
 
-export const PlatformSpy = () => jasmine.createSpyObj('Platform', { ready: Promise.resolve() });
+export const PlatformSpy = () => jasmine.createSpyObj('Platform', { ready: Promise.resolve(), width: 1024 });
 
 export const TextToSpeechSpy = () => jasmine.createSpyObj('TextToSpeech', ['speak']);
 

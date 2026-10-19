@@ -32,12 +32,21 @@ export class FooterComponent {
 
   /** Viewport ≥ 768px. Read on each check; do not cache it from a resize listener. */
   get isWide(): boolean {
-    return this.platform.width() >= WIDE_VIEWPORT_PX;
+    const readWidth = this.platform?.width;
+    if (typeof readWidth !== 'function') {
+      return false;
+    }
+    const width = readWidth.call(this.platform);
+    return typeof width === 'number' && width >= WIDE_VIEWPORT_PX;
   }
 
   /** Current router path is the home page. */
   get isHome(): boolean {
-    return this.router.url.split(/[?#]/)[0] === '/home';
+    const url = this.router?.url;
+    if (typeof url !== 'string') {
+      return false;
+    }
+    return url.split(/[?#]/)[0] === '/home';
   }
 
   /**
