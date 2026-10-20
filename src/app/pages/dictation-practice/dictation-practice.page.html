@@ -9,7 +9,7 @@
   <app-dictation-preload #preload [hidden]="!showPreload"
     (preloadCompleted)="onPreloadCompleted($event)">
   </app-dictation-preload>
-  <div style="padding: 16px;" [hidden]="showPreload">
+  <div class="inner-content" [hidden]="showPreload">
     @if (currentQuestion()) {
       <ion-card class="card">
         <ion-card-header>
@@ -21,7 +21,7 @@
           <score class="ion-float-right" [mark]="mark"></score>
         </ion-card-title>
       </ion-card-header>
-      <ion-card-content style="font-size: 1.6rem">
+      <ion-card-content class="question-content">
         <ion-grid>
           <ion-row>
             <ion-col size="12" size-sm="12" size-md="6">
