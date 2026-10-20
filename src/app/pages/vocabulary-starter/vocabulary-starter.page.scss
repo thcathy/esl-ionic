@@ -1,9 +1,11 @@
+@use '../../../theme/breakpoints' as bp;
+
 .input-form {
   font-size: 1.1rem;
 }
 
 .inner-content {
-  padding: 2px 4px;
+  padding: 8px;
 }
 
 .puzzle span {
@@ -48,7 +50,7 @@
 }
 
 .action-button {
-  margin: 6px;
+  margin: 10px;
 }
 
 .info-content {
@@ -95,5 +97,11 @@
 
   .action-button {
     margin: 10px;
+  }
+}
+
+@include bp.phone {
+  .action-button {
+    margin: 8px;
   }
 }

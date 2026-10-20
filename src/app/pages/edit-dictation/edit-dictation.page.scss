@@ -1,3 +1,5 @@
+@use '../../../theme/breakpoints' as bp;
+
 .error-text div {
   padding-left: 16px;
 }
@@ -13,7 +15,7 @@
 }
 
 .inner-content {
-  padding: 2px 4px;
+  padding: 8px;
 }
 
 .questionsInput {
@@ -105,7 +107,7 @@ fa-icon {
 }
 
 .action-button {
-  margin: 6px;
+  margin: 16px;
 }
 
 @media (min-width: 768px) {
@@ -115,6 +117,12 @@ fa-icon {
 
   .action-button {
     margin: 16px;
+  }
+}
+
+@include bp.phone {
+  .action-button {
+    margin: 8px;
   }
 }
 

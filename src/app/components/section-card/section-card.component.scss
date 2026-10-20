@@ -1,5 +1,7 @@
+@use '../../../theme/breakpoints' as bp;
+
 .compact-section-card {
-  margin: 4px 0 6px;
+  margin: 8px 0 10px;
   border: 1px solid rgba(var(--ion-color-medium-rgb), 0.2);
   border-radius: 10px;
   overflow: hidden;
@@ -48,5 +50,11 @@
     --min-height: 48px;
     --padding-start: 16px;
     --inner-padding-end: 16px;
+  }
+}
+
+@include bp.phone {
+  .compact-section-card {
+    margin: 4px 0 8px;
   }
 }
