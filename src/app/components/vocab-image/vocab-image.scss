@@ -1,25 +1,88 @@
 @use '../../../theme/breakpoints' as bp;
 
 ion-card {
-  min-height: 274px;
+  // Matches the desktop image slot. The old 274px included the button row.
+  min-height: 200px;
   height: auto;
 }
 
-.button {
-  font-size: 1.4rem;
+.image-stage {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  max-width: 100%;
+  min-height: 200px;
+  margin-inline: auto;
+}
+
+.image-clip {
+  overflow: hidden;
+  max-width: 100%;
+  min-height: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .image {
   width: auto;
+  max-width: 100%;
   max-height: 200px;
   display: block;
-  margin-left: auto;
-  margin-right: auto;
   padding: 4px;
 }
 
-.grey-text {
-  color: gray;
+.nav-button {
+  position: absolute;
+  top: 50%;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.82);
+  color: #1a1a1a;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.28);
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+  appearance: none;
+}
+
+.nav-button fa-icon {
+  display: flex;
+  pointer-events: none;
+}
+
+.nav-prev {
+  left: 6px;
+  transform: translateY(-50%);
+}
+
+.nav-next {
+  right: 6px;
+  transform: translateY(-50%);
+}
+
+.nav-button:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.95);
+}
+
+.nav-button:focus-visible {
+  outline: 2px solid var(--ion-color-primary, #3880ff);
+  outline-offset: 2px;
+}
+
+.nav-button:disabled {
+  opacity: 0.45;
+  cursor: default;
 }
 
 .unverified-note-row {
@@ -56,8 +119,12 @@ ion-card {
     max-height: 160px;
   }
 
+  .image-stage {
+    min-height: 160px;
+  }
+
   ion-card {
-    min-height: 224px;
+    min-height: 160px;
   }
 
   .unverified-note-row {

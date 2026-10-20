@@ -37,6 +37,22 @@ describe('VocabImageComponent', () => {
     expect(component.showingPlaceholder).toBeTrue();
   });
 
+  it('overlays previous and next controls on the image', () => {
+    fixture.componentRef.setInput('images', ['https://example.com/a.jpg', 'https://example.com/b.jpg']);
+    fixture.detectChanges();
+
+    const stage = fixture.nativeElement.querySelector('.image-stage');
+    expect(stage.querySelector('.image-clip img.image')).toBeTruthy();
+    expect(stage.querySelector('button.nav-prev')).toBeTruthy();
+    expect(stage.querySelector('button.nav-next')).toBeTruthy();
+    expect(fixture.nativeElement.querySelector('ion-row')).toBeNull();
+
+    const prev = stage.querySelector('button.nav-prev') as HTMLButtonElement;
+    const next = stage.querySelector('button.nav-next') as HTMLButtonElement;
+    expect(prev.disabled).toBeFalse();
+    expect(next.disabled).toBeFalse();
+  });
+
   it('shows unverified note for real images when unverified is true', () => {
     fixture.componentRef.setInput('images', ['https://example.com/a.jpg', 'https://example.com/b.jpg']);
     fixture.componentRef.setInput('unverified', true);
