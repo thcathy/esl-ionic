@@ -12,6 +12,8 @@ import {SpeechService} from '../../services/speech.service';
 import {StorageService} from '../../services/storage.service';
 import {TranslateService} from "@ngx-translate/core";
 import {UIOptionsService} from '../../services/ui-options.service';
+import {AnalyticsService} from '../../services/analytics.service';
+import {summarizeDictationAttempt} from '../../services/analytics-events';
 
 @Component({
     selector: 'app-article-dictation',
@@ -33,6 +35,8 @@ export class ArticleDictationPage {
   isKeyboardActive: boolean;
   voiceMode: string;
   showPreload = true;
+  private loadToken = 0;
+  private acceptPreload = true;
 
   get caseSensitiveText() {
     return this?.dictation?.options?.caseSensitiveSentence ? 'Case Sensitive' : 'Case Insensitive';
@@ -54,6 +58,7 @@ export class ArticleDictationPage {
     protected translate: TranslateService,
     private interpretationService: InterpretationService,
     private log: NGXLogger,
+    private analytics: AnalyticsService,
   ) {}
 
   clearVariables() {
@@ -64,6 +69,7 @@ export class ArticleDictationPage {
     this.histories = [];
     this.dictation = null;
     this.showPreload = true;
+    this.acceptPreload = true;
   }
 
   ionViewDidEnter() {
@@ -71,20 +77,38 @@ export class ArticleDictationPage {
     this.init();
   }
 
+  ionViewWillLeave() {
+    this.acceptPreload = false;
+  }
+
   async init() {
+    const token = ++this.loadToken;
+    this.acceptPreload = false;
     this.dictation = await this.storage.get(NavigationService.storageKeys.dictation);
+    if (token !== this.loadToken) {
+      return;
+    }
     this.voiceMode = await this.speechService.getVoiceMode();
+    if (token !== this.loadToken) {
+      return;
+    }
     this.sentences = this.articleDictationService.divideToSentences(
       this.dictation.article,
       this.articleDictationService.sentenceLengthOptionsToValue(this.dictation.sentenceLength)
     );
     this.log.debug(`divided into ${this.sentences.length} sentences`);
+    this.acceptPreload = true;
     this.initPreload();
   }
 
   onPreloadCompleted(result: PreloadResult) {
-    if (result.useLocalVoice) { this.voiceMode = UIOptionsService.voiceMode.local; }
+    if (!this.showPreload || !this.acceptPreload) {
+      return;
+    }
+    this.acceptPreload = false;
     this.showPreload = false;
+    this.analytics.dictationDidStart(this.navigationService.dictationAttemptMode());
+    if (result.useLocalVoice) { this.voiceMode = UIOptionsService.voiceMode.local; }
     this.speak();
     this.focusAnswerInput();
   }
@@ -143,6 +167,9 @@ export class ArticleDictationPage {
   }
 
   submitAnswer() {
+    if (this.currentIndex >= this.sentences.length) {
+      return;
+    }
     this.histories.unshift(
       this.articleDictationService.checkAnswer(
         this.sentences[this.currentIndex], this.answer, {
@@ -156,6 +183,7 @@ export class ArticleDictationPage {
     this.answer = '';
 
     if (this.currentIndex >= this.sentences.length) {
+      this.analytics.dictationDidFinish(summarizeDictationAttempt(this.histories));
       this.navigationService.articleDictationComplete(this.dictation, this.histories.reverse());
     } else {
       this.speak();

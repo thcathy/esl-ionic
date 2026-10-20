@@ -104,7 +104,7 @@ export class DeepLinkerMock {
 }
 
 export const NavigationServiceSpy = () => jasmine.createSpyObj('NavigationService',
-  ['goTo', 'openVocabularyStarter', 'retryDictation', 'openDictation', 'openDictationById', 'pushOpenDictation', 'startDictation', 'openHomePage', 'getParam', 'setParam', 'copyDictation']);
+  ['goTo', 'openVocabularyStarter', 'retryDictation', 'openDictation', 'openDictationById', 'pushOpenDictation', 'startDictation', 'practiceComplete', 'articleDictationComplete', 'openHomePage', 'getParam', 'setParam', 'copyDictation', 'practiceAttemptSource', 'dictationAttemptMode']);
 
 export const StorageSpy = () => {
   const storageSpy = jasmine.createSpyObj('StorageService', ['get', 'set', 'remove']);

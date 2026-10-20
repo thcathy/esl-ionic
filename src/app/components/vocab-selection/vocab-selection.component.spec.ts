@@ -7,6 +7,7 @@ import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import {EditDictationRequest, MemberDictationService} from '../../services/dictation/member-dictation.service';
 import {Dictations} from '../../entity/dictation';
 import {memberVocabularyMember1Apple} from '../../../testing/test-data';
+import {AnalyticsService} from '../../services/analytics.service';
 
 describe('VocabSelectionComponent', () => {
   let component: VocabSelectionComponent;
@@ -47,6 +48,14 @@ describe('VocabSelectionComponent', () => {
     expect(request.includeAIImage).toBeTrue();
     expect(request.wordContainSpace).toBeTruthy();
   }));
+
+  it('records vocab_select when the custom exercise is saved', () => {
+    const analytics = TestBed.inject(AnalyticsService);
+    spyOn(analytics, 'customPracticeCreate');
+    spyOn(component.modalController, 'dismiss').and.resolveTo(true as never);
+    component.afterSaved({id: 3} as never);
+    expect(analytics.customPracticeCreate).toHaveBeenCalledOnceWith('vocab_select');
+  });
 
   it('selectVocab will activate or de-activate vocabulary', fakeAsync(() => {
     const vocab = memberVocabularyMember1Apple();

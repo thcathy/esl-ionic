@@ -18,6 +18,7 @@ import {ArticleDictationOptionsComponent} from "../../components/article-dictati
 import {IonicModule, IonToggle} from "@ionic/angular";
 import {StorageService} from '../../services/storage.service';
 import {DictationUtils} from '../../utils/dictation-utils';
+import {AnalyticsService} from '../../services/analytics.service';
 
 describe('EditDictationPage', () => {
   let component: EditDictationPage;
@@ -99,6 +100,24 @@ describe('EditDictationPage', () => {
           expect(request).toBeDefined();
           expect(request.source).toEqual(Dictations.Source.FillIn);
           expect(request.includeAIImage).toBeTrue();
+        }));
+
+        it('records a new sentence practice and skips an update', fakeAsync(() => {
+          const analytics = TestBed.inject(AnalyticsService);
+          const create = spyOn(analytics, 'customPracticeCreate');
+          memberDictationServiceSpy.createOrAmendDictation.and.returnValue(of(dictation1));
+          component.dictation = null;
+          component.type.setValue(DictationType.Sentence);
+          component.question.setValue('A short sentence.');
+          component.saveDictation();
+          tick();
+          expect(create).toHaveBeenCalledOnceWith('sentence');
+
+          create.calls.reset();
+          component.dictation = {id: 9} as Dictation;
+          component.saveDictation();
+          tick();
+          expect(create).not.toHaveBeenCalled();
         }));
       });
 

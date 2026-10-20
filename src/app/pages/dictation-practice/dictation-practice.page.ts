@@ -15,6 +15,8 @@ import {InterpretationService} from '../../services/practice/interpretation.serv
 import {VocabPracticeService} from '../../services/practice/vocab-practice.service';
 import {SpeechService} from '../../services/speech.service';
 import {StorageService} from '../../services/storage.service';
+import {AnalyticsService} from '../../services/analytics.service';
+
 @Component({
     selector: 'app-dictation-practice',
     templateUrl: './dictation-practice.page.html',
@@ -27,6 +29,9 @@ export class DictationPracticePage {
 
   dictation: Dictation;
   showPreload = true;
+  private loadToken = 0;
+  private acceptPreload = true;
+  private completionSent = false;
   vocabPractices: VocabPractice[] = [];
   questionIndex: number;
   phonics: string;
@@ -44,11 +49,16 @@ export class DictationPracticePage {
     public storage: StorageService,
     public dictationHelper: DictationHelper,
     private interpretationService: InterpretationService,
+    private analytics: AnalyticsService,
   ) { }
 
   ionViewWillEnter() {
     this.clearVariables();
     this.initDictation();
+  }
+
+  ionViewWillLeave() {
+    this.acceptPreload = false;
   }
 
   clearVariables() {
@@ -60,18 +70,29 @@ export class DictationPracticePage {
     this.answer = '';
     this.puzzleControls = null;
     this.showPreload = true;
+    this.acceptPreload = true;
+    this.completionSent = false;
   }
 
   async initDictation() {
+    const token = ++this.loadToken;
+    this.acceptPreload = false;
     this.dictation = await this.storage.get(NavigationService.storageKeys.dictation);
+    if (token !== this.loadToken) {
+      return;
+    }
     this.questionIndex = 0;
     this.mark = 0;
     this.phonics = 'Phonetic';
 
     const words = this.dictationHelper.wordsToPractice(this.dictation);
     const voiceMode = await this.speechService.getVoiceMode();
+    if (token !== this.loadToken) {
+      return;
+    }
     const isOnline = voiceMode === UIOptionsService.voiceMode.online;
 
+    this.acceptPreload = true;
     this.preload.start({
       questions: words.length,
       voices: isOnline ? words.length : 0,
@@ -103,7 +124,12 @@ export class DictationPracticePage {
   }
 
   onPreloadCompleted(_result: PreloadResult) {
+    if (!this.showPreload || !this.acceptPreload) {
+      return;
+    }
+    this.acceptPreload = false;
     this.showPreload = false;
+    this.analytics.practiceDidStart(this.navigationService.practiceAttemptSource());
     this.onNextQuestion();
   }
 
@@ -165,6 +191,14 @@ export class DictationPracticePage {
 
   nextQuestion() {
     if (this.end()) {
+      if (this.completionSent) {
+        return;
+      }
+      this.completionSent = true;
+      this.analytics.practiceDidComplete({
+        itemCount: this.histories.length,
+        correctCount: this.mark,
+      });
       this.navigationService.practiceComplete({
         dictation : this.dictation, histories: this.histories, mark: this.mark
       });
