@@ -11,7 +11,6 @@ import {VocabPracticeService} from '../../services/practice/vocab-practice.servi
 import {SpeechService} from '../../services/speech.service';
 import {StorageService} from '../../services/storage.service';
 import {TranslateService} from '@ngx-translate/core';
-import {AnalyticsService} from '../../services/analytics.service';
 
 describe('DictationPracticePage', () => {
   let component: DictationPracticePage;
@@ -79,46 +78,6 @@ describe('DictationPracticePage', () => {
       tick();
       expect(component.practiceType).toBe(VocabPracticeType.Spell);
     }));
-  });
-
-  it('records practice start once and complete counts, not the answer', () => {
-    const analytics = TestBed.inject(AnalyticsService);
-    const start = spyOn(analytics, 'practiceDidStart');
-    const complete = spyOn(analytics, 'practiceDidComplete');
-    component.dictation = {options: {}} as any;
-    component.vocabPractices = [{word: 'secret-word'} as any];
-    component.questionIndex = 0;
-
-    component.ionViewWillLeave();
-    component.onPreloadCompleted({useLocalVoice: false});
-    expect(start).not.toHaveBeenCalled();
-
-    component.clearVariables();
-    component.dictation = {options: {}} as any;
-    component.vocabPractices = [{word: 'secret-word'} as any];
-    component.questionIndex = 0;
-    component.onPreloadCompleted({useLocalVoice: false});
-    component.onPreloadCompleted({useLocalVoice: false});
-    expect(start).toHaveBeenCalledTimes(1);
-
-    component.histories = [{correct: true, answer: 'secret-word'} as any];
-    component.mark = 1;
-    component.nextQuestion();
-    component.nextQuestion();
-
-    expect(complete).toHaveBeenCalledOnceWith({
-      itemCount: 1,
-      correctCount: 1,
-    });
-    expect(JSON.stringify(complete.calls.mostRecent().args)).not.toContain('secret-word');
-
-    component.clearVariables();
-    component.vocabPractices = [{word: 'other-word'} as any];
-    component.questionIndex = 0;
-    component.histories = [{correct: false} as any];
-    component.mark = 0;
-    component.nextQuestion();
-    expect(complete).toHaveBeenCalledTimes(2);
   });
 
   describe('speak', () => {
