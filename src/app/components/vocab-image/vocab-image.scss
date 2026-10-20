@@ -1,3 +1,5 @@
+@use '../../../theme/breakpoints' as bp;
+
 ion-card {
   min-height: 274px;
   height: auto;
@@ -47,4 +49,18 @@ ion-card {
   font-size: 0.8rem;
   line-height: 1.35;
   text-align: start;
+}
+
+@include bp.phone {
+  ion-card {
+    min-height: 224px;
+  }
+
+  .image {
+    max-height: 160px;
+  }
+
+  .unverified-note-row {
+    padding: 4px 12px 8px;
+  }
 }
