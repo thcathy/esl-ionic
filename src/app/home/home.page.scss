@@ -1,3 +1,5 @@
+@use '../../theme/breakpoints' as bp;
+
 .main-card {
   background-color: var(--ion-color-tertiary-tint);
   color: white;
@@ -118,4 +120,22 @@
 
 ion-title {
   padding-left: 0px;
+}
+
+@include bp.phone {
+  .main-card ion-card-header ion-card-title {
+    font-size: 1.6rem;
+  }
+
+  .main-card h2 {
+    font-size: 1.35rem;
+  }
+
+  .main-card ion-card-content {
+    font-size: 1.1rem;
+  }
+
+  .main-image-card img {
+    max-height: 120px;
+  }
 }
