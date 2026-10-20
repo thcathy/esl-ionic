@@ -22,14 +22,14 @@
         @if (selectedSegment === 'vocabulary') {
           <app-dictation-list
             [dictations]="createdVocabExercise" [loading]="loadingAllDictations"
-            [showCreateButton]="false" title="Vocabulary Exercise">
+            [showCreateButton]="false" [practiceSource]="'home'" title="Vocabulary Exercise">
           </app-dictation-list>
         }
       </ion-col>
       @if (selectedSegment === 'dictation') {
         <ion-col size="12" size-sm="12" size-md="12" size-lg="6">
           <app-dictation-list [dictations]="createdDictations" [loading]="loadingAllDictations"
-            [showCreateButton]="true" title="My Dictation Created">
+            [showCreateButton]="true" [practiceSource]="'home'" title="My Dictation Created">
           </app-dictation-list>
         </ion-col>
       }

@@ -13,8 +13,7 @@ import {StorageService} from './services/storage.service';
 import config from '../../capacitor.config';
 import packageJson from '../../package.json';
 import {ServerService} from "./services/server.service";
-
-declare let gtag: Function;
+import {AnalyticsService, resolveClientPlatform} from './services/analytics.service';
 
 const auth0CallbackUri = `${config.appId}://${environment.auth0Host}/capacitor/${config.appId}/callback`;
 
@@ -29,6 +28,7 @@ export class AppComponent implements OnInit {
     showAlert: false,
     buttons: ['OK']
   }
+  private sawBackground = false;
 
   constructor(
     public platform: Platform,
@@ -41,6 +41,7 @@ export class AppComponent implements OnInit {
     public serverService: ServerService,
     private log: NGXLogger,
     private zone: NgZone,
+    private analytics: AnalyticsService,
   ) {
     this.authService.handleAuthCallbackWeb();
     this.initializeApp();
@@ -59,9 +60,15 @@ export class AppComponent implements OnInit {
 
       App.addListener('appStateChange', ({ isActive }) => {
         console.log('App state changed. Is active?', isActive);
-        if (isActive) {
-          this.healthCheck();
+        if (!isActive) {
+          this.sawBackground = true;
+          return;
         }
+        if (this.sawBackground) {
+          this.sawBackground = false;
+          this.analytics.appOpen(this.clientPlatform(), packageJson.version, 'warm');
+        }
+        this.healthCheck();
       });
     });
   }
@@ -93,12 +100,19 @@ export class AppComponent implements OnInit {
   }
 
   private setupGoogleAnalytics() {
-    const source = (this.platform.is('android') || this.platform.is('ios')) && !this.platform.is('mobileweb')
-      ? 'app' : 'web';
+    const platform = this.clientPlatform();
+    this.analytics.configure({
+      pageTitle: packageJson.name,
+      platform,
+    });
+    this.analytics.appOpen(platform, packageJson.version, 'cold');
+  }
 
-    gtag('config', 'G-T0NL87GWKB', {
-      page_title: packageJson.name,
-      source: source,
+  private clientPlatform() {
+    return resolveClientPlatform({
+      nativeApp: this.appService.isApp(),
+      ios: this.platform.is('ios'),
+      android: this.platform.is('android'),
     });
   }
 

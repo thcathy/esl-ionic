@@ -171,6 +171,19 @@ describe('DictationListComponent', () => {
     expect(component.navService.pushOpenDictation).not.toHaveBeenCalled();
   });
 
+  it('view from search remembers search as the practice entry', () => {
+    const dictation = TestData.fillInDictation();
+    component.openById = true;
+    component.practiceSource = 'search';
+    component.dictations = [dictation];
+    component.ngOnChanges({});
+    fixture.detectChanges();
+
+    fixture.debugElement.query(By.css('#dictation-list ion-button')).triggerEventHandler('click', null);
+
+    expect(component.navService.rememberPracticeSource).toHaveBeenCalledWith('search');
+  });
+
   function showDictations(count: number) {
     component.dictations = dictations(count);
     component.ngOnChanges({});

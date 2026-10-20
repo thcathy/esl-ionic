@@ -14,6 +14,7 @@ import {
 import {ValidationUtils} from '../../utils/validation-utils';
 import {IonicComponentService} from '../../services/ionic-component.service';
 import {StorageService} from '../../services/storage.service';
+import {AnalyticsService} from '../../services/analytics.service';
 
 export interface DateSearchOption {
   option: string;
@@ -80,6 +81,7 @@ export class SearchDictationPage implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private cdr: ChangeDetectorRef,
+    private analytics: AnalyticsService,
   ) { }
 
   ngOnInit() {
@@ -292,6 +294,7 @@ export class SearchDictationPage implements OnInit, OnDestroy {
       sort: this.sort.value,
     }).subscribe(results => {
       this.results = results;
+      this.analytics.searchUse(`${this.keyword.value ?? ''}`.trim().length, results?.length ?? 0);
       this.endSearch(loader);
     }, () => this.endSearch(loader));
   }

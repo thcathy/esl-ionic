@@ -6,6 +6,7 @@ import {EditDictationRequest, MemberDictationService} from '../../services/dicta
 import {Dictation, Dictations} from '../../entity/dictation';
 import {TranslateService} from '@ngx-translate/core';
 import {IonicComponentService} from '../../services/ionic-component.service';
+import {AnalyticsService} from '../../services/analytics.service';
 
 @Component({
     selector: 'app-vocab-selection',
@@ -28,6 +29,7 @@ export class VocabSelectionComponent implements OnInit {
     public memberDictationService: MemberDictationService,
     public translate: TranslateService,
     public ionicComponentService: IonicComponentService,
+    private analytics: AnalyticsService,
   ) {
     this.selectedVocabs = new Map<string, MemberVocabulary>();
   }
@@ -91,6 +93,7 @@ export class VocabSelectionComponent implements OnInit {
   }
 
   afterSaved(dictation: Dictation) {
+    this.analytics.cardCreate('vocab_card');
     this.modalController.dismiss({
       'dictation': dictation
     });

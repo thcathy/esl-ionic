@@ -12,6 +12,7 @@ import {SpeechService} from '../../services/speech.service';
 import {StorageService} from '../../services/storage.service';
 import {TranslateService} from "@ngx-translate/core";
 import {UIOptionsService} from '../../services/ui-options.service';
+import {AnalyticsService, sentencePracticeStats} from '../../services/analytics.service';
 
 @Component({
     selector: 'app-article-dictation',
@@ -54,6 +55,7 @@ export class ArticleDictationPage {
     protected translate: TranslateService,
     private interpretationService: InterpretationService,
     private log: NGXLogger,
+    private analytics: AnalyticsService,
   ) {}
 
   clearVariables() {
@@ -85,6 +87,9 @@ export class ArticleDictationPage {
   onPreloadCompleted(result: PreloadResult) {
     if (result.useLocalVoice) { this.voiceMode = UIOptionsService.voiceMode.local; }
     this.showPreload = false;
+    if ((this.sentences?.length ?? 0) > 0) {
+      this.analytics.dictationStart('sentence');
+    }
     this.speak();
     this.focusAnswerInput();
   }
@@ -156,6 +161,7 @@ export class ArticleDictationPage {
     this.answer = '';
 
     if (this.currentIndex >= this.sentences.length) {
+      this.analytics.sessionFinished(sentencePracticeStats(this.histories.map(history => history.isCorrect ?? [])));
       this.navigationService.articleDictationComplete(this.dictation, this.histories.reverse());
     } else {
       this.speak();
