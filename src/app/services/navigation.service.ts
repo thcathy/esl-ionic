@@ -10,6 +10,7 @@ import {EditDictationPageMode} from '../pages/edit-dictation/edit-dictation-page
 import {PracticeCompletePageInput} from '../pages/practice-complete/practice-complete.page';
 import {StorageService} from './storage.service';
 import {DictationHelper} from './dictation/dictation-helper.service';
+import {AnalyticsService, PracticeSource, asPracticeSource, resolvePracticeSource} from './analytics.service';
 
 export interface NavigationRequest {
   destination: any;
@@ -33,13 +34,15 @@ export class NavigationService {
   };
 
   params = {};
+  private rememberedPracticeSource: PracticeSource | null = null;
 
   constructor(private router: Router,
               private location: Location,
               private storage: StorageService,
               private dictationService: DictationService,
               private dictationHelper: DictationHelper,
-              private translate: TranslateService) {}
+              private translate: TranslateService,
+              private analytics: AnalyticsService) {}
 
 
   getParam(key: string) {
@@ -67,7 +70,14 @@ export class NavigationService {
     this.location.back();
   }
 
+  rememberPracticeSource(source: string | null | undefined): void {
+    this.rememberedPracticeSource = asPracticeSource(source);
+  }
+
   async startDictation(dictation: Dictation) {
+    const source = resolvePracticeSource(this.router.url ?? '', this.rememberedPracticeSource);
+    this.rememberedPracticeSource = null;
+    this.analytics.practiceStart(source);
     await this.storage.set(NavigationService.storageKeys.dictation, dictation);
 
     if (this.dictationService.isSentenceDictation(dictation)) {
@@ -102,7 +112,8 @@ export class NavigationService {
       state: {
         dictation: JSON.stringify(dictation),
         toastMessage: toastMessage,
-        showBackButton: showBackButton
+        showBackButton: showBackButton,
+        practiceSource: this.rememberedPracticeSource,
       }
     };
     return this.router.navigate(['/dictation-view'], navigationExtras);
@@ -115,7 +126,8 @@ export class NavigationService {
   openDictationById(dictationId: number, showBackButton: boolean = false) {
     const navigationExtras: NavigationExtras = {
       state: {
-        showBackButton: showBackButton
+        showBackButton: showBackButton,
+        practiceSource: this.rememberedPracticeSource,
       }
     };
     return this.router.navigate(['/dictation-view', dictationId], navigationExtras);

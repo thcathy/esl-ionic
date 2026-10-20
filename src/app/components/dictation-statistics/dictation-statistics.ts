@@ -20,6 +20,7 @@ export class DictationStatisticsComponent {
   }
 
   openDictation(dictation: Dictation) {
+    this.navService.rememberPracticeSource('home');
     this.navService.pushOpenDictation(dictation);
   }
 }

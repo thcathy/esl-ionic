@@ -6,6 +6,7 @@ import {DICTATION_SEARCH_MAX_RESULTS} from '../../services/dictation/dictation.s
 import {NavigationService} from '../../services/navigation.service';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {AppService} from '../../services/app.service';
+import {PracticeSource} from '../../services/analytics.service';
 
 @Component({
     selector: 'app-dictation-list',
@@ -37,6 +38,8 @@ export class DictationListComponent implements OnChanges {
   @Input() showResultSummary = false;
   /** When the held list reaches this size, the total is a cap, not an exact count. */
   @Input() resultCap = DICTATION_SEARCH_MAX_RESULTS;
+  /** Where this list sits, so a later start from the card can report search or home. */
+  @Input() practiceSource: PracticeSource | null = null;
 
   viewDictations: Array<Dictation>;
   page: number;
@@ -125,6 +128,7 @@ export class DictationListComponent implements OnChanges {
   }
 
   viewDictation(dictation: Dictation) {
+    this.navService.rememberPracticeSource(this.practiceSource);
     if (this.openById) {
       this.navService.openDictationById(dictation.id, true);
     } else {

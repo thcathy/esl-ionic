@@ -138,6 +138,7 @@ export class MemberHomePage implements OnInit {
   presentVocabCard(data) {
     if (data !== undefined && data['dictation'] !== undefined) {
       const dictation = data['dictation'] as Dictation;
+      this.navigationService.rememberPracticeSource('home');
       this.navigationService.pushOpenDictation(dictation);
     }
   }

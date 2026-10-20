@@ -24,6 +24,7 @@ import {NavigationService} from '../../services/navigation.service';
 import {SpeechService} from '../../services/speech.service';
 import {UIOptionsService} from '../../services/ui-options.service';
 import {DictationUtils} from '../../utils/dictation-utils';
+import {AnalyticsService} from '../../services/analytics.service';
 import {DictationType, EditDictationPageMode} from './edit-dictation-page-enum';
 import {ArticleDictationOptionsComponent} from "../../components/article-dictation-options/article-dictation-options.component";
 import Source = Dictations.Source;
@@ -81,6 +82,7 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
     private uiOptionsService: UIOptionsService,
     private activatedRoute: ActivatedRoute,
     private articleDictationService: ArticleDictationService,
+    private analytics: AnalyticsService,
   ) { }
 
   ngOnInit() {}
@@ -185,6 +187,8 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
   }
 
   async saveDictation() {
+    const creating = this.dictation == null || this.dictation.id < 0;
+    const createType = this.type.value === DictationType.Sentence ? 'sentence' : 'word';
     this.persistOptions();
     this.loader = await this.ionicComponentService.showLoading();
     this.memberDictationService.createOrAmendDictation(<EditDictationRequest>{
@@ -200,7 +204,12 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
       wordContainSpace : this.wordContainSpace.value,
       source : Source.FillIn,
     }).subscribe(
-      dic => this.afterSaved(dic),
+      dic => {
+        if (creating) {
+          this.analytics.cardCreate(createType);
+        }
+        this.afterSaved(dic);
+      },
       err => this.showError(err)
     );
   }
@@ -212,6 +221,7 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
 
     if (this.loader) { this.loader.dismiss(); }
     this.translate.get('UpdatedDictation', {title: dictation.title}).subscribe(msg => {
+      this.navService.rememberPracticeSource(null);
       this.navService.openDictation(dictation, msg);
     });
   }
