@@ -11,15 +11,15 @@ ion-card {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: fit-content;
-  max-width: 100%;
+  // Full card width so the arrows sit on the component edges, not the photo.
+  width: 100%;
   min-height: 200px;
-  margin-inline: auto;
 }
 
 .image-clip {
   overflow: hidden;
   max-width: 100%;
+  min-width: 0;
   min-height: inherit;
   display: flex;
   align-items: center;
