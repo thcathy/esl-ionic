@@ -1,8 +1,7 @@
 @use '../../../theme/breakpoints' as bp;
 
 ion-card {
-  // Matches the desktop image slot. The old 274px included the button row.
-  min-height: 200px;
+  --vocab-image-slot: 200px;
   height: auto;
 }
 
@@ -11,9 +10,9 @@ ion-card {
   display: flex;
   align-items: center;
   justify-content: center;
-  // Full card width so the arrows sit on the component edges, not the photo.
+  // Full card width so the 6px inset is from the component, not the photo.
   width: 100%;
-  min-height: 200px;
+  min-height: var(--vocab-image-slot);
 }
 
 .image-clip {
@@ -29,7 +28,7 @@ ion-card {
 .image {
   width: auto;
   max-width: 100%;
-  max-height: 200px;
+  max-height: var(--vocab-image-slot);
   display: block;
   padding: 4px;
 }
@@ -38,6 +37,7 @@ ion-card {
   position: absolute;
   top: 50%;
   z-index: 1;
+  transform: translateY(-50%);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -58,17 +58,14 @@ ion-card {
 
 .nav-button fa-icon {
   display: flex;
-  pointer-events: none;
 }
 
 .nav-prev {
   left: 6px;
-  transform: translateY(-50%);
 }
 
 .nav-next {
   right: 6px;
-  transform: translateY(-50%);
 }
 
 .nav-button:hover:not(:disabled) {
@@ -115,16 +112,8 @@ ion-card {
 }
 
 @include bp.phone {
-  .image {
-    max-height: 160px;
-  }
-
-  .image-stage {
-    min-height: 160px;
-  }
-
   ion-card {
-    min-height: 160px;
+    --vocab-image-slot: 160px;
   }
 
   .unverified-note-row {

@@ -50,6 +50,10 @@ export class VocabImageComponent implements OnChanges {
     return this.unverified && !this.showingPlaceholder;
   }
 
+  get canCycle(): boolean {
+    return (this.images?.length ?? 0) > 1;
+  }
+
   nextImage() {
     this.state = 'right';
     this.index++;

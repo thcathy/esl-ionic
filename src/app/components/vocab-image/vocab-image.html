@@ -5,13 +5,13 @@
         <img [@move]="state" (@move.done)="onDone($event)" [src]="imageBase64 | safeHtml" class="image" alt="" />
       </div>
       <button type="button" class="nav-button nav-prev"
-        [disabled]="images?.length <= 1"
+        [disabled]="!canCycle"
         [attr.aria-label]="'VocabImage.Previous' | translate"
         (click)="previousImage()">
         <fa-icon [icon]="['fas', 'angle-left']"></fa-icon>
       </button>
       <button type="button" class="nav-button nav-next"
-        [disabled]="images?.length <= 1"
+        [disabled]="!canCycle"
         [attr.aria-label]="'VocabImage.Next' | translate"
         (click)="nextImage()">
         <fa-icon [icon]="['fas', 'angle-right']"></fa-icon>
