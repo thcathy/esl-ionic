@@ -4,18 +4,18 @@
       <div class="image-clip">
         <img [@move]="state" (@move.done)="onDone($event)" [src]="imageBase64 | safeHtml" class="image" alt="" />
       </div>
-      <button type="button" class="nav-button nav-prev"
+      <ion-button fill="clear" shape="round" class="nav-button nav-prev"
         [disabled]="!canCycle"
         [attr.aria-label]="'VocabImage.Previous' | translate"
         (click)="previousImage()">
         <fa-icon [icon]="['fas', 'angle-left']"></fa-icon>
-      </button>
-      <button type="button" class="nav-button nav-next"
+      </ion-button>
+      <ion-button fill="clear" shape="round" class="nav-button nav-next"
         [disabled]="!canCycle"
         [attr.aria-label]="'VocabImage.Next' | translate"
         (click)="nextImage()">
         <fa-icon [icon]="['fas', 'angle-right']"></fa-icon>
-      </button>
+      </ion-button>
     </div>
     @if (showUnverifiedNote) {
       <div class="unverified-note-row">

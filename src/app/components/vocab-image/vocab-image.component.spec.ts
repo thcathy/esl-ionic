@@ -42,8 +42,8 @@ describe('VocabImageComponent', () => {
     fixture.detectChanges();
 
     const stage = fixture.nativeElement.querySelector('.image-stage');
-    const prev = stage.querySelector('button.nav-prev') as HTMLButtonElement;
-    const next = stage.querySelector('button.nav-next') as HTMLButtonElement;
+    const prev = stage.querySelector('ion-button.nav-prev') as HTMLElement & { disabled: boolean };
+    const next = stage.querySelector('ion-button.nav-next') as HTMLElement & { disabled: boolean };
 
     expect(stage.querySelector('.image-clip img.image')).toBeTruthy();
     expect(prev.disabled).toBeFalse();
@@ -55,8 +55,8 @@ describe('VocabImageComponent', () => {
     fixture.componentRef.setInput('images', ['https://example.com/a.jpg']);
     fixture.detectChanges();
 
-    const prev = fixture.nativeElement.querySelector('button.nav-prev') as HTMLButtonElement;
-    const next = fixture.nativeElement.querySelector('button.nav-next') as HTMLButtonElement;
+    const prev = fixture.nativeElement.querySelector('ion-button.nav-prev') as HTMLElement & { disabled: boolean };
+    const next = fixture.nativeElement.querySelector('ion-button.nav-next') as HTMLElement & { disabled: boolean };
     expect(component.canCycle).toBeFalse();
     expect(prev.disabled).toBeTrue();
     expect(next.disabled).toBeTrue();

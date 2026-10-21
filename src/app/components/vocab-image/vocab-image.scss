@@ -33,31 +33,35 @@ ion-card {
   padding: 4px;
 }
 
-.nav-button {
+ion-button.nav-button {
   position: absolute;
   top: 50%;
   z-index: 1;
   transform: translateY(-50%);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
   width: 44px;
   height: 44px;
+  min-width: 44px;
+  min-height: 44px;
   margin: 0;
-  padding: 0;
-  border: 1px solid rgba(0, 0, 0, 0.2);
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.82);
-  color: #1a1a1a;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.28);
   font-size: 1.4rem;
-  line-height: 1;
-  cursor: pointer;
-  appearance: none;
+  --padding-top: 0;
+  --padding-bottom: 0;
+  --padding-start: 0;
+  --padding-end: 0;
+  --border-width: 0;
+  --border-style: none;
+  --border-radius: 50%;
+  --box-shadow: none;
+  --background: rgba(255, 255, 255, 0.55);
+  --background-hover: rgba(255, 255, 255, 0.55);
+  --background-activated: rgba(255, 255, 255, 0.7);
+  --background-focused: rgba(255, 255, 255, 0.55);
+  --color: var(--ion-color-primary, #3880ff);
 }
 
-.nav-button fa-icon {
-  display: flex;
+ion-button.nav-button.ion-focused {
+  outline: 2px solid var(--ion-color-primary, #3880ff);
+  outline-offset: 2px;
 }
 
 .nav-prev {
@@ -66,20 +70,6 @@ ion-card {
 
 .nav-next {
   right: 6px;
-}
-
-.nav-button:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.95);
-}
-
-.nav-button:focus-visible {
-  outline: 2px solid var(--ion-color-primary, #3880ff);
-  outline-offset: 2px;
-}
-
-.nav-button:disabled {
-  opacity: 0.45;
-  cursor: default;
 }
 
 .unverified-note-row {
