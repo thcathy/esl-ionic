@@ -29,9 +29,6 @@ export class DictationPracticePage {
 
   dictation: Dictation;
   showPreload = true;
-  private loadToken = 0;
-  private acceptPreload = true;
-  private completionSent = false;
   vocabPractices: VocabPractice[] = [];
   questionIndex: number;
   phonics: string;
@@ -57,10 +54,6 @@ export class DictationPracticePage {
     this.initDictation();
   }
 
-  ionViewWillLeave() {
-    this.acceptPreload = false;
-  }
-
   clearVariables() {
     this.histories = [];
     this.dictation = null;
@@ -70,29 +63,18 @@ export class DictationPracticePage {
     this.answer = '';
     this.puzzleControls = null;
     this.showPreload = true;
-    this.acceptPreload = true;
-    this.completionSent = false;
   }
 
   async initDictation() {
-    const token = ++this.loadToken;
-    this.acceptPreload = false;
     this.dictation = await this.storage.get(NavigationService.storageKeys.dictation);
-    if (token !== this.loadToken) {
-      return;
-    }
     this.questionIndex = 0;
     this.mark = 0;
     this.phonics = 'Phonetic';
 
     const words = this.dictationHelper.wordsToPractice(this.dictation);
     const voiceMode = await this.speechService.getVoiceMode();
-    if (token !== this.loadToken) {
-      return;
-    }
     const isOnline = voiceMode === UIOptionsService.voiceMode.online;
 
-    this.acceptPreload = true;
     this.preload.start({
       questions: words.length,
       voices: isOnline ? words.length : 0,
@@ -124,10 +106,6 @@ export class DictationPracticePage {
   }
 
   onPreloadCompleted(_result: PreloadResult) {
-    if (!this.showPreload || !this.acceptPreload) {
-      return;
-    }
-    this.acceptPreload = false;
     this.showPreload = false;
     this.analytics.practiceDidStart(this.navigationService.practiceAttemptSource());
     this.onNextQuestion();
@@ -191,10 +169,6 @@ export class DictationPracticePage {
 
   nextQuestion() {
     if (this.end()) {
-      if (this.completionSent) {
-        return;
-      }
-      this.completionSent = true;
       this.analytics.practiceDidComplete({
         itemCount: this.histories.length,
         correctCount: this.mark,

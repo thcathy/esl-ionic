@@ -35,8 +35,6 @@ export class ArticleDictationPage {
   isKeyboardActive: boolean;
   voiceMode: string;
   showPreload = true;
-  private loadToken = 0;
-  private acceptPreload = true;
 
   get caseSensitiveText() {
     return this?.dictation?.options?.caseSensitiveSentence ? 'Case Sensitive' : 'Case Insensitive';
@@ -69,7 +67,6 @@ export class ArticleDictationPage {
     this.histories = [];
     this.dictation = null;
     this.showPreload = true;
-    this.acceptPreload = true;
   }
 
   ionViewDidEnter() {
@@ -77,35 +74,18 @@ export class ArticleDictationPage {
     this.init();
   }
 
-  ionViewWillLeave() {
-    this.acceptPreload = false;
-  }
-
   async init() {
-    const token = ++this.loadToken;
-    this.acceptPreload = false;
     this.dictation = await this.storage.get(NavigationService.storageKeys.dictation);
-    if (token !== this.loadToken) {
-      return;
-    }
     this.voiceMode = await this.speechService.getVoiceMode();
-    if (token !== this.loadToken) {
-      return;
-    }
     this.sentences = this.articleDictationService.divideToSentences(
       this.dictation.article,
       this.articleDictationService.sentenceLengthOptionsToValue(this.dictation.sentenceLength)
     );
     this.log.debug(`divided into ${this.sentences.length} sentences`);
-    this.acceptPreload = true;
     this.initPreload();
   }
 
   onPreloadCompleted(result: PreloadResult) {
-    if (!this.showPreload || !this.acceptPreload) {
-      return;
-    }
-    this.acceptPreload = false;
     this.showPreload = false;
     this.analytics.dictationDidStart(this.navigationService.dictationAttemptMode());
     if (result.useLocalVoice) { this.voiceMode = UIOptionsService.voiceMode.local; }
@@ -167,9 +147,6 @@ export class ArticleDictationPage {
   }
 
   submitAnswer() {
-    if (this.currentIndex >= this.sentences.length) {
-      return;
-    }
     this.histories.unshift(
       this.articleDictationService.checkAnswer(
         this.sentences[this.currentIndex], this.answer, {
