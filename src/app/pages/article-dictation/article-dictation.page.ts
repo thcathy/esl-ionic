@@ -87,7 +87,6 @@ export class ArticleDictationPage {
 
   onPreloadCompleted(result: PreloadResult) {
     this.showPreload = false;
-    this.analytics.dictationDidStart(this.navigationService.dictationAttemptMode());
     if (result.useLocalVoice) { this.voiceMode = UIOptionsService.voiceMode.local; }
     this.speak();
     this.focusAnswerInput();

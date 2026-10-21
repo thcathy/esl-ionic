@@ -10,7 +10,8 @@ import {EditDictationPageMode} from '../pages/edit-dictation/edit-dictation-page
 import {PracticeCompletePageInput} from '../pages/practice-complete/practice-complete.page';
 import {StorageService} from './storage.service';
 import {DictationHelper} from './dictation/dictation-helper.service';
-import {DictationMode, dictationMode, PracticeSource, practiceSourceFromUrl} from './analytics-events';
+import {AnalyticsService} from './analytics.service';
+import {dictationMode, practiceSourceFromUrl} from './analytics-events';
 
 export interface NavigationRequest {
   destination: any;
@@ -34,16 +35,14 @@ export class NavigationService {
   };
 
   params = {};
-  private listSource: PracticeSource | null = null;
-  private attemptSource: PracticeSource = 'card';
-  private attemptMode: DictationMode = 'sentence';
 
   constructor(private router: Router,
               private location: Location,
               private storage: StorageService,
               private dictationService: DictationService,
               private dictationHelper: DictationHelper,
-              private translate: TranslateService) {}
+              private translate: TranslateService,
+              private analytics: AnalyticsService) {}
 
 
   getParam(key: string) {
@@ -75,21 +74,12 @@ export class NavigationService {
     await this.storage.set(NavigationService.storageKeys.dictation, dictation);
 
     if (this.dictationService.isSentenceDictation(dictation)) {
-      this.attemptMode = dictationMode(dictation.sentenceLength);
-      this.listSource = null;
+      this.analytics.dictationDidStart(dictationMode(dictation.sentenceLength));
       this.router.navigate(['/article-dictation']);
     } else {
-      this.attemptSource = this.resolvePracticeSource();
+      this.analytics.practiceDidStart(practiceSourceFromUrl(this.router.url));
       this.router.navigate(['/dictation-practice']);
     }
-  }
-
-  practiceAttemptSource(): PracticeSource {
-    return this.attemptSource;
-  }
-
-  dictationAttemptMode(): DictationMode {
-    return this.attemptMode;
   }
 
   /**
@@ -113,7 +103,6 @@ export class NavigationService {
   }
 
   openDictation(dictation: Dictation, toastMessage: string = null, showBackButton: boolean = false) {
-    this.rememberPracticeList();
     const navigationExtras: NavigationExtras = {
       state: {
         dictation: JSON.stringify(dictation),
@@ -129,7 +118,6 @@ export class NavigationService {
   }
 
   openDictationById(dictationId: number, showBackButton: boolean = false) {
-    this.rememberPracticeList();
     const navigationExtras: NavigationExtras = {
       state: {
         showBackButton: showBackButton
@@ -170,25 +158,5 @@ export class NavigationService {
   changeLanguage(lang: string) {
     this.translate.use(lang);
     this.storage.set(NavigationService.storageKeys.language, lang);
-  }
-
-  /**
-   * A card opened from search, home, or member keeps that list.
-   * Start on the starter, editor, or results screen uses that screen.
-   */
-  private resolvePracticeSource(): PracticeSource {
-    const here = practiceSourceFromUrl(this.router.url);
-    if (here === 'card') {
-      const source = this.listSource ?? 'card';
-      this.listSource = null;
-      return source;
-    }
-    this.listSource = null;
-    return here;
-  }
-
-  private rememberPracticeList(): void {
-    const source = practiceSourceFromUrl(this.router.url);
-    this.listSource = source === 'search' || source === 'home' || source === 'member' ? source : null;
   }
 }

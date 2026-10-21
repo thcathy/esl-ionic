@@ -107,7 +107,6 @@ export class DictationPracticePage {
 
   onPreloadCompleted(_result: PreloadResult) {
     this.showPreload = false;
-    this.analytics.practiceDidStart(this.navigationService.practiceAttemptSource());
     this.onNextQuestion();
   }
 
