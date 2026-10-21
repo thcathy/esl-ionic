@@ -1,7 +1,11 @@
+:host {
+  display: block;
+  margin-top: auto;
+  padding-top: 8px;
+}
+
 .footer {
-  margin-top: 8px;
   padding-bottom: 4px;
-  position: absolute;
   width: 100%;
   color: #ffffff;
   background-color: var(--ion-color-primary-shade);
