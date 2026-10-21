@@ -1,1 +1,1 @@
-Contact Us is now in the app. Report a problem, suggest a feature, or send other feedback without opening an external form.
+Better fit on phones: headings, question text, and pictures are smaller and spacing is tighter. Picture arrows now sit on the card edges. The footer stays at the bottom, is shorter outside Home, and hides while the practice keyboard is open.
