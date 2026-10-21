@@ -1,25 +1,75 @@
 @use '../../../theme/breakpoints' as bp;
 
 ion-card {
-  min-height: 274px;
+  --vocab-image-slot: 200px;
   height: auto;
 }
 
-.button {
-  font-size: 1.4rem;
+.image-stage {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  // Full card width so the 6px inset is from the component, not the photo.
+  width: 100%;
+  min-height: var(--vocab-image-slot);
+}
+
+.image-clip {
+  overflow: hidden;
+  max-width: 100%;
+  min-width: 0;
+  min-height: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .image {
   width: auto;
-  max-height: 200px;
+  max-width: 100%;
+  max-height: var(--vocab-image-slot);
   display: block;
-  margin-left: auto;
-  margin-right: auto;
   padding: 4px;
 }
 
-.grey-text {
-  color: gray;
+ion-button.nav-button {
+  position: absolute;
+  top: 50%;
+  z-index: 1;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
+  margin: 0;
+  font-size: 1.4rem;
+  --padding-top: 0;
+  --padding-bottom: 0;
+  --padding-start: 0;
+  --padding-end: 0;
+  --border-width: 0;
+  --border-style: none;
+  --border-radius: 50%;
+  --box-shadow: none;
+  --background: rgba(255, 255, 255, 0.55);
+  --background-hover: rgba(255, 255, 255, 0.55);
+  --background-activated: rgba(255, 255, 255, 0.7);
+  --background-focused: rgba(255, 255, 255, 0.55);
+  --color: var(--ion-color-primary, #3880ff);
+}
+
+ion-button.nav-button.ion-focused {
+  outline: 2px solid var(--ion-color-primary, #3880ff);
+  outline-offset: 2px;
+}
+
+.nav-prev {
+  left: 6px;
+}
+
+.nav-next {
+  right: 6px;
 }
 
 .unverified-note-row {
@@ -52,12 +102,8 @@ ion-card {
 }
 
 @include bp.phone {
-  .image {
-    max-height: 160px;
-  }
-
   ion-card {
-    min-height: 224px;
+    --vocab-image-slot: 160px;
   }
 
   .unverified-note-row {

@@ -37,6 +37,31 @@ describe('VocabImageComponent', () => {
     expect(component.showingPlaceholder).toBeTrue();
   });
 
+  it('places previous and next on the image stage', () => {
+    fixture.componentRef.setInput('images', ['https://example.com/a.jpg', 'https://example.com/b.jpg']);
+    fixture.detectChanges();
+
+    const stage = fixture.nativeElement.querySelector('.image-stage');
+    const prev = stage.querySelector('ion-button.nav-prev') as HTMLElement & { disabled: boolean };
+    const next = stage.querySelector('ion-button.nav-next') as HTMLElement & { disabled: boolean };
+
+    expect(stage.querySelector('.image-clip img.image')).toBeTruthy();
+    expect(prev.disabled).toBeFalse();
+    expect(next.disabled).toBeFalse();
+    expect(fixture.nativeElement.querySelector('ion-row')).toBeNull();
+  });
+
+  it('disables previous and next when there is only one image', () => {
+    fixture.componentRef.setInput('images', ['https://example.com/a.jpg']);
+    fixture.detectChanges();
+
+    const prev = fixture.nativeElement.querySelector('ion-button.nav-prev') as HTMLElement & { disabled: boolean };
+    const next = fixture.nativeElement.querySelector('ion-button.nav-next') as HTMLElement & { disabled: boolean };
+    expect(component.canCycle).toBeFalse();
+    expect(prev.disabled).toBeTrue();
+    expect(next.disabled).toBeTrue();
+  });
+
   it('shows unverified note for real images when unverified is true', () => {
     fixture.componentRef.setInput('images', ['https://example.com/a.jpg', 'https://example.com/b.jpg']);
     fixture.componentRef.setInput('unverified', true);
