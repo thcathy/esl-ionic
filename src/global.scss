@@ -86,7 +86,11 @@
 
 .inner-content {
   padding: 16px;
-  min-height: calc(90% - 56px);
+}
+
+ion-content.has-app-footer::part(scroll) {
+  display: flex;
+  flex-direction: column;
 }
 
 .menu-content {

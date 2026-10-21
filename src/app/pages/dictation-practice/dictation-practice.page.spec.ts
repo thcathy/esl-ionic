@@ -80,6 +80,26 @@ describe('DictationPracticePage', () => {
     }));
   });
 
+  describe('hideAppFooter', () => {
+    it('stays visible when the virtual keyboard is closed', () => {
+      component.dictation = { options: { practiceType: VocabPracticeType.Spell } } as any;
+      component.isKeyboardActive = false;
+      expect(component.hideAppFooter).toBeFalse();
+    });
+
+    it('hides while the spell keyboard is open', () => {
+      component.dictation = { options: { practiceType: VocabPracticeType.Spell } } as any;
+      component.isKeyboardActive = true;
+      expect(component.hideAppFooter).toBeTrue();
+    });
+
+    it('stays visible in puzzle mode because that keyboard is disabled', () => {
+      component.dictation = { options: { practiceType: VocabPracticeType.Puzzle } } as any;
+      component.isKeyboardActive = true;
+      expect(component.hideAppFooter).toBeFalse();
+    });
+  });
+
   describe('speak', () => {
     it('routes to speech service with pronounce url when available', () => {
       component.dictation = { options: { speakPunctuation: true } } as any;
