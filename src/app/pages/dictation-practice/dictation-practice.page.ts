@@ -94,6 +94,11 @@ export class DictationPracticePage {
   get type() { return VocabPracticeType; }
   get practiceType() { return this.dictation?.options?.practiceType ?? VocabPracticeType.Spell; }
 
+  /** In-scroll footer yields while the spell-mode virtual keyboard occupies ion-footer. */
+  get hideAppFooter(): boolean {
+    return this.isKeyboardActive === true && this.practiceType !== VocabPracticeType.Puzzle;
+  }
+
   get puzzleCols(): number {
     const n = this.puzzleControls?.buttons?.length ?? 1;
     const maxPerRow = 6;

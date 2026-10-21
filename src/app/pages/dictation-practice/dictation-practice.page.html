@@ -95,7 +95,9 @@
 
   <practice-history-list [histories]="histories" [mark]="mark"></practice-history-list>
 </div>
-<app-footer></app-footer>
+@if (!hideAppFooter) {
+  <app-footer></app-footer>
+}
 </ion-content>
 
 <ion-footer>
