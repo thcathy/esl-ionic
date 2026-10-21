@@ -11,6 +11,7 @@ import {ManageVocabHistoryServiceSpy, StorageSpy} from '../../../testing/mocks-i
 import {ManageVocabHistoryService} from '../../services/member/manage-vocab-history.service';
 import {StorageService} from '../../services/storage.service';
 import {Dictation} from '../../entity/dictation';
+import {AnalyticsService} from '../../services/analytics.service';
 import {DICTATION_SEARCH_MAX_RESULTS} from '../../services/dictation/dictation.service';
 import {TestData} from '../../../testing/test-data';
 import en from '../../../assets/i18n/en.json';
@@ -92,6 +93,20 @@ describe('SearchDictationPage', () => {
     jasmine.clock().uninstall();
   }));
 
+
+  it('reports result count and query length without the query text', fakeAsync(() => {
+    const analytics = TestBed.inject(AnalyticsService);
+    const searchUse = spyOn(analytics, 'searchUse');
+    spyOn(component.dictationService, 'search').and.returnValue(of([{}, {}] as Dictation[]));
+    const query = '  pupil@school.edu.hk  ';
+    component.keyword.setValue(query);
+    component.submitSearch();
+    tick();
+
+    expect(searchUse).toHaveBeenCalledOnceWith(2, 'pupil@school.edu.hk'.length);
+    expect(JSON.stringify(searchUse.calls.mostRecent().args)).not.toContain('pupil');
+    expect(JSON.stringify(searchUse.calls.mostRecent().args)).not.toContain('@');
+  }));
 
   it('history is loaded from storage when view enters, and updated when search', fakeAsync(() => {
     component.ionViewDidEnter();

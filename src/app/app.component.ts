@@ -11,10 +11,8 @@ import {FFSAuthService} from './services/auth.service';
 import {NavigationService} from './services/navigation.service';
 import {StorageService} from './services/storage.service';
 import config from '../../capacitor.config';
-import packageJson from '../../package.json';
 import {ServerService} from "./services/server.service";
-
-declare let gtag: Function;
+import {AnalyticsService} from './services/analytics.service';
 
 const auth0CallbackUri = `${config.appId}://${environment.auth0Host}/capacitor/${config.appId}/callback`;
 
@@ -41,6 +39,7 @@ export class AppComponent implements OnInit {
     public serverService: ServerService,
     private log: NGXLogger,
     private zone: NgZone,
+    private analytics: AnalyticsService,
   ) {
     this.authService.handleAuthCallbackWeb();
     this.initializeApp();
@@ -54,15 +53,23 @@ export class AppComponent implements OnInit {
   initializeApp() {
     this.platform.ready().then(() => {
       SplashScreen.hide();
-      this.setupGoogleAnalytics();
+      this.analytics.configure();
+      this.analytics.appOpen();
       this.initLanguage();
+      this.watchAppResume();
+    });
+  }
 
-      App.addListener('appStateChange', ({ isActive }) => {
-        console.log('App state changed. Is active?', isActive);
-        if (isActive) {
-          this.healthCheck();
-        }
-      });
+  private watchAppResume() {
+    // Capacitor App already turns document visibility into appStateChange on web.
+    // iOS and Android WebViews fire visibilitychange as well, so a second listener
+    // counts one resume twice when the two signals are not in the same turn.
+    App.addListener('appStateChange', ({ isActive }) => {
+      console.log('App state changed. Is active?', isActive);
+      if (isActive) {
+        this.healthCheck();
+      }
+      this.analytics.onAppActive(isActive);
     });
   }
 
@@ -89,16 +96,6 @@ export class AppComponent implements OnInit {
         const browserLang = this.translate.getBrowserLang() || this.defaultLanguage;
         this.translate.use(browserLang === 'zh' ? 'zh-Hans' : browserLang);
       }
-    });
-  }
-
-  private setupGoogleAnalytics() {
-    const source = (this.platform.is('android') || this.platform.is('ios')) && !this.platform.is('mobileweb')
-      ? 'app' : 'web';
-
-    gtag('config', 'G-T0NL87GWKB', {
-      page_title: packageJson.name,
-      source: source,
     });
   }
 

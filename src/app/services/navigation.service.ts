@@ -10,6 +10,8 @@ import {EditDictationPageMode} from '../pages/edit-dictation/edit-dictation-page
 import {PracticeCompletePageInput} from '../pages/practice-complete/practice-complete.page';
 import {StorageService} from './storage.service';
 import {DictationHelper} from './dictation/dictation-helper.service';
+import {AnalyticsService} from './analytics.service';
+import {dictationMode, practiceSourceFromUrl} from './analytics-events';
 
 export interface NavigationRequest {
   destination: any;
@@ -39,7 +41,8 @@ export class NavigationService {
               private storage: StorageService,
               private dictationService: DictationService,
               private dictationHelper: DictationHelper,
-              private translate: TranslateService) {}
+              private translate: TranslateService,
+              private analytics: AnalyticsService) {}
 
 
   getParam(key: string) {
@@ -71,8 +74,10 @@ export class NavigationService {
     await this.storage.set(NavigationService.storageKeys.dictation, dictation);
 
     if (this.dictationService.isSentenceDictation(dictation)) {
+      this.analytics.dictationDidStart(dictationMode(dictation.sentenceLength));
       this.router.navigate(['/article-dictation']);
     } else {
+      this.analytics.practiceDidStart(practiceSourceFromUrl(this.router.url));
       this.router.navigate(['/dictation-practice']);
     }
   }

@@ -26,6 +26,7 @@ import {UIOptionsService} from '../../services/ui-options.service';
 import {DictationUtils} from '../../utils/dictation-utils';
 import {DictationType, EditDictationPageMode} from './edit-dictation-page-enum';
 import {ArticleDictationOptionsComponent} from "../../components/article-dictation-options/article-dictation-options.component";
+import {AnalyticsService} from '../../services/analytics.service';
 import Source = Dictations.Source;
 
 type SavedOptionSnapshot = {
@@ -81,6 +82,7 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
     private uiOptionsService: UIOptionsService,
     private activatedRoute: ActivatedRoute,
     private articleDictationService: ArticleDictationService,
+    private analytics: AnalyticsService,
   ) { }
 
   ngOnInit() {}
@@ -206,6 +208,10 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
   }
 
   afterSaved(dictation: Dictation) {
+    const id = this.dictation?.id;
+    if (id == null || id <= 0) {
+      this.analytics.customPracticeCreate(this.type.value === DictationType.Sentence ? 'sentence' : 'word');
+    }
     this.dictation = null;
     this.isSaved = true;
     this.navService.setParam(NavigationService.storageKeys.editDictation, null);

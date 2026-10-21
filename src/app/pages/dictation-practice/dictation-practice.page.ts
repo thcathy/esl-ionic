@@ -15,6 +15,8 @@ import {InterpretationService} from '../../services/practice/interpretation.serv
 import {VocabPracticeService} from '../../services/practice/vocab-practice.service';
 import {SpeechService} from '../../services/speech.service';
 import {StorageService} from '../../services/storage.service';
+import {AnalyticsService} from '../../services/analytics.service';
+
 @Component({
     selector: 'app-dictation-practice',
     templateUrl: './dictation-practice.page.html',
@@ -44,6 +46,7 @@ export class DictationPracticePage {
     public storage: StorageService,
     public dictationHelper: DictationHelper,
     private interpretationService: InterpretationService,
+    private analytics: AnalyticsService,
   ) { }
 
   ionViewWillEnter() {
@@ -170,6 +173,10 @@ export class DictationPracticePage {
 
   nextQuestion() {
     if (this.end()) {
+      this.analytics.practiceDidComplete({
+        itemCount: this.histories.length,
+        correctCount: this.mark,
+      });
       this.navigationService.practiceComplete({
         dictation : this.dictation, histories: this.histories, mark: this.mark
       });
