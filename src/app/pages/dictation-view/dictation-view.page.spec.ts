@@ -22,6 +22,7 @@ describe('DictationViewPage', () => {
     activateRouteStub = new ActivatedRouteStub();
     routerSpy = jasmine.createSpyObj('Router', ['currentNavigation']);
     routerSpy.currentNavigation.and.returnValue(null);
+    routerSpy.url = '/dictation-view';
 
     TestBed.configureTestingModule({
       declarations: [ DictationViewPage ],
