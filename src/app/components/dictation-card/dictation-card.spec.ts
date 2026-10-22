@@ -14,6 +14,8 @@ import {ManageVocabHistoryService} from '../../services/member/manage-vocab-hist
 import {NavigationService} from '../../services/navigation.service';
 import {VocabPracticeType} from '../../enum/vocab-practice-type.enum';
 import {UIOptionsService} from '../../services/ui-options.service';
+import {ModalController} from '@ionic/angular';
+import {ShareDictationModalComponent} from '../share-dictation-modal/share-dictation-modal.component';
 
 describe('DictationCardComponent', () => {
   let component: DictationCardComponent;
@@ -56,6 +58,22 @@ describe('DictationCardComponent', () => {
       expect(fixture.nativeElement.querySelector('.section-info .share-button')).toBeTruthy();
       expect(fixture.nativeElement.querySelector('.section-info .edit-button')).toBeTruthy();
     }));
+
+    it('presents the share modal', async () => {
+      const modalController = TestBed.inject(ModalController);
+      const present = jasmine.createSpy('present').and.resolveTo();
+      spyOn(modalController, 'create').and.resolveTo({present} as never);
+      component.dictation = TestData.fillInDictation();
+
+      await component.shareDictation();
+
+      expect(modalController.create).toHaveBeenCalledWith({
+        component: ShareDictationModalComponent,
+        cssClass: 'share-dictation-modal',
+        componentProps: {dictation: component.dictation},
+      });
+      expect(present).toHaveBeenCalled();
+    });
 
     it('show copy button when enabled for FillIn source', fakeAsync(() => {
       component.dictation = TestData.fillInDictation();

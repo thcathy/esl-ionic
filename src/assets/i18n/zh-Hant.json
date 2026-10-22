@@ -285,5 +285,12 @@
   "Preload.Tip.Images": "AI 圖像僅在儲存聽寫後產生。",
   "VocabImage.UnverifiedAiNote": "AI 圖像，可能與詞義不符",
   "VocabImage.Previous": "上一張圖片",
-  "VocabImage.Next": "下一張圖片"
+  "VocabImage.Next": "下一張圖片",
+  "Close": "關閉",
+  "Scan to open this dictation": "掃碼打開這份默書",
+  "Copy link": "複製連結",
+  "Save QR": "儲存二維碼",
+  "Link copied": "連結已複製",
+  "Could not copy the link. Please try again.": "無法複製連結，請再試一次。",
+  "Couldn't make the QR code. Copy the link instead.": "暫時無法顯示二維碼，請改用複製連結。"
 }

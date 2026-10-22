@@ -1,0 +1,38 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button fill="clear" (click)="close()" [attr.aria-label]="'Close' | translate">
+        <fa-icon [icon]="['fas', 'times']"></fa-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>{{ 'Share' | translate }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<div class="share-body">
+  <h2 class="dictation-name">{{ dictation?.title }}</h2>
+
+  @if (qrSrc) {
+    <img class="qr" [src]="qrSrc" alt="">
+  } @else if (qrFailed) {
+    <p class="qr-error">{{ "Couldn't make the QR code. Copy the link instead." | translate }}</p>
+  } @else {
+    <ion-spinner name="crescent" aria-hidden="true"></ion-spinner>
+  }
+
+  <p class="caption">{{ 'Scan to open this dictation' | translate }}</p>
+
+  <div class="actions">
+    <ion-button expand="block" class="copy-link-button" (click)="copyLink()">
+      {{ 'Copy link' | translate }}
+    </ion-button>
+    <ion-button expand="block" fill="outline" class="save-qr-button" (click)="saveQr()" [disabled]="!qrSrc">
+      {{ 'Save QR' | translate }}
+    </ion-button>
+    @if (canSystemShare) {
+      <ion-button expand="block" fill="outline" class="system-share-button" (click)="systemShare()">
+        {{ 'Share' | translate }}
+      </ion-button>
+    }
+  </div>
+</div>

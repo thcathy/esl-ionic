@@ -14,6 +14,7 @@ import {
   gtagConfigParams,
   PracticeSource,
   sanitizeAnalyticsParams,
+  ShareMethod,
 } from './analytics-events';
 
 type GtagCommand = 'config' | 'event' | 'set' | 'js';
@@ -25,7 +26,8 @@ type AnalyticsEventName =
   | 'dictation_start'
   | 'dictation_result'
   | 'search_use'
-  | 'custom_practice_create';
+  | 'custom_practice_create'
+  | 'share';
 
 declare global {
   interface Window {
@@ -145,6 +147,10 @@ export class AnalyticsService {
 
   customPracticeCreate(createType: CreateType): void {
     this.send('custom_practice_create', {create_type: createType});
+  }
+
+  share(method: ShareMethod): void {
+    this.send('share', {method});
   }
 
   private platformName(): AnalyticsPlatform {

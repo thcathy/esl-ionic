@@ -97,4 +97,10 @@ describe('AnalyticsService', () => {
     expect(gtag).toHaveBeenCalledWith('event', 'search_use', withPage({result_count: 2, query_len: 18}));
     expect(gtag).toHaveBeenCalledWith('event', 'custom_practice_create', withPage({create_type: 'vocab_select'}));
   });
+
+  it('sends share with an allowed method', () => {
+    service.share('copy');
+
+    expect(gtag).toHaveBeenCalledWith('event', 'share', withPage({method: 'copy'}));
+  });
 });

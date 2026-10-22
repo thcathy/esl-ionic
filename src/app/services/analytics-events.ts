@@ -15,12 +15,16 @@ export type DictationErrorType = typeof DICTATION_ERROR_TYPES[number];
 export const ANALYTICS_PLATFORMS = ['ios', 'android', 'web'] as const;
 export type AnalyticsPlatform = typeof ANALYTICS_PLATFORMS[number];
 
+export const SHARE_METHODS = ['native', 'copy', 'qr_view', 'qr_download'] as const;
+export type ShareMethod = typeof SHARE_METHODS[number];
+
 const ENUM_PARAMS: Readonly<Record<string, ReadonlySet<string>>> = {
   source: new Set(PRACTICE_SOURCES),
   mode: new Set(DICTATION_MODES),
   platform: new Set(ANALYTICS_PLATFORMS),
   create_type: new Set(CREATE_TYPES),
   error_type: new Set(DICTATION_ERROR_TYPES),
+  method: new Set(SHARE_METHODS),
 };
 
 const INT_PARAM_KEYS: ReadonlySet<string> = new Set([

@@ -285,5 +285,12 @@
   "Preload.Tip.Images": "AI 图像仅在保存听写后生成。",
   "VocabImage.UnverifiedAiNote": "AI 图像，可能与词义不符",
   "VocabImage.Previous": "上一张图片",
-  "VocabImage.Next": "下一张图片"
+  "VocabImage.Next": "下一张图片",
+  "Close": "关闭",
+  "Scan to open this dictation": "扫码打开这份听写练习",
+  "Copy link": "复制链接",
+  "Save QR": "保存二维码",
+  "Link copied": "链接已复制",
+  "Could not copy the link. Please try again.": "无法复制链接，请再试一次。",
+  "Couldn't make the QR code. Copy the link instead.": "暂时无法显示二维码，请改用复制链接。"
 }
