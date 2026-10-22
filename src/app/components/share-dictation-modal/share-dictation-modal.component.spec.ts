@@ -59,6 +59,7 @@ describe('ShareDictationModalComponent', () => {
     expect(fixture.nativeElement.querySelector('.dictation-name')?.textContent).toContain('Apple');
     expect(fixture.nativeElement.querySelector('.qr')?.getAttribute('src')).toBe('data:image/png;base64,aaa');
     expect(fixture.nativeElement.querySelector('.caption')?.textContent).toContain('Scan to open this dictation');
+    expect(fixture.nativeElement.querySelector('.scan-how')?.textContent).toContain("Open your phone's Camera app and point it at the QR code.");
     expect(fixture.nativeElement.querySelector('.system-share-button')).toBeNull();
     expect(analytics.share).toHaveBeenCalledOnceWith('qr_view');
   });

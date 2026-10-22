@@ -20,7 +20,10 @@
     <ion-spinner name="crescent" aria-hidden="true"></ion-spinner>
   }
 
-  <p class="caption">{{ 'Scan to open this dictation' | translate }}</p>
+  <div class="scan-hint">
+    <p class="caption">{{ 'Scan to open this dictation' | translate }}</p>
+    <p class="caption scan-how">{{ "Open your phone's Camera app and point it at the QR code." | translate }}</p>
+  </div>
 
   <div class="actions">
     <ion-button expand="block" class="copy-link-button" (click)="copyLink()">

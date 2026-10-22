@@ -30,11 +30,21 @@ ion-toolbar {
   height: auto;
 }
 
+.scan-hint {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
 .caption,
 .qr-error {
   margin: 0;
   color: #64748b;
   font-size: 0.95rem;
+}
+
+.scan-how {
+  font-size: 0.85rem;
 }
 
 .qr-error {
