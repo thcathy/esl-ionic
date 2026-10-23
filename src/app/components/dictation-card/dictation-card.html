@@ -85,7 +85,7 @@
           @if (edit) {
             <ion-button class="action-button" color="danger" (click)="confirmDeleteDictation()"><fa-icon [icon]="['fas', 'trash']"></fa-icon>&nbsp;{{'Delete'|translate}}</ion-button>
           }
-          @if (!dictationHelper.isInstantDictation(dictation) && dictation.source === sourceType.FillIn) {
+          @if (canShareDictation()) {
             <ion-button class="action-button share-button" (click)="shareDictation()">
               <fa-icon [icon]="['fas', 'share-square']"></fa-icon>&nbsp;{{'Share'|translate}}
             </ion-button>

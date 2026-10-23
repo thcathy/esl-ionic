@@ -59,6 +59,22 @@ describe('DictationCardComponent', () => {
       expect(fixture.nativeElement.querySelector('.section-info .edit-button')).toBeTruthy();
     }));
 
+    it('hides share when the dictation has no public id', fakeAsync(() => {
+      component.dictation = TestData.instantDictation();
+      fixture.detectChanges();
+      expect(fixture.nativeElement.querySelector('.section-info .share-button')).toBeNull();
+    }));
+
+    it('does not open the share modal without a public id', async () => {
+      const modalController = TestBed.inject(ModalController);
+      spyOn(modalController, 'create');
+      component.dictation = TestData.instantDictation();
+
+      await component.shareDictation();
+
+      expect(modalController.create).not.toHaveBeenCalled();
+    });
+
     it('presents the share modal', async () => {
       const modalController = TestBed.inject(ModalController);
       const present = jasmine.createSpy('present').and.resolveTo();
