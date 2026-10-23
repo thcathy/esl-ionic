@@ -288,6 +288,7 @@
   "VocabImage.Next": "下一張圖片",
   "Close": "關閉",
   "Scan to open this dictation": "掃碼打開這份默書",
+  "QR code for this dictation": "這份默書的二維碼",
   "Open your phone's Camera app and point it at the QR code.": "打開手機的相機，對準這個二維碼。",
   "Copy link": "複製連結",
   "Save QR": "儲存二維碼",

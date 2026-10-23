@@ -25,12 +25,12 @@ export class ShareDictationModalComponent implements OnInit, OnDestroy {
   private loading: Promise<void> | null = null;
 
   constructor(
-    private modalController: ModalController,
-    private shareService: ShareService,
-    private analytics: AnalyticsService,
-    private ionic: IonicComponentService,
-    private translate: TranslateService,
-    private changeDetector: ChangeDetectorRef,
+    private readonly modalController: ModalController,
+    private readonly shareService: ShareService,
+    private readonly analytics: AnalyticsService,
+    private readonly ionic: IonicComponentService,
+    private readonly translate: TranslateService,
+    private readonly changeDetector: ChangeDetectorRef,
   ) {}
 
   ngOnDestroy(): void {
@@ -43,7 +43,11 @@ export class ShareDictationModalComponent implements OnInit, OnDestroy {
   }
 
   private async load(): Promise<void> {
-    this.url = this.shareService.dictationShareUrl(this.dictation);
+    const url = this.shareService.dictationShareUrl(this.dictation);
+    if (!url) {
+      return;
+    }
+    this.url = url;
     const [canSystemShare, qr] = await Promise.all([
       this.shareService.canUseSystemShare(),
       this.loadQr(this.url),
@@ -65,6 +69,9 @@ export class ShareDictationModalComponent implements OnInit, OnDestroy {
   }
 
   async copyLink(): Promise<void> {
+    if (!this.url) {
+      return;
+    }
     try {
       await this.shareService.copyLink(this.url);
       this.analytics.share('copy');
@@ -75,15 +82,19 @@ export class ShareDictationModalComponent implements OnInit, OnDestroy {
   }
 
   saveQr(): void {
-    if (!this.qrSrc) {
+    const id = this.dictation?.id;
+    if (!this.qrSrc || !this.url || typeof id !== 'number' || !Number.isFinite(id) || id < 0) {
       return;
     }
-    const id = this.dictation?.id ?? 'qr';
-    this.shareService.saveQrPng(this.qrSrc, `funfunspell-dictation-${id}.png`);
-    this.analytics.share('qr_download');
+    if (this.shareService.saveQrPng(this.qrSrc, `funfunspell-dictation-${id}.png`)) {
+      this.analytics.share('qr_download');
+    }
   }
 
   async systemShare(): Promise<void> {
+    if (!this.url) {
+      return;
+    }
     try {
       await this.shareService.nativeShare(this.dictation);
       this.analytics.share('native');

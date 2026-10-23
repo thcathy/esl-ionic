@@ -288,6 +288,7 @@
   "VocabImage.Next": "下一张图片",
   "Close": "关闭",
   "Scan to open this dictation": "扫码打开这份听写练习",
+  "QR code for this dictation": "这份听写练习的二维码",
   "Open your phone's Camera app and point it at the QR code.": "打开手机的相机，对准这个二维码。",
   "Copy link": "复制链接",
   "Save QR": "保存二维码",

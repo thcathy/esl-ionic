@@ -1,4 +1,5 @@
 import {TestBed} from '@angular/core/testing';
+import {Capacitor} from '@capacitor/core';
 
 import {Dictation} from '../entity/dictation';
 import {ShareService} from './share.service';
@@ -16,6 +17,20 @@ describe('ShareService', () => {
   it('keeps the canonical dictation link', () => {
     expect(service.dictationShareUrl(dictation)).toBe(shareUrl);
     expect(service.shareTitle(dictation)).toBe('Share FunFunSpell Dictation - Apple');
+  });
+
+  it('does not build a link when the dictation id is missing', () => {
+    expect(service.dictationShareUrl(undefined)).toBeNull();
+    expect(service.dictationShareUrl({title: 'Apple'} as Dictation)).toBeNull();
+    expect(service.dictationShareUrl({id: -3, title: 'Apple'} as Dictation)).toBeNull();
+  });
+
+  it('does not open system share without a public id', async () => {
+    const share = jasmine.createSpy('share').and.resolveTo(undefined);
+    await withNavigatorShare(share, async () => {
+      await expectAsync(service.nativeShare({title: 'Apple'} as Dictation)).toBeRejected();
+      expect(share).not.toHaveBeenCalled();
+    });
   });
 
   it('shares the canonical dictation link without extra text', async () => {
@@ -70,12 +85,30 @@ describe('ShareService', () => {
     spyOn(document.body, 'appendChild').and.returnValue(link);
     spyOn(link, 'remove');
 
-    service.saveQrPng('data:image/png;base64,abc', 'funfunspell-dictation-42.png');
+    expect(service.saveQrPng('data:image/png;base64,abc', 'funfunspell-dictation-42.png')).toBeTrue();
 
     expect(link.href).toContain('data:image/png;base64,abc');
     expect(link.download).toBe('funfunspell-dictation-42.png');
     expect(link.click).toHaveBeenCalled();
     expect(link.remove).toHaveBeenCalled();
+  });
+
+  it('does not treat a native webview click as a completed download', () => {
+    spyOn(Capacitor, 'isNativePlatform').and.returnValue(true);
+    const link = document.createElement('a');
+    spyOn(document, 'createElement').and.returnValue(link);
+    spyOn(link, 'click');
+    spyOn(document.body, 'appendChild').and.returnValue(link);
+    spyOn(link, 'remove');
+
+    expect(service.saveQrPng('data:image/png;base64,abc', 'funfunspell-dictation-42.png')).toBeFalse();
+    expect(link.click).toHaveBeenCalled();
+  });
+
+  it('does not start a download without a file', () => {
+    spyOn(document, 'createElement');
+    expect(service.saveQrPng('', 'funfunspell-dictation-42.png')).toBeFalse();
+    expect(document.createElement).not.toHaveBeenCalled();
   });
 });
 

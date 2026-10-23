@@ -1,4 +1,5 @@
 import {Injectable} from '@angular/core';
+import {Capacitor} from '@capacitor/core';
 import {Share} from '@capacitor/share';
 
 import {Dictation} from '../entity/dictation';
@@ -9,8 +10,12 @@ type QrCodeModule = typeof import('qrcode');
   providedIn: 'root',
 })
 export class ShareService {
-  dictationShareUrl(dictation: Dictation): string {
-    return `https://www.funfunspell.com/link/dictation-view/${dictation.id}`;
+  dictationShareUrl(dictation: Dictation | null | undefined): string | null {
+    const id = dictation?.id;
+    if (typeof id !== 'number' || !Number.isFinite(id) || id < 0) {
+      return null;
+    }
+    return `https://www.funfunspell.com/link/dictation-view/${id}`;
   }
 
   shareTitle(dictation: Dictation): string {
@@ -35,9 +40,13 @@ export class ShareService {
   }
 
   async nativeShare(dictation: Dictation): Promise<void> {
+    const url = this.dictationShareUrl(dictation);
+    if (!url) {
+      throw new Error('dictation link unavailable');
+    }
     await Share.share({
       title: this.shareTitle(dictation),
-      url: this.dictationShareUrl(dictation),
+      url,
     });
   }
 
@@ -50,13 +59,25 @@ export class ShareService {
     });
   }
 
-  saveQrPng(dataUrl: string, filename: string): void {
+  saveQrPng(dataUrl: string, filename: string): boolean {
+    if (!dataUrl || !filename) {
+      return false;
+    }
     const link = document.createElement('a');
+    if (!('download' in link)) {
+      return false;
+    }
     link.href = dataUrl;
     link.download = filename;
-    document.body.appendChild(link);
-    link.click();
+    try {
+      document.body.appendChild(link);
+      link.click();
+    } catch {
+      link.remove();
+      return false;
+    }
     link.remove();
+    return !Capacitor.isNativePlatform();
   }
 }
 

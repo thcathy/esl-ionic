@@ -58,6 +58,7 @@ describe('ShareDictationModalComponent', () => {
 
     expect(fixture.nativeElement.querySelector('.dictation-name')?.textContent).toContain('Apple');
     expect(fixture.nativeElement.querySelector('.qr')?.getAttribute('src')).toBe('data:image/png;base64,aaa');
+    expect(fixture.nativeElement.querySelector('.qr')?.getAttribute('alt')).toBe('QR code for this dictation');
     expect(fixture.nativeElement.querySelector('.caption')?.textContent).toContain('Scan to open this dictation');
     expect(fixture.nativeElement.querySelector('.scan-how')?.textContent).toContain("Open your phone's Camera app and point it at the QR code.");
     expect(fixture.nativeElement.querySelector('.system-share-button')).toBeNull();
@@ -91,7 +92,8 @@ describe('ShareDictationModalComponent', () => {
     expect(ionic.showToastMessage).toHaveBeenCalledWith('Could not copy the link. Please try again.');
   });
 
-  it('saves the QR png and records qr_download', async () => {
+  it('saves the QR png and records qr_download when the download starts', async () => {
+    shareService.saveQrPng.and.returnValue(true);
     await render();
     component.saveQr();
 
@@ -100,6 +102,35 @@ describe('ShareDictationModalComponent', () => {
       'funfunspell-dictation-42.png',
     );
     expect(analytics.share).toHaveBeenCalledWith('qr_download');
+  });
+
+  it('does not record qr_download when the download does not start', async () => {
+    shareService.saveQrPng.and.returnValue(false);
+    await render();
+    analytics.share.calls.reset();
+
+    component.saveQr();
+
+    expect(shareService.saveQrPng).toHaveBeenCalled();
+    expect(analytics.share).not.toHaveBeenCalled();
+  });
+
+  it('hides the link actions when the dictation has no public id', async () => {
+    component.dictation = {title: 'Apple'} as Dictation;
+    shareService.dictationShareUrl.and.returnValue(null);
+    await render();
+
+    expect(shareService.qrDataUrl).not.toHaveBeenCalled();
+    expect(fixture.nativeElement.querySelector('.actions')).toBeNull();
+    expect(fixture.nativeElement.querySelector('.qr')).toBeNull();
+    expect(analytics.share).not.toHaveBeenCalled();
+
+    await component.copyLink();
+    component.saveQr();
+    await component.systemShare();
+    expect(shareService.copyLink).not.toHaveBeenCalled();
+    expect(shareService.saveQrPng).not.toHaveBeenCalled();
+    expect(shareService.nativeShare).not.toHaveBeenCalled();
   });
 
   it('records native share only after the sheet succeeds', async () => {

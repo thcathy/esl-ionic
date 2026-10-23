@@ -1,10 +1,12 @@
 :host {
   display: block;
-  background: #fff;
+  background: var(--ion-background-color, #fff);
+  color: var(--ion-text-color, var(--ion-color-dark));
 }
 
 ion-toolbar {
-  --background: #fff;
+  --background: var(--ion-toolbar-background, var(--ion-background-color, #fff));
+  --color: var(--ion-toolbar-color, var(--ion-text-color, var(--ion-color-dark)));
   --border-width: 0;
 }
 
@@ -21,7 +23,7 @@ ion-toolbar {
   margin: 0;
   font-size: 1.15rem;
   font-weight: 600;
-  color: #1f2937;
+  color: var(--ion-text-color, var(--ion-color-dark));
   overflow-wrap: anywhere;
 }
 
@@ -39,7 +41,7 @@ ion-toolbar {
 .caption,
 .qr-error {
   margin: 0;
-  color: #64748b;
+  color: var(--ion-text-color-step-600, #64748b);
   font-size: 0.95rem;
 }
 
