@@ -10,6 +10,7 @@
     "test": "ng test --browsers=ChromeWithAutoplay",
     "test-ci": "ng test --watch=false --browsers=ChromeHeadlessCI",
     "test-dev": "ng test --browsers=ChromeHeadlessCI",
+    "test-functions": "npm test --prefix functions",
     "lint": "ng lint",
     "e2e:install": "playwright install chromium",
     "pree2e": "playwright install chromium",
