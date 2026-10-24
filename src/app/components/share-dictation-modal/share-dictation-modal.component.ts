@@ -45,6 +45,7 @@ export class ShareDictationModalComponent implements OnInit, OnDestroy {
   private async load(): Promise<void> {
     const url = this.shareService.dictationShareUrl(this.dictation);
     if (!url) {
+      await this.modalController.dismiss().catch(() => undefined);
       return;
     }
     this.url = url;
@@ -69,9 +70,6 @@ export class ShareDictationModalComponent implements OnInit, OnDestroy {
   }
 
   async copyLink(): Promise<void> {
-    if (!this.url) {
-      return;
-    }
     try {
       await this.shareService.copyLink(this.url);
       this.analytics.share('copy');
@@ -82,19 +80,15 @@ export class ShareDictationModalComponent implements OnInit, OnDestroy {
   }
 
   saveQr(): void {
-    const id = this.dictation?.id;
-    if (!this.qrSrc || !this.url || typeof id !== 'number' || !Number.isFinite(id) || id < 0) {
+    if (!this.qrSrc) {
       return;
     }
-    if (this.shareService.saveQrPng(this.qrSrc, `funfunspell-dictation-${id}.png`)) {
+    if (this.shareService.saveQrPng(this.qrSrc, `funfunspell-dictation-${this.dictation.id}.png`)) {
       this.analytics.share('qr_download');
     }
   }
 
   async systemShare(): Promise<void> {
-    if (!this.url) {
-      return;
-    }
     try {
       await this.shareService.nativeShare(this.dictation);
       this.analytics.share('native');

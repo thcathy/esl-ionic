@@ -1,4 +1,5 @@
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import {ModalController} from '@ionic/angular';
 
 import {Dictation} from '../../entity/dictation';
 import {AnalyticsService} from '../../services/analytics.service';
@@ -115,22 +116,18 @@ describe('ShareDictationModalComponent', () => {
     expect(analytics.share).not.toHaveBeenCalled();
   });
 
-  it('hides the link actions when the dictation has no public id', async () => {
+  it('dismisses when the dictation has no public id', async () => {
+    const modalController = TestBed.inject(ModalController);
+    spyOn(modalController, 'dismiss').and.resolveTo(true);
     component.dictation = {title: 'Apple'} as Dictation;
     shareService.dictationShareUrl.and.returnValue(null);
+
     await render();
 
+    expect(modalController.dismiss).toHaveBeenCalled();
     expect(shareService.qrDataUrl).not.toHaveBeenCalled();
     expect(fixture.nativeElement.querySelector('.actions')).toBeNull();
-    expect(fixture.nativeElement.querySelector('.qr')).toBeNull();
     expect(analytics.share).not.toHaveBeenCalled();
-
-    await component.copyLink();
-    component.saveQr();
-    await component.systemShare();
-    expect(shareService.copyLink).not.toHaveBeenCalled();
-    expect(shareService.saveQrPng).not.toHaveBeenCalled();
-    expect(shareService.nativeShare).not.toHaveBeenCalled();
   });
 
   it('records native share only after the sheet succeeds', async () => {
