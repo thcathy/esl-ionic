@@ -23,6 +23,8 @@ jobs:
           cache: 'npm'
           cache-dependency-path: package-lock.json
       - run: npm ci --legacy-peer-deps
+      - name: Link Open Graph function tests
+        run: npm ci --ignore-scripts --prefix functions && npm test --prefix functions
       - run: npm run build --if-present
       - run: npm run test-ci
       - uses: actions/upload-artifact@v4
