@@ -1,5 +1,8 @@
 import {TestBed} from '@angular/core/testing';
 import {Capacitor} from '@capacitor/core';
+import {Directory} from '@capacitor/filesystem';
+import {FilesystemWeb} from '@capacitor/filesystem/dist/esm/web';
+import {ShareWeb} from '@capacitor/share/dist/esm/web';
 
 import {Dictation} from '../entity/dictation';
 import {ShareService} from './share.service';
@@ -78,14 +81,14 @@ describe('ShareService', () => {
     expect(dataUrl.length).toBeGreaterThan(100);
   });
 
-  it('downloads the QR png through an anchor', () => {
+  it('downloads the QR png through an anchor', async () => {
     const link = document.createElement('a');
     spyOn(document, 'createElement').and.returnValue(link);
     spyOn(link, 'click');
     spyOn(document.body, 'appendChild').and.returnValue(link);
     spyOn(link, 'remove');
 
-    expect(service.saveQrPng('data:image/png;base64,abc', 'funfunspell-dictation-42.png')).toBeTrue();
+    await expectAsync(service.saveQrPng('data:image/png;base64,abc', 'funfunspell-dictation-42.png')).toBeResolvedTo(true);
 
     expect(link.href).toContain('data:image/png;base64,abc');
     expect(link.download).toBe('funfunspell-dictation-42.png');
@@ -93,21 +96,39 @@ describe('ShareService', () => {
     expect(link.remove).toHaveBeenCalled();
   });
 
-  it('does not treat a native webview click as a completed download', () => {
+  it('writes the QR on a device and opens the share sheet', async () => {
     spyOn(Capacitor, 'isNativePlatform').and.returnValue(true);
-    const link = document.createElement('a');
-    spyOn(document, 'createElement').and.returnValue(link);
-    spyOn(link, 'click');
-    spyOn(document.body, 'appendChild').and.returnValue(link);
-    spyOn(link, 'remove');
+    spyOn(document, 'createElement');
+    const fileUri = 'file:///cache/funfunspell-dictation-42.png';
+    const writeFile = spyOn(FilesystemWeb.prototype, 'writeFile').and.resolveTo({uri: fileUri});
+    const share = spyOn(ShareWeb.prototype, 'share').and.resolveTo({});
 
-    expect(service.saveQrPng('data:image/png;base64,abc', 'funfunspell-dictation-42.png')).toBeFalse();
-    expect(link.click).toHaveBeenCalled();
+    await expectAsync(service.saveQrPng('data:image/png;base64,abc', 'funfunspell-dictation-42.png')).toBeResolvedTo(true);
+
+    expect(document.createElement).not.toHaveBeenCalled();
+    expect(writeFile).toHaveBeenCalledOnceWith({
+      path: 'funfunspell-dictation-42.png',
+      data: 'abc',
+      directory: Directory.Cache,
+    });
+    expect(share).toHaveBeenCalledOnceWith({
+      title: 'funfunspell-dictation-42.png',
+      files: [fileUri],
+    });
   });
 
-  it('does not start a download without a file', () => {
+  it('does not record a device save when the share sheet is canceled', async () => {
+    spyOn(Capacitor, 'isNativePlatform').and.returnValue(true);
+    spyOn(FilesystemWeb.prototype, 'writeFile').and.resolveTo({uri: 'file:///cache/funfunspell-dictation-42.png'});
+    const share = spyOn(ShareWeb.prototype, 'share').and.rejectWith(new Error('Share canceled'));
+
+    await expectAsync(service.saveQrPng('data:image/png;base64,abc', 'funfunspell-dictation-42.png')).toBeResolvedTo(false);
+    expect(share).toHaveBeenCalled();
+  });
+
+  it('does not start a download without a file', async () => {
     spyOn(document, 'createElement');
-    expect(service.saveQrPng('', 'funfunspell-dictation-42.png')).toBeFalse();
+    await expectAsync(service.saveQrPng('', 'funfunspell-dictation-42.png')).toBeResolvedTo(false);
     expect(document.createElement).not.toHaveBeenCalled();
   });
 });

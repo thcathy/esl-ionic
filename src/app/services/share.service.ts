@@ -1,5 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Capacitor} from '@capacitor/core';
+import {Directory, Filesystem} from '@capacitor/filesystem';
 import {Share} from '@capacitor/share';
 
 import {Dictation} from '../entity/dictation';
@@ -59,10 +60,22 @@ export class ShareService {
     });
   }
 
-  saveQrPng(dataUrl: string, filename: string): boolean {
+  async saveQrPng(dataUrl: string, filename: string): Promise<boolean> {
     if (!dataUrl || !filename) {
       return false;
     }
+    try {
+      if (Capacitor.isNativePlatform()) {
+        await this.saveQrOnDevice(dataUrl, filename);
+        return true;
+      }
+      return this.downloadQrPng(dataUrl, filename);
+    } catch {
+      return false;
+    }
+  }
+
+  private downloadQrPng(dataUrl: string, filename: string): boolean {
     const link = document.createElement('a');
     if (!('download' in link)) {
       return false;
@@ -77,8 +90,34 @@ export class ShareService {
       return false;
     }
     link.remove();
-    return !Capacitor.isNativePlatform();
+    return true;
   }
+
+  private async saveQrOnDevice(dataUrl: string, filename: string): Promise<void> {
+    const data = pngBase64(dataUrl);
+    if (!data) {
+      throw new Error('qr png unavailable');
+    }
+    const written = await Filesystem.writeFile({
+      path: filename,
+      data,
+      directory: Directory.Cache,
+    });
+    await Share.share({
+      title: filename,
+      files: [written.uri],
+    });
+  }
+}
+
+function pngBase64(dataUrl: string): string | null {
+  const marker = 'base64,';
+  const index = dataUrl.indexOf(marker);
+  if (index < 0) {
+    return null;
+  }
+  const data = dataUrl.slice(index + marker.length);
+  return data.length > 0 ? data : null;
 }
 
 function qrApi(loaded: QrCodeModule): QrCodeModule {

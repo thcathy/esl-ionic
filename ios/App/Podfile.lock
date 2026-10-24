@@ -10,6 +10,9 @@ PODS:
   - CapacitorCommunityTextToSpeech (8.0.0):
     - Capacitor
   - CapacitorCordova (8.5.2)
+  - CapacitorFilesystem (8.1.5):
+    - Capacitor
+    - IONFilesystemLib (= 2.0.1)
   - CapacitorHaptics (8.0.0):
     - Capacitor
   - CapacitorKeyboard (8.0.0):
@@ -20,6 +23,7 @@ PODS:
     - Capacitor
   - CapacitorStatusBar (8.0.0):
     - Capacitor
+  - IONFilesystemLib (2.0.1)
 
 DEPENDENCIES:
   - "Capacitor (from `../../node_modules/@capacitor/ios`)"
@@ -28,11 +32,16 @@ DEPENDENCIES:
   - "CapacitorCommunityInAppReview (from `../../node_modules/@capacitor-community/in-app-review`)"
   - "CapacitorCommunityTextToSpeech (from `../../node_modules/@capacitor-community/text-to-speech`)"
   - "CapacitorCordova (from `../../node_modules/@capacitor/ios`)"
+  - "CapacitorFilesystem (from `../../node_modules/@capacitor/filesystem`)"
   - "CapacitorHaptics (from `../../node_modules/@capacitor/haptics`)"
   - "CapacitorKeyboard (from `../../node_modules/@capacitor/keyboard`)"
   - "CapacitorShare (from `../../node_modules/@capacitor/share`)"
   - "CapacitorSplashScreen (from `../../node_modules/@capacitor/splash-screen`)"
   - "CapacitorStatusBar (from `../../node_modules/@capacitor/status-bar`)"
+
+SPEC REPOS:
+  trunk:
+    - IONFilesystemLib
 
 EXTERNAL SOURCES:
   Capacitor:
@@ -47,6 +56,8 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/@capacitor-community/text-to-speech"
   CapacitorCordova:
     :path: "../../node_modules/@capacitor/ios"
+  CapacitorFilesystem:
+    :path: "../../node_modules/@capacitor/filesystem"
   CapacitorHaptics:
     :path: "../../node_modules/@capacitor/haptics"
   CapacitorKeyboard:
@@ -65,12 +76,14 @@ SPEC CHECKSUMS:
   CapacitorCommunityInAppReview: 4492bdd34aad4d27ed87949376022cc93b294ea1
   CapacitorCommunityTextToSpeech: 43cd3c04174f38b8766f160830ee474cd5596439
   CapacitorCordova: 5bec5648cbd09a176ce34ce5e7b6cdabb2c8a327
+  CapacitorFilesystem: e3bc7123acb1554df1b7b099fa5847064b9e1bd4
   CapacitorHaptics: 2079d9fa04c5a71e18663b4722323c304c58245c
   CapacitorKeyboard: d7868c079a4d5277a3deca27a10a488fcbbb8b69
   CapacitorShare: 12f1d192170cbcf9f108fd675ac8e343761a4638
   CapacitorSplashScreen: 422880d7117605c30699eb4b21644b62db42e86c
   CapacitorStatusBar: 312e2e67928dfe9514c4a8916a1fd610552f5f35
+  IONFilesystemLib: 306469e4c563f61de82d7bca2bbfed9e64d1b2d2
 
-PODFILE CHECKSUM: 4da52af4514582f3a2f4fdbc4b4d2aa95be610d3
+PODFILE CHECKSUM: ed187aae6f2f12aca92f3f45401624da50cdcddd
 
 COCOAPODS: 1.16.2

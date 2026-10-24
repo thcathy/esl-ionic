@@ -30,6 +30,7 @@ describe('ShareDictationModalComponent', () => {
     shareService.qrDataUrl.and.resolveTo('data:image/png;base64,aaa');
     shareService.copyLink.and.resolveTo();
     shareService.nativeShare.and.resolveTo();
+    shareService.saveQrPng.and.resolveTo(false);
     analytics = jasmine.createSpyObj('AnalyticsService', ['share']);
     ionic = jasmine.createSpyObj('IonicComponentService', ['showToastMessage']);
 
@@ -93,10 +94,10 @@ describe('ShareDictationModalComponent', () => {
     expect(ionic.showToastMessage).toHaveBeenCalledWith('Could not copy the link. Please try again.');
   });
 
-  it('saves the QR png and records qr_download when the download starts', async () => {
-    shareService.saveQrPng.and.returnValue(true);
+  it('saves the QR png and records qr_download when the save starts', async () => {
+    shareService.saveQrPng.and.resolveTo(true);
     await render();
-    component.saveQr();
+    await component.saveQr();
 
     expect(shareService.saveQrPng).toHaveBeenCalledOnceWith(
       'data:image/png;base64,aaa',
@@ -105,12 +106,12 @@ describe('ShareDictationModalComponent', () => {
     expect(analytics.share).toHaveBeenCalledWith('qr_download');
   });
 
-  it('does not record qr_download when the download does not start', async () => {
-    shareService.saveQrPng.and.returnValue(false);
+  it('does not record qr_download when the save does not start', async () => {
+    shareService.saveQrPng.and.resolveTo(false);
     await render();
     analytics.share.calls.reset();
 
-    component.saveQr();
+    await component.saveQr();
 
     expect(shareService.saveQrPng).toHaveBeenCalled();
     expect(analytics.share).not.toHaveBeenCalled();

@@ -23,6 +23,7 @@ export class ShareDictationModalComponent implements OnInit, OnDestroy {
 
   private alive = true;
   private loading: Promise<void> | null = null;
+  private savingQr = false;
 
   constructor(
     private readonly modalController: ModalController,
@@ -79,12 +80,21 @@ export class ShareDictationModalComponent implements OnInit, OnDestroy {
     }
   }
 
-  saveQr(): void {
-    if (!this.qrSrc) {
+  async saveQr(): Promise<void> {
+    if (!this.qrSrc || this.savingQr) {
       return;
     }
-    if (this.shareService.saveQrPng(this.qrSrc, `funfunspell-dictation-${this.dictation.id}.png`)) {
-      this.analytics.share('qr_download');
+    this.savingQr = true;
+    try {
+      const saved = await this.shareService.saveQrPng(
+        this.qrSrc,
+        `funfunspell-dictation-${this.dictation.id}.png`,
+      );
+      if (saved) {
+        this.analytics.share('qr_download');
+      }
+    } finally {
+      this.savingQr = false;
     }
   }
 
