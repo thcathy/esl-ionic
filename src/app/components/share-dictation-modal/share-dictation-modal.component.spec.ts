@@ -117,6 +117,15 @@ describe('ShareDictationModalComponent', () => {
     expect(analytics.share).not.toHaveBeenCalled();
   });
 
+  it('does not ask to scan when the QR could not be made', async () => {
+    shareService.qrDataUrl.and.rejectWith(new Error('qr'));
+    await render();
+
+    expect(fixture.nativeElement.querySelector('.qr-error')).toBeTruthy();
+    expect(fixture.nativeElement.querySelector('.scan-hint')).toBeNull();
+    expect(fixture.nativeElement.querySelector('.copy-link-button')).toBeTruthy();
+  });
+
   it('dismisses when the dictation has no public id', async () => {
     const modalController = TestBed.inject(ModalController);
     spyOn(modalController, 'dismiss').and.resolveTo(true);

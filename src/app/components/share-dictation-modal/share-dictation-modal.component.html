@@ -15,16 +15,15 @@
   @if (url) {
     @if (qrSrc) {
       <img class="qr" [src]="qrSrc" [alt]="'QR code for this dictation' | translate">
+      <div class="scan-hint">
+        <p class="caption">{{ 'Scan to open this dictation' | translate }}</p>
+        <p class="caption scan-how">{{ "Open your phone's Camera app and point it at the QR code." | translate }}</p>
+      </div>
     } @else if (qrFailed) {
       <p class="qr-error">{{ "Couldn't make the QR code. Copy the link instead." | translate }}</p>
     } @else {
       <ion-spinner name="crescent" aria-hidden="true"></ion-spinner>
     }
-
-    <div class="scan-hint">
-      <p class="caption">{{ 'Scan to open this dictation' | translate }}</p>
-      <p class="caption scan-how">{{ "Open your phone's Camera app and point it at the QR code." | translate }}</p>
-    </div>
 
     <div class="actions">
       <ion-button expand="block" class="copy-link-button" (click)="copyLink()">
