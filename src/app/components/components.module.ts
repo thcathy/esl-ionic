@@ -31,6 +31,7 @@ import {VocabPracticeTypeSelectorComponent} from './vocab-practice-type-selector
 import {VoiceModeSelectorComponent} from './voice-mode-selector/voice-mode-selector.component';
 import {DictationPreloadComponent} from './dictation-preload/dictation-preload.component';
 import {PreloadRowComponent} from './dictation-preload/preload-row/preload-row.component';
+import {ShareDictationModalComponent} from './share-dictation-modal/share-dictation-modal.component';
 
 @NgModule({ declarations: [MemberScoreRankingComponent,
         DictationStatisticsComponent,
@@ -45,7 +46,7 @@ import {PreloadRowComponent} from './dictation-preload/preload-row/preload-row.c
         MemberPracticeHistoryListComponent,
         VocabHistoryListComponent,
         TextInterpretationComponent,
-        VirtualKeyboardComponent, CharacterButtonComponent, CharacterComponent, VocabSelectionComponent, ArticleDictationOptionsComponent, AppHeaderComponent, SectionCardComponent, VocabPracticeTypeModalComponent, VocabPracticeTypeSelectorComponent, VoiceModeSelectorComponent, DictationPreloadComponent, PreloadRowComponent
+        VirtualKeyboardComponent, CharacterButtonComponent, CharacterComponent, VocabSelectionComponent, ArticleDictationOptionsComponent, AppHeaderComponent, SectionCardComponent, VocabPracticeTypeModalComponent, VocabPracticeTypeSelectorComponent, VoiceModeSelectorComponent, DictationPreloadComponent, PreloadRowComponent, ShareDictationModalComponent
     ],
     exports: [MemberScoreRankingComponent,
         DictationStatisticsComponent,
@@ -60,7 +61,7 @@ import {PreloadRowComponent} from './dictation-preload/preload-row/preload-row.c
         MemberPracticeHistoryListComponent,
         VocabHistoryListComponent,
         TextInterpretationComponent,
-        VirtualKeyboardComponent, CharacterButtonComponent, CharacterComponent, VocabSelectionComponent, ArticleDictationOptionsComponent, AppHeaderComponent, SectionCardComponent, VocabPracticeTypeModalComponent, VocabPracticeTypeSelectorComponent, VoiceModeSelectorComponent, DictationPreloadComponent
+        VirtualKeyboardComponent, CharacterButtonComponent, CharacterComponent, VocabSelectionComponent, ArticleDictationOptionsComponent, AppHeaderComponent, SectionCardComponent, VocabPracticeTypeModalComponent, VocabPracticeTypeSelectorComponent, VoiceModeSelectorComponent, DictationPreloadComponent, ShareDictationModalComponent
     ], imports: [IonicModule,
         TranslateModule,
         PipesModule,

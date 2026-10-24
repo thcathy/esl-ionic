@@ -119,5 +119,15 @@
   "SearchSort.mostRecommended": "Most recommended",
   "SearchSort.lastModified": "Last modified",
   "Previous": "Previous",
-  "Next": "Next"
+  "Next": "Next",
+  "Share": "Share",
+  "Close": "Close",
+  "Scan to open this dictation": "Scan to open this dictation",
+  "QR code for this dictation": "QR code for this dictation",
+  "Open your phone's Camera app and point it at the QR code.": "Open your phone's Camera app and point it at the QR code.",
+  "Copy link": "Copy link",
+  "Save QR": "Save QR",
+  "Link copied": "Link copied",
+  "Could not copy the link. Please try again.": "Could not copy the link. Please try again.",
+  "Couldn't make the QR code. Copy the link instead.": "Couldn't make the QR code. Copy the link instead."
 }

@@ -24,10 +24,11 @@ allprojects {
     }
     configurations.all {
         resolutionStrategy {
-            force 'org.jetbrains.kotlin:kotlin-stdlib:1.8.22'
-            force 'org.jetbrains.kotlin:kotlin-stdlib-common:1.8.22'
-            force 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.22'
-            force 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.22'
+            // Filesystem 8.1 is compiled with Kotlin 2.2 and calls SpillingKt.
+            force 'org.jetbrains.kotlin:kotlin-stdlib:2.2.20'
+            force 'org.jetbrains.kotlin:kotlin-stdlib-common:2.2.20'
+            force 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:2.2.20'
+            force 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:2.2.20'
         }
     }
 }

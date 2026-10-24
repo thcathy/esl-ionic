@@ -47,6 +47,14 @@ describe('analytics event params', () => {
     expect(JSON.stringify(summary)).not.toContain('secret');
   });
 
+  it('allows share methods and drops any other method', () => {
+    for (const method of ['native', 'copy', 'qr_view', 'qr_download']) {
+      expect(sanitizeAnalyticsParams({method})).toEqual({method});
+    }
+    expect(sanitizeAnalyticsParams({method: 'whatsapp'})).toEqual({});
+    expect(sanitizeAnalyticsParams({method: 'copy this link to a friend'})).toEqual({});
+  });
+
   it('keeps the path and drops the query and hash from the hit url', () => {
     const previous = `${window.location.pathname}${window.location.search}${window.location.hash}`;
     window.history.replaceState(null, '', '/search-dictation?q=St%20Mary%20pupil@school.edu#token');

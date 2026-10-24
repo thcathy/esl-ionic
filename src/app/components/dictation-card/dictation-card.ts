@@ -1,6 +1,6 @@
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {Component, Input, OnInit, ViewChild} from '@angular/core';
-import {AlertController, ToastController} from '@ionic/angular';
+import {AlertController, ModalController, ToastController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
 import {Dictation, Dictations} from '../../entity/dictation';
 import {VocabPracticeType} from '../../enum/vocab-practice-type.enum';
@@ -8,11 +8,12 @@ import {DictationHelper} from '../../services/dictation/dictation-helper.service
 import {MemberDictationService} from '../../services/dictation/member-dictation.service';
 import {ManageVocabHistoryService} from '../../services/member/manage-vocab-history.service';
 import {NavigationService} from '../../services/navigation.service';
-import {ShareService} from '../../services/share.service';
 import {SpeechService} from '../../services/speech.service';
 import {UIOptionsService} from '../../services/ui-options.service';
 import {FFSAuthService} from '../../services/auth.service';
+import {ShareService} from '../../services/share.service';
 import {ArticleDictationOptionsComponent} from "../article-dictation-options/article-dictation-options.component";
+import {ShareDictationModalComponent} from '../share-dictation-modal/share-dictation-modal.component';
 
 @Component({
     selector: 'app-dictation-card',
@@ -54,9 +55,10 @@ export class DictationCardComponent implements OnInit {
               public translate: TranslateService,
               public alertController: AlertController,
               public toastController: ToastController,
-              public shareService: ShareService,
               public authService: FFSAuthService,
-              private speechService: SpeechService) {}
+              private speechService: SpeechService,
+              private modalController: ModalController,
+              private readonly shareService: ShareService) {}
 
   get sourceType() { return Dictations.Source; }
   get practiceType() { return VocabPracticeType; }
@@ -143,8 +145,21 @@ export class DictationCardComponent implements OnInit {
     await alert.present();
   }
 
-  shareDictation() {
-    this.shareService.shareDictation(this.dictation);
+  canShareDictation(): boolean {
+    return this.dictation?.source === Dictations.Source.FillIn
+      && this.shareService.dictationShareUrl(this.dictation) != null;
+  }
+
+  async shareDictation() {
+    if (!this.canShareDictation()) {
+      return;
+    }
+    const modal = await this.modalController.create({
+      component: ShareDictationModalComponent,
+      cssClass: 'share-dictation-modal',
+      componentProps: {dictation: this.dictation},
+    });
+    await modal.present();
   }
 
   copyDictation() {
