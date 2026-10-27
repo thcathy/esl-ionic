@@ -132,7 +132,7 @@ const CARD_LINE_HEIGHT = 48;
 const CARD_MAX_LINES = 3;
 const CARD_LOGO_GAP = 20;
 const CARD_LOGO_HEIGHT_AT_560 = 72;
-const WORDMARK_SRC = 'assets/img/logo_new.png';
+const LOGO_SRC = 'assets/img/logo_new.png';
 
 type TextMeasure = (value: string) => number;
 
@@ -248,9 +248,9 @@ function ellipsize(value: string, maxWidth: number, measure: TextMeasure): strin
 }
 
 async function drawQrCard(qrDataUrl: string, title: string, qrSize: number): Promise<string> {
-  const [image, wordmark] = await Promise.all([
+  const [image, logo] = await Promise.all([
     loadImage(qrDataUrl),
-    loadImage(WORDMARK_SRC).catch(() => null),
+    loadImage(LOGO_SRC).catch(() => null),
   ]);
   const measureCanvas = document.createElement('canvas');
   const measureCtx = measureCanvas.getContext('2d');
@@ -259,8 +259,8 @@ async function drawQrCard(qrDataUrl: string, title: string, qrSize: number): Pro
   }
   measureCtx.font = CARD_FONT;
   const lines = wrapCanvasText(title, qrSize, CARD_MAX_LINES, (value) => measureCtx.measureText(value).width);
-  const logoHeight = wordmark ? Math.max(1, Math.round(qrSize * CARD_LOGO_HEIGHT_AT_560 / 560)) : 0;
-  const logoGap = wordmark ? CARD_LOGO_GAP : 0;
+  const logoHeight = logo ? Math.max(1, Math.round(qrSize * CARD_LOGO_HEIGHT_AT_560 / 560)) : 0;
+  const logoGap = logo ? CARD_LOGO_GAP : 0;
   const canvas = document.createElement('canvas');
   canvas.width = qrSize + CARD_PADDING * 2;
   canvas.height = CARD_PADDING + qrSize + CARD_GAP + lines.length * CARD_LINE_HEIGHT + logoGap + logoHeight + CARD_PADDING;
@@ -279,10 +279,10 @@ async function drawQrCard(qrDataUrl: string, title: string, qrSize: number): Pro
   lines.forEach((line, index) => {
     ctx.fillText(line, canvas.width / 2, textTop + index * CARD_LINE_HEIGHT);
   });
-  if (wordmark && logoHeight > 0) {
-    const logoWidth = Math.round(logoHeight * (wordmark.naturalWidth / wordmark.naturalHeight));
+  if (logo && logoHeight > 0) {
+    const logoWidth = Math.round(logoHeight * (logo.naturalWidth / logo.naturalHeight));
     const logoTop = textTop + lines.length * CARD_LINE_HEIGHT + logoGap;
-    ctx.drawImage(wordmark, (canvas.width - logoWidth) / 2, logoTop, logoWidth, logoHeight);
+    ctx.drawImage(logo, (canvas.width - logoWidth) / 2, logoTop, logoWidth, logoHeight);
   }
   return canvas.toDataURL('image/png');
 }
