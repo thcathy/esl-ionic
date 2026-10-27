@@ -1,6 +1,5 @@
 @if (visible) {
   <div class="share-install-banner" role="region" [attr.aria-label]="'ShareInstallBanner.Region' | translate">
-    <p class="share-install-banner__copy">{{ 'ShareInstallBanner.Title' | translate }}</p>
     <div class="share-install-banner__badges">
       <a [href]="appStoreUrl" target="_blank" rel="noopener" (click)="onBadge('ios')">
         <img class="share-install-banner__apple" [src]="appStoreBadgeUrl" alt="Download on the App Store">
@@ -9,6 +8,7 @@
         <img [src]="playStoreBadgeUrl" alt="google play store">
       </a>
     </div>
+    <p class="share-install-banner__copy">{{ 'ShareInstallBanner.Title' | translate }}</p>
     <button type="button" class="share-install-banner__dismiss" (click)="dismiss()" [attr.aria-label]="'Close' | translate">
       <span aria-hidden="true">×</span>
     </button>

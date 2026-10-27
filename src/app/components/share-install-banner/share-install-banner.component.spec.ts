@@ -89,6 +89,12 @@ describe('ShareInstallBannerComponent', () => {
     expect(el?.textContent).not.toContain('Save');
     expect(el?.textContent).not.toContain('Recommend');
 
+    const badges = el!.querySelector('.share-install-banner__badges');
+    const copy = el!.querySelector('.share-install-banner__copy');
+    expect(badges).not.toBeNull();
+    expect(copy).not.toBeNull();
+    expect(badges!.compareDocumentPosition(copy!) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+
     const links = el!.querySelectorAll('a');
     expect(links.length).toBe(2);
     expect(links[0].getAttribute('href')).toBe(APP_STORE_URL);
