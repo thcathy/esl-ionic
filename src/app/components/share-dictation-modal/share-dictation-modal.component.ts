@@ -109,7 +109,7 @@ export class ShareDictationModalComponent implements OnInit, OnDestroy {
 
   private async savedQrImage(): Promise<string> {
     try {
-      return await this.shareService.buildQrImage(this.url, this.dictation.title);
+      return await this.shareService.buildQrImageDataString(this.url, this.dictation.title);
     } catch {
       return this.qrSrc;
     }

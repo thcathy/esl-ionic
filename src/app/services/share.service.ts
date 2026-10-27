@@ -60,7 +60,7 @@ export class ShareService {
     });
   }
 
-  async buildQrImage(url: string, title: string, qrSize = 560): Promise<string> {
+  async buildQrImageDataString(url: string, title: string, qrSize = 560): Promise<string> {
     const qr = await this.qrDataUrl(url, qrSize);
     const [image, logo] = await Promise.all([
       loadImage(qr),
