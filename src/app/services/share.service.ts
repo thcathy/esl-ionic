@@ -134,6 +134,9 @@ const CARD_GAP = 28;
 const CARD_FONT = '600 36px sans-serif';
 const CARD_LINE_HEIGHT = 48;
 const CARD_MAX_LINES = 3;
+const CARD_LOGO_GAP = 20;
+const CARD_LOGO_HEIGHT_AT_560 = 72;
+const WORDMARK_SRC = 'assets/img/logo_new.png';
 
 export function wrapCanvasText(
   text: string,
@@ -211,7 +214,10 @@ function ellipsize(value: string, maxWidth: number, measure: (value: string) => 
 }
 
 async function drawQrCard(qrDataUrl: string, title: string, qrSize: number): Promise<string> {
-  const image = await loadImage(qrDataUrl);
+  const [image, wordmark] = await Promise.all([
+    loadImage(qrDataUrl),
+    loadImage(WORDMARK_SRC).catch(() => null),
+  ]);
   const measureCanvas = document.createElement('canvas');
   const measureCtx = measureCanvas.getContext('2d');
   if (!measureCtx) {
@@ -223,9 +229,11 @@ async function drawQrCard(qrDataUrl: string, title: string, qrSize: number): Pro
     return qrDataUrl;
   }
 
+  const logoHeight = wordmark ? Math.max(1, Math.round(qrSize * CARD_LOGO_HEIGHT_AT_560 / 560)) : 0;
+  const logoGap = wordmark ? CARD_LOGO_GAP : 0;
   const canvas = document.createElement('canvas');
   canvas.width = qrSize + CARD_PADDING * 2;
-  canvas.height = CARD_PADDING + qrSize + CARD_GAP + lines.length * CARD_LINE_HEIGHT + CARD_PADDING;
+  canvas.height = CARD_PADDING + qrSize + CARD_GAP + lines.length * CARD_LINE_HEIGHT + logoGap + logoHeight + CARD_PADDING;
   const ctx = canvas.getContext('2d');
   if (!ctx) {
     return qrDataUrl;
@@ -241,6 +249,11 @@ async function drawQrCard(qrDataUrl: string, title: string, qrSize: number): Pro
   lines.forEach((line, index) => {
     ctx.fillText(line, canvas.width / 2, textTop + index * CARD_LINE_HEIGHT);
   });
+  if (wordmark && logoHeight > 0) {
+    const logoWidth = Math.round(logoHeight * (wordmark.naturalWidth / wordmark.naturalHeight));
+    const logoTop = textTop + lines.length * CARD_LINE_HEIGHT + logoGap;
+    ctx.drawImage(wordmark, (canvas.width - logoWidth) / 2, logoTop, logoWidth, logoHeight);
+  }
   return canvas.toDataURL('image/png');
 }
 

@@ -88,6 +88,7 @@ describe('ShareService', () => {
     expect(size.width).toBe(280 + 96);
     expect(size.height).toBeGreaterThan(280 + 96);
     expect(await darkPixelsBelowQr(card, 280)).toBeGreaterThan(20);
+    expect(await colorfulPixels(card)).toBeGreaterThan(20);
   });
 
   it('leaves a blank name as the QR itself', async () => {
@@ -188,6 +189,34 @@ async function darkPixelsBelowQr(dataUrl: string, qrSize: number): Promise<numbe
     }
   }
   return dark;
+}
+
+async function colorfulPixels(dataUrl: string): Promise<number> {
+  const image = await new Promise<HTMLImageElement>((resolve, reject) => {
+    const loaded = new Image();
+    loaded.onload = () => resolve(loaded);
+    loaded.onerror = () => reject(new Error('png unavailable'));
+    loaded.src = dataUrl;
+  });
+  const canvas = document.createElement('canvas');
+  canvas.width = image.naturalWidth;
+  canvas.height = image.naturalHeight;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) {
+    return 0;
+  }
+  ctx.drawImage(image, 0, 0);
+  const band = ctx.getImageData(0, Math.floor(canvas.height * 0.8), canvas.width, Math.ceil(canvas.height * 0.2));
+  let colorful = 0;
+  for (let index = 0; index < band.data.length; index += 4) {
+    const red = band.data[index];
+    const green = band.data[index + 1];
+    const blue = band.data[index + 2];
+    if (Math.abs(red - green) > 25 || Math.abs(green - blue) > 25 || Math.abs(red - blue) > 25) {
+      colorful += 1;
+    }
+  }
+  return colorful;
 }
 
 async function withNavigatorShare<T>(share: unknown, run: () => Promise<T>): Promise<T> {
