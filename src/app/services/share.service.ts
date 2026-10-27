@@ -62,11 +62,7 @@ export class ShareService {
 
   async qrCardDataUrl(url: string, title: string, qrSize = 560): Promise<string> {
     const qr = await this.qrDataUrl(url, qrSize);
-    const label = title.trim();
-    if (!label) {
-      return qr;
-    }
-    return drawQrCard(qr, label, qrSize);
+    return drawQrCard(qr, title, qrSize);
   }
 
   async saveQrPng(dataUrl: string, filename: string): Promise<boolean> {
@@ -263,10 +259,6 @@ async function drawQrCard(qrDataUrl: string, title: string, qrSize: number): Pro
   }
   measureCtx.font = CARD_FONT;
   const lines = wrapCanvasText(title, qrSize, CARD_MAX_LINES, (value) => measureCtx.measureText(value).width);
-  if (lines.length === 0) {
-    return qrDataUrl;
-  }
-
   const logoHeight = wordmark ? Math.max(1, Math.round(qrSize * CARD_LOGO_HEIGHT_AT_560 / 560)) : 0;
   const logoGap = wordmark ? CARD_LOGO_GAP : 0;
   const canvas = document.createElement('canvas');

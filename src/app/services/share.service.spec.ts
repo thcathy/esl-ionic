@@ -91,12 +91,6 @@ describe('ShareService', () => {
     expect(await colorfulPixels(card)).toBeGreaterThan(20);
   });
 
-  it('leaves a blank name as the QR itself', async () => {
-    const qr = await service.qrDataUrl(shareUrl, 128);
-    const card = await service.qrCardDataUrl(shareUrl, '   ', 128);
-    expect(card).toBe(qr);
-  });
-
   it('wraps a long dictation name and keeps an ellipsis on the last line', () => {
     const width = (value: string) => value.length * 10;
     expect(wrapCanvasText('Apple', 100, 3, width)).toEqual(['Apple']);
