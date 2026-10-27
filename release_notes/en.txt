@@ -1,1 +1,1 @@
-Better fit on phones: headings, question text, and pictures are smaller and spacing is tighter. Picture arrows now sit on the card edges. The footer stays at the bottom, is shorter outside Home, and hides while the practice keyboard is open.
+Share a dictation from Fill-in with a QR code, copy link, or the system share sheet. Saved QR images include the dictation name and logo. On the website, shared dictation links show an App Store / Play banner you can dismiss.
