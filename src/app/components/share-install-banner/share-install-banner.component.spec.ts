@@ -56,8 +56,8 @@ describe('ShareInstallBannerComponent', () => {
   beforeEach(() => {
     const translate = TestBed.inject(TranslateService);
     translate.setTranslation('en', {
-      'ShareInstallBanner.Title': 'Practise offline — get the FunFunSpell app',
-      'ShareInstallBanner.Region': 'Get the app',
+      'ShareInstallBanner.Title': 'We have apps',
+      'ShareInstallBanner.Region': 'FunFunSpell apps',
       'Close': 'Close',
     });
     translate.use('en');
@@ -83,8 +83,8 @@ describe('ShareInstallBannerComponent', () => {
     const component = render();
     const el = banner();
     expect(component.visible).toBeTrue();
-    expect(el?.textContent).toContain('Practise offline — get the FunFunSpell app');
-    expect(el?.getAttribute('aria-label')).toBe('Get the app');
+    expect(el?.textContent).toContain('We have apps');
+    expect(el?.getAttribute('aria-label')).toBe('FunFunSpell apps');
     expect(el?.textContent).not.toContain('Start');
     expect(el?.textContent).not.toContain('Save');
     expect(el?.textContent).not.toContain('Recommend');
