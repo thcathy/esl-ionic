@@ -7,7 +7,7 @@ import {DictationService} from '../../services/dictation/dictation.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ActivatedRouteStub} from '../../../testing/activated-route-stub';
 import {dictation1} from '../../../testing/test-data';
-import {of, Subject} from 'rxjs';
+import {of} from 'rxjs';
 
 describe('DictationViewPage', () => {
   let component: DictationViewPage;
@@ -20,11 +20,8 @@ describe('DictationViewPage', () => {
     dictationServiceSpy = jasmine.createSpyObj('DictationService', ['getById']);
     dictationServiceSpy.getById.and.returnValue(of(dictation1));
     activateRouteStub = new ActivatedRouteStub();
-    routerSpy = jasmine.createSpyObj('Router', ['currentNavigation', 'getCurrentNavigation']);
+    routerSpy = jasmine.createSpyObj('Router', ['currentNavigation']);
     routerSpy.currentNavigation.and.returnValue(null);
-    routerSpy.getCurrentNavigation.and.returnValue(null);
-    routerSpy.lastSuccessfulNavigation = () => null;
-    routerSpy.events = new Subject();
     routerSpy.url = '/dictation-view';
 
     TestBed.configureTestingModule({

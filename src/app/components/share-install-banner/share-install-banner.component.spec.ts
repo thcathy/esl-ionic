@@ -1,8 +1,7 @@
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
-import {NavigationEnd, Router} from '@angular/router';
+import {Router} from '@angular/router';
 import {TranslateModule, TranslateService} from '@ngx-translate/core';
-import {Subject} from 'rxjs';
 
 import {AnalyticsService} from '../../services/analytics.service';
 import {AppService} from '../../services/app.service';
@@ -19,28 +18,14 @@ describe('ShareInstallBannerComponent', () => {
   let fixture: ComponentFixture<ShareInstallBannerComponent>;
   let appService: jasmine.SpyObj<AppService>;
   let analytics: jasmine.SpyObj<AnalyticsService>;
-  let events: Subject<unknown>;
-  let router: {
-    url: string;
-    events: Subject<unknown>;
-    getCurrentNavigation: () => null;
-    lastSuccessfulNavigation: () => {id: number} | null;
-  };
-  let lastNavId: number | null;
+  let router: {url: string};
 
   beforeEach(waitForAsync(() => {
     sessionStorage.removeItem(SHARE_INSTALL_BANNER_DISMISS_KEY);
     appService = jasmine.createSpyObj('AppService', ['isApp']);
     appService.isApp.and.returnValue(false);
     analytics = jasmine.createSpyObj('AnalyticsService', ['shareBannerImpress', 'shareBannerClick']);
-    events = new Subject<unknown>();
-    lastNavId = 1;
-    router = {
-      url: '/link/dictation-view/42',
-      events,
-      getCurrentNavigation: () => null,
-      lastSuccessfulNavigation: () => lastNavId == null ? null : {id: lastNavId},
-    };
+    router = {url: '/link/dictation-view/42'};
 
     TestBed.configureTestingModule({
       declarations: [ShareInstallBannerComponent],
@@ -105,34 +90,22 @@ describe('ShareInstallBannerComponent', () => {
     expect(links[1].querySelector('img')?.getAttribute('src')).toBe(PLAY_STORE_BADGE_URL);
 
     expect(analytics.shareBannerImpress).toHaveBeenCalledTimes(1);
-    events.next(new NavigationEnd(1, router.url, router.url));
-    expect(analytics.shareBannerImpress).toHaveBeenCalledTimes(1);
   });
 
-  it('impresses again on the next navigation that still shows the banner', () => {
-    render();
-    expect(analytics.shareBannerImpress).toHaveBeenCalledTimes(1);
-    router.url = '/link/dictation-view/43?ref=1';
-    events.next(new NavigationEnd(2, router.url, router.url));
-    fixture.detectChanges();
-    expect(banner()).not.toBeNull();
-    expect(analytics.shareBannerImpress).toHaveBeenCalledTimes(2);
-  });
-
-  it('hides the banner and skips impress on a normal dictation view', () => {
+  it('hides the banner on a normal dictation view and still records the impress', () => {
     router.url = '/dictation-view/42';
     const component = render();
     expect(component.visible).toBeFalse();
     expect(banner()).toBeNull();
-    expect(analytics.shareBannerImpress).not.toHaveBeenCalled();
+    expect(analytics.shareBannerImpress).toHaveBeenCalledTimes(1);
   });
 
-  it('hides the banner in the native app', () => {
+  it('hides the banner in the native app and still records the impress', () => {
     appService.isApp.and.returnValue(true);
     const component = render();
     expect(component.visible).toBeFalse();
     expect(banner()).toBeNull();
-    expect(analytics.shareBannerImpress).not.toHaveBeenCalled();
+    expect(analytics.shareBannerImpress).toHaveBeenCalledTimes(1);
   });
 
   it('hides for the rest of the tab session after dismiss', () => {
@@ -145,15 +118,9 @@ describe('ShareInstallBannerComponent', () => {
     expect(sessionStorage.getItem(SHARE_INSTALL_BANNER_DISMISS_KEY)).toBe('1');
     expect(analytics.shareBannerImpress).toHaveBeenCalledTimes(1);
 
-    router.url = '/link/dictation-view/99';
-    events.next(new NavigationEnd(3, router.url, router.url));
-    fixture.detectChanges();
-    expect(banner()).toBeNull();
-    expect(analytics.shareBannerImpress).toHaveBeenCalledTimes(1);
-
     render();
     expect(banner()).toBeNull();
-    expect(analytics.shareBannerImpress).toHaveBeenCalledTimes(1);
+    expect(analytics.shareBannerImpress).toHaveBeenCalledTimes(2);
   });
 
   it('sends the store on badge tap', () => {

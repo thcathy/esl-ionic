@@ -156,7 +156,6 @@ export class AnalyticsService {
     this.send('share', {method});
   }
 
-  /** Once per view, and only when the share-link install banner is actually shown. */
   shareBannerImpress(): void {
     this.send('share_banner', {});
   }

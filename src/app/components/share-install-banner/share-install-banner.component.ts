@@ -1,6 +1,5 @@
-import {AfterViewInit, Component, OnDestroy} from '@angular/core';
-import {NavigationEnd, Router} from '@angular/router';
-import {Subscription} from 'rxjs';
+import {Component, OnInit} from '@angular/core';
+import {Router} from '@angular/router';
 
 import {StoreBadge} from '../../services/analytics-events';
 import {AnalyticsService} from '../../services/analytics.service';
@@ -23,15 +22,13 @@ import {
   styleUrls: ['./share-install-banner.component.scss'],
   standalone: false,
 })
-export class ShareInstallBannerComponent implements AfterViewInit, OnDestroy {
+export class ShareInstallBannerComponent implements OnInit {
   readonly appStoreUrl = APP_STORE_URL;
   readonly appStoreBadgeUrl = APP_STORE_BADGE_URL;
   readonly playStoreUrl = PLAY_STORE_URL;
   readonly playStoreBadgeUrl = PLAY_STORE_BADGE_URL;
 
   private dismissed = false;
-  private impressedId: number | null = null;
-  private navSub: Subscription | null = null;
 
   constructor(
     private readonly appService: AppService,
@@ -39,19 +36,10 @@ export class ShareInstallBannerComponent implements AfterViewInit, OnDestroy {
     private readonly analytics: AnalyticsService,
   ) {
     this.dismissed = readShareInstallBannerDismissed(this.sessionStorage());
-    this.navSub = this.router.events.subscribe(event => {
-      if (event instanceof NavigationEnd) {
-        this.impress(event.id);
-      }
-    });
   }
 
-  ngAfterViewInit(): void {
-    this.impress(this.navigationId() ?? -1);
-  }
-
-  ngOnDestroy(): void {
-    this.navSub?.unsubscribe();
+  ngOnInit(): void {
+    this.analytics.shareBannerImpress();
   }
 
   get visible(): boolean {
@@ -69,20 +57,6 @@ export class ShareInstallBannerComponent implements AfterViewInit, OnDestroy {
     } catch {
       // Private mode can reject sessionStorage. The in-memory flag still hides the banner.
     }
-  }
-
-  private impress(id: number): void {
-    if (this.impressedId === id || !this.visible) {
-      return;
-    }
-    this.impressedId = id;
-    this.analytics.shareBannerImpress();
-  }
-
-  private navigationId(): number | null {
-    return this.router.getCurrentNavigation()?.id
-      ?? this.router.lastSuccessfulNavigation()?.id
-      ?? null;
   }
 
   private sessionStorage(): Storage | null {
