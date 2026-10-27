@@ -48,6 +48,19 @@ describe('DictationViewPage', () => {
     expect(component).toBeTruthy();
   });
 
+  it('places the install banner under the header and before the dictation card', () => {
+    const el: HTMLElement = fixture.nativeElement;
+    const header = el.querySelector('ion-header');
+    const banner = el.querySelector('app-share-install-banner');
+    const card = el.querySelector('app-dictation-card');
+    expect(header).not.toBeNull();
+    expect(banner).not.toBeNull();
+    expect(card).not.toBeNull();
+    expect(header!.compareDocumentPosition(banner!) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(banner!.compareDocumentPosition(card!) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(card!.contains(banner!)).toBeFalse();
+  });
+
   it('input with dictation Id will call get dictation from service', fakeAsync(() => {
     activateRouteStub.setParamMap({ dictationId: 1 });
     tick();

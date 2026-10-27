@@ -103,4 +103,14 @@ describe('AnalyticsService', () => {
 
     expect(gtag).toHaveBeenCalledWith('event', 'share', withPage({method: 'copy'}));
   });
+
+  it('sends share banner impress and store badge clicks', () => {
+    service.shareBannerImpress();
+    service.shareBannerClick('ios');
+    service.shareBannerClick('android');
+
+    expect(gtag).toHaveBeenCalledWith('event', 'share_banner', withPage({}));
+    expect(gtag).toHaveBeenCalledWith('event', 'share_banner_click', withPage({store: 'ios'}));
+    expect(gtag).toHaveBeenCalledWith('event', 'share_banner_click', withPage({store: 'android'}));
+  });
 });

@@ -5,6 +5,12 @@ import {AppService} from '../../services/app.service';
 import {NavigationService} from '../../services/navigation.service';
 import {FFSAuthService} from '../../services/auth.service';
 import packageJson from '../../../../package.json';
+import {
+  APP_STORE_BADGE_URL,
+  APP_STORE_URL,
+  PLAY_STORE_BADGE_URL,
+  PLAY_STORE_URL,
+} from '../../utils/store-links';
 
 /** Ionic `md` breakpoint — same width as the footer `size-md` columns. */
 const WIDE_VIEWPORT_PX = 768;
@@ -18,6 +24,10 @@ const WIDE_VIEWPORT_PX = 768;
 export class FooterComponent {
 
   text: string;
+  readonly appStoreUrl = APP_STORE_URL;
+  readonly appStoreBadgeUrl = APP_STORE_BADGE_URL;
+  readonly playStoreUrl = PLAY_STORE_URL;
+  readonly playStoreBadgeUrl = PLAY_STORE_BADGE_URL;
 
   constructor(
     public appService: AppService,

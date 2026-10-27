@@ -18,6 +18,9 @@ export type AnalyticsPlatform = typeof ANALYTICS_PLATFORMS[number];
 export const SHARE_METHODS = ['native', 'copy', 'qr_view', 'qr_download'] as const;
 export type ShareMethod = typeof SHARE_METHODS[number];
 
+export const STORE_BADGES = ['ios', 'android'] as const;
+export type StoreBadge = typeof STORE_BADGES[number];
+
 const ENUM_PARAMS: Readonly<Record<string, ReadonlySet<string>>> = {
   source: new Set(PRACTICE_SOURCES),
   mode: new Set(DICTATION_MODES),
@@ -25,6 +28,7 @@ const ENUM_PARAMS: Readonly<Record<string, ReadonlySet<string>>> = {
   create_type: new Set(CREATE_TYPES),
   error_type: new Set(DICTATION_ERROR_TYPES),
   method: new Set(SHARE_METHODS),
+  store: new Set(STORE_BADGES),
 };
 
 const INT_PARAM_KEYS: ReadonlySet<string> = new Set([

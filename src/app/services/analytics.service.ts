@@ -15,6 +15,7 @@ import {
   PracticeSource,
   sanitizeAnalyticsParams,
   ShareMethod,
+  StoreBadge,
 } from './analytics-events';
 
 type GtagCommand = 'config' | 'event' | 'set' | 'js';
@@ -27,7 +28,9 @@ type AnalyticsEventName =
   | 'dictation_result'
   | 'search_use'
   | 'custom_practice_create'
-  | 'share';
+  | 'share'
+  | 'share_banner'
+  | 'share_banner_click';
 
 declare global {
   interface Window {
@@ -151,6 +154,14 @@ export class AnalyticsService {
 
   share(method: ShareMethod): void {
     this.send('share', {method});
+  }
+
+  shareBannerImpress(): void {
+    this.send('share_banner', {});
+  }
+
+  shareBannerClick(store: StoreBadge): void {
+    this.send('share_banner_click', {store});
   }
 
   private platformName(): AnalyticsPlatform {
