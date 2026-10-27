@@ -23,13 +23,13 @@ describe('ShareDictationModalComponent', () => {
       'copyLink',
       'nativeShare',
       'qrDataUrl',
-      'qrCardDataUrl',
+      'buildQrImage',
       'saveQrPng',
     ]);
     shareService.dictationShareUrl.and.returnValue(shareUrl);
     shareService.canUseSystemShare.and.resolveTo(false);
     shareService.qrDataUrl.and.resolveTo('data:image/png;base64,aaa');
-    shareService.qrCardDataUrl.and.resolveTo('data:image/png;base64,card');
+    shareService.buildQrImage.and.resolveTo('data:image/png;base64,card');
     shareService.copyLink.and.resolveTo();
     shareService.nativeShare.and.resolveTo();
     shareService.saveQrPng.and.resolveTo(false);
@@ -101,7 +101,7 @@ describe('ShareDictationModalComponent', () => {
     await render();
     await component.saveQr();
 
-    expect(shareService.qrCardDataUrl).toHaveBeenCalledOnceWith(shareUrl, 'Apple');
+    expect(shareService.buildQrImage).toHaveBeenCalledOnceWith(shareUrl, 'Apple');
     expect(shareService.saveQrPng).toHaveBeenCalledOnceWith(
       'data:image/png;base64,card',
       'funfunspell-dictation-42.png',
@@ -110,7 +110,7 @@ describe('ShareDictationModalComponent', () => {
   });
 
   it('saves the plain QR when the named image cannot be drawn', async () => {
-    shareService.qrCardDataUrl.and.rejectWith(new Error('canvas'));
+    shareService.buildQrImage.and.rejectWith(new Error('canvas'));
     shareService.saveQrPng.and.resolveTo(true);
     await render();
     await component.saveQr();

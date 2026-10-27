@@ -82,7 +82,7 @@ describe('ShareService', () => {
   });
 
   it('draws the dictation name under the QR on the saved image', async () => {
-    const card = await service.qrCardDataUrl(shareUrl, 'Apple', 280);
+    const card = await service.buildQrImage(shareUrl, 'Apple', 280);
     const size = await pngSize(card);
     expect(card.startsWith('data:image/png;base64,')).toBeTrue();
     expect(size.width).toBe(280 + 96);
