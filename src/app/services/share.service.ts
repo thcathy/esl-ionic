@@ -62,7 +62,43 @@ export class ShareService {
 
   async qrCardDataUrl(url: string, title: string, qrSize = 560): Promise<string> {
     const qr = await this.qrDataUrl(url, qrSize);
-    return drawQrCard(qr, title, qrSize);
+    const [image, logo] = await Promise.all([
+      loadImage(qr),
+      loadImage(CARD.logoSrc).catch(() => null),
+    ]);
+    const measureCanvas = document.createElement('canvas');
+    const measureCtx = measureCanvas.getContext('2d');
+    if (!measureCtx) {
+      return qr;
+    }
+    measureCtx.font = CARD.font;
+    const lines = wrapCanvasText(title, qrSize, CARD.maxLines, (value) => measureCtx.measureText(value).width);
+    const logoHeight = logo ? Math.max(1, Math.round(qrSize * CARD.logoHeight / CARD.logoQrSize)) : 0;
+    const logoGap = logo ? CARD.logoGap : 0;
+    const canvas = document.createElement('canvas');
+    canvas.width = qrSize + CARD.padding * 2;
+    canvas.height = CARD.padding + qrSize + CARD.gap + lines.length * CARD.lineHeight + logoGap + logoHeight + CARD.padding;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) {
+      return qr;
+    }
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(image, CARD.padding, CARD.padding, qrSize, qrSize);
+    ctx.fillStyle = '#1a1a1a';
+    ctx.font = CARD.font;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'top';
+    const textTop = CARD.padding + qrSize + CARD.gap;
+    lines.forEach((line, index) => {
+      ctx.fillText(line, canvas.width / 2, textTop + index * CARD.lineHeight);
+    });
+    if (logo && logoHeight > 0) {
+      const logoWidth = Math.round(logoHeight * (logo.naturalWidth / logo.naturalHeight));
+      const logoTop = textTop + lines.length * CARD.lineHeight + logoGap;
+      ctx.drawImage(logo, (canvas.width - logoWidth) / 2, logoTop, logoWidth, logoHeight);
+    }
+    return canvas.toDataURL('image/png');
   }
 
   async saveQrPng(dataUrl: string, filename: string): Promise<boolean> {
@@ -248,46 +284,6 @@ function ellipsize(value: string, maxWidth: number, measure: TextMeasure): strin
     end -= 1;
   }
   return end === 0 ? ellipsis : chars.slice(0, end).join('') + ellipsis;
-}
-
-async function drawQrCard(qrDataUrl: string, title: string, qrSize: number): Promise<string> {
-  const [image, logo] = await Promise.all([
-    loadImage(qrDataUrl),
-    loadImage(CARD.logoSrc).catch(() => null),
-  ]);
-  const measureCanvas = document.createElement('canvas');
-  const measureCtx = measureCanvas.getContext('2d');
-  if (!measureCtx) {
-    return qrDataUrl;
-  }
-  measureCtx.font = CARD.font;
-  const lines = wrapCanvasText(title, qrSize, CARD.maxLines, (value) => measureCtx.measureText(value).width);
-  const logoHeight = logo ? Math.max(1, Math.round(qrSize * CARD.logoHeight / CARD.logoQrSize)) : 0;
-  const logoGap = logo ? CARD.logoGap : 0;
-  const canvas = document.createElement('canvas');
-  canvas.width = qrSize + CARD.padding * 2;
-  canvas.height = CARD.padding + qrSize + CARD.gap + lines.length * CARD.lineHeight + logoGap + logoHeight + CARD.padding;
-  const ctx = canvas.getContext('2d');
-  if (!ctx) {
-    return qrDataUrl;
-  }
-  ctx.fillStyle = '#ffffff';
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  ctx.drawImage(image, CARD.padding, CARD.padding, qrSize, qrSize);
-  ctx.fillStyle = '#1a1a1a';
-  ctx.font = CARD.font;
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'top';
-  const textTop = CARD.padding + qrSize + CARD.gap;
-  lines.forEach((line, index) => {
-    ctx.fillText(line, canvas.width / 2, textTop + index * CARD.lineHeight);
-  });
-  if (logo && logoHeight > 0) {
-    const logoWidth = Math.round(logoHeight * (logo.naturalWidth / logo.naturalHeight));
-    const logoTop = textTop + lines.length * CARD.lineHeight + logoGap;
-    ctx.drawImage(logo, (canvas.width - logoWidth) / 2, logoTop, logoWidth, logoHeight);
-  }
-  return canvas.toDataURL('image/png');
 }
 
 function loadImage(src: string): Promise<HTMLImageElement> {
