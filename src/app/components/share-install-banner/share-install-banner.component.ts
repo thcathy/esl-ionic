@@ -30,9 +30,7 @@ export class ShareInstallBannerComponent implements AfterViewInit, OnDestroy {
   readonly playStoreBadgeUrl = PLAY_STORE_BADGE_URL;
 
   private dismissed = false;
-  private viewReady = false;
   private impressedId: number | null = null;
-  private pendingNavId: number | null = null;
   private navSub: Subscription | null = null;
 
   constructor(
@@ -43,17 +41,13 @@ export class ShareInstallBannerComponent implements AfterViewInit, OnDestroy {
     this.dismissed = readShareInstallBannerDismissed(this.sessionStorage());
     this.navSub = this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
-        this.pendingNavId = event.id;
-        if (this.viewReady) {
-          this.impress(event.id);
-        }
+        this.impress(event.id);
       }
     });
   }
 
   ngAfterViewInit(): void {
-    this.viewReady = true;
-    this.impress(this.pendingNavId ?? this.navigationId() ?? -1);
+    this.impress(this.navigationId() ?? -1);
   }
 
   ngOnDestroy(): void {
