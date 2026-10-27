@@ -56,7 +56,7 @@ describe('ShareInstallBannerComponent', () => {
   beforeEach(() => {
     const translate = TestBed.inject(TranslateService);
     translate.setTranslation('en', {
-      'ShareInstallBanner.Title': 'Same account on the website and in the app. Continue this dictation on your phone.',
+      'ShareInstallBanner.Title': 'Same account on the website and in the app. Practise anytime, anywhere.',
       'ShareInstallBanner.Region': 'Website and app',
       'Close': 'Close',
     });
@@ -83,7 +83,7 @@ describe('ShareInstallBannerComponent', () => {
     const component = render();
     const el = banner();
     expect(component.visible).toBeTrue();
-    expect(el?.textContent).toContain('Same account on the website and in the app. Continue this dictation on your phone.');
+    expect(el?.textContent).toContain('Same account on the website and in the app. Practise anytime, anywhere.');
     expect(el?.getAttribute('aria-label')).toBe('Website and app');
     expect(el?.textContent).not.toContain('Start');
     expect(el?.textContent).not.toContain('Save');
