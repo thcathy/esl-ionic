@@ -23,11 +23,13 @@ describe('ShareDictationModalComponent', () => {
       'copyLink',
       'nativeShare',
       'qrDataUrl',
+      'buildQrImageDataString',
       'saveQrPng',
     ]);
     shareService.dictationShareUrl.and.returnValue(shareUrl);
     shareService.canUseSystemShare.and.resolveTo(false);
     shareService.qrDataUrl.and.resolveTo('data:image/png;base64,aaa');
+    shareService.buildQrImageDataString.and.resolveTo('data:image/png;base64,card');
     shareService.copyLink.and.resolveTo();
     shareService.nativeShare.and.resolveTo();
     shareService.saveQrPng.and.resolveTo(false);
@@ -99,11 +101,24 @@ describe('ShareDictationModalComponent', () => {
     await render();
     await component.saveQr();
 
+    expect(shareService.buildQrImageDataString).toHaveBeenCalledOnceWith(shareUrl, 'Apple');
+    expect(shareService.saveQrPng).toHaveBeenCalledOnceWith(
+      'data:image/png;base64,card',
+      'funfunspell-dictation-42.png',
+    );
+    expect(analytics.share).toHaveBeenCalledWith('qr_download');
+  });
+
+  it('saves the plain QR when the named image cannot be drawn', async () => {
+    shareService.buildQrImageDataString.and.rejectWith(new Error('canvas'));
+    shareService.saveQrPng.and.resolveTo(true);
+    await render();
+    await component.saveQr();
+
     expect(shareService.saveQrPng).toHaveBeenCalledOnceWith(
       'data:image/png;base64,aaa',
       'funfunspell-dictation-42.png',
     );
-    expect(analytics.share).toHaveBeenCalledWith('qr_download');
   });
 
   it('does not record qr_download when the save does not start', async () => {

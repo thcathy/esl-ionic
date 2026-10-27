@@ -60,6 +60,47 @@ export class ShareService {
     });
   }
 
+  async buildQrImageDataString(url: string, title: string, qrSize = 560): Promise<string> {
+    const qr = await this.qrDataUrl(url, qrSize);
+    const [image, logo] = await Promise.all([
+      loadImage(qr),
+      loadImage(SAVED_QR_CONFIG.logoSrc).catch(() => null),
+    ]);
+    const measureCanvas = document.createElement('canvas');
+    const measureCtx = measureCanvas.getContext('2d');
+    if (!measureCtx) {
+      return qr;
+    }
+    measureCtx.font = SAVED_QR_CONFIG.font;
+    const lines = wrapCanvasText(title, qrSize, SAVED_QR_CONFIG.maxLines, (value) => measureCtx.measureText(value).width);
+    const logoHeight = logo ? Math.max(1, Math.round(qrSize * SAVED_QR_CONFIG.logoHeight / SAVED_QR_CONFIG.logoQrSize)) : 0;
+    const logoGap = logo ? SAVED_QR_CONFIG.logoGap : 0;
+    const canvas = document.createElement('canvas');
+    canvas.width = qrSize + SAVED_QR_CONFIG.padding * 2;
+    canvas.height = SAVED_QR_CONFIG.padding + qrSize + SAVED_QR_CONFIG.gap + lines.length * SAVED_QR_CONFIG.lineHeight + logoGap + logoHeight + SAVED_QR_CONFIG.padding;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) {
+      return qr;
+    }
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(image, SAVED_QR_CONFIG.padding, SAVED_QR_CONFIG.padding, qrSize, qrSize);
+    ctx.fillStyle = '#1a1a1a';
+    ctx.font = SAVED_QR_CONFIG.font;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'top';
+    const textTop = SAVED_QR_CONFIG.padding + qrSize + SAVED_QR_CONFIG.gap;
+    lines.forEach((line, index) => {
+      ctx.fillText(line, canvas.width / 2, textTop + index * SAVED_QR_CONFIG.lineHeight);
+    });
+    if (logo && logoHeight > 0) {
+      const logoWidth = Math.round(logoHeight * (logo.naturalWidth / logo.naturalHeight));
+      const logoTop = textTop + lines.length * SAVED_QR_CONFIG.lineHeight + logoGap;
+      ctx.drawImage(logo, (canvas.width - logoWidth) / 2, logoTop, logoWidth, logoHeight);
+    }
+    return canvas.toDataURL('image/png');
+  }
+
   async saveQrPng(dataUrl: string, filename: string): Promise<boolean> {
     if (!dataUrl || !filename) {
       return false;
@@ -118,6 +159,140 @@ function pngBase64(dataUrl: string): string | null {
   }
   const data = dataUrl.slice(index + marker.length);
   return data.length > 0 ? data : null;
+}
+
+const SAVED_QR_CONFIG = {
+  padding: 48,
+  gap: 28,
+  font: '600 36px sans-serif',
+  lineHeight: 48,
+  maxLines: 3,
+  logoGap: 20,
+  logoHeight: 72,
+  logoQrSize: 560,
+  logoSrc: 'assets/img/logo_new.png',
+} as const;
+
+type TextMeasure = (value: string) => number;
+
+export function wrapCanvasText(
+  text: string,
+  maxWidth: number,
+  maxLines: number,
+  measure: TextMeasure,
+): string[] {
+  const words = text.trim().split(/\s+/).filter((word) => word.length > 0);
+  const lines: string[] = [];
+  let current = '';
+  let index = 0;
+
+  while (index < words.length && lines.length < maxLines) {
+    const step = appendWord(lines, current, words, index, maxWidth, maxLines, measure);
+    if (step.done) {
+      return lines;
+    }
+    current = step.current;
+    index = step.index;
+  }
+
+  if (current.length > 0 && lines.length < maxLines) {
+    lines.push(current);
+  }
+  return lines;
+}
+
+function appendWord(
+  lines: string[],
+  current: string,
+  words: string[],
+  index: number,
+  maxWidth: number,
+  maxLines: number,
+  measure: TextMeasure,
+): {done: boolean; current: string; index: number} {
+  const candidate = current.length > 0 ? `${current} ${words[index]}` : words[index];
+  if (measure(candidate) <= maxWidth) {
+    return {done: false, current: candidate, index: index + 1};
+  }
+  if (lines.length === maxLines - 1) {
+    lines.push(ellipsize(candidate, maxWidth, measure));
+    return {done: true, current, index};
+  }
+  if (current.length > 0) {
+    lines.push(current);
+    return {done: false, current: '', index};
+  }
+  const next = index + 1;
+  const done = placeBrokenWord(
+    lines,
+    breakToken(words[index], maxWidth, measure),
+    words.slice(next),
+    maxWidth,
+    maxLines,
+    measure,
+  );
+  return {done, current: '', index: next};
+}
+
+function placeBrokenWord(
+  lines: string[],
+  pieces: string[],
+  pending: string[],
+  maxWidth: number,
+  maxLines: number,
+  measure: TextMeasure,
+): boolean {
+  for (let index = 0; index < pieces.length; index++) {
+    if (lines.length !== maxLines - 1) {
+      lines.push(pieces[index]);
+      continue;
+    }
+    const rest = pieces.slice(index).join('');
+    const tail = pending.length > 0 ? `${rest} ${pending.join(' ')}` : rest;
+    lines.push(ellipsize(tail, maxWidth, measure));
+    return true;
+  }
+  return false;
+}
+
+function breakToken(token: string, maxWidth: number, measure: TextMeasure): string[] {
+  const parts: string[] = [];
+  let current = '';
+  for (const char of Array.from(token)) {
+    const next = current + char;
+    if (current && measure(next) > maxWidth) {
+      parts.push(current);
+      current = char;
+    } else {
+      current = next;
+    }
+  }
+  if (current) {
+    parts.push(current);
+  }
+  return parts;
+}
+
+function ellipsize(value: string, maxWidth: number, measure: TextMeasure): string {
+  if (measure(value) <= maxWidth) {
+    return value;
+  }
+  const ellipsis = '…';
+  let end = Array.from(value).length;
+  const chars = Array.from(value);
+  while (end > 0 && measure(chars.slice(0, end).join('') + ellipsis) > maxWidth) {
+    end -= 1;
+  }
+  return end === 0 ? ellipsis : chars.slice(0, end).join('') + ellipsis;
+}
+
+function loadImage(src: string): Promise<HTMLImageElement> {
+  return new Promise((resolve, reject) => {
+    const image = new Image();
+    image.onload = () => resolve(image);
+    image.onerror = () => reject(new Error('qr image unavailable'));
+    image.src = src;
+  });
 }
 
 function qrApi(loaded: QrCodeModule): QrCodeModule {
