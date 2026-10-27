@@ -157,21 +157,24 @@ describe('ShareService', () => {
 });
 
 function pngSize(dataUrl: string): Promise<{width: number; height: number}> {
+  return loadPng(dataUrl).then((image) => ({width: image.naturalWidth, height: image.naturalHeight}));
+}
+
+function loadPng(dataUrl: string): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
     const image = new Image();
-    image.onload = () => resolve({width: image.naturalWidth, height: image.naturalHeight});
+    image.onload = () => resolve(image);
     image.onerror = () => reject(new Error('png unavailable'));
     image.src = dataUrl;
   });
 }
 
-async function darkPixelsBelowQr(dataUrl: string, qrSize: number): Promise<number> {
-  const image = await new Promise<HTMLImageElement>((resolve, reject) => {
-    const loaded = new Image();
-    loaded.onload = () => resolve(loaded);
-    loaded.onerror = () => reject(new Error('png unavailable'));
-    loaded.src = dataUrl;
-  });
+async function countPixels(
+  dataUrl: string,
+  region: (width: number, height: number) => {y: number; height: number},
+  matches: (red: number, green: number, blue: number) => boolean,
+): Promise<number> {
+  const image = await loadPng(dataUrl);
   const canvas = document.createElement('canvas');
   canvas.width = image.naturalWidth;
   canvas.height = image.naturalHeight;
@@ -180,43 +183,32 @@ async function darkPixelsBelowQr(dataUrl: string, qrSize: number): Promise<numbe
     return 0;
   }
   ctx.drawImage(image, 0, 0);
-  const top = 48 + qrSize + 28;
-  const band = ctx.getImageData(0, top, canvas.width, Math.max(1, canvas.height - top));
-  let dark = 0;
+  const box = region(canvas.width, canvas.height);
+  const band = ctx.getImageData(0, box.y, canvas.width, box.height);
+  let count = 0;
   for (let index = 0; index < band.data.length; index += 4) {
-    if (band.data[index] < 250 || band.data[index + 1] < 250 || band.data[index + 2] < 250) {
-      dark += 1;
+    if (matches(band.data[index], band.data[index + 1], band.data[index + 2])) {
+      count += 1;
     }
   }
-  return dark;
+  return count;
 }
 
-async function colorfulPixels(dataUrl: string): Promise<number> {
-  const image = await new Promise<HTMLImageElement>((resolve, reject) => {
-    const loaded = new Image();
-    loaded.onload = () => resolve(loaded);
-    loaded.onerror = () => reject(new Error('png unavailable'));
-    loaded.src = dataUrl;
-  });
-  const canvas = document.createElement('canvas');
-  canvas.width = image.naturalWidth;
-  canvas.height = image.naturalHeight;
-  const ctx = canvas.getContext('2d');
-  if (!ctx) {
-    return 0;
-  }
-  ctx.drawImage(image, 0, 0);
-  const band = ctx.getImageData(0, Math.floor(canvas.height * 0.8), canvas.width, Math.ceil(canvas.height * 0.2));
-  let colorful = 0;
-  for (let index = 0; index < band.data.length; index += 4) {
-    const red = band.data[index];
-    const green = band.data[index + 1];
-    const blue = band.data[index + 2];
-    if (Math.abs(red - green) > 25 || Math.abs(green - blue) > 25 || Math.abs(red - blue) > 25) {
-      colorful += 1;
-    }
-  }
-  return colorful;
+function darkPixelsBelowQr(dataUrl: string, qrSize: number): Promise<number> {
+  const top = 48 + qrSize + 28;
+  return countPixels(
+    dataUrl,
+    (_width, height) => ({y: top, height: Math.max(1, height - top)}),
+    (red, green, blue) => red < 250 || green < 250 || blue < 250,
+  );
+}
+
+function colorfulPixels(dataUrl: string): Promise<number> {
+  return countPixels(
+    dataUrl,
+    (_width, height) => ({y: Math.floor(height * 0.8), height: Math.ceil(height * 0.2)}),
+    (red, green, blue) => Math.abs(red - green) > 25 || Math.abs(green - blue) > 25 || Math.abs(red - blue) > 25,
+  );
 }
 
 async function withNavigatorShare<T>(share: unknown, run: () => Promise<T>): Promise<T> {

@@ -138,51 +138,89 @@ const CARD_LOGO_GAP = 20;
 const CARD_LOGO_HEIGHT_AT_560 = 72;
 const WORDMARK_SRC = 'assets/img/logo_new.png';
 
+type TextMeasure = (value: string) => number;
+
 export function wrapCanvasText(
   text: string,
   maxWidth: number,
   maxLines: number,
-  measure: (value: string) => number,
+  measure: TextMeasure,
 ): string[] {
   const words = text.trim().split(/\s+/).filter((word) => word.length > 0);
   const lines: string[] = [];
   let current = '';
+  let index = 0;
 
-  for (let index = 0; index < words.length; index++) {
-    const word = words[index];
-    const candidate = current ? `${current} ${word}` : word;
-    if (measure(candidate) <= maxWidth) {
-      current = candidate;
-      continue;
-    }
-    if (lines.length === maxLines - 1) {
-      lines.push(ellipsize(candidate, maxWidth, measure));
+  while (index < words.length && lines.length < maxLines) {
+    const step = appendWord(lines, current, words, index, maxWidth, maxLines, measure);
+    if (step.done) {
       return lines;
     }
-    if (current) {
-      lines.push(current);
-      current = '';
-      index -= 1;
-      continue;
-    }
-    const pieces = breakToken(word, maxWidth, measure);
-    for (let pieceIndex = 0; pieceIndex < pieces.length; pieceIndex++) {
-      if (lines.length === maxLines - 1) {
-        const tail = pieces.slice(pieceIndex).join('')
-          + (index < words.length - 1 ? ` ${words.slice(index + 1).join(' ')}` : '');
-        lines.push(ellipsize(tail, maxWidth, measure));
-        return lines;
-      }
-      lines.push(pieces[pieceIndex]);
-    }
+    current = step.current;
+    index = step.index;
   }
-  if (current) {
+
+  if (current.length > 0 && lines.length < maxLines) {
     lines.push(current);
   }
-  return lines.slice(0, maxLines);
+  return lines;
 }
 
-function breakToken(token: string, maxWidth: number, measure: (value: string) => number): string[] {
+function appendWord(
+  lines: string[],
+  current: string,
+  words: string[],
+  index: number,
+  maxWidth: number,
+  maxLines: number,
+  measure: TextMeasure,
+): {done: boolean; current: string; index: number} {
+  const candidate = current.length > 0 ? `${current} ${words[index]}` : words[index];
+  if (measure(candidate) <= maxWidth) {
+    return {done: false, current: candidate, index: index + 1};
+  }
+  if (lines.length === maxLines - 1) {
+    lines.push(ellipsize(candidate, maxWidth, measure));
+    return {done: true, current, index};
+  }
+  if (current.length > 0) {
+    lines.push(current);
+    return {done: false, current: '', index};
+  }
+  const next = index + 1;
+  const done = placeBrokenWord(
+    lines,
+    breakToken(words[index], maxWidth, measure),
+    words.slice(next),
+    maxWidth,
+    maxLines,
+    measure,
+  );
+  return {done, current: '', index: next};
+}
+
+function placeBrokenWord(
+  lines: string[],
+  pieces: string[],
+  pending: string[],
+  maxWidth: number,
+  maxLines: number,
+  measure: TextMeasure,
+): boolean {
+  for (let index = 0; index < pieces.length; index++) {
+    if (lines.length !== maxLines - 1) {
+      lines.push(pieces[index]);
+      continue;
+    }
+    const rest = pieces.slice(index).join('');
+    const tail = pending.length > 0 ? `${rest} ${pending.join(' ')}` : rest;
+    lines.push(ellipsize(tail, maxWidth, measure));
+    return true;
+  }
+  return false;
+}
+
+function breakToken(token: string, maxWidth: number, measure: TextMeasure): string[] {
   const parts: string[] = [];
   let current = '';
   for (const char of Array.from(token)) {
@@ -200,7 +238,7 @@ function breakToken(token: string, maxWidth: number, measure: (value: string) =>
   return parts;
 }
 
-function ellipsize(value: string, maxWidth: number, measure: (value: string) => number): string {
+function ellipsize(value: string, maxWidth: number, measure: TextMeasure): string {
   if (measure(value) <= maxWidth) {
     return value;
   }
