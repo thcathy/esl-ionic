@@ -88,13 +88,14 @@ describe('ShareInstallBannerComponent', () => {
     expect(analytics.shareBannerImpress).toHaveBeenCalledTimes(1);
   });
 
-  it('ignores the query and hash when deciding to show', () => {
+  it('shows a share link that includes a query or hash', () => {
     router.url = '/link/dictation-view/42?ref=share#top';
     expect(render().visible).toBeTrue();
+  });
 
+  it('hides a normal dictation view when the query mentions a share link', () => {
     router.url = '/dictation-view/42?from=/link/dictation-view';
-    fixture.detectChanges();
-    expect(fixture.componentInstance.visible).toBeFalse();
+    expect(render().visible).toBeFalse();
     expect(banner()).toBeNull();
   });
 
