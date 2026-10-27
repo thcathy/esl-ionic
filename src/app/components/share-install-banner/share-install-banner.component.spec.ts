@@ -12,7 +12,6 @@ import {
   PLAY_STORE_URL,
 } from '../../utils/store-links';
 import {ShareInstallBannerComponent} from './share-install-banner.component';
-import {SHARE_INSTALL_BANNER_DISMISS_KEY} from './share-install-banner.logic';
 
 describe('ShareInstallBannerComponent', () => {
   let fixture: ComponentFixture<ShareInstallBannerComponent>;
@@ -21,7 +20,6 @@ describe('ShareInstallBannerComponent', () => {
   let router: {url: string};
 
   beforeEach(waitForAsync(() => {
-    sessionStorage.removeItem(SHARE_INSTALL_BANNER_DISMISS_KEY);
     appService = jasmine.createSpyObj('AppService', ['isApp']);
     appService.isApp.and.returnValue(false);
     analytics = jasmine.createSpyObj('AnalyticsService', ['shareBannerImpress', 'shareBannerClick']);
@@ -43,14 +41,12 @@ describe('ShareInstallBannerComponent', () => {
     translate.setTranslation('en', {
       'ShareInstallBanner.Title': 'Same account on the website and in the app. Practise anytime, anywhere.',
       'ShareInstallBanner.Region': 'Website and app',
-      'Close': 'Close',
     });
     translate.use('en');
   });
 
   afterEach(() => {
     fixture?.destroy();
-    sessionStorage.removeItem(SHARE_INSTALL_BANNER_DISMISS_KEY);
   });
 
   function render(): ShareInstallBannerComponent {
@@ -106,21 +102,6 @@ describe('ShareInstallBannerComponent', () => {
     expect(component.visible).toBeFalse();
     expect(banner()).toBeNull();
     expect(analytics.shareBannerImpress).toHaveBeenCalledTimes(1);
-  });
-
-  it('hides for the rest of the tab session after dismiss', () => {
-    render();
-    expect(analytics.shareBannerImpress).toHaveBeenCalledTimes(1);
-    const close = fixture.nativeElement.querySelector('.share-install-banner__dismiss') as HTMLButtonElement;
-    close.click();
-    fixture.detectChanges();
-    expect(banner()).toBeNull();
-    expect(sessionStorage.getItem(SHARE_INSTALL_BANNER_DISMISS_KEY)).toBe('1');
-    expect(analytics.shareBannerImpress).toHaveBeenCalledTimes(1);
-
-    render();
-    expect(banner()).toBeNull();
-    expect(analytics.shareBannerImpress).toHaveBeenCalledTimes(2);
   });
 
   it('sends the store on badge tap', () => {

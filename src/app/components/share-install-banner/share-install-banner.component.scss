@@ -6,7 +6,7 @@
 
 .share-install-banner {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-columns: auto minmax(0, 1fr);
   align-items: center;
   gap: 8px 10px;
   margin: 8px 0 10px;
@@ -47,38 +47,12 @@
   color: #334155;
 }
 
-.share-install-banner__dismiss {
-  appearance: none;
-  margin: 0;
-  border: 0;
-  background: transparent;
-  color: var(--ion-color-medium);
-  width: 32px;
-  height: 32px;
-  padding: 0;
-  font-size: 1.25rem;
-  line-height: 1;
-  cursor: pointer;
-  border-radius: 6px;
-}
-
-.share-install-banner__dismiss:hover,
-.share-install-banner__dismiss:focus-visible {
-  background: rgba(var(--ion-color-primary-rgb), 0.12);
-  color: var(--ion-color-primary-shade);
-}
-
-.share-install-banner__dismiss:focus-visible {
-  outline: 2px solid var(--ion-color-primary);
-  outline-offset: 1px;
-}
-
 @include bp.phone {
   .share-install-banner {
-    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-columns: minmax(0, 1fr);
     grid-template-areas:
-      "badges dismiss"
-      "copy copy";
+      "badges"
+      "copy";
     margin: 4px 0 8px;
     padding: 8px;
   }
@@ -90,11 +64,6 @@
   .share-install-banner__copy {
     grid-area: copy;
     font-size: 0.9rem;
-  }
-
-  .share-install-banner__dismiss {
-    grid-area: dismiss;
-    justify-self: end;
   }
 
   .share-install-banner__badges img {
