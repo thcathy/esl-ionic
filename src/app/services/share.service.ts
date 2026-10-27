@@ -64,38 +64,38 @@ export class ShareService {
     const qr = await this.qrDataUrl(url, qrSize);
     const [image, logo] = await Promise.all([
       loadImage(qr),
-      loadImage(CARD.logoSrc).catch(() => null),
+      loadImage(SAVED_QR.logoSrc).catch(() => null),
     ]);
     const measureCanvas = document.createElement('canvas');
     const measureCtx = measureCanvas.getContext('2d');
     if (!measureCtx) {
       return qr;
     }
-    measureCtx.font = CARD.font;
-    const lines = wrapCanvasText(title, qrSize, CARD.maxLines, (value) => measureCtx.measureText(value).width);
-    const logoHeight = logo ? Math.max(1, Math.round(qrSize * CARD.logoHeight / CARD.logoQrSize)) : 0;
-    const logoGap = logo ? CARD.logoGap : 0;
+    measureCtx.font = SAVED_QR.font;
+    const lines = wrapCanvasText(title, qrSize, SAVED_QR.maxLines, (value) => measureCtx.measureText(value).width);
+    const logoHeight = logo ? Math.max(1, Math.round(qrSize * SAVED_QR.logoHeight / SAVED_QR.logoQrSize)) : 0;
+    const logoGap = logo ? SAVED_QR.logoGap : 0;
     const canvas = document.createElement('canvas');
-    canvas.width = qrSize + CARD.padding * 2;
-    canvas.height = CARD.padding + qrSize + CARD.gap + lines.length * CARD.lineHeight + logoGap + logoHeight + CARD.padding;
+    canvas.width = qrSize + SAVED_QR.padding * 2;
+    canvas.height = SAVED_QR.padding + qrSize + SAVED_QR.gap + lines.length * SAVED_QR.lineHeight + logoGap + logoHeight + SAVED_QR.padding;
     const ctx = canvas.getContext('2d');
     if (!ctx) {
       return qr;
     }
     ctx.fillStyle = '#ffffff';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.drawImage(image, CARD.padding, CARD.padding, qrSize, qrSize);
+    ctx.drawImage(image, SAVED_QR.padding, SAVED_QR.padding, qrSize, qrSize);
     ctx.fillStyle = '#1a1a1a';
-    ctx.font = CARD.font;
+    ctx.font = SAVED_QR.font;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'top';
-    const textTop = CARD.padding + qrSize + CARD.gap;
+    const textTop = SAVED_QR.padding + qrSize + SAVED_QR.gap;
     lines.forEach((line, index) => {
-      ctx.fillText(line, canvas.width / 2, textTop + index * CARD.lineHeight);
+      ctx.fillText(line, canvas.width / 2, textTop + index * SAVED_QR.lineHeight);
     });
     if (logo && logoHeight > 0) {
       const logoWidth = Math.round(logoHeight * (logo.naturalWidth / logo.naturalHeight));
-      const logoTop = textTop + lines.length * CARD.lineHeight + logoGap;
+      const logoTop = textTop + lines.length * SAVED_QR.lineHeight + logoGap;
       ctx.drawImage(logo, (canvas.width - logoWidth) / 2, logoTop, logoWidth, logoHeight);
     }
     return canvas.toDataURL('image/png');
@@ -161,7 +161,7 @@ function pngBase64(dataUrl: string): string | null {
   return data.length > 0 ? data : null;
 }
 
-const CARD = {
+const SAVED_QR = {
   padding: 48,
   gap: 28,
   font: '600 36px sans-serif',
