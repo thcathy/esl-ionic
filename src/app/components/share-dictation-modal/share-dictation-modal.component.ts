@@ -87,7 +87,7 @@ export class ShareDictationModalComponent implements OnInit, OnDestroy {
     this.savingQr = true;
     try {
       const saved = await this.shareService.saveQrPng(
-        this.qrSrc,
+        await this.savedQrImage(),
         `funfunspell-dictation-${this.dictation.id}.png`,
       );
       if (saved) {
@@ -104,6 +104,14 @@ export class ShareDictationModalComponent implements OnInit, OnDestroy {
       this.analytics.share('native');
     } catch {
       return;
+    }
+  }
+
+  private async savedQrImage(): Promise<string> {
+    try {
+      return await this.shareService.qrCardDataUrl(this.url, this.dictation?.title ?? '');
+    } catch {
+      return this.qrSrc;
     }
   }
 
