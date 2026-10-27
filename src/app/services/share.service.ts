@@ -64,38 +64,38 @@ export class ShareService {
     const qr = await this.qrDataUrl(url, qrSize);
     const [image, logo] = await Promise.all([
       loadImage(qr),
-      loadImage(SAVED_QR.logoSrc).catch(() => null),
+      loadImage(SAVED_QR_CONFIG.logoSrc).catch(() => null),
     ]);
     const measureCanvas = document.createElement('canvas');
     const measureCtx = measureCanvas.getContext('2d');
     if (!measureCtx) {
       return qr;
     }
-    measureCtx.font = SAVED_QR.font;
-    const lines = wrapCanvasText(title, qrSize, SAVED_QR.maxLines, (value) => measureCtx.measureText(value).width);
-    const logoHeight = logo ? Math.max(1, Math.round(qrSize * SAVED_QR.logoHeight / SAVED_QR.logoQrSize)) : 0;
-    const logoGap = logo ? SAVED_QR.logoGap : 0;
+    measureCtx.font = SAVED_QR_CONFIG.font;
+    const lines = wrapCanvasText(title, qrSize, SAVED_QR_CONFIG.maxLines, (value) => measureCtx.measureText(value).width);
+    const logoHeight = logo ? Math.max(1, Math.round(qrSize * SAVED_QR_CONFIG.logoHeight / SAVED_QR_CONFIG.logoQrSize)) : 0;
+    const logoGap = logo ? SAVED_QR_CONFIG.logoGap : 0;
     const canvas = document.createElement('canvas');
-    canvas.width = qrSize + SAVED_QR.padding * 2;
-    canvas.height = SAVED_QR.padding + qrSize + SAVED_QR.gap + lines.length * SAVED_QR.lineHeight + logoGap + logoHeight + SAVED_QR.padding;
+    canvas.width = qrSize + SAVED_QR_CONFIG.padding * 2;
+    canvas.height = SAVED_QR_CONFIG.padding + qrSize + SAVED_QR_CONFIG.gap + lines.length * SAVED_QR_CONFIG.lineHeight + logoGap + logoHeight + SAVED_QR_CONFIG.padding;
     const ctx = canvas.getContext('2d');
     if (!ctx) {
       return qr;
     }
     ctx.fillStyle = '#ffffff';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.drawImage(image, SAVED_QR.padding, SAVED_QR.padding, qrSize, qrSize);
+    ctx.drawImage(image, SAVED_QR_CONFIG.padding, SAVED_QR_CONFIG.padding, qrSize, qrSize);
     ctx.fillStyle = '#1a1a1a';
-    ctx.font = SAVED_QR.font;
+    ctx.font = SAVED_QR_CONFIG.font;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'top';
-    const textTop = SAVED_QR.padding + qrSize + SAVED_QR.gap;
+    const textTop = SAVED_QR_CONFIG.padding + qrSize + SAVED_QR_CONFIG.gap;
     lines.forEach((line, index) => {
-      ctx.fillText(line, canvas.width / 2, textTop + index * SAVED_QR.lineHeight);
+      ctx.fillText(line, canvas.width / 2, textTop + index * SAVED_QR_CONFIG.lineHeight);
     });
     if (logo && logoHeight > 0) {
       const logoWidth = Math.round(logoHeight * (logo.naturalWidth / logo.naturalHeight));
-      const logoTop = textTop + lines.length * SAVED_QR.lineHeight + logoGap;
+      const logoTop = textTop + lines.length * SAVED_QR_CONFIG.lineHeight + logoGap;
       ctx.drawImage(logo, (canvas.width - logoWidth) / 2, logoTop, logoWidth, logoHeight);
     }
     return canvas.toDataURL('image/png');
@@ -161,7 +161,7 @@ function pngBase64(dataUrl: string): string | null {
   return data.length > 0 ? data : null;
 }
 
-const SAVED_QR = {
+const SAVED_QR_CONFIG = {
   padding: 48,
   gap: 28,
   font: '600 36px sans-serif',
