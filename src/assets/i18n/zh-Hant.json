@@ -294,5 +294,7 @@
   "Save QR": "儲存二維碼",
   "Link copied": "連結已複製",
   "Could not copy the link. Please try again.": "無法複製連結，請再試一次。",
-  "Couldn't make the QR code. Copy the link instead.": "暫時無法顯示二維碼，請改用複製連結。"
+  "Couldn't make the QR code. Copy the link instead.": "暫時無法顯示二維碼，請改用複製連結。",
+  "ShareInstallBanner.Title": "離線也能練習 — 下載 FunFunSpell 應用程式",
+  "ShareInstallBanner.Region": "下載應用程式"
 }

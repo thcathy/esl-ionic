@@ -129,5 +129,7 @@
   "Save QR": "Save QR",
   "Link copied": "Link copied",
   "Could not copy the link. Please try again.": "Could not copy the link. Please try again.",
-  "Couldn't make the QR code. Copy the link instead.": "Couldn't make the QR code. Copy the link instead."
+  "Couldn't make the QR code. Copy the link instead.": "Couldn't make the QR code. Copy the link instead.",
+  "ShareInstallBanner.Title": "Practise offline — get the FunFunSpell app",
+  "ShareInstallBanner.Region": "Get the app"
 }

@@ -7,7 +7,7 @@ import {DictationService} from '../../services/dictation/dictation.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ActivatedRouteStub} from '../../../testing/activated-route-stub';
 import {dictation1} from '../../../testing/test-data';
-import {of} from 'rxjs';
+import {of, Subject} from 'rxjs';
 
 describe('DictationViewPage', () => {
   let component: DictationViewPage;
@@ -20,8 +20,11 @@ describe('DictationViewPage', () => {
     dictationServiceSpy = jasmine.createSpyObj('DictationService', ['getById']);
     dictationServiceSpy.getById.and.returnValue(of(dictation1));
     activateRouteStub = new ActivatedRouteStub();
-    routerSpy = jasmine.createSpyObj('Router', ['currentNavigation']);
+    routerSpy = jasmine.createSpyObj('Router', ['currentNavigation', 'getCurrentNavigation']);
     routerSpy.currentNavigation.and.returnValue(null);
+    routerSpy.getCurrentNavigation.and.returnValue(null);
+    routerSpy.lastSuccessfulNavigation = () => null;
+    routerSpy.events = new Subject();
     routerSpy.url = '/dictation-view';
 
     TestBed.configureTestingModule({
@@ -46,6 +49,19 @@ describe('DictationViewPage', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('places the install banner under the header and before the dictation card', () => {
+    const el: HTMLElement = fixture.nativeElement;
+    const header = el.querySelector('ion-header');
+    const banner = el.querySelector('app-share-install-banner');
+    const card = el.querySelector('app-dictation-card');
+    expect(header).not.toBeNull();
+    expect(banner).not.toBeNull();
+    expect(card).not.toBeNull();
+    expect(header!.compareDocumentPosition(banner!) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(banner!.compareDocumentPosition(card!) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(card!.contains(banner!)).toBeFalse();
   });
 
   it('input with dictation Id will call get dictation from service', fakeAsync(() => {

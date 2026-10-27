@@ -6,6 +6,12 @@ import {TranslateModule} from '@ngx-translate/core';
 import {of} from 'rxjs';
 
 import packageJson from '../../../../package.json';
+import {
+  APP_STORE_BADGE_URL,
+  APP_STORE_URL,
+  PLAY_STORE_BADGE_URL,
+  PLAY_STORE_URL,
+} from '../../utils/store-links';
 import {FFSAuthService} from '../../services/auth.service';
 import {AppService} from '../../services/app.service';
 import {NavigationService} from '../../services/navigation.service';
@@ -67,6 +73,13 @@ describe('FooterComponent', () => {
     expect(component.showBanner).toBeTrue();
     expect(component.showSlimFooter).toBeFalse();
     expect(dom()).toEqual({columns: true, banner: true, badges: true, credit: true, version: true});
+    const el: HTMLElement = fixture.nativeElement;
+    const apple = el.querySelector(`a[href="${APP_STORE_URL}"]`);
+    const play = el.querySelector(`a[href="${PLAY_STORE_URL}"]`);
+    expect(apple?.querySelector('img')?.getAttribute('src')).toBe(APP_STORE_BADGE_URL);
+    expect(play?.querySelector('img')?.getAttribute('src')).toBe(PLAY_STORE_BADGE_URL);
+    expect(play?.getAttribute('target')).toBe('_blank');
+    expect(play?.getAttribute('rel')).toBe('noopener');
   });
 
   it('wide web non-home stays full', () => {

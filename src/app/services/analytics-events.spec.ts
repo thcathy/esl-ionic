@@ -47,6 +47,13 @@ describe('analytics event params', () => {
     expect(JSON.stringify(summary)).not.toContain('secret');
   });
 
+  it('allows store ios and android and drops any other store', () => {
+    expect(sanitizeAnalyticsParams({store: 'ios'})).toEqual({store: 'ios'});
+    expect(sanitizeAnalyticsParams({store: 'android'})).toEqual({store: 'android'});
+    expect(sanitizeAnalyticsParams({store: 'web'})).toEqual({});
+    expect(sanitizeAnalyticsParams({store: 'App Store'})).toEqual({});
+  });
+
   it('allows share methods and drops any other method', () => {
     for (const method of ['native', 'copy', 'qr_view', 'qr_download']) {
       expect(sanitizeAnalyticsParams({method})).toEqual({method});
