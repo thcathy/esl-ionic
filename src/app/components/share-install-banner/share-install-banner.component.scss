@@ -5,12 +5,11 @@
 }
 
 .share-install-banner {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
+  display: flex;
   align-items: center;
-  gap: 8px 10px;
+  gap: 10px;
   margin: 8px 0 10px;
-  padding: 8px 8px 8px 10px;
+  padding: 8px 4px 8px 10px;
   background: #ffffff;
   color: #334155;
   border: 1px solid rgba(var(--ion-color-medium-rgb), 0.2);
@@ -19,6 +18,7 @@
 
 .share-install-banner__badges {
   display: flex;
+  flex: 0 0 auto;
   flex-wrap: wrap;
   align-items: center;
   gap: 6px;
@@ -40,6 +40,8 @@
 }
 
 .share-install-banner__copy {
+  flex: 0 1 auto;
+  min-width: 0;
   margin: 0;
   font-size: 0.95rem;
   font-weight: 400;
@@ -47,14 +49,41 @@
   color: #334155;
 }
 
+.share-install-banner__close {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: #1e293b;
+  cursor: pointer;
+}
+
+.share-install-banner__close fa-icon {
+  font-size: 1.25rem;
+  color: #1e293b;
+}
+
+.share-install-banner__close:hover,
+.share-install-banner__close:focus-visible {
+  background: rgba(30, 41, 59, 0.08);
+}
+
 @include bp.phone {
   .share-install-banner {
-    grid-template-columns: minmax(0, 1fr);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
     grid-template-areas:
-      "badges"
-      "copy";
+      "badges close"
+      "copy close";
     margin: 4px 0 8px;
-    padding: 8px;
+    padding: 8px 4px 8px 8px;
   }
 
   .share-install-banner__badges {
@@ -64,6 +93,11 @@
   .share-install-banner__copy {
     grid-area: copy;
     font-size: 0.9rem;
+  }
+
+  .share-install-banner__close {
+    grid-area: close;
+    align-self: center;
   }
 
   .share-install-banner__badges img {

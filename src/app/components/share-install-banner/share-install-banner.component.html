@@ -9,5 +9,8 @@
       </a>
     </div>
     <p class="share-install-banner__copy">{{ 'ShareInstallBanner.Title' | translate }}</p>
+    <button type="button" class="share-install-banner__close" (click)="dismiss()" [attr.aria-label]="'Close' | translate">
+      <fa-icon [icon]="['fas', 'times']"></fa-icon>
+    </button>
   </div>
 }

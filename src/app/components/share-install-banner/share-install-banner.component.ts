@@ -22,6 +22,7 @@ export class ShareInstallBannerComponent implements OnInit {
   readonly appStoreBadgeUrl = APP_STORE_BADGE_URL;
   readonly playStoreUrl = PLAY_STORE_URL;
   readonly playStoreBadgeUrl = PLAY_STORE_BADGE_URL;
+  private dismissed = false;
 
   constructor(
     private readonly appService: AppService,
@@ -34,7 +35,7 @@ export class ShareInstallBannerComponent implements OnInit {
   }
 
   get visible(): boolean {
-    if (this.appService.isApp()) {
+    if (this.dismissed || this.appService.isApp()) {
       return false;
     }
     return this.router.url.split(/[?#]/)[0].startsWith('/link/dictation-view');
@@ -42,5 +43,9 @@ export class ShareInstallBannerComponent implements OnInit {
 
   onBadge(store: StoreBadge): void {
     this.analytics.shareBannerClick(store);
+  }
+
+  dismiss(): void {
+    this.dismissed = true;
   }
 }

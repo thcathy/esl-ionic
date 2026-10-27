@@ -3,6 +3,7 @@ import {By} from '@angular/platform-browser';
 import {Router} from '@angular/router';
 import {TranslateModule, TranslateService} from '@ngx-translate/core';
 
+import {FontAwesomeIconsModule} from '../../fontawesome-icons.module';
 import {AnalyticsService} from '../../services/analytics.service';
 import {AppService} from '../../services/app.service';
 import {
@@ -27,7 +28,7 @@ describe('ShareInstallBannerComponent', () => {
 
     TestBed.configureTestingModule({
       declarations: [ShareInstallBannerComponent],
-      imports: [TranslateModule.forRoot()],
+      imports: [TranslateModule.forRoot(), FontAwesomeIconsModule],
       providers: [
         {provide: AppService, useValue: appService},
         {provide: AnalyticsService, useValue: analytics},
@@ -41,6 +42,7 @@ describe('ShareInstallBannerComponent', () => {
     translate.setTranslation('en', {
       'ShareInstallBanner.Title': 'Same account on the website and in the app. Practise anytime, anywhere.',
       'ShareInstallBanner.Region': 'Website and app',
+      'Close': 'Close',
     });
     translate.use('en');
   });
@@ -122,5 +124,18 @@ describe('ShareInstallBannerComponent', () => {
     links[1].triggerEventHandler('click', new MouseEvent('click'));
     expect(analytics.shareBannerClick).toHaveBeenCalledWith('ios');
     expect(analytics.shareBannerClick).toHaveBeenCalledWith('android');
+  });
+
+  it('shows a close button that hides the banner', () => {
+    const component = render();
+    const close = banner()!.querySelector('.share-install-banner__close') as HTMLButtonElement;
+    expect(close).not.toBeNull();
+    expect(close.getAttribute('aria-label')).toBe('Close');
+    expect(close.querySelector('fa-icon')).not.toBeNull();
+
+    close.click();
+    fixture.detectChanges();
+    expect(component.visible).toBeFalse();
+    expect(banner()).toBeNull();
   });
 });
