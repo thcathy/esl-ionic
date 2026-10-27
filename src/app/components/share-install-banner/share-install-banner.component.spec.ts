@@ -88,6 +88,16 @@ describe('ShareInstallBannerComponent', () => {
     expect(analytics.shareBannerImpress).toHaveBeenCalledTimes(1);
   });
 
+  it('ignores the query and hash when deciding to show', () => {
+    router.url = '/link/dictation-view/42?ref=share#top';
+    expect(render().visible).toBeTrue();
+
+    router.url = '/dictation-view/42?from=/link/dictation-view';
+    fixture.detectChanges();
+    expect(fixture.componentInstance.visible).toBeFalse();
+    expect(banner()).toBeNull();
+  });
+
   it('hides the banner on a normal dictation view and still records the impress', () => {
     router.url = '/dictation-view/42';
     const component = render();

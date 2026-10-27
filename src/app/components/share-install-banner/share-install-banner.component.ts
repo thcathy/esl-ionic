@@ -10,7 +10,6 @@ import {
   PLAY_STORE_BADGE_URL,
   PLAY_STORE_URL,
 } from '../../utils/store-links';
-import {showShareInstallBanner} from './share-install-banner.logic';
 
 @Component({
   selector: 'app-share-install-banner',
@@ -35,7 +34,10 @@ export class ShareInstallBannerComponent implements OnInit {
   }
 
   get visible(): boolean {
-    return showShareInstallBanner(this.appService.isApp(), this.router.url);
+    if (this.appService.isApp()) {
+      return false;
+    }
+    return this.router.url.split(/[?#]/)[0].startsWith('/link/dictation-view');
   }
 
   onBadge(store: StoreBadge): void {
