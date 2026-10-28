@@ -1,16 +1,19 @@
 <ion-card class="card list" style="margin-top: 12px;">
   <ion-card-header>
-    <div class="history-heading">
-      <ion-card-title>
-        <fa-icon [icon]="['fas', 'edit']"></fa-icon>
-        {{ 'LastTimesPractice' | translate: {times: histories.length} }}
-      </ion-card-title>
-      <p class="retention-note">
+    <ion-card-title>
+      <fa-icon [icon]="['fas', 'edit']"></fa-icon>
+      {{ 'LastTimesPractice' | translate: {times: histories.length} }}
+      <button type="button" id="practice-history-retention" class="retention-info"
+        [attr.aria-label]="'PracticeHistoryRetentionNote' | translate">
         <fa-icon [icon]="['fas', 'circle-info']"></fa-icon>
-        <span>{{ 'PracticeHistoryRetentionNote' | translate }}</span>
-      </p>
-    </div>
+      </button>
+    </ion-card-title>
   </ion-card-header>
+  <ion-popover trigger="practice-history-retention" triggerAction="click" side="bottom" alignment="center">
+    <ng-template>
+      <p class="ion-padding retention-popover-text">{{ 'PracticeHistoryRetentionNote' | translate }}</p>
+    </ng-template>
+  </ion-popover>
   <ion-card-content>
     @if (loading) {
       <ion-progress-bar type="indeterminate"></ion-progress-bar>
