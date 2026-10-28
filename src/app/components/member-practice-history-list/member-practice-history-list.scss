@@ -12,11 +12,25 @@
 }
 
 .retention-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
   margin: 4px 0 0;
   color: rgba(255, 255, 255, 0.92);
   font-size: 0.75rem;
   font-weight: 400;
   line-height: 1.35;
+}
+
+.retention-note fa-icon {
+  flex: 0 0 auto;
+  padding: 0;
+  font-size: 0.75rem;
+  line-height: 1.35;
+  height: calc(0.75rem * 1.35);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 ion-col {

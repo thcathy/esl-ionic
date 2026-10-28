@@ -5,7 +5,10 @@
         <fa-icon [icon]="['fas', 'edit']"></fa-icon>
         {{ 'LastTimesPractice' | translate: {times: histories.length} }}
       </ion-card-title>
-      <p class="retention-note">{{ 'PracticeHistoryRetentionNote' | translate }}</p>
+      <p class="retention-note">
+        <fa-icon [icon]="['fas', 'circle-info']"></fa-icon>
+        <span>{{ 'PracticeHistoryRetentionNote' | translate }}</span>
+      </p>
     </div>
   </ion-card-header>
   <ion-card-content>
