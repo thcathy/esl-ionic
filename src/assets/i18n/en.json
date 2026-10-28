@@ -61,6 +61,7 @@
   "ContactUs.Sent": "Thanks! We received your message.",
   "ContactUs.Failed": "We couldn't send your message. Please try again.",
   "LastTimesPractice": "Last {{times}} Practice Results",
+  "PracticeHistoryRetentionNote": "Up to 50 results, kept for 12 months.",
   "About_Us_Content": "We provide free English vocabulary exercise or create vocabulary exercise yourself. Totally free without advertisement. Program can speak any English word or sentence, also provides image and phonetic symbols when learning vocabulary.",
   "Home_Online_Dictation_description": "Create dictation with natural AI voice, AI-generated images, AI meaning, and phonetic symbols in one place. Store your dictations in the cloud. All features are free with no ads.",
   "FeatureBadge.AIVoice": "AI Voice",
