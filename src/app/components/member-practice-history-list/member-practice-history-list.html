@@ -3,15 +3,15 @@
     <ion-card-title>
       <fa-icon [icon]="['fas', 'edit']"></fa-icon>
       {{ 'LastTimesPractice' | translate: {times: histories.length} }}
-      <button type="button" id="practice-history-retention" class="retention-info"
-        [attr.aria-label]="'PracticeHistoryRetentionNote' | translate">
-        <fa-icon [icon]="['fas', 'circle-info']"></fa-icon>
-      </button>
+      <sup>
+        <fa-icon id="practice-history-retention" [icon]="['fas', 'circle-info']"
+          [attr.aria-label]="'PracticeHistoryRetentionNote' | translate"></fa-icon>
+      </sup>
     </ion-card-title>
   </ion-card-header>
   <ion-popover trigger="practice-history-retention" triggerAction="click" side="bottom" alignment="center">
     <ng-template>
-      <p class="ion-padding retention-popover-text">{{ 'PracticeHistoryRetentionNote' | translate }}</p>
+      <p class="ion-padding ion-no-margin">{{ 'PracticeHistoryRetentionNote' | translate }}</p>
     </ng-template>
   </ion-popover>
   <ion-card-content>
