@@ -5,6 +5,12 @@
   }
 }
 
+.history-heading {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
 .retention-note {
   margin: 4px 0 0;
   color: rgba(255, 255, 255, 0.92);

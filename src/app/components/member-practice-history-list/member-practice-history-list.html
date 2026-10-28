@@ -1,10 +1,12 @@
 <ion-card class="card list" style="margin-top: 12px;">
   <ion-card-header>
-    <ion-card-title>
-      <fa-icon [icon]="['fas', 'edit']"></fa-icon>
-      {{ 'LastTimesPractice' | translate: {times: histories.length} }}
-    </ion-card-title>
-    <p class="retention-note">{{ 'PracticeHistoryRetentionNote' | translate }}</p>
+    <div class="history-heading">
+      <ion-card-title>
+        <fa-icon [icon]="['fas', 'edit']"></fa-icon>
+        {{ 'LastTimesPractice' | translate: {times: histories.length} }}
+      </ion-card-title>
+      <p class="retention-note">{{ 'PracticeHistoryRetentionNote' | translate }}</p>
+    </div>
   </ion-card-header>
   <ion-card-content>
     @if (loading) {
