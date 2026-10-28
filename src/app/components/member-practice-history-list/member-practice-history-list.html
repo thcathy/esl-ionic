@@ -4,6 +4,7 @@
       <fa-icon [icon]="['fas', 'edit']"></fa-icon>
       {{ 'LastTimesPractice' | translate: {times: histories.length} }}
     </ion-card-title>
+    <p class="retention-note">{{ 'PracticeHistoryRetentionNote' | translate }}</p>
   </ion-card-header>
   <ion-card-content>
     @if (loading) {

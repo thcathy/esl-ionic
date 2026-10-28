@@ -177,6 +177,7 @@
   "Within 3 Month": "3個月內",
   "Within Half Year": "半年內",
   "LastTimesPractice": "最近{{times}}次練習結果",
+  "PracticeHistoryRetentionNote": "最多保留 50 條練習記錄，保留 12 個月。",
   "Dictation not found": "找不到練習",
   "Detail": "詳情",
   "You can use the ID number to search this dictation": "您可以使用 ID 號碼來搜索此練習",
