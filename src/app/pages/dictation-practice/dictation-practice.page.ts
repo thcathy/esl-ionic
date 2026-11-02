@@ -116,7 +116,7 @@ export class DictationPracticePage {
   }
 
   private fetchQuestion(word: string) {
-    return this.vocabPracticeService.getQuestion(word, this.dictation.showImage).pipe(
+    return this.vocabPracticeService.getQuestion(word).pipe(
       tap(vp => this.preload.recordQuestion(!!vp))
     );
   }
