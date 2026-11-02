@@ -32,11 +32,9 @@ export class VocabPracticeService extends Service {
   private getAllHistoryUrl = environment.apiHost + '/member/vocab/practice/history/getall';
   private staticImageUrl = environment.imagesHost;
 
-  getQuestion(word: string, showImage: boolean): Observable<VocabPractice> {
-    let params = new HttpParams();
-    params = params.append('image', false);
-
-    return this.http.get<VocabPractice>(this.getQuestionUrl + encodeURIComponent(word),  {params: params});
+  getQuestion(word: string): Observable<VocabPractice> {
+    const params = new HttpParams().append('image', false);
+    return this.http.get<VocabPractice>(this.getQuestionUrl + encodeURIComponent(word), {params});
   }
 
   getImages(vocabPractice: VocabPractice, includeAIImage: boolean = true): Observable<VocabPractice> {

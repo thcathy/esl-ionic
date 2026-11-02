@@ -86,6 +86,16 @@ describe('VocabPracticeService', () => {
     expect(result.answers.filter(a => a === '?').length).toEqual(5);
   });
 
+  it('getQuestion requests the word without an image', () => {
+    httpClientSpy.get.and.returnValue(of({ word: 'apple' }));
+
+    service.getQuestion('apple');
+
+    const [url, options] = httpClientSpy.get.calls.mostRecent().args;
+    expect(url).toContain('/vocab/get/question/apple');
+    expect(options.params.get('image')).toBe('false');
+  });
+
   it('imageUrl can create correct url', () => {
     expect(service.imageUrl('i am ok')).toContain('images%2Fi-%2Fi-am-ok.json?alt=media');
   });
