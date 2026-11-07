@@ -73,7 +73,6 @@ export class VocabPracticeService extends Service {
       );
   }
 
-  /** Posts to esl-rest `POST /flag-image`. Anonymous calls are allowed. */
   flagImage(request: FlagImageRequest): Observable<void> {
     return this.http.post<FlagImageResponse>(this.flagImageUrl, {
       phrase: request.phrase,
