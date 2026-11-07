@@ -122,11 +122,11 @@ describe('VocabImageComponent', () => {
     const shown = component.imageBase64;
     clickReport();
 
-    const req = httpMock.expectOne(environment.apiHost + '/image-report');
+    const req = httpMock.expectOne(environment.apiHost + '/flag-image');
     expect(req.request.method).toBe('POST');
     expect(req.request.body).toEqual({phrase: 'apple', imageIndex: 1});
     expect(req.request.headers.has('X-API-KEY')).toBeFalse();
-    req.flush({id: 4, phrase: 'apple', imageIndex: 1, memberId: null});
+    req.flush({id: 4, phrase: 'apple', imageIndex: 1, count: 1});
     fixture.detectChanges();
 
     expect(ionic.showToastMessage).toHaveBeenCalledOnceWith(reportThanks);
@@ -139,8 +139,8 @@ describe('VocabImageComponent', () => {
   it('keeps the report button disabled for the rest of this practice and enables it on a new practice', () => {
     showReportable(['https://example.com/a.jpg'], 'apple', 1);
     clickReport();
-    httpMock.expectOne(environment.apiHost + '/image-report')
-      .flush({id: 1, phrase: 'apple', imageIndex: 0, memberId: null});
+    httpMock.expectOne(environment.apiHost + '/flag-image')
+      .flush({id: 1, phrase: 'apple', imageIndex: 0, count: 1});
     fixture.detectChanges();
     expect(reportButton().disabled).toBeTrue();
 
@@ -151,16 +151,16 @@ describe('VocabImageComponent', () => {
     expect(component.imageBase64).toBe('https://example.com/c.jpg');
     expect(fixture.nativeElement.querySelector('img.image')).toBeTruthy();
     expect(reportButton().disabled).toBeTrue();
-    httpMock.expectNone(environment.apiHost + '/image-report');
+    httpMock.expectNone(environment.apiHost + '/flag-image');
 
     fixture.componentRef.setInput('practiceSession', 2);
     fixture.detectChanges();
     expect(reportButton().disabled).toBeFalse();
 
     clickReport();
-    const again = httpMock.expectOne(environment.apiHost + '/image-report');
+    const again = httpMock.expectOne(environment.apiHost + '/flag-image');
     expect(again.request.body).toEqual({phrase: 'banana', imageIndex: 0});
-    again.flush({id: 2, phrase: 'banana', imageIndex: 0, memberId: null});
+    again.flush({id: 2, phrase: 'banana', imageIndex: 0, count: 1});
     fixture.detectChanges();
     expect(ionic.showToastMessage).toHaveBeenCalledTimes(2);
     expect(fixture.nativeElement.querySelector('img.image')).toBeTruthy();
@@ -170,7 +170,7 @@ describe('VocabImageComponent', () => {
     showReportable(['https://example.com/a.jpg'], 'apple', 1);
     const shown = component.imageBase64;
     clickReport();
-    httpMock.expectOne(environment.apiHost + '/image-report')
+    httpMock.expectOne(environment.apiHost + '/flag-image')
       .flush('nope', {status: 500, statusText: 'Server Error'});
     fixture.detectChanges();
 

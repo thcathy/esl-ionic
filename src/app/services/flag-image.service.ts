@@ -5,20 +5,27 @@ import {map} from 'rxjs/operators';
 
 import {environment} from '../../environments/environment';
 
-export interface ImageReportRequest {
+export interface FlagImageRequest {
   phrase: string;
   imageIndex: number;
 }
 
+export interface FlagImageResponse {
+  id: number;
+  phrase: string;
+  imageIndex: number;
+  count: number;
+}
+
 @Injectable({ providedIn: 'root' })
-export class ImageReportService {
-  private readonly reportUrl = environment.apiHost + '/image-report';
+export class FlagImageService {
+  private readonly flagUrl = environment.apiHost + '/flag-image';
 
   constructor(private readonly http: HttpClient) {}
 
-  /** Posts to esl-rest `POST /image-report`. A logged-in member id is taken from the existing auth token. */
-  report(request: ImageReportRequest): Observable<void> {
-    return this.http.post(this.reportUrl, {
+  /** Posts to esl-rest `POST /flag-image`. Anonymous calls are allowed. */
+  flag(request: FlagImageRequest): Observable<void> {
+    return this.http.post<FlagImageResponse>(this.flagUrl, {
       phrase: request.phrase,
       imageIndex: request.imageIndex,
     }).pipe(map(() => undefined));

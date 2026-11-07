@@ -4,7 +4,7 @@ import {TranslateService} from '@ngx-translate/core';
 import {defaultImage} from '../../entity/dictation';
 import {CollectionUtils} from '../../utils/collection-utils';
 import {DictationUtils} from '../../utils/dictation-utils';
-import {ImageReportService} from '../../services/image-report.service';
+import {FlagImageService} from '../../services/flag-image.service';
 import {IonicComponentService} from '../../services/ionic-component.service';
 
 interface PracticeImage {
@@ -45,7 +45,7 @@ export class VocabImageComponent implements OnChanges, OnDestroy {
   private alive = true;
 
   constructor(
-    private readonly imageReportService: ImageReportService,
+    private readonly flagImageService: FlagImageService,
     private readonly ionic: IonicComponentService,
     private readonly translate: TranslateService,
   ) {
@@ -108,7 +108,7 @@ export class VocabImageComponent implements OnChanges, OnDestroy {
     }
   }
 
-  reportImage(event: Event) {
+  flagImage(event: Event) {
     event.preventDefault();
     event.stopPropagation();
     if (!this.reportEnabled) {
@@ -119,7 +119,7 @@ export class VocabImageComponent implements OnChanges, OnDestroy {
     const imageIndex = this.currentSourceIndex;
     const session = this.practiceSession;
     this.reporting = true;
-    this.imageReportService.report({phrase, imageIndex}).subscribe({
+    this.flagImageService.flag({phrase, imageIndex}).subscribe({
       next: () => {
         if (!this.alive || session !== this.practiceSession) {
           return;
