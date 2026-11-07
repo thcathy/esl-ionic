@@ -80,21 +80,6 @@ describe('DictationPracticePage', () => {
     }));
   });
 
-  describe('image report session', () => {
-    it('starts a new session each time practice opens', fakeAsync(() => {
-      storageSpy.get.and.resolveTo({ vocabs: [], showImage: false });
-      expect(component.practiceSession).toBe(0);
-
-      component.ionViewWillEnter();
-      tick();
-      expect(component.practiceSession).toBe(1);
-
-      component.ionViewWillEnter();
-      tick();
-      expect(component.practiceSession).toBe(2);
-    }));
-  });
-
   describe('hideAppFooter', () => {
     it('stays visible when the virtual keyboard is closed', () => {
       component.dictation = { options: { practiceType: VocabPracticeType.Spell } } as any;

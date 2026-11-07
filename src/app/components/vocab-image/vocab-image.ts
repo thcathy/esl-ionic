@@ -28,7 +28,6 @@ export class VocabImageComponent implements OnChanges, OnDestroy {
   @Input() images: string[];
   @Input() phrase = '';
   @Input() canReport = false;
-  @Input() practiceSession = 0;
   index: number;
   state = 'center';
   imageBase64 = '';
@@ -36,6 +35,7 @@ export class VocabImageComponent implements OnChanges, OnDestroy {
   private reported = false;
   private reporting = false;
   private alive = true;
+  private imageLoad = 0;
 
   constructor(
     private readonly vocabPracticeService: VocabPracticeService,
@@ -46,20 +46,20 @@ export class VocabImageComponent implements OnChanges, OnDestroy {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['practiceSession']) {
-      this.reported = false;
-      this.reporting = false;
+    if (!changes['images']) {
+      return;
     }
-    if (changes['images'] || changes['practiceSession']) {
-      if (DictationUtils.notValidImages(this.images)) {
-        this.images = defaultImage;
-        this.showingPlaceholder = true;
-      } else {
-        this.showingPlaceholder = false;
-      }
-      this.index = Math.floor(Math.random() * this.images.length);
-      this.imageBase64 = this.images[this.index];
+    this.reported = false;
+    this.reporting = false;
+    this.imageLoad++;
+    if (DictationUtils.notValidImages(this.images)) {
+      this.images = defaultImage;
+      this.showingPlaceholder = true;
+    } else {
+      this.showingPlaceholder = false;
     }
+    this.index = Math.floor(Math.random() * this.images.length);
+    this.imageBase64 = this.images[this.index];
   }
 
   ngOnDestroy() {
@@ -111,11 +111,11 @@ export class VocabImageComponent implements OnChanges, OnDestroy {
 
     const phrase = this.phrase.trim();
     const imageIndex = this.index;
-    const session = this.practiceSession;
+    const load = this.imageLoad;
     this.reporting = true;
     this.vocabPracticeService.flagImage({phrase, imageIndex}).subscribe({
       next: () => {
-        if (!this.alive || session !== this.practiceSession) {
+        if (!this.alive || load !== this.imageLoad) {
           return;
         }
         this.reporting = false;
@@ -123,7 +123,7 @@ export class VocabImageComponent implements OnChanges, OnDestroy {
         void this.ionic.showToastMessage(this.translate.instant('VocabImage.ReportThanks'));
       },
       error: () => {
-        if (!this.alive || session !== this.practiceSession) {
+        if (!this.alive || load !== this.imageLoad) {
           return;
         }
         this.reporting = false;

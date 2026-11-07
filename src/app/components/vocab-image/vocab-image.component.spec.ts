@@ -132,7 +132,7 @@ describe('VocabImageComponent', () => {
   it('reports the phrase and the current Firebase image index, then keeps the image up', () => {
     const images = ['https://example.com/a.jpg', 'https://example.com/b.jpg'];
     spyOn(Math, 'random').and.returnValue(0.5);
-    showReportable(images, 'apple', 1);
+    showReportable(images, 'apple');
 
     expect(images).toEqual(['https://example.com/a.jpg', 'https://example.com/b.jpg']);
     expect(component.index).toBe(1);
@@ -157,8 +157,8 @@ describe('VocabImageComponent', () => {
     expect(reportButton().disabled).toBeTrue();
   });
 
-  it('keeps the report button disabled for the rest of this practice and enables it on a new practice', () => {
-    showReportable(['https://example.com/a.jpg'], 'apple', 1);
+  it('disables the report button until the next images load', () => {
+    showReportable(['https://example.com/a.jpg'], 'apple');
     clickReport();
     httpMock.expectOne(environment.apiHost + '/flag-image')
       .flush({id: 1, phrase: 'apple', imageIndex: 0, count: 1});
@@ -171,11 +171,6 @@ describe('VocabImageComponent', () => {
 
     expect(component.imageBase64).toBe('https://example.com/c.jpg');
     expect(fixture.nativeElement.querySelector('img.image')).toBeTruthy();
-    expect(reportButton().disabled).toBeTrue();
-    httpMock.expectNone(environment.apiHost + '/flag-image');
-
-    fixture.componentRef.setInput('practiceSession', 2);
-    fixture.detectChanges();
     expect(reportButton().disabled).toBeFalse();
 
     clickReport();
@@ -188,7 +183,7 @@ describe('VocabImageComponent', () => {
   });
 
   it('leaves the button enabled and the image visible when the report fails', () => {
-    showReportable(['https://example.com/a.jpg'], 'apple', 1);
+    showReportable(['https://example.com/a.jpg'], 'apple');
     const shown = component.imageBase64;
     clickReport();
     httpMock.expectOne(environment.apiHost + '/flag-image')
@@ -201,11 +196,10 @@ describe('VocabImageComponent', () => {
     expect(fixture.nativeElement.querySelector('img.image')).toBeTruthy();
   });
 
-  function showReportable(images: string[], phrase: string, practiceSession: number) {
+  function showReportable(images: string[], phrase: string) {
     fixture.componentRef.setInput('images', images);
     fixture.componentRef.setInput('phrase', phrase);
     fixture.componentRef.setInput('canReport', true);
-    fixture.componentRef.setInput('practiceSession', practiceSession);
     fixture.detectChanges();
   }
 
