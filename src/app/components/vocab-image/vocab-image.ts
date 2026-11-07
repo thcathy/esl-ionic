@@ -75,8 +75,7 @@ export class VocabImageComponent implements OnChanges, OnDestroy {
       && !this.showingPlaceholder
       && !this.reported
       && !this.reporting
-      && this.phrase.trim().length > 0
-      && this.index >= 0;
+      && this.phrase.trim().length > 0;
   }
 
   nextImage() {
@@ -113,7 +112,7 @@ export class VocabImageComponent implements OnChanges, OnDestroy {
     const imageIndex = this.index;
     const load = this.imageLoad;
     this.reporting = true;
-    this.vocabPracticeService.flagImage({phrase, imageIndex}).subscribe({
+    this.vocabPracticeService.flagImage(phrase, imageIndex).subscribe({
       next: () => {
         if (!this.alive || load !== this.imageLoad) {
           return;

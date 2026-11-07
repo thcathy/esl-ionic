@@ -104,7 +104,7 @@ describe('VocabPracticeService', () => {
     httpClientSpy.post.and.returnValue(of({id: 1, phrase: 'bus stop', imageIndex: 2, count: 1}));
     let completed = false;
 
-    service.flagImage({phrase: 'bus stop', imageIndex: 2}).subscribe(() => completed = true);
+    service.flagImage('bus stop', 2).subscribe(() => completed = true);
 
     const [url, body] = httpClientSpy.post.calls.mostRecent().args;
     expect(url).toContain('/flag-image');
