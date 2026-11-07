@@ -108,13 +108,34 @@ describe('VocabImageComponent', () => {
     expect(fixture.nativeElement.querySelector('.unverified-note-row')).toBeNull();
   });
 
+  it('starts at a random index and steps through the original order', () => {
+    const images = ['https://example.com/a.jpg', 'https://example.com/b.jpg', 'https://example.com/c.jpg'];
+    spyOn(Math, 'random').and.returnValue(0.5);
+    fixture.componentRef.setInput('images', images);
+    fixture.detectChanges();
+
+    expect(component.index).toBe(1);
+    expect(component.imageBase64).toBe(images[1]);
+    expect(images).toEqual(['https://example.com/a.jpg', 'https://example.com/b.jpg', 'https://example.com/c.jpg']);
+
+    component.nextImage();
+    component.onDone({});
+    expect(component.index).toBe(2);
+    expect(component.imageBase64).toBe(images[2]);
+
+    component.nextImage();
+    component.onDone({});
+    expect(component.index).toBe(0);
+    expect(component.imageBase64).toBe(images[0]);
+  });
+
   it('reports the phrase and the current Firebase image index, then keeps the image up', () => {
     const images = ['https://example.com/a.jpg', 'https://example.com/b.jpg'];
-    spyOn(Math, 'random').and.returnValue(0);
+    spyOn(Math, 'random').and.returnValue(0.5);
     showReportable(images, 'apple', 1);
 
     expect(images).toEqual(['https://example.com/a.jpg', 'https://example.com/b.jpg']);
-    expect(component.currentSourceIndex).toBe(1);
+    expect(component.index).toBe(1);
     expect(component.imageBase64).toBe('https://example.com/b.jpg');
     expect(reportButton().textContent).toContain('Wrong or bad image');
     expect(reportButton().getAttribute('type')).toBe('button');

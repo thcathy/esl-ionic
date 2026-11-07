@@ -2,15 +2,9 @@ import {Component, Input, OnChanges, OnDestroy, SimpleChanges} from '@angular/co
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {TranslateService} from '@ngx-translate/core';
 import {defaultImage} from '../../entity/dictation';
-import {CollectionUtils} from '../../utils/collection-utils';
 import {DictationUtils} from '../../utils/dictation-utils';
 import {IonicComponentService} from '../../services/ionic-component.service';
 import {VocabPracticeService} from '../../services/practice/vocab-practice.service';
-
-interface PracticeImage {
-  src: string;
-  sourceIndex: number;
-}
 
 @Component({
     selector: 'vocab-image',
@@ -39,7 +33,6 @@ export class VocabImageComponent implements OnChanges, OnDestroy {
   state = 'center';
   imageBase64 = '';
   showingPlaceholder = false;
-  private displayImages: PracticeImage[] = [];
   private reported = false;
   private reporting = false;
   private alive = true;
@@ -58,7 +51,14 @@ export class VocabImageComponent implements OnChanges, OnDestroy {
       this.reporting = false;
     }
     if (changes['images'] || changes['practiceSession']) {
-      this.refreshImages();
+      if (DictationUtils.notValidImages(this.images)) {
+        this.images = defaultImage;
+        this.showingPlaceholder = true;
+      } else {
+        this.showingPlaceholder = false;
+      }
+      this.index = Math.floor(Math.random() * this.images.length);
+      this.imageBase64 = this.images[this.index];
     }
   }
 
@@ -67,11 +67,7 @@ export class VocabImageComponent implements OnChanges, OnDestroy {
   }
 
   get canCycle(): boolean {
-    return this.displayImages.length > 1;
-  }
-
-  get currentSourceIndex(): number {
-    return this.displayImages[this.index]?.sourceIndex ?? -1;
+    return (this.images?.length ?? 0) > 1;
   }
 
   get reportEnabled(): boolean {
@@ -80,25 +76,25 @@ export class VocabImageComponent implements OnChanges, OnDestroy {
       && !this.reported
       && !this.reporting
       && this.phrase.trim().length > 0
-      && this.currentSourceIndex >= 0;
+      && this.index >= 0;
   }
 
   nextImage() {
     this.state = 'right';
     this.index++;
-    if (this.index >= this.displayImages.length) { this.index = 0; }
+    if (this.index >= this.images.length) { this.index = 0; }
   }
 
   previousImage() {
     this.state = 'left';
     this.index--;
     if (this.index < 0) {
-      this.index = this.displayImages.length - 1;
+      this.index = this.images.length - 1;
     }
   }
 
   onDone(_event) {
-    this.imageBase64 = this.displayImages[this.index].src;
+    this.imageBase64 = this.images[this.index];
     if (this.state === 'left') {
       this.state = 'right-end';
     } else if (this.state === 'right') {
@@ -114,7 +110,7 @@ export class VocabImageComponent implements OnChanges, OnDestroy {
     }
 
     const phrase = this.phrase.trim();
-    const imageIndex = this.currentSourceIndex;
+    const imageIndex = this.index;
     const session = this.practiceSession;
     this.reporting = true;
     this.vocabPracticeService.flagImage({phrase, imageIndex}).subscribe({
@@ -135,18 +131,4 @@ export class VocabImageComponent implements OnChanges, OnDestroy {
     });
   }
 
-  private refreshImages() {
-    const incoming = this.images;
-    if (DictationUtils.notValidImages(incoming)) {
-      this.displayImages = defaultImage.map((src, sourceIndex) => ({src, sourceIndex}));
-      this.showingPlaceholder = true;
-    } else {
-      this.displayImages = CollectionUtils.shuffle(
-        incoming.map((src, sourceIndex) => ({src, sourceIndex}))
-      );
-      this.showingPlaceholder = false;
-    }
-    this.index = 0;
-    this.imageBase64 = this.displayImages[0].src;
-  }
 }
