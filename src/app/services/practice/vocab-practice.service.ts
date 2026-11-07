@@ -30,6 +30,7 @@ export class VocabPracticeService extends Service {
   private generatePracticeUrl = environment.apiHost + '/vocab/practice/generate/';
   private saveHistoryUrl = environment.apiHost + '/member/vocab/practice/history/save/v2';
   private getAllHistoryUrl = environment.apiHost + '/member/vocab/practice/history/getall';
+  private flagImageUrl = environment.apiHost + '/flag-image';
   private staticImageUrl = environment.imagesHost;
 
   getQuestion(word: string): Observable<VocabPractice> {
@@ -40,23 +41,31 @@ export class VocabPracticeService extends Service {
   getImages(vocabPractice: VocabPractice, includeAIImage: boolean = true): Observable<VocabPractice> {
     console.log(`picsFullPaths from server: ${vocabPractice.picsFullPaths}`);
     if (!DictationUtils.notValidImages(vocabPractice.picsFullPaths)) {
+      vocabPractice.canReportImage = false;
       return of(vocabPractice);
     }
 
     return this.http.get<ImagesObject>(this.imageUrl(vocabPractice.word))
       .pipe(
         map(imagesObject => {
-          console.log(`imagesObject verified=${imagesObject.isVerify}`);
-          const acceptImages = includeAIImage || imagesObject.isVerify === true;
-          vocabPractice.imageIsVerify = imagesObject.isVerify;
-          vocabPractice.picsFullPaths = acceptImages ? imagesObject.images : [];
+          const images = Array.isArray(imagesObject?.images) ? imagesObject.images : [];
+          vocabPractice.picsFullPaths = includeAIImage ? images : [];
+          vocabPractice.canReportImage = includeAIImage && images.length > 0;
           return vocabPractice;
         }),
         catchError(() => {
           vocabPractice.picsFullPaths = null;
+          vocabPractice.canReportImage = false;
           return of(vocabPractice);
         })
       );
+  }
+
+  flagImage(phrase: string, imageIndex: number): Observable<void> {
+    return this.http.post(this.flagImageUrl, {
+      phrase,
+      imageIndex,
+    }).pipe(map(() => undefined));
   }
 
   imageUrl(phrase: string): string {

@@ -72,33 +72,26 @@ ion-button.nav-button.ion-focused {
   right: 6px;
 }
 
-.unverified-note-row {
+.report-row {
   display: flex;
-  align-items: flex-start;
   justify-content: center;
-  gap: 6px;
-  padding: 4px 12px 10px;
+  padding: 0 12px 8px;
 }
 
-.unverified-note-row fa-icon {
-  flex: 0 0 auto;
-  color: var(--ion-color-medium);
-  font-size: 0.8rem;
-  line-height: 1.35;
-  height: calc(0.8rem * 1.35);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.unverified-note-row ion-note {
-  flex: 0 1 auto;
+ion-button.report-image-button {
   margin: 0;
-  padding: 0;
-  display: block;
-  font-size: 0.8rem;
-  line-height: 1.35;
-  text-align: start;
+  max-width: 100%;
+  min-height: 32px;
+  height: auto;
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: normal;
+  text-transform: none;
+  white-space: normal;
+  --padding-top: 4px;
+  --padding-bottom: 4px;
+  --padding-start: 8px;
+  --padding-end: 8px;
 }
 
 @include bp.phone {
@@ -106,7 +99,7 @@ ion-button.nav-button.ion-focused {
     --vocab-image-slot: 160px;
   }
 
-  .unverified-note-row {
-    padding: 4px 12px 8px;
+  .report-row {
+    padding: 0 12px 6px;
   }
 }

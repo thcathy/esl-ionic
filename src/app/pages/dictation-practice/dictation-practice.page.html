@@ -84,7 +84,8 @@
             <ion-col size="12" size-sm="12" size-md="6">
               <vocab-image
                 [images]="currentQuestion().picsFullPaths"
-                [unverified]="currentQuestion()?.imageIsVerify === false">
+                [phrase]="currentQuestion().word"
+                [canReport]="currentQuestion().canReportImage === true">
               </vocab-image>
             </ion-col>
           </ion-row>
