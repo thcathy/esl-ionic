@@ -194,9 +194,7 @@ describe('VocabImageComponent', () => {
 
   function clickReport() {
     const button = fixture.debugElement.query(By.css('ion-button.report-image-button'));
-    const event = new Event('click', {bubbles: true, cancelable: true});
-    button.triggerEventHandler('click', event);
-    expect(event.defaultPrevented).toBeTrue();
+    button.triggerEventHandler('click', null);
   }
 
 });

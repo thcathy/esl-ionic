@@ -108,9 +108,7 @@ export class VocabImageComponent implements OnChanges, OnDestroy {
     }
   }
 
-  flagImage(event: Event) {
-    event.preventDefault();
-    event.stopPropagation();
+  flagImage() {
     if (!this.reportEnabled) {
       return;
     }
