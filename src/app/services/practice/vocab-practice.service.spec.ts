@@ -58,7 +58,7 @@ describe('VocabPracticeService', () => {
     service.saveHistory(vocabHistories1);
     const callArg = httpClientSpy.post.calls.mostRecent().args[1];
     expect(callArg.histories.length).toEqual(2);
-    expect(callArg.histories[0].question.canReportImage).toBeUndefined();
+    expect(callArg.histories[0].question.canReportImage).toBeTrue();
     expect(callArg.histories[0].question.picsFullPaths.length).toBeLessThan(1);
     expect(callArg.histories[0].question.picsFullPathsInString.length).toBeLessThan(1);
     expect(callArg.histories[0].question.grades.length).toBeLessThan(1);

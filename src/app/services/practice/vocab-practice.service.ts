@@ -130,7 +130,6 @@ export class VocabPracticeService extends Service {
       trimmedQuestion.picsFullPaths = [];
       trimmedQuestion.picsFullPathsInString = '';
       trimmedQuestion.grades = [];
-      delete trimmedQuestion.canReportImage;
       h.question = trimmedQuestion;
       return h;
     });
