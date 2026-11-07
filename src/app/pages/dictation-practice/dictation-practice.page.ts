@@ -31,6 +31,7 @@ export class DictationPracticePage {
   showPreload = true;
   vocabPractices: VocabPractice[] = [];
   questionIndex: number;
+  practiceSession = 0;
   phonics: string;
   answer: string;
   mark = 0;
@@ -63,6 +64,7 @@ export class DictationPracticePage {
     this.answer = '';
     this.puzzleControls = null;
     this.showPreload = true;
+    this.practiceSession++;
   }
 
   async initDictation() {
