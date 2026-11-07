@@ -15,20 +15,19 @@ export class CollectionUtils {
     return array.slice(minIndex, array.length);
   }
 
-  static shuffle<T>(array: readonly T[]): T[] {
-    const copy = array.slice();
-    let currentIndex = copy.length;
+  static shuffle(array: string[]): string[] {
+    let currentIndex = array.length, temporaryValue, randomIndex;
 
-    while (currentIndex !== 0) {
-      const randomIndex = Math.floor(Math.random() * currentIndex);
+    while (0 !== currentIndex) {
+      randomIndex = Math.floor(Math.random() * currentIndex);
       currentIndex -= 1;
 
-      const temporary = copy[currentIndex];
-      copy[currentIndex] = copy[randomIndex];
-      copy[randomIndex] = temporary;
+      temporaryValue = array[currentIndex];
+      array[currentIndex] = array[randomIndex];
+      array[randomIndex] = temporaryValue;
     }
 
-    return copy;
+    return array;
   }
 
 }

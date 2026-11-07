@@ -52,13 +52,13 @@ describe('VocabPracticeService', () => {
 
   it('save history should trim the input before sending out', () => {
     const vocabHistories1 = [
-      <VocabPracticeHistory>{ question: {...vocab_apple, canReportImage: true} },
+      <VocabPracticeHistory>{ question: vocab_apple },
       <VocabPracticeHistory>{ question: vocab_banana }
     ];
+
     service.saveHistory(vocabHistories1);
     const callArg = httpClientSpy.post.calls.mostRecent().args[1];
     expect(callArg.histories.length).toEqual(2);
-    expect(callArg.histories[0].question.canReportImage).toBeUndefined();
     expect(callArg.histories[0].question.picsFullPaths.length).toBeLessThan(1);
     expect(callArg.histories[0].question.picsFullPathsInString.length).toBeLessThan(1);
     expect(callArg.histories[0].question.grades.length).toBeLessThan(1);
@@ -100,51 +100,45 @@ describe('VocabPracticeService', () => {
     expect(service.imageUrl('i am ok')).toContain('images%2Fi-%2Fi-am-ok.json?alt=media');
   });
 
-  it('getImages shows Firebase images when Include AI Image is on and ignores isVerify', (done) => {
-    const cases = [
-      { includeAIImage: true, isVerify: false },
-      { includeAIImage: true, isVerify: true },
-      { includeAIImage: undefined, isVerify: false },
-    ];
-    let remaining = cases.length;
+  it('getImages accepts unverified AI images when includeAIImage is true', (done) => {
+    const practice = { word: 'unicorn', picsFullPaths: null } as any;
+    httpClientSpy.get.and.returnValue(of({ images: ['img1'], isVerify: false }));
 
-    cases.forEach(({ includeAIImage, isVerify }) => {
-      const practice = { word: 'unicorn', picsFullPaths: null } as any;
-      httpClientSpy.get.and.returnValue(of({ images: ['img1', 'img2'], isVerify }));
-
-      service.getImages(practice, includeAIImage).subscribe(result => {
-        expect(result.picsFullPaths).toEqual(['img1', 'img2']);
-        expect(result.canReportImage).toBeTrue();
-        expect('imageIsVerify' in result).toBeFalse();
-        expect('isVerify' in result).toBeFalse();
-        remaining--;
-        if (remaining === 0) {
-          done();
-        }
-      });
-    });
-  });
-
-  it('getImages hides Firebase images when Include AI Image is off, even if isVerify is true', (done) => {
-    const practice = { word: 'apple', picsFullPaths: null } as any;
-    httpClientSpy.get.and.returnValue(of({ images: ['img1'], isVerify: true }));
-
-    service.getImages(practice, false).subscribe(result => {
-      expect(result.picsFullPaths).toEqual([]);
-      expect(result.canReportImage).toBeFalse();
-      expect('imageIsVerify' in result).toBeFalse();
-      expect('isVerify' in result).toBeFalse();
+    service.getImages(practice, true).subscribe(result => {
+      expect(result.picsFullPaths).toEqual(['img1']);
+      expect(result.imageIsVerify).toBeFalse();
       done();
     });
   });
 
-  it('getImages keeps an already valid picture and does not mark it reportable', (done) => {
+  it('getImages hides unverified AI images with empty array when includeAIImage is false', (done) => {
+    const practice = { word: 'unicorn', picsFullPaths: null } as any;
+    httpClientSpy.get.and.returnValue(of({ images: ['img1'], isVerify: false }));
+
+    service.getImages(practice, false).subscribe(result => {
+      expect(result.picsFullPaths).toEqual([]);
+      expect(result.imageIsVerify).toBeFalse();
+      done();
+    });
+  });
+
+  it('getImages accepts verified images when includeAIImage is false', (done) => {
+    const practice = { word: 'apple', picsFullPaths: null } as any;
+    httpClientSpy.get.and.returnValue(of({ images: ['img1'], isVerify: true }));
+
+    service.getImages(practice, false).subscribe(result => {
+      expect(result.picsFullPaths).toEqual(['img1']);
+      expect(result.imageIsVerify).toBeTrue();
+      done();
+    });
+  });
+
+  it('getImages leaves imageIsVerify undefined when picsFullPaths already valid', (done) => {
     const practice = { word: 'apple', picsFullPaths: ['existing.jpg'] } as any;
 
     service.getImages(practice, true).subscribe(result => {
       expect(result.picsFullPaths).toEqual(['existing.jpg']);
-      expect(result.canReportImage).toBeFalse();
-      expect('imageIsVerify' in result).toBeFalse();
+      expect(result.imageIsVerify).toBeUndefined();
       expect(httpClientSpy.get).not.toHaveBeenCalled();
       done();
     });

@@ -40,21 +40,20 @@ export class VocabPracticeService extends Service {
   getImages(vocabPractice: VocabPractice, includeAIImage: boolean = true): Observable<VocabPractice> {
     console.log(`picsFullPaths from server: ${vocabPractice.picsFullPaths}`);
     if (!DictationUtils.notValidImages(vocabPractice.picsFullPaths)) {
-      vocabPractice.canReportImage = false;
       return of(vocabPractice);
     }
 
     return this.http.get<ImagesObject>(this.imageUrl(vocabPractice.word))
       .pipe(
         map(imagesObject => {
-          const images = Array.isArray(imagesObject?.images) ? imagesObject.images : [];
-          vocabPractice.picsFullPaths = includeAIImage ? images : [];
-          vocabPractice.canReportImage = includeAIImage && images.length > 0;
+          console.log(`imagesObject verified=${imagesObject.isVerify}`);
+          const acceptImages = includeAIImage || imagesObject.isVerify === true;
+          vocabPractice.imageIsVerify = imagesObject.isVerify;
+          vocabPractice.picsFullPaths = acceptImages ? imagesObject.images : [];
           return vocabPractice;
         }),
         catchError(() => {
           vocabPractice.picsFullPaths = null;
-          vocabPractice.canReportImage = false;
           return of(vocabPractice);
         })
       );
@@ -109,7 +108,6 @@ export class VocabPracticeService extends Service {
       trimmedQuestion.picsFullPaths = [];
       trimmedQuestion.picsFullPathsInString = '';
       trimmedQuestion.grades = [];
-      delete trimmedQuestion.canReportImage;
       h.question = trimmedQuestion;
       return h;
     });

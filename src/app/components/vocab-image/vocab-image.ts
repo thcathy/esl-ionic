@@ -1,16 +1,8 @@
-import {Component, Input, OnChanges, OnDestroy, SimpleChanges} from '@angular/core';
+import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {animate, state, style, transition, trigger} from '@angular/animations';
-import {TranslateService} from '@ngx-translate/core';
 import {defaultImage} from '../../entity/dictation';
 import {CollectionUtils} from '../../utils/collection-utils';
 import {DictationUtils} from '../../utils/dictation-utils';
-import {FlagImageService} from '../../services/flag-image.service';
-import {IonicComponentService} from '../../services/ionic-component.service';
-
-interface PracticeImage {
-  src: string;
-  sourceIndex: number;
-}
 
 @Component({
     selector: 'vocab-image',
@@ -30,75 +22,54 @@ interface PracticeImage {
     ],
     standalone: false
 })
-export class VocabImageComponent implements OnChanges, OnDestroy {
+export class VocabImageComponent implements OnChanges {
   @Input() images: string[];
-  @Input() phrase = '';
-  @Input() canReport = false;
-  @Input() practiceSession = 0;
+  @Input() unverified = false;
   index: number;
   state = 'center';
   imageBase64 = '';
   showingPlaceholder = false;
-  private displayImages: PracticeImage[] = [];
-  private reported = false;
-  private reporting = false;
-  private alive = true;
 
-  constructor(
-    private readonly flagImageService: FlagImageService,
-    private readonly ionic: IonicComponentService,
-    private readonly translate: TranslateService,
-  ) {
+  constructor() {
     this.index = 0;
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes['practiceSession']) {
-      this.reported = false;
-      this.reporting = false;
+  ngOnChanges(_changes: SimpleChanges) {
+    if (DictationUtils.notValidImages(this.images)) {
+      this.images = defaultImage;
+      this.showingPlaceholder = true;
+    } else {
+      this.showingPlaceholder = false;
     }
-    if (changes['images'] || changes['practiceSession']) {
-      this.refreshImages();
-    }
+    this.images = CollectionUtils.shuffle(this.images);
+    this.index = 0;
+    this.imageBase64 = this.images[0];
   }
 
-  ngOnDestroy() {
-    this.alive = false;
+  get showUnverifiedNote(): boolean {
+    return this.unverified && !this.showingPlaceholder;
   }
 
   get canCycle(): boolean {
-    return this.displayImages.length > 1;
-  }
-
-  get currentSourceIndex(): number {
-    return this.displayImages[this.index]?.sourceIndex ?? -1;
-  }
-
-  get reportEnabled(): boolean {
-    return this.canReport
-      && !this.showingPlaceholder
-      && !this.reported
-      && !this.reporting
-      && this.phrase.trim().length > 0
-      && this.currentSourceIndex >= 0;
+    return (this.images?.length ?? 0) > 1;
   }
 
   nextImage() {
     this.state = 'right';
     this.index++;
-    if (this.index >= this.displayImages.length) { this.index = 0; }
+    if (this.index >= this.images.length) { this.index = 0; }
   }
 
   previousImage() {
     this.state = 'left';
     this.index--;
     if (this.index < 0) {
-      this.index = this.displayImages.length - 1;
+      this.index = this.images.length - 1;
     }
   }
 
-  onDone(_event) {
-    this.imageBase64 = this.displayImages[this.index].src;
+  onDone($event) {
+    this.imageBase64 = this.images[this.index];
     if (this.state === 'left') {
       this.state = 'right-end';
     } else if (this.state === 'right') {
@@ -106,49 +77,5 @@ export class VocabImageComponent implements OnChanges, OnDestroy {
     } else if (this.state.endsWith('-end')) {
       this.state = 'center';
     }
-  }
-
-  flagImage(event: Event) {
-    event.preventDefault();
-    event.stopPropagation();
-    if (!this.reportEnabled) {
-      return;
-    }
-
-    const phrase = this.phrase.trim();
-    const imageIndex = this.currentSourceIndex;
-    const session = this.practiceSession;
-    this.reporting = true;
-    this.flagImageService.flag({phrase, imageIndex}).subscribe({
-      next: () => {
-        if (!this.alive || session !== this.practiceSession) {
-          return;
-        }
-        this.reporting = false;
-        this.reported = true;
-        void this.ionic.showToastMessage(this.translate.instant('VocabImage.ReportThanks'));
-      },
-      error: () => {
-        if (!this.alive || session !== this.practiceSession) {
-          return;
-        }
-        this.reporting = false;
-      },
-    });
-  }
-
-  private refreshImages() {
-    const incoming = this.images;
-    if (DictationUtils.notValidImages(incoming)) {
-      this.displayImages = defaultImage.map((src, sourceIndex) => ({src, sourceIndex}));
-      this.showingPlaceholder = true;
-    } else {
-      this.displayImages = CollectionUtils.shuffle(
-        incoming.map((src, sourceIndex) => ({src, sourceIndex}))
-      );
-      this.showingPlaceholder = false;
-    }
-    this.index = 0;
-    this.imageBase64 = this.displayImages[0].src;
   }
 }

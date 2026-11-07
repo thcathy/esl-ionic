@@ -11,13 +11,12 @@ export interface VocabPractice {
   grades?: Grade[];
   createdDate?: Date;
   picsFullPaths?: string[];
-  /** True when picsFullPaths is the Firebase image list, in that list's order. */
-  canReportImage?: boolean;
   ipaunavailable?: boolean;
   ipa?: string;
   activePronounceLink?: string;
   picsFullPathsInString?: string;
   suffledWord?: string;
+  imageIsVerify?: boolean;
 }
 
 export enum VocabDifficulty {
