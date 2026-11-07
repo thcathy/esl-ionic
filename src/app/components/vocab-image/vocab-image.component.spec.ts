@@ -138,7 +138,7 @@ describe('VocabImageComponent', () => {
     expect(component.index).toBe(1);
     expect(component.imageBase64).toBe('https://example.com/b.jpg');
     expect(reportButton().textContent).toContain('Report bad image?');
-    expect(reportButton().getAttribute('fill')).toBe('outline');
+    expect(reportButton().getAttribute('fill')).toBe('clear');
     expect(reportButton().getAttribute('type')).toBe('button');
 
     const shown = component.imageBase64;
