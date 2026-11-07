@@ -34,7 +34,7 @@ describe('VocabImageComponent', () => {
     httpMock = TestBed.inject(HttpTestingController);
     const translate = TestBed.inject(TranslateService);
     translate.setTranslation('en', {
-      'VocabImage.Report': 'Wrong or bad image?',
+      'VocabImage.Report': 'Report bad image?',
       'VocabImage.ReportThanks': reportThanks,
     }, true);
     translate.use('en');
@@ -137,7 +137,7 @@ describe('VocabImageComponent', () => {
     expect(images).toEqual(['https://example.com/a.jpg', 'https://example.com/b.jpg']);
     expect(component.index).toBe(1);
     expect(component.imageBase64).toBe('https://example.com/b.jpg');
-    expect(reportButton().textContent).toContain('Wrong or bad image?');
+    expect(reportButton().textContent).toContain('Report bad image?');
     expect(reportButton().getAttribute('fill')).toBe('outline');
     expect(reportButton().getAttribute('type')).toBe('button');
 
