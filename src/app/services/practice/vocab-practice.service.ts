@@ -19,6 +19,18 @@ export interface CreateDictationHistoryRequest {
   histories?: VocabPracticeHistory[];
 }
 
+export interface FlagImageRequest {
+  phrase: string;
+  imageIndex: number;
+}
+
+interface FlagImageResponse {
+  id: number;
+  phrase: string;
+  imageIndex: number;
+  count: number;
+}
+
 @Injectable({ providedIn: 'root' })
 export class VocabPracticeService extends Service {
 
@@ -30,6 +42,7 @@ export class VocabPracticeService extends Service {
   private generatePracticeUrl = environment.apiHost + '/vocab/practice/generate/';
   private saveHistoryUrl = environment.apiHost + '/member/vocab/practice/history/save/v2';
   private getAllHistoryUrl = environment.apiHost + '/member/vocab/practice/history/getall';
+  private flagImageUrl = environment.apiHost + '/flag-image';
   private staticImageUrl = environment.imagesHost;
 
   getQuestion(word: string): Observable<VocabPractice> {
@@ -58,6 +71,14 @@ export class VocabPracticeService extends Service {
           return of(vocabPractice);
         })
       );
+  }
+
+  /** Posts to esl-rest `POST /flag-image`. Anonymous calls are allowed. */
+  flagImage(request: FlagImageRequest): Observable<void> {
+    return this.http.post<FlagImageResponse>(this.flagImageUrl, {
+      phrase: request.phrase,
+      imageIndex: request.imageIndex,
+    }).pipe(map(() => undefined));
   }
 
   imageUrl(phrase: string): string {

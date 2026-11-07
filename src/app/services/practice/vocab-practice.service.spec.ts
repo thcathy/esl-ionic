@@ -100,6 +100,19 @@ describe('VocabPracticeService', () => {
     expect(service.imageUrl('i am ok')).toContain('images%2Fi-%2Fi-am-ok.json?alt=media');
   });
 
+  it('flagImage POSTs phrase and imageIndex to /flag-image', () => {
+    httpClientSpy.post.and.returnValue(of({id: 1, phrase: 'bus stop', imageIndex: 2, count: 1}));
+    let completed = false;
+
+    service.flagImage({phrase: 'bus stop', imageIndex: 2}).subscribe(() => completed = true);
+
+    const [url, body] = httpClientSpy.post.calls.mostRecent().args;
+    expect(url).toContain('/flag-image');
+    expect(url).not.toContain('image-generation');
+    expect(body).toEqual({phrase: 'bus stop', imageIndex: 2});
+    expect(completed).toBeTrue();
+  });
+
   it('getImages shows Firebase images when Include AI Image is on and ignores isVerify', (done) => {
     const cases = [
       { includeAIImage: true, isVerify: false },
