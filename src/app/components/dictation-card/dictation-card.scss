@@ -3,6 +3,110 @@
   gap: 2px;
 }
 
+// Practice-start: options (voice, spelling/puzzle, START) sit beside the
+// info card once the page is wide enough, so a tall word list cannot push
+// the primary action below the first screen. Narrower widths keep a single
+// column but place options above the word list.
+:host.practice-start {
+  display: block;
+  max-width: 100%;
+  min-width: 0;
+
+  .dictation-card-layout {
+    align-items: start;
+  }
+
+  .section-info,
+  .section-options,
+  .section-content {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .dictation-detail {
+    width: 100%;
+  }
+
+  .dictation-detail td {
+    // `.card td` sets break-all globally; keep labels and values on word boundaries.
+    word-break: normal;
+    overflow-wrap: break-word;
+  }
+
+  .fillin-vocabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  .start-button-row {
+    max-width: 100%;
+  }
+
+  .start-button {
+    max-width: 100%;
+  }
+
+  ::ng-deep .compact-section-card {
+    margin: 4px 0 6px;
+  }
+
+  ::ng-deep .compact-section-card ion-card-header {
+    padding: 6px 8px;
+  }
+
+  ::ng-deep .compact-section-card ion-card-title {
+    font-size: 0.88rem;
+  }
+
+  ::ng-deep .compact-section-card ion-card-content ion-item {
+    --min-height: 36px;
+    --padding-start: 8px;
+    --inner-padding-end: 8px;
+  }
+}
+
+@media (min-width: 640px) {
+  :host.practice-start .dictation-card-layout {
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+    grid-template-areas:
+      "info options"
+      "content content";
+    column-gap: 12px;
+  }
+
+  // Fixed columns stop a long value from widening the info card past its grid track.
+  :host.practice-start .dictation-detail {
+    table-layout: fixed;
+  }
+
+  :host.practice-start .dictation-detail td:first-child {
+    width: 38%;
+  }
+
+  :host.practice-start .section-info {
+    grid-area: info;
+  }
+
+  :host.practice-start .section-options {
+    grid-area: options;
+  }
+
+  :host.practice-start .section-content {
+    grid-area: content;
+  }
+}
+
+@media (max-width: 639.98px) {
+  :host.practice-start .section-options {
+    order: 2;
+  }
+
+  :host.practice-start .section-content {
+    order: 3;
+  }
+}
+
 .section-body {
   padding: 2px 8px 6px;
 }

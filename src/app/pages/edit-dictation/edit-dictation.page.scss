@@ -5,12 +5,56 @@
 }
 
 .input-form {
+  max-width: 100%;
+
   ion-input {
     --placeholder-color: #A0A0A0;
   }
 
   ion-label {
-    min-width: 95px;
+    min-width: 0;
+  }
+
+  > ion-row > ion-col {
+    min-width: 0;
+  }
+
+  ion-row.radio > ion-col,
+  .word-options-all > ion-row > ion-col {
+    flex: 1 1 10rem;
+    width: auto;
+    max-width: 100%;
+    min-width: 0;
+  }
+}
+
+.form-actions ion-toolbar {
+  --background: #ffffff;
+  --border-width: 0;
+  --min-height: 52px;
+  box-shadow: 0 -1px 0 rgba(15, 23, 42, 0.12);
+}
+
+.form-actions-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+}
+
+.form-actions-bar .action-button {
+  margin: 4px;
+  max-width: 100%;
+}
+
+// Keep the writing area from consuming a short laptop viewport.
+// The native control lives in Ionic's shadow root and sizes from `rows`;
+// capping the host keeps Preview/Save in view with the field.
+@media (max-height: 820px) {
+  #ion-col-textarea ion-textarea {
+    max-height: min(220px, 38vh);
+    overflow: auto;
   }
 }
 
@@ -30,8 +74,13 @@ fa-icon {
 
 .type-example {
   padding-left: 42px;
+  padding-right: 8px;
   font-size: 0.8rem;
   color: #555555;
+  overflow-wrap: break-word;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .puzzle span {

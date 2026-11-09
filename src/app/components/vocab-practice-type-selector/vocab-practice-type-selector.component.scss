@@ -1,10 +1,24 @@
+:host ion-row.radio > ion-col {
+  // Override Ionic's flex-basis: 0 so a narrow row wraps the pair
+  // instead of letting min-content overflow and clip the tiles.
+  flex: 1 1 12rem;
+  width: auto;
+  max-width: 100%;
+  min-width: 0;
+}
+
 .type-example {
   min-height: 36px;
-  padding-left: 20px;
+  padding-left: 12px;
   font-size: 0.9rem;
   color: #555555;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
+  row-gap: 4px;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .type-example .spell {
@@ -19,6 +33,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  flex: 0 0 auto;
   width: 22px;
   height: 24px;
   margin: 0 2px;
