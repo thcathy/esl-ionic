@@ -14,7 +14,7 @@ concurrency:
 
 jobs:
   build-test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -37,7 +37,7 @@ jobs:
           junit_files: junit/*.xml
 
   e2e-uat:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     if: github.ref == 'refs/heads/master'
     steps:
       - uses: actions/checkout@v4
@@ -59,7 +59,7 @@ jobs:
           retention-days: 7
 
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs: [ build-test, e2e-uat ]
     if: github.ref == 'refs/heads/master'
     steps:
