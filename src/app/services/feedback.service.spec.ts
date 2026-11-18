@@ -23,16 +23,22 @@ describe('FeedbackService', () => {
 
   afterEach(() => httpMock.verify());
 
-  it('POSTs email and message to /feedback', () => {
+  it('POSTs channel, contact, and message, and repeats the address as email when Email is chosen', () => {
     let completed = false;
 
-    service.submit({email: 'learner@example.com', message: 'The audio was quiet.'}).subscribe(() => {
+    service.submit({
+      channel: 'email',
+      contact: 'learner@example.com',
+      message: 'The audio was quiet.',
+    }).subscribe(() => {
       completed = true;
     });
 
     const req = httpMock.expectOne(environment.apiHost + '/feedback');
     expect(req.request.method).toBe('POST');
     expect(req.request.body).toEqual({
+      channel: 'email',
+      contact: 'learner@example.com',
       email: 'learner@example.com',
       message: 'The audio was quiet.',
     });
@@ -40,10 +46,26 @@ describe('FeedbackService', () => {
     expect(completed).toBeTrue();
   });
 
+  it('POSTs a non-email channel without an email address', () => {
+    service.submit({
+      channel: 'whatsapp',
+      contact: '+852 9123 4567',
+      message: 'Hello',
+    }).subscribe();
+
+    const req = httpMock.expectOne(environment.apiHost + '/feedback');
+    expect(req.request.body).toEqual({
+      channel: 'whatsapp',
+      contact: '+852 9123 4567',
+      message: 'Hello',
+    });
+    req.flush('');
+  });
+
   it('surfaces an HTTP error without treating it as success', () => {
     let failed = false;
 
-    service.submit({email: 'learner@example.com', message: 'Hello'}).subscribe({
+    service.submit({channel: 'messenger', contact: 'Jane Lee', message: 'Hello'}).subscribe({
       next: () => fail('expected the request to fail'),
       error: () => failed = true,
     });

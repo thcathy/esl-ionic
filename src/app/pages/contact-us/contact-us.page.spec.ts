@@ -1,6 +1,7 @@
 import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
-import {Subject, throwError} from 'rxjs';
+import {TranslateService} from '@ngx-translate/core';
+import {of, Subject, throwError} from 'rxjs';
 
 import {ContactUsPage} from './contact-us.page';
 import {SharedTestModule} from '../../../testing/shared-test.module';
@@ -16,9 +17,11 @@ describe('ContactUsPage', () => {
   let navigation: jasmine.SpyObj<NavigationService>;
   let ionic: jasmine.SpyObj<IonicComponentService>;
   let auth: {userProfile: {email?: string} | null};
+  let translate: TranslateService;
 
   beforeEach(waitForAsync(() => {
     feedback = jasmine.createSpyObj('FeedbackService', ['submit']);
+    feedback.submit.and.returnValue(of(undefined));
     navigation = jasmine.createSpyObj('NavigationService', ['goBack']);
     ionic = jasmine.createSpyObj('IonicComponentService', ['showToastMessage']);
     auth = {userProfile: null};
@@ -37,12 +40,16 @@ describe('ContactUsPage', () => {
   }));
 
   beforeEach(() => {
+    translate = TestBed.inject(TranslateService);
+    translate.use('en');
     fixture = TestBed.createComponent(ContactUsPage);
     component = fixture.componentInstance;
+    spyOn(component, 'reachLocales').and.returnValue(['en-HK']);
     fixture.detectChanges();
   });
 
-  it('requires a valid email and a message', () => {
+  it('requires a message, and a valid email only when Email is selected', () => {
+    component.channel.setValue('email');
     component.submit();
     expect(feedback.submit).not.toHaveBeenCalled();
     expect(component.email.errors.required).toBeTrue();
@@ -56,27 +63,107 @@ describe('ContactUsPage', () => {
     expect(feedback.submit).not.toHaveBeenCalled();
   });
 
-  it('prefills the signed-in email and keeps an edited address', () => {
+  it('requires the matching contact and does not check email format for other channels', () => {
+    expect(component.selectedChannel).toBe('whatsapp');
+    expect(component.channels).toEqual(['whatsapp', 'email', 'wechat', 'messenger']);
+
+    component.message.setValue('Hello there');
+    component.submit();
+    expect(component.contact.errors.required).toBeTrue();
+    expect(component.email.errors).toBeNull();
+    expect(feedback.submit).not.toHaveBeenCalled();
+
+    component.channel.setValue('wechat');
+    component.contact.setValue('not-an-email');
+    component.submit();
+    expect(feedback.submit).toHaveBeenCalledOnceWith({
+      channel: 'wechat',
+      contact: 'not-an-email',
+      message: 'Hello there',
+    });
+  });
+
+  it('requires a WeChat ID and a Messenger name on those channels', () => {
+    component.message.setValue('Hello there');
+
+    component.channel.setValue('wechat');
+    component.submit();
+    expect(component.contact.errors.required).toBeTrue();
+    expect(component.contactRequiredKey).toBe('ContactUs.WeChatRequired');
+
+    component.channel.setValue('messenger');
+    component.contact.setValue('   ');
+    component.submit();
+    expect(component.contact.errors.required).toBeTrue();
+    expect(component.contactRequiredKey).toBe('ContactUs.MessengerRequired');
+    expect(feedback.submit).not.toHaveBeenCalled();
+  });
+
+  it('reorders the list when the language changes and keeps a channel the learner already chose', () => {
+    component.channel.setValue('messenger');
+    component.channel.markAsDirty();
+    component.contact.setValue('Jane Lee');
+
+    translate.use('zh-Hans');
+
+    expect(component.channels).toEqual(['wechat', 'email', 'whatsapp', 'messenger']);
+    expect(component.selectedChannel).toBe('messenger');
+    expect(component.contact.value).toBe('Jane Lee');
+  });
+
+  it('follows the language when it arrives before the learner picks a channel', () => {
+    expect(component.selectedChannel).toBe('whatsapp');
+
+    translate.use('zh-Hans');
+
+    expect(component.channels[0]).toBe('wechat');
+    expect(component.selectedChannel).toBe('wechat');
+  });
+
+  it('lists WeChat first when the app language is Simplified Chinese', () => {
+    translate.use('zh-Hans');
+    component.ionViewWillEnter();
+    expect(component.channels).toEqual(['wechat', 'email', 'whatsapp', 'messenger']);
+    expect(component.selectedChannel).toBe('wechat');
+  });
+
+  it('selects Email and prefills the login email, and keeps an edited address', () => {
     auth.userProfile = {email: 'learner@example.com'};
     component.ionViewWillEnter();
+    expect(component.selectedChannel).toBe('email');
     expect(component.email.value).toBe('learner@example.com');
 
     component.email.setValue('parent@example.com');
     component.ionViewWillEnter();
     expect(component.email.value).toBe('parent@example.com');
+    expect(component.selectedChannel).toBe('email');
   });
 
-  it('posts trimmed fields, confirms, and leaves the page', () => {
+  it('keeps a chosen channel when the page is entered again and still prefills an empty email', () => {
+    component.channel.setValue('messenger');
+    component.channel.markAsDirty();
+    auth.userProfile = {email: 'learner@example.com'};
+
+    component.ionViewWillEnter();
+
+    expect(component.selectedChannel).toBe('messenger');
+    expect(component.email.value).toBe('learner@example.com');
+    expect(component.email.errors).toBeNull();
+  });
+
+  it('posts the chosen channel and trimmed contact, confirms, and leaves the page', () => {
     const pending = new Subject<void>();
     feedback.submit.and.returnValue(pending.asObservable());
-    component.email.setValue('  learner@example.com  ');
+    component.channel.setValue('whatsapp');
+    component.contact.setValue('  +852 9123 4567  ');
     component.message.setValue('  Hello there  ');
 
     component.submit();
     component.submit();
 
     expect(feedback.submit).toHaveBeenCalledOnceWith({
-      email: 'learner@example.com',
+      channel: 'whatsapp',
+      contact: '+852 9123 4567',
       message: 'Hello there',
     });
     pending.next();
@@ -86,8 +173,28 @@ describe('ContactUsPage', () => {
     expect(component.submitting).toBeFalse();
   });
 
+  it('shows the reach-you select and only the field for the selected channel', () => {
+    fixture.detectChanges();
+    const root: HTMLElement = fixture.nativeElement;
+    expect(root.querySelector('ion-select')?.label).toBe('ContactUs.ReachYou');
+    expect(Array.from(root.querySelectorAll('ion-select-option'), option => option.textContent?.trim())).toEqual([
+      'ContactUs.Channel.WhatsApp',
+      'ContactUs.Channel.Email',
+      'ContactUs.Channel.WeChat',
+      'ContactUs.Channel.Messenger',
+    ]);
+    expect(root.querySelector('ion-input')?.label).toBe('ContactUs.WhatsAppNumber');
+    expect(root.querySelector('ion-input[formcontrolname="email"]')).toBeNull();
+
+    component.channel.setValue('email');
+    fixture.detectChanges();
+    expect(root.querySelector('ion-input')?.label).toBe('Email');
+    expect(root.querySelector('ion-input[formcontrolname="contact"]')).toBeNull();
+  });
+
   it('keeps the form and does not claim success when sending fails', () => {
     feedback.submit.and.returnValue(throwError(() => new Error('offline')));
+    component.channel.setValue('email');
     component.email.setValue('learner@example.com');
     component.message.setValue('Hello there');
 
@@ -102,7 +209,8 @@ describe('ContactUsPage', () => {
   it('does not leave again when the page is already closed', () => {
     const pending = new Subject<void>();
     feedback.submit.and.returnValue(pending.asObservable());
-    component.email.setValue('learner@example.com');
+    component.channel.setValue('messenger');
+    component.contact.setValue('Jane Lee');
     component.message.setValue('Hello there');
     component.submit();
     component.ionViewWillLeave();
