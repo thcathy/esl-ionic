@@ -159,7 +159,7 @@
   "ContactUs.Channel.WhatsApp": "WhatsApp",
   "ContactUs.Channel.WeChat": "微信",
   "ContactUs.Channel.Messenger": "Facebook Messenger",
-  "ContactUs.ContactOptional": "可不填。不需要回复就留空。",
+  "ContactUs.ContactOptional": "不需要回复可留空。",
   "ContactUs.WhatsAppNumber": "WhatsApp 号码",
   "ContactUs.WeChatId": "微信号或手机号码",
   "ContactUs.MessengerName": "Facebook 名字或个人主页链接",

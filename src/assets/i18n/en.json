@@ -64,7 +64,7 @@
   "ContactUs.Channel.WhatsApp": "WhatsApp",
   "ContactUs.Channel.WeChat": "WeChat",
   "ContactUs.Channel.Messenger": "Facebook Messenger",
-  "ContactUs.ContactOptional": "Optional. Leave blank if you don't need a reply.",
+  "ContactUs.ContactOptional": "Leave it blank if you don't need a reply.",
   "ContactUs.WhatsAppNumber": "WhatsApp number",
   "ContactUs.WeChatId": "WeChat ID or phone number",
   "ContactUs.MessengerName": "Facebook name or profile link",
