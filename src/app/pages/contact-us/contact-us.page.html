@@ -38,12 +38,7 @@
               </ion-item>
               @if (emailInvalid) {
                 <div id="contact-email-error" class="error-text" role="alert">
-                  @if (email.errors.required) {
-                    <div>{{'ContactUs.EmailRequired' | translate}}</div>
-                  }
-                  @if (email.errors.email) {
-                    <div>{{'ContactUs.EmailInvalid' | translate}}</div>
-                  }
+                  <div>{{'ContactUs.EmailInvalid' | translate}}</div>
                 </div>
               }
             } @else {
@@ -54,19 +49,11 @@
                   [attr.inputmode]="selectedChannel === 'whatsapp' ? 'tel' : 'text'"
                   autocomplete="off"
                   labelPlacement="stacked"
-                  label="{{ contactLabelKey | translate }}"
-                  [attr.aria-invalid]="contactInvalid"
-                  [attr.aria-describedby]="contactInvalid ? 'contact-detail-error' : null">
+                  label="{{ contactLabelKey | translate }}">
                 </ion-input>
               </ion-item>
-              @if (contactInvalid) {
-                <div id="contact-detail-error" class="error-text" role="alert">
-                  @if (contact.errors?.required) {
-                    <div>{{ contactRequiredKey | translate }}</div>
-                  }
-                </div>
-              }
             }
+            <div class="hint-text">{{'ContactUs.ContactOptional' | translate}}</div>
             <ion-item>
               <ion-textarea
                 formControlName="message"

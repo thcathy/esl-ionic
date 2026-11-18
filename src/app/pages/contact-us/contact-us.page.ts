@@ -67,7 +67,6 @@ export class ContactUsPage implements OnInit, OnDestroy {
   get message() { return this.inputForm.get('message'); }
   get selectedChannel(): ContactChannel { return this.channel.value as ContactChannel; }
   get emailInvalid() { return this.selectedChannel === 'email' && this.email.invalid && (this.email.dirty || this.email.touched); }
-  get contactInvalid() { return this.selectedChannel !== 'email' && this.contact.invalid && (this.contact.dirty || this.contact.touched); }
   get messageInvalid() { return this.message.invalid && (this.message.dirty || this.message.touched); }
 
   channelLabelKey(channel: ContactChannel): string {
@@ -96,19 +95,6 @@ export class ContactUsPage implements OnInit, OnDestroy {
     }
   }
 
-  get contactRequiredKey(): string {
-    switch (this.selectedChannel) {
-      case 'email': return 'ContactUs.EmailRequired';
-      case 'whatsapp': return 'ContactUs.WhatsAppRequired';
-      case 'wechat': return 'ContactUs.WeChatRequired';
-      case 'messenger': return 'ContactUs.MessengerRequired';
-      default: {
-        const unknown: never = this.selectedChannel;
-        return unknown;
-      }
-    }
-  }
-
   submit() {
     if (this.submitting) {
       return;
@@ -127,11 +113,10 @@ export class ContactUsPage implements OnInit, OnDestroy {
 
     const contact = channel === 'email' ? this.email.value : this.contact.value;
     this.submitting = true;
-    this.feedbackService.submit({
-      channel,
-      contact,
-      message: this.message.value,
-    }).subscribe({
+    this.feedbackService.submit(contact
+      ? {channel, contact, message: this.message.value}
+      : {message: this.message.value}
+    ).subscribe({
       next: () => this.onSent(),
       error: () => this.onFailed(),
     });
@@ -159,12 +144,11 @@ export class ContactUsPage implements OnInit, OnDestroy {
 
   private applyChannelValidators(channel: ContactChannel) {
     if (channel === 'email') {
-      this.email.setValidators([Validators.required, Validators.email]);
-      this.contact.clearValidators();
+      this.email.setValidators([Validators.email]);
     } else {
       this.email.clearValidators();
-      this.contact.setValidators([Validators.required]);
     }
+    this.contact.clearValidators();
     this.email.updateValueAndValidity({emitEvent: false});
     this.contact.updateValueAndValidity({emitEvent: false});
   }

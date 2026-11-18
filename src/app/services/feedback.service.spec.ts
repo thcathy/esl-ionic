@@ -62,6 +62,14 @@ describe('FeedbackService', () => {
     req.flush('');
   });
 
+  it('POSTs a message alone when no contact is given', () => {
+    service.submit({message: 'Hello'}).subscribe();
+
+    const req = httpMock.expectOne(environment.apiHost + '/feedback');
+    expect(req.request.body).toEqual({message: 'Hello'});
+    req.flush('');
+  });
+
   it('surfaces an HTTP error without treating it as success', () => {
     let failed = false;
 

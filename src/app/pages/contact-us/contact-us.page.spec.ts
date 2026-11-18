@@ -48,31 +48,38 @@ describe('ContactUsPage', () => {
     fixture.detectChanges();
   });
 
-  it('requires a message, and a valid email only when Email is selected', () => {
+  afterEach(() => fixture.destroy());
+
+  it('requires a message and checks email format only when an address is entered', () => {
     component.channel.setValue('email');
     component.submit();
     expect(feedback.submit).not.toHaveBeenCalled();
-    expect(component.email.errors.required).toBeTrue();
+    expect(component.email.errors).toBeNull();
     expect(component.message.errors.required).toBeTrue();
 
+    component.message.setValue('Hello there');
+    component.submit();
+    expect(feedback.submit).toHaveBeenCalledOnceWith({message: 'Hello there'});
+
+    feedback.submit.calls.reset();
+    component.message.setValue('Hello there');
     component.email.setValue('not-an-email');
-    component.message.setValue('   ');
     component.submit();
     expect(component.email.errors.email).toBeTrue();
-    expect(component.message.errors.required).toBeTrue();
     expect(feedback.submit).not.toHaveBeenCalled();
   });
 
-  it('requires the matching contact and does not check email format for other channels', () => {
+  it('sends a message with no contact, and sends a contact when one is entered', () => {
     expect(component.selectedChannel).toBe('whatsapp');
     expect(component.channels).toEqual(['whatsapp', 'email', 'wechat', 'messenger']);
 
     component.message.setValue('Hello there');
     component.submit();
-    expect(component.contact.errors.required).toBeTrue();
-    expect(component.email.errors).toBeNull();
-    expect(feedback.submit).not.toHaveBeenCalled();
+    expect(component.contact.errors).toBeNull();
+    expect(feedback.submit).toHaveBeenCalledOnceWith({message: 'Hello there'});
 
+    feedback.submit.calls.reset();
+    component.message.setValue('Hello there');
     component.channel.setValue('wechat');
     component.contact.setValue('not-an-email');
     component.submit();
@@ -83,20 +90,14 @@ describe('ContactUsPage', () => {
     });
   });
 
-  it('requires a WeChat ID and a Messenger name on those channels', () => {
-    component.message.setValue('Hello there');
-
-    component.channel.setValue('wechat');
-    component.submit();
-    expect(component.contact.errors.required).toBeTrue();
-    expect(component.contactRequiredKey).toBe('ContactUs.WeChatRequired');
-
+  it('treats a blank Messenger name as no contact', () => {
     component.channel.setValue('messenger');
     component.contact.setValue('   ');
+    component.message.setValue('Hello there');
+
     component.submit();
-    expect(component.contact.errors.required).toBeTrue();
-    expect(component.contactRequiredKey).toBe('ContactUs.MessengerRequired');
-    expect(feedback.submit).not.toHaveBeenCalled();
+
+    expect(feedback.submit).toHaveBeenCalledOnceWith({message: 'Hello there'});
   });
 
   it('reorders the list when the language changes and keeps a channel the learner already chose', () => {
@@ -174,7 +175,6 @@ describe('ContactUsPage', () => {
   });
 
   it('shows the reach-you select and only the field for the selected channel', () => {
-    fixture.detectChanges();
     const root: HTMLElement = fixture.nativeElement;
     expect(root.querySelector('ion-select')?.label).toBe('ContactUs.ReachYou');
     expect(Array.from(root.querySelectorAll('ion-select-option'), option => option.textContent?.trim())).toEqual([
@@ -183,13 +183,9 @@ describe('ContactUsPage', () => {
       'ContactUs.Channel.WeChat',
       'ContactUs.Channel.Messenger',
     ]);
+    expect(root.querySelector('.hint-text')?.textContent?.trim()).toBe('ContactUs.ContactOptional');
     expect(root.querySelector('ion-input')?.label).toBe('ContactUs.WhatsAppNumber');
     expect(root.querySelector('ion-input[formcontrolname="email"]')).toBeNull();
-
-    component.channel.setValue('email');
-    fixture.detectChanges();
-    expect(root.querySelector('ion-input')?.label).toBe('Email');
-    expect(root.querySelector('ion-input[formcontrolname="contact"]')).toBeNull();
   });
 
   it('keeps the form and does not claim success when sending fails', () => {

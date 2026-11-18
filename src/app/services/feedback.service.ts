@@ -7,9 +7,9 @@ import {environment} from '../../environments/environment';
 import {ContactChannel} from './contact-channel';
 
 export interface FeedbackRequest {
-  channel: ContactChannel;
-  contact: string;
   message: string;
+  channel?: ContactChannel;
+  contact?: string;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -20,13 +20,13 @@ export class FeedbackService {
 
   /** Posts to esl-rest `POST /feedback`. An empty 200 body is success. */
   submit(request: FeedbackRequest): Observable<void> {
-    const body: Record<string, string> = {
-      channel: request.channel,
-      contact: request.contact,
-      message: request.message,
-    };
-    if (request.channel === 'email') {
-      body.email = request.contact;
+    const body: Record<string, string> = {message: request.message};
+    if (request.contact) {
+      body.channel = request.channel;
+      body.contact = request.contact;
+      if (request.channel === 'email') {
+        body.email = request.contact;
+      }
     }
     return this.http.post(this.feedbackUrl, body, {responseType: 'text'}).pipe(map(() => undefined));
   }
