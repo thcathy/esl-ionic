@@ -13,7 +13,11 @@ export function defaultContactChannel(canPrefillEmail: boolean, channels: readon
 }
 
 export function prefersWeChat(appLang: string | null | undefined, locales: readonly string[]): boolean {
-  return [appLang, ...locales].some(looksLikeMainlandChina);
+  if (looksLikeMainlandChina(appLang)) {
+    return true;
+  }
+  const primary = locales.find(locale => !!locale?.trim());
+  return looksLikeMainlandChina(primary);
 }
 
 function looksLikeMainlandChina(token: string | null | undefined): boolean {
@@ -24,10 +28,9 @@ function looksLikeMainlandChina(token: string | null | undefined): boolean {
   if (!value) {
     return false;
   }
-  // A bare "zh" is Simplified Chinese in this app (see AppComponent.initLanguage).
-  if (value === 'zh' || value === 'zh-cn' || value === 'zh-hans' || value === 'cmn-hans' || value === 'cmn-hans-cn') {
+  if (value === 'zh-cn' || value === 'zh-hans' || value === 'cmn-hans' || value === 'cmn-hans-cn') {
     return true;
   }
-  const parts = value.split('-');
+  const parts = value.split('-').filter(part => part.length > 0);
   return parts.length > 1 && parts[parts.length - 1] === 'cn';
 }

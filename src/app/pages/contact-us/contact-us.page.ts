@@ -138,24 +138,11 @@ export class ContactUsPage implements OnInit, OnDestroy {
   }
 
   reachLocales(): string[] {
-    const locales: string[] = [];
-    if (typeof navigator !== 'undefined') {
-      if (navigator.languages?.length) {
-        locales.push(...navigator.languages);
-      }
-      if (navigator.language) {
-        locales.push(navigator.language);
-      }
+    if (typeof navigator !== 'undefined' && navigator.language?.trim()) {
+      return [navigator.language];
     }
     const culture = this.translate.getBrowserCultureLang();
-    if (culture) {
-      locales.push(culture);
-    }
-    const browserLang = this.translate.getBrowserLang();
-    if (browserLang) {
-      locales.push(browserLang);
-    }
-    return locales;
+    return culture ? [culture] : [];
   }
 
   private syncReachDefaults() {
