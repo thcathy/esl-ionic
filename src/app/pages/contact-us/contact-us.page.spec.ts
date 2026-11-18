@@ -44,7 +44,6 @@ describe('ContactUsPage', () => {
     translate.use('en');
     fixture = TestBed.createComponent(ContactUsPage);
     component = fixture.componentInstance;
-    spyOn(component, 'reachLocales').and.returnValue(['en-HK']);
     fixture.detectChanges();
   });
 
@@ -71,7 +70,7 @@ describe('ContactUsPage', () => {
 
   it('sends a message with no contact, and sends a contact when one is entered', () => {
     expect(component.selectedChannel).toBe('email');
-    expect(component.channels).toEqual(['whatsapp', 'email', 'wechat', 'messenger']);
+    expect(component.channels).toEqual(['email', 'whatsapp', 'wechat', 'messenger']);
 
     component.message.setValue('Hello there');
     component.submit();
@@ -98,34 +97,6 @@ describe('ContactUsPage', () => {
     component.submit();
 
     expect(feedback.submit).toHaveBeenCalledOnceWith({message: 'Hello there'});
-  });
-
-  it('reorders the list when the language changes and keeps a channel the learner already chose', () => {
-    component.channel.setValue('messenger');
-    component.channel.markAsDirty();
-    component.contact.setValue('Jane Lee');
-
-    translate.use('zh-Hans');
-
-    expect(component.channels).toEqual(['wechat', 'email', 'whatsapp', 'messenger']);
-    expect(component.selectedChannel).toBe('messenger');
-    expect(component.contact.value).toBe('Jane Lee');
-  });
-
-  it('reorders the list with the language and keeps Email selected until the learner picks a channel', () => {
-    expect(component.selectedChannel).toBe('email');
-
-    translate.use('zh-Hans');
-
-    expect(component.channels[0]).toBe('wechat');
-    expect(component.selectedChannel).toBe('email');
-  });
-
-  it('lists WeChat first when the app language is Simplified Chinese and still selects Email', () => {
-    translate.use('zh-Hans');
-    component.ionViewWillEnter();
-    expect(component.channels).toEqual(['wechat', 'email', 'whatsapp', 'messenger']);
-    expect(component.selectedChannel).toBe('email');
   });
 
   it('selects Email and prefills the login email, and keeps an edited address', () => {
@@ -178,8 +149,8 @@ describe('ContactUsPage', () => {
     const root: HTMLElement = fixture.nativeElement;
     expect(root.querySelector('ion-select')?.label).toBe('ContactUs.ReachYou');
     expect(Array.from(root.querySelectorAll('ion-select-option'), option => option.textContent?.trim())).toEqual([
-      'ContactUs.Channel.WhatsApp',
       'ContactUs.Channel.Email',
+      'ContactUs.Channel.WhatsApp',
       'ContactUs.Channel.WeChat',
       'ContactUs.Channel.Messenger',
     ]);

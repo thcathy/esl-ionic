@@ -4,7 +4,7 @@ import {TranslateService} from '@ngx-translate/core';
 import {Subscription} from 'rxjs';
 
 import {FFSAuthService} from '../../services/auth.service';
-import {ContactChannel, contactChannelsFor} from '../../services/contact-channel';
+import {ContactChannel, contactChannels} from '../../services/contact-channel';
 import {FeedbackService} from '../../services/feedback.service';
 import {IonicComponentService} from '../../services/ionic-component.service';
 import {NavigationService} from '../../services/navigation.service';
@@ -17,7 +17,7 @@ import {NavigationService} from '../../services/navigation.service';
 })
 export class ContactUsPage implements OnInit, OnDestroy {
   inputForm: UntypedFormGroup;
-  channels: ContactChannel[] = contactChannelsFor(null, []);
+  readonly channels = contactChannels;
   submitting = false;
   private viewActive = true;
   private channelSub?: Subscription;
@@ -38,10 +38,9 @@ export class ContactUsPage implements OnInit, OnDestroy {
       contact: [''],
       message: ['', Validators.required],
     });
-    this.channelSub = new Subscription();
-    this.channelSub.add(this.channel.valueChanges.subscribe(channel => this.applyChannelValidators(channel)));
-    this.channelSub.add(this.translate.onLangChange.subscribe(() => this.syncReachDefaults()));
-    this.syncReachDefaults();
+    this.channelSub = this.channel.valueChanges.subscribe(channel => this.applyChannelValidators(channel));
+    this.applyChannelValidators(this.channel.value);
+    this.prefillEmail();
   }
 
   ngOnDestroy() {
@@ -50,7 +49,7 @@ export class ContactUsPage implements OnInit, OnDestroy {
 
   ionViewWillEnter() {
     this.viewActive = true;
-    this.syncReachDefaults();
+    this.prefillEmail();
   }
 
   ionViewWillLeave() {
@@ -118,24 +117,11 @@ export class ContactUsPage implements OnInit, OnDestroy {
     });
   }
 
-  reachLocales(): string[] {
-    if (typeof navigator !== 'undefined' && navigator.language?.trim()) {
-      return [navigator.language];
-    }
-    const culture = this.translate.getBrowserCultureLang();
-    return culture ? [culture] : [];
-  }
-
-  private syncReachDefaults() {
-    this.channels = contactChannelsFor(this.translate.currentLang, this.reachLocales());
+  private prefillEmail() {
     const profileEmail = (this.authService.userProfile?.email ?? '').trim();
     if (profileEmail && !(this.email.value ?? '').trim()) {
       this.email.setValue(profileEmail);
     }
-    if (this.channel.pristine) {
-      this.channel.setValue('email', {emitEvent: false});
-    }
-    this.applyChannelValidators(this.channel.value);
   }
 
   private applyChannelValidators(channel: ContactChannel) {
