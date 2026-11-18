@@ -1,6 +1,7 @@
 import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
-import {Subject, throwError} from 'rxjs';
+import {TranslateService} from '@ngx-translate/core';
+import {of, Subject, throwError} from 'rxjs';
 
 import {ContactUsPage} from './contact-us.page';
 import {SharedTestModule} from '../../../testing/shared-test.module';
@@ -16,9 +17,11 @@ describe('ContactUsPage', () => {
   let navigation: jasmine.SpyObj<NavigationService>;
   let ionic: jasmine.SpyObj<IonicComponentService>;
   let auth: {userProfile: {email?: string} | null};
+  let translate: TranslateService;
 
   beforeEach(waitForAsync(() => {
     feedback = jasmine.createSpyObj('FeedbackService', ['submit']);
+    feedback.submit.and.returnValue(of(undefined));
     navigation = jasmine.createSpyObj('NavigationService', ['goBack']);
     ionic = jasmine.createSpyObj('IonicComponentService', ['showToastMessage']);
     auth = {userProfile: null};
@@ -37,46 +40,102 @@ describe('ContactUsPage', () => {
   }));
 
   beforeEach(() => {
+    translate = TestBed.inject(TranslateService);
+    translate.use('en');
     fixture = TestBed.createComponent(ContactUsPage);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('requires a valid email and a message', () => {
+  afterEach(() => fixture.destroy());
+
+  it('requires a message and checks email format only when an address is entered', () => {
+    component.channel.setValue('email');
     component.submit();
     expect(feedback.submit).not.toHaveBeenCalled();
-    expect(component.email.errors.required).toBeTrue();
+    expect(component.email.errors).toBeNull();
     expect(component.message.errors.required).toBeTrue();
 
+    component.message.setValue('Hello there');
+    component.submit();
+    expect(feedback.submit).toHaveBeenCalledOnceWith({message: 'Hello there'});
+
+    feedback.submit.calls.reset();
+    component.message.setValue('Hello there');
     component.email.setValue('not-an-email');
-    component.message.setValue('   ');
     component.submit();
     expect(component.email.errors.email).toBeTrue();
-    expect(component.message.errors.required).toBeTrue();
     expect(feedback.submit).not.toHaveBeenCalled();
   });
 
-  it('prefills the signed-in email and keeps an edited address', () => {
+  it('sends a message with no contact, and sends a contact when one is entered', () => {
+    expect(component.selectedChannel).toBe('email');
+    expect(component.channels).toEqual(['email', 'whatsapp', 'wechat', 'messenger']);
+
+    component.message.setValue('Hello there');
+    component.submit();
+    expect(component.contact.errors).toBeNull();
+    expect(feedback.submit).toHaveBeenCalledOnceWith({message: 'Hello there'});
+
+    feedback.submit.calls.reset();
+    component.message.setValue('Hello there');
+    component.channel.setValue('wechat');
+    component.contact.setValue('not-an-email');
+    component.submit();
+    expect(feedback.submit).toHaveBeenCalledOnceWith({
+      channel: 'wechat',
+      contact: 'not-an-email',
+      message: 'Hello there',
+    });
+  });
+
+  it('treats a blank Messenger name as no contact', () => {
+    component.channel.setValue('messenger');
+    component.contact.setValue('   ');
+    component.message.setValue('Hello there');
+
+    component.submit();
+
+    expect(feedback.submit).toHaveBeenCalledOnceWith({message: 'Hello there'});
+  });
+
+  it('selects Email and prefills the login email, and keeps an edited address', () => {
     auth.userProfile = {email: 'learner@example.com'};
     component.ionViewWillEnter();
+    expect(component.selectedChannel).toBe('email');
     expect(component.email.value).toBe('learner@example.com');
 
     component.email.setValue('parent@example.com');
     component.ionViewWillEnter();
     expect(component.email.value).toBe('parent@example.com');
+    expect(component.selectedChannel).toBe('email');
   });
 
-  it('posts trimmed fields, confirms, and leaves the page', () => {
+  it('keeps a chosen channel when the page is entered again and still prefills an empty email', () => {
+    component.channel.setValue('messenger');
+    component.channel.markAsDirty();
+    auth.userProfile = {email: 'learner@example.com'};
+
+    component.ionViewWillEnter();
+
+    expect(component.selectedChannel).toBe('messenger');
+    expect(component.email.value).toBe('learner@example.com');
+    expect(component.email.errors).toBeNull();
+  });
+
+  it('posts the chosen channel and trimmed contact, confirms, and leaves the page', () => {
     const pending = new Subject<void>();
     feedback.submit.and.returnValue(pending.asObservable());
-    component.email.setValue('  learner@example.com  ');
+    component.channel.setValue('whatsapp');
+    component.contact.setValue('  +852 9123 4567  ');
     component.message.setValue('  Hello there  ');
 
     component.submit();
     component.submit();
 
     expect(feedback.submit).toHaveBeenCalledOnceWith({
-      email: 'learner@example.com',
+      channel: 'whatsapp',
+      contact: '+852 9123 4567',
       message: 'Hello there',
     });
     pending.next();
@@ -86,8 +145,23 @@ describe('ContactUsPage', () => {
     expect(component.submitting).toBeFalse();
   });
 
+  it('shows the reach-you select and only the field for the selected channel', () => {
+    const root: HTMLElement = fixture.nativeElement;
+    expect(root.querySelector('ion-select')?.label).toBe('ContactUs.ReachYou');
+    expect(Array.from(root.querySelectorAll('ion-select-option'), option => option.textContent?.trim())).toEqual([
+      'ContactUs.Channel.Email',
+      'ContactUs.Channel.WhatsApp',
+      'ContactUs.Channel.WeChat',
+      'ContactUs.Channel.Messenger',
+    ]);
+    expect(root.querySelector('.hint-text')?.textContent?.trim()).toBe('ContactUs.ContactOptional');
+    expect(root.querySelector('ion-input')?.label).toBe('Email');
+    expect(root.querySelector('ion-input[formcontrolname="contact"]')).toBeNull();
+  });
+
   it('keeps the form and does not claim success when sending fails', () => {
     feedback.submit.and.returnValue(throwError(() => new Error('offline')));
+    component.channel.setValue('email');
     component.email.setValue('learner@example.com');
     component.message.setValue('Hello there');
 
@@ -102,7 +176,8 @@ describe('ContactUsPage', () => {
   it('does not leave again when the page is already closed', () => {
     const pending = new Subject<void>();
     feedback.submit.and.returnValue(pending.asObservable());
-    component.email.setValue('learner@example.com');
+    component.channel.setValue('messenger');
+    component.contact.setValue('Jane Lee');
     component.message.setValue('Hello there');
     component.submit();
     component.ionViewWillLeave();

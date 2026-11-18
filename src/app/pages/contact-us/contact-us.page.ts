@@ -1,8 +1,10 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {TranslateService} from '@ngx-translate/core';
+import {Subscription} from 'rxjs';
 
 import {FFSAuthService} from '../../services/auth.service';
+import {ContactChannel, contactChannels} from '../../services/contact-channel';
 import {FeedbackService} from '../../services/feedback.service';
 import {IonicComponentService} from '../../services/ionic-component.service';
 import {NavigationService} from '../../services/navigation.service';
@@ -13,10 +15,12 @@ import {NavigationService} from '../../services/navigation.service';
   styleUrls: ['./contact-us.page.scss'],
   standalone: false
 })
-export class ContactUsPage implements OnInit {
+export class ContactUsPage implements OnInit, OnDestroy {
   inputForm: UntypedFormGroup;
+  readonly channels = contactChannels;
   submitting = false;
   private viewActive = true;
+  private channelSub?: Subscription;
 
   constructor(
     private readonly formBuilder: UntypedFormBuilder,
@@ -29,9 +33,18 @@ export class ContactUsPage implements OnInit {
 
   ngOnInit() {
     this.inputForm = this.formBuilder.group({
-      email: ['', [Validators.required, Validators.email]],
-      message: ['', [Validators.required]],
+      channel: ['email', Validators.required],
+      email: [''],
+      contact: [''],
+      message: ['', Validators.required],
     });
+    this.channelSub = this.channel.valueChanges.subscribe(channel => this.applyChannelValidators(channel));
+    this.applyChannelValidators(this.channel.value);
+    this.prefillEmail();
+  }
+
+  ngOnDestroy() {
+    this.channelSub?.unsubscribe();
   }
 
   ionViewWillEnter() {
@@ -43,37 +56,83 @@ export class ContactUsPage implements OnInit {
     this.viewActive = false;
   }
 
+  get channel() { return this.inputForm.get('channel'); }
   get email() { return this.inputForm.get('email'); }
+  get contact() { return this.inputForm.get('contact'); }
   get message() { return this.inputForm.get('message'); }
-  get emailInvalid() { return this.email.invalid && (this.email.dirty || this.email.touched); }
+  get selectedChannel(): ContactChannel { return this.channel.value as ContactChannel; }
+  get emailInvalid() { return this.selectedChannel === 'email' && this.email.invalid && (this.email.dirty || this.email.touched); }
   get messageInvalid() { return this.message.invalid && (this.message.dirty || this.message.touched); }
+
+  channelLabelKey(channel: ContactChannel): string {
+    switch (channel) {
+      case 'email': return 'ContactUs.Channel.Email';
+      case 'whatsapp': return 'ContactUs.Channel.WhatsApp';
+      case 'wechat': return 'ContactUs.Channel.WeChat';
+      case 'messenger': return 'ContactUs.Channel.Messenger';
+      default: {
+        const unknown: never = channel;
+        return unknown;
+      }
+    }
+  }
+
+  get contactLabelKey(): string {
+    switch (this.selectedChannel) {
+      case 'email': return 'Email';
+      case 'whatsapp': return 'ContactUs.WhatsAppNumber';
+      case 'wechat': return 'ContactUs.WeChatId';
+      case 'messenger': return 'ContactUs.MessengerName';
+      default: {
+        const unknown: never = this.selectedChannel;
+        return unknown;
+      }
+    }
+  }
 
   submit() {
     if (this.submitting) {
       return;
     }
-    this.email.setValue((this.email.value ?? '').trim());
+    const channel = this.selectedChannel;
+    if (channel === 'email') {
+      this.email.setValue((this.email.value ?? '').trim());
+    } else {
+      this.contact.setValue((this.contact.value ?? '').trim());
+    }
     this.message.setValue((this.message.value ?? '').trim());
     if (this.inputForm.invalid) {
       this.inputForm.markAllAsTouched();
       return;
     }
 
+    const contact = channel === 'email' ? this.email.value : this.contact.value;
     this.submitting = true;
-    this.feedbackService.submit({
-      email: this.email.value,
-      message: this.message.value,
-    }).subscribe({
+    this.feedbackService.submit(contact
+      ? {channel, contact, message: this.message.value}
+      : {message: this.message.value}
+    ).subscribe({
       next: () => this.onSent(),
       error: () => this.onFailed(),
     });
   }
 
   private prefillEmail() {
-    const profileEmail = this.authService.userProfile?.email;
-    if (profileEmail && !this.email.value) {
+    const profileEmail = (this.authService.userProfile?.email ?? '').trim();
+    if (profileEmail && !(this.email.value ?? '').trim()) {
       this.email.setValue(profileEmail);
     }
+  }
+
+  private applyChannelValidators(channel: ContactChannel) {
+    if (channel === 'email') {
+      this.email.setValidators([Validators.email]);
+    } else {
+      this.email.clearValidators();
+    }
+    this.contact.clearValidators();
+    this.email.updateValueAndValidity({emitEvent: false});
+    this.contact.updateValueAndValidity({emitEvent: false});
   }
 
   private onSent() {

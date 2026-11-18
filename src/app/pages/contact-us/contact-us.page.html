@@ -12,27 +12,48 @@
         @if (inputForm) {
           <form class="input-form" [formGroup]="inputForm" (ngSubmit)="submit()" novalidate>
             <ion-item>
-              <ion-input
-                formControlName="email"
-                type="email"
-                inputmode="email"
-                autocomplete="email"
+              <ion-select
+                formControlName="channel"
+                interface="popover"
                 labelPlacement="stacked"
-                label="{{'Email' | translate}}"
-                [attr.aria-invalid]="emailInvalid"
-                [attr.aria-describedby]="emailInvalid ? 'contact-email-error' : null">
-              </ion-input>
+                label="{{'ContactUs.ReachYou' | translate}}"
+                [attr.aria-label]="'ContactUs.ReachYou' | translate">
+                @for (option of channels; track option) {
+                  <ion-select-option [value]="option">{{ channelLabelKey(option) | translate }}</ion-select-option>
+                }
+              </ion-select>
             </ion-item>
-            @if (emailInvalid) {
-              <div id="contact-email-error" class="error-text" role="alert">
-                @if (email.errors.required) {
-                  <div>{{'ContactUs.EmailRequired' | translate}}</div>
-                }
-                @if (email.errors.email) {
+            @if (selectedChannel === 'email') {
+              <ion-item>
+                <ion-input
+                  formControlName="email"
+                  type="email"
+                  inputmode="email"
+                  autocomplete="email"
+                  labelPlacement="stacked"
+                  label="{{'Email' | translate}}"
+                  [attr.aria-invalid]="emailInvalid"
+                  [attr.aria-describedby]="emailInvalid ? 'contact-email-error' : null">
+                </ion-input>
+              </ion-item>
+              @if (emailInvalid) {
+                <div id="contact-email-error" class="error-text" role="alert">
                   <div>{{'ContactUs.EmailInvalid' | translate}}</div>
-                }
-              </div>
+                </div>
+              }
+            } @else {
+              <ion-item>
+                <ion-input
+                  formControlName="contact"
+                  [type]="selectedChannel === 'whatsapp' ? 'tel' : 'text'"
+                  [attr.inputmode]="selectedChannel === 'whatsapp' ? 'tel' : 'text'"
+                  autocomplete="off"
+                  labelPlacement="stacked"
+                  label="{{ contactLabelKey | translate }}">
+                </ion-input>
+              </ion-item>
             }
+            <div class="hint-text">{{'ContactUs.ContactOptional' | translate}}</div>
             <ion-item>
               <ion-textarea
                 formControlName="message"

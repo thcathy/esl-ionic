@@ -2,8 +2,14 @@
   padding: 2px 4px;
 }
 
-.error-text div {
+.error-text div,
+.hint-text {
   padding-left: 16px;
+}
+
+.hint-text {
+  color: var(--ion-color-medium);
+  font-size: 0.85rem;
 }
 
 ion-button {
