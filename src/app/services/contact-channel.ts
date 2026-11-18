@@ -8,10 +8,6 @@ export function contactChannelsFor(appLang: string | null | undefined, locales: 
   return [first, ...CHANNELS.filter(channel => channel !== first)];
 }
 
-export function defaultContactChannel(canPrefillEmail: boolean, channels: readonly ContactChannel[]): ContactChannel {
-  return canPrefillEmail ? 'email' : channels[0];
-}
-
 export function prefersWeChat(appLang: string | null | undefined, locales: readonly string[]): boolean {
   if (looksLikeMainlandChina(appLang)) {
     return true;

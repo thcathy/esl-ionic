@@ -1,4 +1,4 @@
-import {contactChannelsFor, defaultContactChannel, prefersWeChat} from './contact-channel';
+import {contactChannelsFor, prefersWeChat} from './contact-channel';
 
 describe('contactChannelsFor', () => {
   it('lists WeChat first for Mainland Chinese language or locale and keeps every channel', () => {
@@ -17,14 +17,5 @@ describe('contactChannelsFor', () => {
     expect(contactChannelsFor('en', ['zh-TW', 'zh'])).toEqual(['whatsapp', 'email', 'wechat', 'messenger']);
     expect(prefersWeChat('en', [])).toBeFalse();
     expect(prefersWeChat(null, [])).toBeFalse();
-  });
-
-  it('selects Email when a login email can be prefilled, otherwise the first channel', () => {
-    const outside = contactChannelsFor('en', ['en-HK']);
-    const mainland = contactChannelsFor('zh-Hans', []);
-
-    expect(defaultContactChannel(true, outside)).toBe('email');
-    expect(defaultContactChannel(false, outside)).toBe('whatsapp');
-    expect(defaultContactChannel(false, mainland)).toBe('wechat');
   });
 });

@@ -4,11 +4,7 @@ import {TranslateService} from '@ngx-translate/core';
 import {Subscription} from 'rxjs';
 
 import {FFSAuthService} from '../../services/auth.service';
-import {
-  ContactChannel,
-  contactChannelsFor,
-  defaultContactChannel,
-} from '../../services/contact-channel';
+import {ContactChannel, contactChannelsFor} from '../../services/contact-channel';
 import {FeedbackService} from '../../services/feedback.service';
 import {IonicComponentService} from '../../services/ionic-component.service';
 import {NavigationService} from '../../services/navigation.service';
@@ -37,7 +33,7 @@ export class ContactUsPage implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.inputForm = this.formBuilder.group({
-      channel: ['whatsapp', Validators.required],
+      channel: ['email', Validators.required],
       email: [''],
       contact: [''],
       message: ['', Validators.required],
@@ -137,7 +133,7 @@ export class ContactUsPage implements OnInit, OnDestroy {
       this.email.setValue(profileEmail);
     }
     if (this.channel.pristine) {
-      this.channel.setValue(defaultContactChannel(!!profileEmail, this.channels), {emitEvent: false});
+      this.channel.setValue('email', {emitEvent: false});
     }
     this.applyChannelValidators(this.channel.value);
   }

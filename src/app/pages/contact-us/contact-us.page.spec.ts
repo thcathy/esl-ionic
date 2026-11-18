@@ -70,7 +70,7 @@ describe('ContactUsPage', () => {
   });
 
   it('sends a message with no contact, and sends a contact when one is entered', () => {
-    expect(component.selectedChannel).toBe('whatsapp');
+    expect(component.selectedChannel).toBe('email');
     expect(component.channels).toEqual(['whatsapp', 'email', 'wechat', 'messenger']);
 
     component.message.setValue('Hello there');
@@ -112,20 +112,20 @@ describe('ContactUsPage', () => {
     expect(component.contact.value).toBe('Jane Lee');
   });
 
-  it('follows the language when it arrives before the learner picks a channel', () => {
-    expect(component.selectedChannel).toBe('whatsapp');
+  it('reorders the list with the language and keeps Email selected until the learner picks a channel', () => {
+    expect(component.selectedChannel).toBe('email');
 
     translate.use('zh-Hans');
 
     expect(component.channels[0]).toBe('wechat');
-    expect(component.selectedChannel).toBe('wechat');
+    expect(component.selectedChannel).toBe('email');
   });
 
-  it('lists WeChat first when the app language is Simplified Chinese', () => {
+  it('lists WeChat first when the app language is Simplified Chinese and still selects Email', () => {
     translate.use('zh-Hans');
     component.ionViewWillEnter();
     expect(component.channels).toEqual(['wechat', 'email', 'whatsapp', 'messenger']);
-    expect(component.selectedChannel).toBe('wechat');
+    expect(component.selectedChannel).toBe('email');
   });
 
   it('selects Email and prefills the login email, and keeps an edited address', () => {
@@ -184,8 +184,8 @@ describe('ContactUsPage', () => {
       'ContactUs.Channel.Messenger',
     ]);
     expect(root.querySelector('.hint-text')?.textContent?.trim()).toBe('ContactUs.ContactOptional');
-    expect(root.querySelector('ion-input')?.label).toBe('ContactUs.WhatsAppNumber');
-    expect(root.querySelector('ion-input[formcontrolname="email"]')).toBeNull();
+    expect(root.querySelector('ion-input')?.label).toBe('Email');
+    expect(root.querySelector('ion-input[formcontrolname="contact"]')).toBeNull();
   });
 
   it('keeps the form and does not claim success when sending fails', () => {
