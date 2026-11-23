@@ -64,7 +64,7 @@
         </div>
       </app-dictation-card>
     }
-    <practice-history-list [histories]="histories" [mark]="mark"></practice-history-list>
+    <practice-history-list [histories]="histories" [mark]="mark" [chronological]="practiceType === type.Paper"></practice-history-list>
   </div>
   <app-footer></app-footer>
 </ion-content>

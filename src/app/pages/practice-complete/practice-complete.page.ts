@@ -164,6 +164,7 @@ export class PracticeCompletePage implements OnInit {
   }
 
   get showDictationContent() { return this.dictation?.options?.retryWrongWord; }
+  get type() { return VocabPracticeType; }
 
 }
 

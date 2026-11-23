@@ -37,6 +37,8 @@ export class DictationPracticePage {
   histories: VocabPracticeHistory[] = [];
   isKeyboardActive: boolean;
   puzzleControls: PuzzleControls;
+  paperMarking = false;
+  paperMarks: Array<boolean | null> = [];
   speak$ = new Subject<boolean>();
 
   constructor(
@@ -62,6 +64,8 @@ export class DictationPracticePage {
     this.mark = 0;
     this.answer = '';
     this.puzzleControls = null;
+    this.paperMarking = false;
+    this.paperMarks = [];
     this.showPreload = true;
   }
 
@@ -82,7 +86,8 @@ export class DictationPracticePage {
       interpretations: words.length,
     });
 
-    for (const word of words) {
+    this.vocabPractices = new Array(words.length);
+    words.forEach((word, index) => {
       this.fetchQuestion(word)
         .pipe(
           mergeMap(vp => this.fetchImages(vp)),
@@ -90,8 +95,8 @@ export class DictationPracticePage {
           tap(vp => this.interpretationService.interpret(vp.word)
             .subscribe(() => this.preload.recordInterpretation(true)))
         )
-        .subscribe(p => this.receiveVocabPractice(p));
-    }
+        .subscribe(p => this.receiveVocabPractice(p, index));
+    });
   }
 
   get type() { return VocabPracticeType; }
@@ -99,7 +104,15 @@ export class DictationPracticePage {
 
   /** In-scroll footer yields while the spell-mode virtual keyboard occupies ion-footer. */
   get hideAppFooter(): boolean {
-    return this.isKeyboardActive === true && this.practiceType !== VocabPracticeType.Puzzle;
+    return this.isKeyboardActive === true
+      && this.practiceType !== VocabPracticeType.Puzzle
+      && this.practiceType !== VocabPracticeType.Paper;
+  }
+
+  get canFinishPaper(): boolean {
+    return this.paperMarks.length > 0
+      && this.paperMarks.length === this.vocabPractices.length
+      && this.paperMarks.every(mark => mark !== null);
   }
 
   get puzzleCols(): number {
@@ -137,17 +150,72 @@ export class DictationPracticePage {
       : of(vocabPractice);
   }
 
-  private receiveVocabPractice(p: VocabPractice) {
-    this.vocabPractices.push(p);
+  private receiveVocabPractice(p: VocabPractice, index: number) {
+    this.vocabPractices[index] = p;
   }
 
   speak() {
-    const word = this.currentQuestion().word;
-    void this.speechService.speakByVoiceMode(word, {
-      speakPunctuation: this.dictation?.options?.speakPunctuation,
-      pronounceUrl: this.currentQuestion().activePronounceLink,
-    });
+    this.speakPractice(this.questionIndex);
     this.speak$.next(true);
+  }
+
+  speakPractice(index: number) {
+    const question = this.vocabPractices[index];
+    if (!question) {
+      return;
+    }
+    void this.speechService.speakByVoiceMode(question.word, {
+      speakPunctuation: this.dictation?.options?.speakPunctuation,
+      pronounceUrl: question.activePronounceLink,
+    });
+  }
+
+  onPaperNext() {
+    if (this.paperMarking) {
+      return;
+    }
+    if (this.end()) {
+      this.paperMarks = this.vocabPractices.map(() => null);
+      this.paperMarking = true;
+      return;
+    }
+    this.questionIndex++;
+    this.onNextQuestion();
+  }
+
+  setPaperMark(index: number, correct: boolean) {
+    this.paperMarks = this.paperMarks.map((mark, i) => {
+      if (i !== index) {
+        return mark;
+      }
+      return mark === correct ? null : correct;
+    });
+  }
+
+  markUnmarkedPaper(correct: boolean) {
+    this.paperMarks = this.paperMarks.map(mark => mark === null ? correct : mark);
+  }
+
+  finishPaper() {
+    if (!this.canFinishPaper) {
+      return;
+    }
+    this.histories = this.vocabPractices.map((question, index) => ({
+      answer: '',
+      question,
+      correct: this.paperMarks[index] === true,
+      state: 'in',
+    }));
+    this.mark = this.histories.filter(history => history.correct).length;
+    this.analytics.practiceDidComplete({
+      itemCount: this.histories.length,
+      correctCount: this.mark,
+    });
+    this.navigationService.practiceComplete({
+      dictation: this.dictation,
+      histories: this.histories,
+      mark: this.mark,
+    });
   }
 
   showPhonics() {
@@ -189,6 +257,9 @@ export class DictationPracticePage {
   onNextQuestion() {
     this.preNextQuestion();
     this.speak();
+    if (this.practiceType === VocabPracticeType.Paper) {
+      return;
+    }
     this.focusAnswerInput();
     if (this.practiceType === VocabPracticeType.Puzzle) {
       this.puzzleControls = this.vocabPracticeService.createPuzzleControls(this.currentQuestion().word);

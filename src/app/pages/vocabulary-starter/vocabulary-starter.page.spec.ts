@@ -73,6 +73,28 @@ describe('VocabularyStarterPage', () => {
     expect(storedArg.voiceMode).toEqual('online');
     const voiceModeCall = setCalls.find((args: any[]) => args[0] === 'UIOptionsService.keys.ttsVoiceMode');
     expect(voiceModeCall).toEqual(['UIOptionsService.keys.ttsVoiceMode', 'online']);
+    const practiceTypeCall = setCalls.find((args: any[]) => args[0] === 'UIOptionsService.keys.vocabPracticeType');
+    expect(practiceTypeCall).toEqual(['UIOptionsService.keys.vocabPracticeType', VocabPracticeType.Puzzle]);
+  }));
+
+  it('uses the remembered Write on paper type', fakeAsync(() => {
+    storageSpy.get.and.callFake((key: string) => {
+      if (key === 'UIOptionsService.keys.vocabPracticeType') {
+        return Promise.resolve(VocabPracticeType.Paper);
+      }
+      if (key === component.inputKey) {
+        return Promise.resolve(<VocabularyStarterPageInput>{
+          difficulty: VocabDifficulty.Beginner,
+          type: VocabPracticeType.Spell,
+        });
+      }
+      return Promise.resolve(null);
+    });
+
+    component.ionViewWillEnter();
+    tick();
+
+    expect(component.type.value).toEqual(VocabPracticeType.Paper);
   }));
 
 });

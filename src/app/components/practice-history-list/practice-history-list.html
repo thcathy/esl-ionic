@@ -17,11 +17,13 @@
       <ion-list>
         @for (history of histories; track history; let i = $index) {
           <ion-item [@flyIn]="history.state">
-            <ion-badge item-start style="background-color: #4CAF50; margin: 0px;">{{ histories.length - i }}</ion-badge>
+            <ion-badge item-start style="background-color: #4CAF50; margin: 0px;">{{ chronological ? i + 1 : histories.length - i }}</ion-badge>
             <ion-label>
               <ion-row>
                 <ion-col>{{ history.question.word }}</ion-col>
-                <ion-col [class.green-text]="history.correct" [class.red]="!history.correct">{{ history.answer }}</ion-col>
+                @if (history.answer) {
+                  <ion-col [class.green-text]="history.correct" [class.red]="!history.correct">{{ history.answer }}</ion-col>
+                }
                 <ion-col class="hidden-md-down">[{{ history.question.ipaunavailable ? 'N.A.' : history.question.ipa }}]</ion-col>
                 <ion-col class="ion-text-right">@if (history.correct) {
                   <fa-icon [icon]="['fas', 'check']" class="green-text"></fa-icon>

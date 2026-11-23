@@ -10,7 +10,64 @@
     (preloadCompleted)="onPreloadCompleted($event)">
   </app-dictation-preload>
   <div class="inner-content" [hidden]="showPreload">
-    @if (currentQuestion()) {
+    @if (paperMarking) {
+      <ion-card class="card">
+        <ion-card-header>
+          <ion-card-title>{{'Mark answers'|translate}}</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <div class="paper-mark-list">
+            @for (question of vocabPractices; track $index; let i = $index) {
+              <div class="paper-mark-row">
+                <div class="paper-mark-word">{{ question.word }}</div>
+                <ion-button fill="outline" color="primary" shape="round" class="paper-icon-btn"
+                  (click)="speakPractice(i)" [attr.aria-label]="'Listen'|translate">
+                  <fa-icon [icon]="['fas', 'headphones']"></fa-icon>
+                </ion-button>
+                <ion-button shape="round" class="paper-icon-btn"
+                  [fill]="paperMarks[i] === true ? 'solid' : 'outline'"
+                  [color]="paperMarks[i] === true ? 'success' : 'medium'"
+                  [attr.aria-pressed]="paperMarks[i] === true"
+                  [attr.aria-label]="'Mark correct'|translate"
+                  (click)="setPaperMark(i, true)">
+                  <fa-icon icon="check"></fa-icon>
+                </ion-button>
+                <ion-button shape="round" class="paper-icon-btn"
+                  [fill]="paperMarks[i] === false ? 'solid' : 'outline'"
+                  [color]="paperMarks[i] === false ? 'danger' : 'medium'"
+                  [attr.aria-pressed]="paperMarks[i] === false"
+                  [attr.aria-label]="'Mark wrong'|translate"
+                  (click)="setPaperMark(i, false)">
+                  <fa-icon icon="times"></fa-icon>
+                </ion-button>
+              </div>
+            }
+            <div class="paper-mark-row paper-mark-all">
+              <span></span>
+              <span></span>
+              <ion-button fill="outline" color="primary" shape="round" class="paper-icon-btn"
+                (click)="markUnmarkedPaper(true)" [attr.aria-label]="'Mark remaining correct'|translate">
+                <span class="double-mark" aria-hidden="true">
+                  <fa-icon icon="check"></fa-icon><fa-icon icon="check"></fa-icon>
+                </span>
+              </ion-button>
+              <ion-button fill="outline" color="primary" shape="round" class="paper-icon-btn"
+                (click)="markUnmarkedPaper(false)" [attr.aria-label]="'Mark remaining wrong'|translate">
+                <span class="double-mark" aria-hidden="true">
+                  <fa-icon icon="times"></fa-icon><fa-icon icon="times"></fa-icon>
+                </span>
+              </ion-button>
+            </div>
+            <div class="paper-finish">
+              <ion-button [disabled]="!canFinishPaper" (click)="finishPaper()">{{'Finish'|translate}}</ion-button>
+              @if (!canFinishPaper) {
+                <div class="paper-finish-hint">{{'Tick every item to finish.'|translate}}</div>
+              }
+            </div>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    } @else if (currentQuestion()) {
       <ion-card class="card">
         <ion-card-header>
           <ion-card-title>
@@ -18,7 +75,9 @@
             <span
             >({{'incorrect only'|translate}})</span>
           }
-          <score class="ion-float-right" [mark]="mark"></score>
+          @if (practiceType !== type.Paper) {
+            <score class="ion-float-right" [mark]="mark"></score>
+          }
         </ion-card-title>
       </ion-card-header>
       <ion-card-content class="question-content">
@@ -59,6 +118,14 @@
                   </div>
                 </div>
               }
+              @if (practiceType === type.Paper) {
+                <div class="paper-listen-actions">
+                  <p class="paper-listen-hint">{{'Write the word on paper, then tap Next.'|translate}}</p>
+                  <ion-button class="submitBtn" (click)="onPaperNext()">
+                    <fa-icon icon="angle-right"></fa-icon>&nbsp;{{'Next'|translate}}
+                  </ion-button>
+                </div>
+              }
               <div>
                 <app-text-interpretation [text]="currentQuestion().word" />
               </div>
@@ -94,16 +161,20 @@
     </ion-card>
   }
 
-  <practice-history-list [histories]="histories" [mark]="mark"></practice-history-list>
+  @if (!paperMarking && practiceType !== type.Paper) {
+    <practice-history-list [histories]="histories" [mark]="mark"></practice-history-list>
+  }
 </div>
 @if (!hideAppFooter) {
   <app-footer></app-footer>
 }
 </ion-content>
 
-<ion-footer>
-  <virtual-keyboard #virtualKeyboard
-    [disabled]="practiceType === type.Puzzle"
-    (keyPress)="onKeyPress($event)"
-  (keyboardEvent)="onKeyboardEvent($event)"></virtual-keyboard>
-</ion-footer>
+@if (practiceType !== type.Paper) {
+  <ion-footer>
+    <virtual-keyboard #virtualKeyboard
+      [disabled]="practiceType === type.Puzzle"
+      (keyPress)="onKeyPress($event)"
+    (keyboardEvent)="onKeyboardEvent($event)"></virtual-keyboard>
+  </ion-footer>
+}

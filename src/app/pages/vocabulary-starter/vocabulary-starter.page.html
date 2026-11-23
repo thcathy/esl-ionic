@@ -35,33 +35,10 @@
                 }
               </ion-note>
 
-              <ion-radio-group formControlName="type">
-                <ion-row class="radio">
-                  <ion-col>
-                    <ion-item>
-                      <ion-radio value="Spell">
-                        <span [class.deselected]="type.value === practiceType.Puzzle">{{'Spelling'|translate}}</span>
-                      </ion-radio>
-                    </ion-item>
-                    <div class="type-example" [class.deselected]="type.value !== practiceType.Spell">
-                      <fa-icon icon="apple-alt"></fa-icon>&nbsp;<span class="spell">apple</span>
-                    </div>
-                  </ion-col>
-                  <ion-col>
-                    <ion-item>
-                      <ion-radio value="Puzzle">
-                        <span [class.deselected]="type.value === practiceType.Spell">{{'Puzzle'|translate}}</span>
-                      </ion-radio>
-                    </ion-item>
-                    <div class="type-example puzzle" [class.deselected]="type.value !== practiceType.Puzzle">
-                      <fa-icon icon="apple-alt"></fa-icon>
-                      <span class="puzzle">p</span><span>e</span><span>l</span><span>a</span>
-                    </div>
-                  </ion-col>
-                </ion-row>
-              </ion-radio-group>
-
-              <div class="options-divider"></div>
+              <app-vocab-practice-type-selector
+                [selectedType]="type.value || practiceType.Spell"
+                (selectedTypeChange)="type.setValue($event)">
+              </app-vocab-practice-type-selector>
 
               <div class="action-row">
                 @if (authService.isAuthenticated$ | async) {

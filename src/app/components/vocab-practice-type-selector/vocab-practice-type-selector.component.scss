@@ -1,6 +1,35 @@
-.type-example {
+.practice-type-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.practice-type-option {
+  border-radius: 12px;
+}
+
+.practice-type-option.selected {
+  background: rgba(var(--ion-color-primary-rgb), 0.12);
+}
+
+.practice-type-line {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   min-height: 36px;
-  padding-left: 20px;
+  padding: 4px 8px 0 12px;
+}
+
+.practice-type-line input {
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  accent-color: var(--ion-color-primary);
+}
+
+.type-example {
+  min-height: 32px;
+  margin: 0 12px 6px 48px;
   font-size: 0.9rem;
   color: #555555;
   display: flex;
@@ -34,6 +63,13 @@
   background: #cfcfcf;
   color: white;
   box-shadow: none;
+}
+
+.type-hint {
+  margin: 0 16px 10px 48px;
+  color: #64748b;
+  font-size: 0.9rem;
+  line-height: 1.35;
 }
 
 .deselected {

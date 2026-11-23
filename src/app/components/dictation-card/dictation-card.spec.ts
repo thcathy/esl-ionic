@@ -197,6 +197,31 @@ describe('DictationCardComponent', () => {
       expect(uiOptionsService.saveOption).toHaveBeenCalledWith(UIOptionsService.keys.vocabPracticeType, VocabPracticeType.Puzzle);
       expect(component.dictation.options.practiceType).toBe(VocabPracticeType.Puzzle);
     }));
+
+    it('keeps Write on paper instead of forcing Spell', fakeAsync(() => {
+      spyOn(uiOptionsService, 'saveOption').and.returnValue(Promise.resolve());
+      component.dictation = TestData.fillInDictation();
+
+      component.startVocabDictation(VocabPracticeType.Paper);
+
+      expect(component.dictation.options.practiceType).toBe(VocabPracticeType.Paper);
+      expect(uiOptionsService.saveOption).toHaveBeenCalledWith(UIOptionsService.keys.vocabPracticeType, VocabPracticeType.Paper);
+    }));
+
+    it('loads a remembered Write on paper type when the dictation has none', async () => {
+      component.dictation = TestData.fillInDictation();
+      component.dictation.options = {} as any;
+      spyOn(uiOptionsService, 'loadOption').and.callFake((key: string) => {
+        if (key === UIOptionsService.keys.vocabPracticeType) {
+          return Promise.resolve(VocabPracticeType.Paper);
+        }
+        return Promise.resolve(null);
+      });
+
+      await component.ngOnInit();
+
+      expect(component.selectedStartPracticeType).toBe(VocabPracticeType.Paper);
+    });
   });
 
   describe('copy dictation', () => {

@@ -378,6 +378,18 @@ describe('EditDictationPage', () => {
           expect(saved.get('UIOptionsService.keys.editDictationIncludeAIImage')).toBeTrue();
           expect(saved.get('UIOptionsService.keys.editDictationWordContainSpace')).toBeTrue();
           expect(saved.get('UIOptionsService.keys.editDictationWordPracticeType')).toEqual(VocabPracticeType.Puzzle);
+          expect(saved.get('UIOptionsService.keys.vocabPracticeType')).toEqual(VocabPracticeType.Puzzle);
+        }));
+
+        it('remembers Write on paper from the shared practice type', fakeAsync(() => {
+          storageSpy.get.and.callFake((key: string) => Promise.resolve({
+            'UIOptionsService.keys.vocabPracticeType': VocabPracticeType.Paper,
+            'UIOptionsService.keys.editDictationWordPracticeType': VocabPracticeType.Puzzle,
+          }[key]));
+
+          componentViewWillEnter();
+
+          expect(component.wordPracticeType.value).toEqual(VocabPracticeType.Paper);
         }));
       });
 

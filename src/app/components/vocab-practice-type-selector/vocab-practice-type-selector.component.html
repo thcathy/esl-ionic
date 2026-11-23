@@ -1,26 +1,34 @@
-<ion-radio-group [ngModel]="selectedType" (ngModelChange)="onSelectedTypeChange($event)">
-  <ion-row class="radio">
-    <ion-col>
-      <ion-item>
-        <ion-radio [value]="practiceType.Spell">
-          <span [class.deselected]="selectedType === practiceType.Puzzle">{{'Spelling'|translate}}</span>
-        </ion-radio>
-      </ion-item>
-      <div class="type-example" [class.deselected]="selectedType !== practiceType.Spell">
-        <fa-icon icon="apple-alt"></fa-icon>&nbsp;<span class="spell">apple</span>
-      </div>
-    </ion-col>
-    <ion-col>
-      <ion-item>
-        <ion-radio [value]="practiceType.Puzzle">
-          <span [class.deselected]="selectedType === practiceType.Spell">{{'Puzzle'|translate}}</span>
-        </ion-radio>
-      </ion-item>
-      <div class="type-example puzzle" [class.deselected]="selectedType !== practiceType.Puzzle">
-        <fa-icon icon="apple-alt"></fa-icon>
-        <span class="puzzle">p</span><span>e</span><span>l</span><span>a</span>
-      </div>
-    </ion-col>
-  </ion-row>
-</ion-radio-group>
+<div class="practice-type-list" role="radiogroup">
+  <label class="practice-type-option" [class.selected]="selectedType === practiceType.Spell">
+    <span class="practice-type-line">
+      <input #typeRadio type="radio" [name]="radioName" [value]="practiceType.Spell"
+        (change)="onRadioChange($event, practiceType.Spell)">
+      <span [class.deselected]="selectedType !== practiceType.Spell">{{'Spelling'|translate}}</span>
+    </span>
+    <div class="type-example" [class.deselected]="selectedType !== practiceType.Spell">
+      <fa-icon icon="apple-alt"></fa-icon>&nbsp;<span class="spell">apple</span>
+    </div>
+  </label>
+  <label class="practice-type-option" [class.selected]="selectedType === practiceType.Puzzle">
+    <span class="practice-type-line">
+      <input #typeRadio type="radio" [name]="radioName" [value]="practiceType.Puzzle"
+        (change)="onRadioChange($event, practiceType.Puzzle)">
+      <span [class.deselected]="selectedType !== practiceType.Puzzle">{{'Puzzle'|translate}}</span>
+    </span>
+    <div class="type-example puzzle" [class.deselected]="selectedType !== practiceType.Puzzle">
+      <fa-icon icon="apple-alt"></fa-icon>
+      <span class="puzzle">p</span><span>e</span><span>l</span><span>a</span>
+    </div>
+  </label>
+  <label class="practice-type-option" [class.selected]="selectedType === practiceType.Paper">
+    <span class="practice-type-line">
+      <input #typeRadio type="radio" [name]="radioName" [value]="practiceType.Paper"
+        (change)="onRadioChange($event, practiceType.Paper)">
+      <span [class.deselected]="selectedType !== practiceType.Paper">{{'Write on paper'|translate}}</span>
+    </span>
+    @if (selectedType === practiceType.Paper) {
+      <div class="type-hint">{{'Listen, write on paper, then tick'|translate}}</div>
+    }
+  </label>
+</div>
 <div class="options-divider"></div>
