@@ -108,6 +108,23 @@ describe('DictationPracticePage', () => {
     });
   });
 
+  describe('showAnswerKeyboard', () => {
+    it('stays hidden until a dictation is loaded', () => {
+      component.dictation = null;
+      expect(component.showAnswerKeyboard).toBeFalse();
+    });
+
+    it('stays hidden for Write on paper', () => {
+      component.dictation = { options: { practiceType: VocabPracticeType.Paper } } as any;
+      expect(component.showAnswerKeyboard).toBeFalse();
+    });
+
+    it('shows for a loaded spelling dictation', () => {
+      component.dictation = { options: { practiceType: VocabPracticeType.Spell } } as any;
+      expect(component.showAnswerKeyboard).toBeTrue();
+    });
+  });
+
   describe('Write on paper', () => {
     function questions() {
       return [{ word: 'apple' }, { word: 'playground' }, { word: 'elephant' }] as any[];

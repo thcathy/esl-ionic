@@ -86,7 +86,7 @@ export class DictationPracticePage {
       interpretations: words.length,
     });
 
-    this.vocabPractices = new Array(words.length);
+    this.vocabPractices = Array.from({length: words.length});
     words.forEach((word, index) => {
       this.fetchQuestion(word)
         .pipe(
@@ -107,6 +107,10 @@ export class DictationPracticePage {
     return this.isKeyboardActive === true
       && this.practiceType !== VocabPracticeType.Puzzle
       && this.practiceType !== VocabPracticeType.Paper;
+  }
+
+  get showAnswerKeyboard(): boolean {
+    return this.dictation != null && this.practiceType !== VocabPracticeType.Paper;
   }
 
   get canFinishPaper(): boolean {

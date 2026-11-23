@@ -170,7 +170,7 @@
 }
 </ion-content>
 
-@if (practiceType !== type.Paper) {
+@if (showAnswerKeyboard) {
   <ion-footer>
     <virtual-keyboard #virtualKeyboard
       [disabled]="practiceType === type.Puzzle"
