@@ -70,8 +70,9 @@
   height: 24px;
   margin: 0 2px;
   border-radius: 5px;
-  background: var(--ion-color-medium);
-  color: var(--ion-text-color, #1a1a1a);
+  background: transparent;
+  border: 1px solid currentColor;
+  color: currentColor;
   font-weight: 700;
   font-size: 0.78rem;
   box-shadow: none;
