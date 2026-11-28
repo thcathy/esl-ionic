@@ -27,9 +27,54 @@
         (change)="onRadioChange($event, practiceType.Paper)">
       <span class="type-name" [class.deselected]="selectedType !== practiceType.Paper">{{'Write on paper'|translate}}</span>
       <span class="type-example paper" [class.deselected]="selectedType !== practiceType.Paper">
-        {{'Listen, write on paper, then tick'|translate}}
+        {{'Listen, write on paper, then check your answers.'|translate}}
       </span>
     </span>
   </label>
 </div>
+@if (selectedType === practiceType.Paper) {
+  <div class="paper-options">
+    <div class="paper-option-row">
+      <span>{{'Auto play next'|translate}}</span>
+      <ion-toggle [(ngModel)]="autoPlayNext" [attr.aria-label]="'Auto play next'|translate"></ion-toggle>
+    </div>
+    <div class="paper-option-row">
+      <span>{{'Repeat'|translate}}</span>
+      <span class="repeat-choices">
+        @for (count of repeatChoices; track count) {
+          <button type="button" class="repeat-choice" [class.selected]="repeatCount === count"
+            (click)="repeatCount = count">{{count}}</button>
+        }
+      </span>
+    </div>
+    <div class="paper-option-row">
+      <span>{{'Speed'|translate}} <strong>{{speedLabel}}</strong></span>
+      <span class="speed-choices">
+        <ion-button fill="outline" color="primary" shape="round" class="speed-btn" (click)="slower()"
+          [attr.aria-label]="'Slower'|translate">
+          <fa-icon icon="bicycle"></fa-icon>
+        </ion-button>
+        <ion-button fill="outline" color="primary" shape="round" class="speed-btn" (click)="faster()"
+          [attr.aria-label]="'Faster'|translate">
+          <fa-icon icon="person-running"></fa-icon>
+        </ion-button>
+      </span>
+    </div>
+    <div class="paper-option-row">
+      <span>{{'Pause'|translate}}</span>
+      <span class="pause-choices">
+        <ion-button fill="outline" color="medium" shape="round" class="pause-btn" [disabled]="!autoPlayNext"
+          (click)="changePause(-1)" [attr.aria-label]="'Pause'|translate">
+          <fa-icon icon="minus"></fa-icon>
+        </ion-button>
+        <span class="pause-value">{{pauseSeconds}} s</span>
+        <ion-button fill="outline" color="medium" shape="round" class="pause-btn" [disabled]="!autoPlayNext"
+          (click)="changePause(1)" [attr.aria-label]="'Pause'|translate">
+          <fa-icon icon="plus"></fa-icon>
+        </ion-button>
+      </span>
+    </div>
+    <div class="paper-option-note">{{'Used when Auto play next is on.'|translate}}</div>
+  </div>
+}
 <div class="options-divider"></div>

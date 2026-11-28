@@ -29,7 +29,16 @@ describe('VocabPracticeTypeSelectorComponent', () => {
     expect(text).toContain('Spelling');
     expect(text).toContain('Puzzle');
     expect(text).toContain('Write on paper');
-    expect(text).toContain('Listen, write on paper, then tick');
+    expect(text).toContain('Listen, write on paper, then check your answers.');
+    expect(text).not.toContain('Auto play next');
+  });
+
+  it('shows Write on paper playback options only while that type is selected', () => {
+    component.selectedType = VocabPracticeType.Paper;
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.textContent).toContain('Auto play next');
+    expect(fixture.nativeElement.textContent).toContain('Repeat');
     expect(fixture.nativeElement.querySelectorAll('.type-example').length).toBe(3);
   });
 

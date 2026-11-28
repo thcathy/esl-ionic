@@ -13,7 +13,16 @@ export class VocabPracticeTypeSelectorComponent implements OnChanges, AfterViewI
   @ViewChildren('typeRadio') radios: QueryList<ElementRef<HTMLInputElement>>;
 
   readonly radioName = `vocab-practice-type-${Math.random().toString(36).slice(2)}`;
+  readonly repeatChoices = [1, 2, 3];
+  autoPlayNext = false;
+  repeatCount = 1;
+  speed = 0.7;
+  pauseSeconds = 5;
   private syncing = false;
+
+  get speedLabel(): string {
+    return this.speed.toFixed(1);
+  }
 
   get practiceType() { return VocabPracticeType; }
 
@@ -23,6 +32,21 @@ export class VocabPracticeTypeSelectorComponent implements OnChanges, AfterViewI
 
   ngAfterViewInit() {
     this.syncRadios();
+  }
+
+  slower() {
+    this.speed = Math.max(0.1, Math.round((this.speed - 0.1) * 10) / 10);
+  }
+
+  faster() {
+    this.speed = Math.min(1, Math.round((this.speed + 0.1) * 10) / 10);
+  }
+
+  changePause(delta: number) {
+    if (!this.autoPlayNext) {
+      return;
+    }
+    this.pauseSeconds = Math.min(10, Math.max(1, this.pauseSeconds + delta));
   }
 
   onRadioChange(event: Event, value: VocabPracticeType) {

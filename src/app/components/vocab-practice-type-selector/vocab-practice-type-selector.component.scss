@@ -40,12 +40,10 @@
 }
 
 .type-example {
-  margin-left: auto;
   font-size: 0.9rem;
   color: #555555;
   display: flex;
   align-items: center;
-  flex: 0 0 auto;
 }
 
 .type-example .spell {
@@ -80,7 +78,64 @@
 .type-example.paper {
   font-size: 0.82rem;
   line-height: 1.25;
-  white-space: nowrap;
+}
+
+.paper-options {
+  margin: 4px 8px 2px;
+  border-top: 1px solid rgba(var(--ion-color-medium-rgb), 0.18);
+}
+
+.paper-option-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 44px;
+  padding: 2px 8px;
+  font-size: var(--ion-font-size, 16px);
+}
+
+.repeat-choices,
+.speed-choices,
+.pause-choices {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.repeat-choice {
+  width: 36px;
+  height: 32px;
+  border-radius: 8px;
+  border: 1px solid var(--ion-color-primary);
+  background: transparent;
+  color: var(--ion-color-primary);
+  font-weight: 600;
+}
+
+.repeat-choice.selected {
+  background: var(--ion-color-primary);
+  color: #ffffff;
+}
+
+.speed-btn,
+.pause-btn {
+  --padding-start: 0;
+  --padding-end: 0;
+  width: 36px;
+  height: 36px;
+  margin: 0;
+}
+
+.pause-value {
+  min-width: 2.5rem;
+  text-align: center;
+}
+
+.paper-option-note {
+  padding: 0 8px 8px;
+  font-size: 0.82rem;
+  color: var(--ion-color-medium);
 }
 
 .deselected {
