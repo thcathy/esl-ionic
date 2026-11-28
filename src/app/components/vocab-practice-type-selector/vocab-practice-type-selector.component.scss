@@ -119,7 +119,7 @@
   height: 36px;
   margin: 0;
   padding: 0;
-  border-radius: 8px;
+  border-radius: 50%;
   border: 1px solid var(--ion-color-primary);
   background: transparent;
   color: var(--ion-color-primary);
@@ -127,10 +127,6 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-}
-
-.icon-choice {
-  border-radius: 50%;
 }
 
 .repeat-choice.selected {
