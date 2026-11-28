@@ -1,4 +1,5 @@
 import {AfterViewInit, Component, ElementRef, EventEmitter, Input, OnChanges, Output, QueryList, ViewChildren} from '@angular/core';
+import {Dictations} from '../../entity/dictation';
 import {resolveVocabPracticeType, VocabPracticeType} from '../../enum/vocab-practice-type.enum';
 
 @Component({
@@ -47,6 +48,17 @@ export class VocabPracticeTypeSelectorComponent implements OnChanges, AfterViewI
       return;
     }
     this.pauseSeconds = Math.min(10, Math.max(1, this.pauseSeconds + delta));
+  }
+
+  applyPaperPlayback(options: Dictations.Options): void {
+    if (this.selectedType !== VocabPracticeType.Paper) {
+      options.autoPlayNext = false;
+      return;
+    }
+    options.autoPlayNext = this.autoPlayNext;
+    options.repeatCount = this.repeatCount;
+    options.speakRate = this.speed;
+    options.pauseSeconds = this.pauseSeconds;
   }
 
   onRadioChange(event: Event, value: VocabPracticeType) {

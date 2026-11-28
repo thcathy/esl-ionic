@@ -14,6 +14,7 @@ import {FFSAuthService} from '../../services/auth.service';
 import {ShareService} from '../../services/share.service';
 import {ArticleDictationOptionsComponent} from "../article-dictation-options/article-dictation-options.component";
 import {ShareDictationModalComponent} from '../share-dictation-modal/share-dictation-modal.component';
+import {VocabPracticeTypeSelectorComponent} from '../vocab-practice-type-selector/vocab-practice-type-selector.component';
 
 @Component({
     selector: 'app-dictation-card',
@@ -43,6 +44,7 @@ export class DictationCardComponent implements OnInit {
   @Input() showCopyButton = false;
 
   @ViewChild('articleDictationOptions') articleDictationOptions: ArticleDictationOptionsComponent;
+  @ViewChild(VocabPracticeTypeSelectorComponent) practiceTypeSelector?: VocabPracticeTypeSelectorComponent;
 
   recommendState = 'normal';
   selectedStartPracticeType: VocabPracticeType = VocabPracticeType.Spell;
@@ -208,6 +210,8 @@ export class DictationCardComponent implements OnInit {
       dictation.options.caseSensitiveSentence = this.articleDictationOptions.caseSensitive.checked;
       dictation.options.checkPunctuation = this.articleDictationOptions.checkPunctuation.checked;
       dictation.options.speakPunctuation = this.articleDictationOptions.speakPunctuation.checked;
+    } else if (!this.dictationHelper.isSentenceDictation(dictation)) {
+      this.practiceTypeSelector?.applyPaperPlayback(dictation.options);
     }
     return dictation;
   }

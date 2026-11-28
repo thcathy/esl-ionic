@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
 import {vocabDifficulties, VocabDifficulty} from '../../entity/voacb-practice';
 import {VocabPracticeService} from '../../services/practice/vocab-practice.service';
@@ -9,6 +9,7 @@ import {resolveVocabPracticeType, VocabPracticeType} from '../../enum/vocab-prac
 import {StorageService} from '../../services/storage.service';
 import {TranslateService} from "@ngx-translate/core";
 import {UIOptionsService} from '../../services/ui-options.service';
+import {VocabPracticeTypeSelectorComponent} from '../../components/vocab-practice-type-selector/vocab-practice-type-selector.component';
 
 @Component({
     selector: 'app-vocabulary-starter',
@@ -17,6 +18,8 @@ import {UIOptionsService} from '../../services/ui-options.service';
     standalone: false
 })
 export class VocabularyStarterPage implements OnInit {
+  @ViewChild(VocabPracticeTypeSelectorComponent) practiceTypeSelector?: VocabPracticeTypeSelectorComponent;
+
   inputKey = 'VocabularyStarterPage.vocabularyStarterPageInput';
   inputForm: UntypedFormGroup;
   vocabDifficulties: String[] = vocabDifficulties;
@@ -77,6 +80,7 @@ export class VocabularyStarterPage implements OnInit {
     this.vocabPracticeService.generatePractice(this.difficulty.value)
       .subscribe(d => {
         d.options = { practiceType };
+        this.practiceTypeSelector?.applyPaperPlayback(d.options);
         this.navigationService.startDictation(d);
       });
   }

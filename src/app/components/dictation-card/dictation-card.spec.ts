@@ -208,6 +208,26 @@ describe('DictationCardComponent', () => {
       expect(uiOptionsService.saveOption).toHaveBeenCalledWith(UIOptionsService.keys.vocabPracticeType, VocabPracticeType.Paper);
     }));
 
+    it('copies Write on paper playback settings from the selector', fakeAsync(() => {
+      spyOn(uiOptionsService, 'saveOption').and.returnValue(Promise.resolve());
+      component.dictation = TestData.fillInDictation();
+      component.practiceTypeSelector = {
+        applyPaperPlayback(options) {
+          options.autoPlayNext = true;
+          options.repeatCount = 2;
+          options.speakRate = 0.5;
+          options.pauseSeconds = 4;
+        },
+      } as any;
+
+      component.startVocabDictation(VocabPracticeType.Paper);
+
+      expect(component.dictation.options.autoPlayNext).toBeTrue();
+      expect(component.dictation.options.repeatCount).toBe(2);
+      expect(component.dictation.options.speakRate).toBe(0.5);
+      expect(component.dictation.options.pauseSeconds).toBe(4);
+    }));
+
     it('loads a remembered Write on paper type when the dictation has none', async () => {
       component.dictation = TestData.fillInDictation();
       component.dictation.options = {} as any;

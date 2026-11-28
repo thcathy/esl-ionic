@@ -97,4 +97,27 @@ describe('VocabularyStarterPage', () => {
     expect(component.type.value).toEqual(VocabPracticeType.Paper);
   }));
 
+  it('passes Write on paper playback settings into the practice', fakeAsync(() => {
+    const generated = { id: 9 } as any;
+    vocabPracticeServiceSpy.generatePractice.and.returnValue(of(generated));
+    component.type.setValue(VocabPracticeType.Paper);
+    component.practiceTypeSelector = {
+      applyPaperPlayback(options) {
+        options.autoPlayNext = true;
+        options.repeatCount = 2;
+        options.speakRate = 0.5;
+        options.pauseSeconds = 4;
+      },
+    } as any;
+
+    component.start();
+    tick();
+
+    expect(generated.options.practiceType).toBe(VocabPracticeType.Paper);
+    expect(generated.options.autoPlayNext).toBeTrue();
+    expect(generated.options.repeatCount).toBe(2);
+    expect(generated.options.speakRate).toBe(0.5);
+    expect(generated.options.pauseSeconds).toBe(4);
+  }));
+
 });

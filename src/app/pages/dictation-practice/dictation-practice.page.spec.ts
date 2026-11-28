@@ -22,7 +22,7 @@ describe('DictationPracticePage', () => {
   beforeEach(waitForAsync(() => {
     storageSpy = StorageSpy();
     navigationServiceSpy = NavigationServiceSpy();
-    speechServiceSpy = jasmine.createSpyObj('SpeechService', ['speakByVoiceMode', 'prefetchByVoiceMode', 'getVoiceMode', 'ensureVoiceModeLoaded']);
+    speechServiceSpy = jasmine.createSpyObj('SpeechService', ['speakByVoiceMode', 'prefetchByVoiceMode', 'getVoiceMode', 'ensureVoiceModeLoaded', 'stop']);
     speechServiceSpy.speakByVoiceMode.and.resolveTo('local');
     speechServiceSpy.prefetchByVoiceMode.and.resolveTo(true);
     speechServiceSpy.getVoiceMode.and.resolveTo('local');
@@ -219,6 +219,80 @@ describe('DictationPracticePage', () => {
         ],
       });
     });
+
+    it('speaks each word the chosen number of times and stays put when auto play is off', fakeAsync(() => {
+      component.dictation.options.repeatCount = 3;
+      component.dictation.options.speakRate = 0.4;
+
+      component.onNextQuestion();
+      tick();
+
+      expect(speechServiceSpy.speakByVoiceMode).toHaveBeenCalledTimes(3);
+      expect(speechServiceSpy.speakByVoiceMode).toHaveBeenCalledWith('apple', jasmine.objectContaining({
+        rate: 0.4,
+        untilEnd: true,
+      }));
+      tick(10000);
+      expect(component.questionIndex).toBe(0);
+      expect(component.paperMarking).toBeFalse();
+    }));
+
+    it('advances after the pause when auto play is on', fakeAsync(() => {
+      component.dictation.options.autoPlayNext = true;
+      component.dictation.options.pauseSeconds = 5;
+      component.dictation.options.repeatCount = 1;
+
+      component.onNextQuestion();
+      tick();
+      expect(component.questionIndex).toBe(0);
+
+      tick(4999);
+      expect(component.questionIndex).toBe(0);
+      tick(1);
+      tick();
+      expect(component.questionIndex).toBe(1);
+
+      tick(5000);
+      tick();
+      expect(component.questionIndex).toBe(2);
+
+      tick(5000);
+      tick();
+      expect(component.paperMarking).toBeTrue();
+      expect(component.questionIndex).toBe(2);
+      expect(navigationServiceSpy.practiceComplete).not.toHaveBeenCalled();
+    }));
+
+    it('Listen replays the current word once and does not advance', fakeAsync(() => {
+      component.dictation.options.autoPlayNext = true;
+      component.dictation.options.repeatCount = 3;
+      component.dictation.options.pauseSeconds = 5;
+      component.onNextQuestion();
+      tick();
+      speechServiceSpy.speakByVoiceMode.calls.reset();
+
+      component.speak();
+      tick();
+
+      expect(speechServiceSpy.speakByVoiceMode).toHaveBeenCalledTimes(1);
+      tick(5000);
+      expect(component.questionIndex).toBe(0);
+    }));
+
+    it('manual Next cancels a pending auto advance', fakeAsync(() => {
+      component.dictation.options.autoPlayNext = true;
+      component.dictation.options.pauseSeconds = 5;
+      component.onNextQuestion();
+      tick();
+
+      component.dictation.options.autoPlayNext = false;
+      component.onPaperNext();
+
+      expect(component.questionIndex).toBe(1);
+      tick(5000);
+      expect(component.questionIndex).toBe(1);
+      expect(component.paperMarking).toBeFalse();
+    }));
   });
 
   describe('speak', () => {

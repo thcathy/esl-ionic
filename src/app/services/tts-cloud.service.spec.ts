@@ -112,5 +112,46 @@ describe('TtsCloudService', () => {
       expect(firstPlayAudio.play).toHaveBeenCalled();
       expect(secondPlayAudio.play).toHaveBeenCalled();
     });
+
+    it('playAudioUrl waits until playback ends when asked', async () => {
+      const listeners: Record<string, () => void> = {};
+      const fakeAudio: any = {
+        play: jasmine.createSpy().and.resolveTo(undefined),
+        pause: jasmine.createSpy(),
+        currentTime: 0,
+        addEventListener: (name: string, cb: () => void) => { listeners[name] = cb; },
+      };
+      spyOn(window as any, 'Audio').and.returnValue(fakeAudio);
+
+      let settled = false;
+      const pending = service.playAudioUrl(audioUrl, 0.7, true).then(result => {
+        settled = true;
+        return result;
+      });
+      await Promise.resolve();
+      await Promise.resolve();
+      expect(settled).toBeFalse();
+
+      listeners['ended']();
+      await expectAsync(pending).toBeResolvedTo(true);
+    });
+
+    it('stopCloudAudio releases a playback that is waiting to end', async () => {
+      const fakeAudio: any = {
+        play: jasmine.createSpy().and.resolveTo(undefined),
+        pause: jasmine.createSpy(),
+        currentTime: 0,
+        addEventListener: () => undefined,
+      };
+      spyOn(window as any, 'Audio').and.returnValue(fakeAudio);
+
+      const pending = service.playAudioUrl(audioUrl, undefined, true);
+      await Promise.resolve();
+      await Promise.resolve();
+      service.stopCloudAudio();
+
+      await expectAsync(pending).toBeResolvedTo(true);
+      expect(fakeAudio.pause).toHaveBeenCalled();
+    });
   });
 });

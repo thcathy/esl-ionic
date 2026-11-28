@@ -26,6 +26,7 @@ import {UIOptionsService} from '../../services/ui-options.service';
 import {DictationUtils} from '../../utils/dictation-utils';
 import {DictationType, EditDictationPageMode} from './edit-dictation-page-enum';
 import {ArticleDictationOptionsComponent} from "../../components/article-dictation-options/article-dictation-options.component";
+import {VocabPracticeTypeSelectorComponent} from '../../components/vocab-practice-type-selector/vocab-practice-type-selector.component';
 import {AnalyticsService} from '../../services/analytics.service';
 import Source = Dictations.Source;
 
@@ -69,6 +70,7 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
   private savedOptions: SavedOptionSnapshot = {...EditDictationPage.defaultSavedOptions};
 
   @ViewChild('articleDictationOptions') articleDictationOptions: ArticleDictationOptionsComponent;
+  @ViewChild(VocabPracticeTypeSelectorComponent) practiceTypeSelector?: VocabPracticeTypeSelectorComponent;
 
   constructor(
     public formBuilder: UntypedFormBuilder,
@@ -355,6 +357,15 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
     this.includeAIImage.disable({emitEvent: false});
   }
 
+  private wordStartOptions(): Dictations.Options {
+    const options: Dictations.Options = {
+      practiceType: this.wordPracticeType.value,
+      voiceMode: this.voiceMode.value || UIOptionsService.voiceMode.online,
+    };
+    this.practiceTypeSelector?.applyPaperPlayback(options);
+    return options;
+  }
+
   prepareDictation(): Dictation {
     if (this.type.value === DictationType.Word) {
       return <Dictation>{
@@ -366,10 +377,7 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
         title: new Date().toDateString(),
         suitableStudent: 'Any',
         wordContainSpace: this.wordContainSpace.value,
-        options: {
-          practiceType : this.wordPracticeType.value,
-          voiceMode: this.voiceMode.value || UIOptionsService.voiceMode.online,
-        },
+        options: this.wordStartOptions(),
         source: Dictations.Source.FillIn,
       };
     } else {

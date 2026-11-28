@@ -40,6 +40,9 @@ export class DictationPracticePage {
   paperMarking = false;
   paperMarks: Array<boolean | null> = [];
   speak$ = new Subject<boolean>();
+  private paperPlaybackId = 0;
+  private paperPauseTimer: ReturnType<typeof setTimeout> | null = null;
+  private paperPauseResolve: ((continued: boolean) => void) | null = null;
 
   constructor(
     public vocabPracticeService: VocabPracticeService,
@@ -56,7 +59,12 @@ export class DictationPracticePage {
     this.initDictation();
   }
 
+  ionViewWillLeave() {
+    this.stopPaperPlayback();
+  }
+
   clearVariables() {
+    this.stopPaperPlayback();
     this.histories = [];
     this.dictation = null;
     this.vocabPractices = [];
@@ -119,6 +127,28 @@ export class DictationPracticePage {
       && this.paperMarks.every(mark => mark !== null);
   }
 
+  private get paperRepeat(): number {
+    const count = this.dictation?.options?.repeatCount;
+    return count === 2 || count === 3 ? count : 1;
+  }
+
+  private get paperRate(): number {
+    const rate = this.dictation?.options?.speakRate;
+    if (typeof rate !== 'number' || Number.isNaN(rate)) {
+      return 0.7;
+    }
+    return Math.min(1, Math.max(0.1, Math.round(rate * 10) / 10));
+  }
+
+  private get paperPauseMs(): number {
+    const seconds = this.dictation?.options?.pauseSeconds ?? 5;
+    return Math.min(10, Math.max(1, seconds)) * 1000;
+  }
+
+  private get paperAutoPlay(): boolean {
+    return this.practiceType === VocabPracticeType.Paper && this.dictation?.options?.autoPlayNext === true;
+  }
+
   get puzzleCols(): number {
     const n = this.puzzleControls?.buttons?.length ?? 1;
     const maxPerRow = 6;
@@ -159,6 +189,12 @@ export class DictationPracticePage {
   }
 
   speak() {
+    if (this.practiceType === VocabPracticeType.Paper) {
+      this.stopPaperPlayback();
+      void this.playPaperQuestion(false);
+      this.speak$.next(true);
+      return;
+    }
     this.speakPractice(this.questionIndex);
     this.speak$.next(true);
   }
@@ -175,6 +211,7 @@ export class DictationPracticePage {
   }
 
   onPaperNext() {
+    this.stopPaperPlayback();
     if (this.paperMarking) {
       return;
     }
@@ -260,14 +297,70 @@ export class DictationPracticePage {
 
   onNextQuestion() {
     this.preNextQuestion();
-    this.speak();
     if (this.practiceType === VocabPracticeType.Paper) {
+      void this.playPaperQuestion(true);
       return;
     }
+    this.speak();
     this.focusAnswerInput();
     if (this.practiceType === VocabPracticeType.Puzzle) {
       this.puzzleControls = this.vocabPracticeService.createPuzzleControls(this.currentQuestion().word);
     }
+  }
+
+  private async playPaperQuestion(fromQuestion: boolean): Promise<void> {
+    const run = ++this.paperPlaybackId;
+    const times = fromQuestion ? this.paperRepeat : 1;
+    for (let i = 0; i < times; i++) {
+      if (run !== this.paperPlaybackId || this.paperMarking) {
+        return;
+      }
+      await this.speakPaperAndWait(this.questionIndex);
+    }
+    if (!fromQuestion || !this.paperAutoPlay || run !== this.paperPlaybackId || this.paperMarking) {
+      return;
+    }
+    const continued = await this.waitForPaperPause(run);
+    if (!continued || run !== this.paperPlaybackId || this.paperMarking) {
+      return;
+    }
+    this.onPaperNext();
+  }
+
+  private speakPaperAndWait(index: number): Promise<unknown> {
+    const question = this.vocabPractices[index];
+    if (!question) {
+      return Promise.resolve();
+    }
+    return this.speechService.speakByVoiceMode(question.word, {
+      speakPunctuation: this.dictation?.options?.speakPunctuation,
+      pronounceUrl: question.activePronounceLink,
+      rate: this.paperRate,
+      untilEnd: true,
+    });
+  }
+
+  private waitForPaperPause(run: number): Promise<boolean> {
+    return new Promise(resolve => {
+      this.paperPauseResolve = resolve;
+      this.paperPauseTimer = setTimeout(() => {
+        this.paperPauseTimer = null;
+        this.paperPauseResolve = null;
+        resolve(this.paperPlaybackId === run);
+      }, this.paperPauseMs);
+    });
+  }
+
+  private stopPaperPlayback() {
+    this.paperPlaybackId++;
+    if (this.paperPauseTimer != null) {
+      clearTimeout(this.paperPauseTimer);
+      this.paperPauseTimer = null;
+    }
+    const resolve = this.paperPauseResolve;
+    this.paperPauseResolve = null;
+    resolve?.(false);
+    this.speechService.stop();
   }
 
   end = (): boolean => this.questionIndex + 1 >= this.vocabPractices.length;

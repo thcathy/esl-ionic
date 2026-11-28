@@ -62,4 +62,23 @@ describe('VocabPracticeTypeSelectorComponent', () => {
     expect(component.selectedType).toBe(VocabPracticeType.Paper);
     expect(component.selectedTypeChange.emit).toHaveBeenCalledWith(VocabPracticeType.Paper);
   });
+
+  it('copies playback settings only while Write on paper is selected', () => {
+    const options: { autoPlayNext?: boolean; repeatCount?: number; speakRate?: number; pauseSeconds?: number } = {};
+    component.selectedType = VocabPracticeType.Spell;
+    component.autoPlayNext = true;
+    component.applyPaperPlayback(options);
+    expect(options.autoPlayNext).toBeFalse();
+
+    component.selectedType = VocabPracticeType.Paper;
+    component.repeatCount = 3;
+    component.speed = 0.4;
+    component.pauseSeconds = 8;
+    component.applyPaperPlayback(options);
+
+    expect(options.autoPlayNext).toBeTrue();
+    expect(options.repeatCount).toBe(3);
+    expect(options.speakRate).toBe(0.4);
+    expect(options.pauseSeconds).toBe(8);
+  });
 });
