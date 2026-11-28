@@ -37,6 +37,11 @@
 
 .type-name {
   flex: 0 0 auto;
+  color: var(--ion-text-color, #1a1a1a);
+}
+
+.practice-type-option.selected .type-name {
+  color: var(--ion-color-primary);
 }
 
 .type-example {
@@ -120,9 +125,9 @@
   margin: 0;
   padding: 0;
   border-radius: 50%;
-  border: 1px solid var(--ion-text-color, #1a1a1a);
+  border: 1px solid var(--ion-color-primary);
   background: transparent;
-  color: var(--ion-text-color, #1a1a1a);
+  color: var(--ion-color-primary);
   font-size: 1rem;
   font-weight: 600;
   display: inline-flex;
@@ -135,15 +140,15 @@
 }
 
 .repeat-choice.selected {
-  background: var(--ion-text-color, #1a1a1a);
-  color: #ffffff;
+  background: var(--ion-color-primary);
+  color: var(--ion-color-primary-contrast, #ffffff);
 }
 
 .stepper-value {
   width: 100%;
   text-align: center;
   font-variant-numeric: tabular-nums;
-  color: var(--ion-text-color, #1a1a1a);
+  color: var(--ion-color-primary);
   font-weight: 600;
 }
 
