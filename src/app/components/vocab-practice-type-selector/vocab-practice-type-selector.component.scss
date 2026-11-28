@@ -49,9 +49,13 @@
 
 .type-example {
   font-size: 0.9rem;
-  color: #555555;
+  color: var(--ion-text-color, #1a1a1a);
   display: flex;
   align-items: center;
+}
+
+.practice-type-option.selected .type-example {
+  color: var(--ion-color-primary);
 }
 
 .type-example .spell {
@@ -70,17 +74,15 @@
   height: 24px;
   margin: 0 2px;
   border-radius: 5px;
-  background: #2c2c2c;
-  color: white;
+  background: var(--ion-text-color, #1a1a1a);
+  color: #ffffff;
   font-weight: 700;
   font-size: 0.78rem;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.18), 0 1px 1px rgba(0, 0, 0, 0.1);
 }
 
-.puzzle.deselected span {
-  background: #cfcfcf;
-  color: white;
-  box-shadow: none;
+.practice-type-option.selected .puzzle span {
+  background: var(--ion-color-primary);
 }
 
 .type-example.paper {
@@ -147,10 +149,6 @@
   font-variant-numeric: tabular-nums;
   color: var(--ion-color-primary);
   font-weight: 600;
-}
-
-.deselected {
-  color: #aaaaaa;
 }
 
 .options-divider {
