@@ -25,7 +25,7 @@ describe('VocabPracticeTypeSelectorComponent', () => {
 
     expect(options.length).toBe(3);
     expect(fixture.nativeElement.querySelector('ion-col')).toBeNull();
-    expect(text).toContain('Practice method');
+    expect(text).toContain('Practice Method');
     expect(text).toContain('Spelling');
     expect(text).toContain('Puzzle');
     expect(text).toContain('Write on paper');
