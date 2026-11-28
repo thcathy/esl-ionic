@@ -35,10 +35,6 @@
 @if (selectedType === practiceType.Paper) {
   <div class="paper-options">
     <div class="paper-option-row">
-      <span>{{'Auto play next'|translate}}</span>
-      <ion-toggle [(ngModel)]="autoPlayNext" [attr.aria-label]="'Auto play next'|translate"></ion-toggle>
-    </div>
-    <div class="paper-option-row">
       <span>{{'Repeat'|translate}}</span>
       <span class="repeat-choices">
         @for (count of repeatChoices; track count) {
@@ -61,20 +57,25 @@
       </span>
     </div>
     <div class="paper-option-row">
-      <span>{{'Pause'|translate}}</span>
-      <span class="pause-choices">
-        <ion-button fill="outline" color="medium" shape="round" class="pause-btn" [disabled]="!autoPlayNext"
-          (click)="changePause(-1)" [attr.aria-label]="'Pause'|translate">
-          <fa-icon icon="minus"></fa-icon>
-        </ion-button>
-        <span class="pause-value">{{pauseSeconds}} s</span>
-        <ion-button fill="outline" color="medium" shape="round" class="pause-btn" [disabled]="!autoPlayNext"
-          (click)="changePause(1)" [attr.aria-label]="'Pause'|translate">
-          <fa-icon icon="plus"></fa-icon>
-        </ion-button>
-      </span>
+      <span>{{'Auto play next'|translate}}</span>
+      <ion-toggle [(ngModel)]="autoPlayNext" [attr.aria-label]="'Auto play next'|translate"></ion-toggle>
     </div>
-    <div class="paper-option-note">{{'Used when Auto play next is on.'|translate}}</div>
+    @if (autoPlayNext) {
+      <div class="paper-option-row">
+        <span>{{'Pause'|translate}}</span>
+        <span class="pause-choices">
+          <ion-button fill="outline" color="medium" shape="round" class="pause-btn"
+            (click)="changePause(-1)" [attr.aria-label]="'Pause'|translate">
+            <fa-icon icon="minus"></fa-icon>
+          </ion-button>
+          <span class="pause-value">{{pauseSeconds}} s</span>
+          <ion-button fill="outline" color="medium" shape="round" class="pause-btn"
+            (click)="changePause(1)" [attr.aria-label]="'Pause'|translate">
+            <fa-icon icon="plus"></fa-icon>
+          </ion-button>
+        </span>
+      </div>
+    }
   </div>
 }
 <div class="options-divider"></div>

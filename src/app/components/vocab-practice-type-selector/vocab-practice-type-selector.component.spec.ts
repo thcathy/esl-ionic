@@ -37,8 +37,19 @@ describe('VocabPracticeTypeSelectorComponent', () => {
     component.selectedType = VocabPracticeType.Paper;
     fixture.detectChanges();
 
-    expect(fixture.nativeElement.textContent).toContain('Auto play next');
-    expect(fixture.nativeElement.textContent).toContain('Repeat');
+    const text = fixture.nativeElement.textContent;
+    expect(text).toContain('Auto play next');
+    expect(text).toContain('Repeat');
+    expect(text).not.toContain('Pause');
+    expect(text).not.toContain('Used when Auto play next is on.');
+  });
+
+  it('shows Pause only after Auto play next is turned on', () => {
+    component.selectedType = VocabPracticeType.Paper;
+    component.autoPlayNext = true;
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.textContent).toContain('Pause');
     expect(fixture.nativeElement.querySelectorAll('.type-example').length).toBe(3);
   });
 
