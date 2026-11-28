@@ -25,17 +25,13 @@ describe('VocabPracticeTypeSelectorComponent', () => {
 
     expect(options.length).toBe(3);
     expect(fixture.nativeElement.querySelector('ion-col')).toBeNull();
+    expect(text).toContain('Practice method');
     expect(text).toContain('Spelling');
     expect(text).toContain('Puzzle');
     expect(text).toContain('Write on paper');
     expect(text).not.toContain('Listen, write on paper, then tick');
-  });
-
-  it('shows the Write on paper hint only while that type is selected', () => {
-    component.selectedType = VocabPracticeType.Paper;
-    fixture.detectChanges();
-
-    expect(fixture.nativeElement.textContent).toContain('Listen, write on paper, then tick');
+    expect(fixture.nativeElement.querySelector('.type-example')).toBeNull();
+    expect(fixture.nativeElement.querySelector('.type-hint')).toBeNull();
   });
 
   it('keeps Write on paper when the selection changes', () => {

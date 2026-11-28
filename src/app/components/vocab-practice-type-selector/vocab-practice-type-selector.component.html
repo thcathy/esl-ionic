@@ -1,13 +1,11 @@
-<div class="practice-type-list" role="radiogroup">
+<div class="practice-method-label" [id]="radioName + '-label'">{{'Practice method'|translate}}</div>
+<div class="practice-type-list" role="radiogroup" [attr.aria-labelledby]="radioName + '-label'">
   <label class="practice-type-option" [class.selected]="selectedType === practiceType.Spell">
     <span class="practice-type-line">
       <input #typeRadio type="radio" [name]="radioName" [value]="practiceType.Spell"
         (change)="onRadioChange($event, practiceType.Spell)">
       <span [class.deselected]="selectedType !== practiceType.Spell">{{'Spelling'|translate}}</span>
     </span>
-    <div class="type-example" [class.deselected]="selectedType !== practiceType.Spell">
-      <fa-icon icon="apple-alt"></fa-icon>&nbsp;<span class="spell">apple</span>
-    </div>
   </label>
   <label class="practice-type-option" [class.selected]="selectedType === practiceType.Puzzle">
     <span class="practice-type-line">
@@ -15,10 +13,6 @@
         (change)="onRadioChange($event, practiceType.Puzzle)">
       <span [class.deselected]="selectedType !== practiceType.Puzzle">{{'Puzzle'|translate}}</span>
     </span>
-    <div class="type-example puzzle" [class.deselected]="selectedType !== practiceType.Puzzle">
-      <fa-icon icon="apple-alt"></fa-icon>
-      <span class="puzzle">p</span><span>e</span><span>l</span><span>a</span>
-    </div>
   </label>
   <label class="practice-type-option" [class.selected]="selectedType === practiceType.Paper">
     <span class="practice-type-line">
@@ -26,9 +20,6 @@
         (change)="onRadioChange($event, practiceType.Paper)">
       <span [class.deselected]="selectedType !== practiceType.Paper">{{'Write on paper'|translate}}</span>
     </span>
-    @if (selectedType === practiceType.Paper) {
-      <div class="type-hint">{{'Listen, write on paper, then tick'|translate}}</div>
-    }
   </label>
 </div>
 <div class="options-divider"></div>
