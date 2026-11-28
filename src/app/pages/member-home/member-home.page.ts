@@ -15,6 +15,8 @@ import {ModalController} from '@ionic/angular';
 import {VocabSelectionComponent} from '../../components/vocab-selection/vocab-selection.component';
 import {faCheckCircle, faTimesCircle} from '@fortawesome/free-regular-svg-icons';
 import {FFSAuthService} from '../../services/auth.service';
+import {UIOptionsService} from '../../services/ui-options.service';
+import {resolveVocabPracticeType} from '../../enum/vocab-practice-type.enum';
 
 @Component({
     selector: 'app-member-home',
@@ -47,6 +49,7 @@ export class MemberHomePage implements OnInit {
     private log: NGXLogger,
     public modalController: ModalController,
     public authService: FFSAuthService,
+    private uiOptionsService: UIOptionsService,
   ) { }
 
   ngOnInit() {
@@ -113,11 +116,15 @@ export class MemberHomePage implements OnInit {
     this.location.go(`/member-home?segment=${ev.detail.value}`);
   }
 
-  onVocabHistoryList(value: string) {
+  async onVocabHistoryList(value: string) {
     if (value === 'reviewAll') {
-      this.navigationService.startDictation(
-        this.manageVocabHistoryService.generatePracticeFromAnsweredBefore()
-      );
+      const dictation = this.manageVocabHistoryService.generatePracticeFromAnsweredBefore();
+      const savedType = await this.uiOptionsService.loadOption(UIOptionsService.keys.vocabPracticeType);
+      dictation.options = {
+        ...(dictation.options ?? {}),
+        practiceType: resolveVocabPracticeType(savedType),
+      };
+      this.navigationService.startDictation(dictation);
     } else if (value === 'reviewSelected') {
       this.presentVocabSelectionModal();
     }

@@ -143,6 +143,14 @@
     @if (showOptions) {
       <app-section-card class="dictation-section section-options" [headerTitle]="'Options'|translate" icon="sliders-h">
         <div class="section-body">
+          @if (showPracticeOptions && !dictationHelper.isSentenceDictation(dictation)) {
+            <app-vocab-practice-type-selector
+              class="start-type-selector"
+              [selectedType]="selectedStartPracticeType"
+              (selectedTypeChange)="selectedStartPracticeType = $event">
+            </app-vocab-practice-type-selector>
+          }
+
           @if (showPracticeOptions) {
             <app-voice-mode-selector
               [selectedMode]="selectedVoiceMode"
@@ -154,19 +162,12 @@
             <app-article-dictation-options #articleDictationOptions></app-article-dictation-options>
           }
 
-          @if (showPracticeOptions && !dictationHelper.isSentenceDictation(dictation)) {
-            <app-vocab-practice-type-selector
-              class="start-type-selector"
-              [selectedType]="selectedStartPracticeType"
-              (selectedTypeChange)="selectedStartPracticeType = $event">
-            </app-vocab-practice-type-selector>
-            @if (showStartButton) {
-              <div class="start-button-row">
-                <ion-button class="action-button start-button" (click)="startVocabDictation(selectedStartPracticeType)">
-                  <fa-icon [icon]="['fas', 'play']"></fa-icon>&nbsp;{{'Start'|translate}}
-                </ion-button>
-              </div>
-            }
+          @if (showPracticeOptions && !dictationHelper.isSentenceDictation(dictation) && showStartButton) {
+            <div class="start-button-row">
+              <ion-button class="action-button start-button" (click)="startVocabDictation(selectedStartPracticeType)">
+                <fa-icon [icon]="['fas', 'play']"></fa-icon>&nbsp;{{'Start'|translate}}
+              </ion-button>
+            </div>
           }
 
           @if (showStartButton && showPracticeOptions && dictationHelper.isSentenceDictation(dictation)) {

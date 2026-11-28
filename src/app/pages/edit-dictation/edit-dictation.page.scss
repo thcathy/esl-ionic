@@ -53,8 +53,31 @@ fa-icon {
   text-decoration: underline;
 }
 
+ion-select {
+  color: var(--ion-color-primary);
+}
+
+ion-select [slot="label"] {
+  font-size: var(--ion-font-size, 16px);
+  font-weight: 400;
+  line-height: 1.25;
+  color: var(--ion-text-color, #1a1a1a);
+}
+
+ion-radio span:not(.deselected) {
+  color: var(--ion-color-primary);
+}
+
+ion-radio span.deselected {
+  color: #484848;
+}
+
 .deselected {
   color: #ccc;
+}
+
+.type-example.deselected {
+  color: #555555;
 }
 
 .voice-mode-note {

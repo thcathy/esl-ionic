@@ -13,7 +13,7 @@ import {TranslateService} from '@ngx-translate/core';
 import {Observable} from 'rxjs';
 import {Dictation, Dictations, SentenceLengthOptions, SuitableStudentOptions} from '../../entity/dictation';
 import {Vocab} from '../../entity/vocab';
-import {VocabPracticeType} from '../../enum/vocab-practice-type.enum';
+import {resolveVocabPracticeType, VocabPracticeType} from '../../enum/vocab-practice-type.enum';
 import {CanComponentDeactivate} from '../../guards/can-deactivate.guard';
 import {FFSAuthService} from '../../services/auth.service';
 import {ArticleDictationService} from '../../services/dictation/article-dictation.service';
@@ -26,6 +26,7 @@ import {UIOptionsService} from '../../services/ui-options.service';
 import {DictationUtils} from '../../utils/dictation-utils';
 import {DictationType, EditDictationPageMode} from './edit-dictation-page-enum';
 import {ArticleDictationOptionsComponent} from "../../components/article-dictation-options/article-dictation-options.component";
+import {VocabPracticeTypeSelectorComponent} from '../../components/vocab-practice-type-selector/vocab-practice-type-selector.component';
 import {AnalyticsService} from '../../services/analytics.service';
 import Source = Dictations.Source;
 
@@ -69,6 +70,7 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
   private savedOptions: SavedOptionSnapshot = {...EditDictationPage.defaultSavedOptions};
 
   @ViewChild('articleDictationOptions') articleDictationOptions: ArticleDictationOptionsComponent;
+  @ViewChild(VocabPracticeTypeSelectorComponent) practiceTypeSelector?: VocabPracticeTypeSelectorComponent;
 
   constructor(
     public formBuilder: UntypedFormBuilder,
@@ -248,15 +250,19 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
   }
 
   private persistOptions() {
-    const options = {
+    const practiceType = resolveVocabPracticeType(this.wordPracticeType.value);
+    const options: Record<string, unknown> = {
       [UIOptionsService.keys.ttsVoiceMode]: this.voiceMode.value || UIOptionsService.voiceMode.online,
       [UIOptionsService.keys.editDictationType]: this.type.value || DictationType.Word,
       [UIOptionsService.keys.editDictationSentenceLength]: this.sentenceLength.value || 'Normal',
       [UIOptionsService.keys.editDictationShowImage]: this.showImage.value === true,
       [UIOptionsService.keys.editDictationIncludeAIImage]: this.includeAIImage?.value === true,
       [UIOptionsService.keys.editDictationWordContainSpace]: this.wordContainSpace.value === true,
-      [UIOptionsService.keys.editDictationWordPracticeType]: this.wordPracticeType.value || VocabPracticeType.Spell,
+      [UIOptionsService.keys.editDictationWordPracticeType]: practiceType,
     };
+    if (this.mode === EditDictationPageMode.Start) {
+      options[UIOptionsService.keys.vocabPracticeType] = practiceType;
+    }
 
     Object.entries(options).forEach(([key, value]) => this.uiOptionsService.saveOption(key, value));
   }
@@ -284,6 +290,7 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
       savedIncludeAiImage,
       savedWordContainSpace,
       savedWordPracticeType,
+      savedSharedPracticeType,
     ] = await Promise.all([
       this.uiOptionsService.loadOption(UIOptionsService.keys.ttsVoiceMode),
       this.uiOptionsService.loadOption(UIOptionsService.keys.editDictationType),
@@ -292,6 +299,7 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
       this.uiOptionsService.loadOption(UIOptionsService.keys.editDictationIncludeAIImage),
       this.uiOptionsService.loadOption(UIOptionsService.keys.editDictationWordContainSpace),
       this.uiOptionsService.loadOption(UIOptionsService.keys.editDictationWordPracticeType),
+      this.uiOptionsService.loadOption(UIOptionsService.keys.vocabPracticeType),
     ]);
 
     this.savedOptions = {
@@ -301,7 +309,7 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
       showImage: this.toBoolean(savedShowImage, EditDictationPage.defaultSavedOptions.showImage),
       includeAIImage: this.toBoolean(savedIncludeAiImage, EditDictationPage.defaultSavedOptions.includeAIImage),
       wordContainSpace: this.toBoolean(savedWordContainSpace),
-      wordPracticeType: this.resolveWordPracticeType(savedWordPracticeType),
+      wordPracticeType: resolveVocabPracticeType(savedSharedPracticeType ?? savedWordPracticeType),
     };
   }
 
@@ -311,10 +319,6 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
 
   private resolveSentenceLength(sentenceLength: string): string {
     return this.sentenceLengthOptions.includes(sentenceLength) ? sentenceLength : 'Normal';
-  }
-
-  private resolveWordPracticeType(practiceType: VocabPracticeType): VocabPracticeType {
-    return practiceType === VocabPracticeType.Puzzle ? VocabPracticeType.Puzzle : VocabPracticeType.Spell;
   }
 
   private toBoolean(value: unknown, defaultValue = false): boolean {
@@ -330,7 +334,7 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
     this.showImage.setValue(this.toBoolean(dictation.showImage));
     this.includeAIImage.setValue(this.toBoolean(dictation.includeAIImage));
     this.wordContainSpace.setValue(this.toBoolean(dictation.wordContainSpace));
-    this.wordPracticeType.setValue(this.resolveWordPracticeType(dictation?.options?.practiceType));
+    this.wordPracticeType.setValue(resolveVocabPracticeType(dictation?.options?.practiceType));
   }
 
   private applyEditableDictationFormValue(dictation: Dictation) {
@@ -353,6 +357,15 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
     this.includeAIImage.disable({emitEvent: false});
   }
 
+  private wordStartOptions(): Dictations.Options {
+    const options: Dictations.Options = {
+      practiceType: this.wordPracticeType.value,
+      voiceMode: this.voiceMode.value || UIOptionsService.voiceMode.online,
+    };
+    this.practiceTypeSelector?.applyPaperPlayback(options);
+    return options;
+  }
+
   prepareDictation(): Dictation {
     if (this.type.value === DictationType.Word) {
       return <Dictation>{
@@ -364,10 +377,7 @@ export class EditDictationPage implements OnInit, CanComponentDeactivate {
         title: new Date().toDateString(),
         suitableStudent: 'Any',
         wordContainSpace: this.wordContainSpace.value,
-        options: {
-          practiceType : this.wordPracticeType.value,
-          voiceMode: this.voiceMode.value || UIOptionsService.voiceMode.online,
-        },
+        options: this.wordStartOptions(),
         source: Dictations.Source.FillIn,
       };
     } else {

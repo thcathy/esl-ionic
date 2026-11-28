@@ -308,6 +308,29 @@ describe('EditDictationPage', () => {
           expect(dictation2.vocabs[2].word).toEqual('cup');
         }));
 
+        it('passes Write on paper playback settings when starting', fakeAsync(() => {
+          component.question.setValue('apple');
+          component.type.setValue(DictationType.Word);
+          component.wordPracticeType.setValue(VocabPracticeType.Paper);
+          component.practiceTypeSelector = {
+            applyPaperPlayback(options) {
+              options.autoPlayNext = true;
+              options.repeatCount = 3;
+              options.speakRate = 0.6;
+              options.pauseSeconds = 2;
+            },
+          } as any;
+
+          component.startDictationNow();
+
+          const dictation = navigationServiceSpy.startDictation.calls.mostRecent().args[0] as Dictation;
+          expect(dictation.options.practiceType).toEqual(VocabPracticeType.Paper);
+          expect(dictation.options.autoPlayNext).toBeTrue();
+          expect(dictation.options.repeatCount).toBe(3);
+          expect(dictation.options.speakRate).toBe(0.6);
+          expect(dictation.options.pauseSeconds).toBe(2);
+        }));
+
         it('select dictation by word will show options for word', fakeAsync(() => {
           component.type.setValue(DictationType.Word);
           expect(fixture.nativeElement.querySelector('.word-options-instant')).toBeDefined();
@@ -378,6 +401,18 @@ describe('EditDictationPage', () => {
           expect(saved.get('UIOptionsService.keys.editDictationIncludeAIImage')).toBeTrue();
           expect(saved.get('UIOptionsService.keys.editDictationWordContainSpace')).toBeTrue();
           expect(saved.get('UIOptionsService.keys.editDictationWordPracticeType')).toEqual(VocabPracticeType.Puzzle);
+          expect(saved.get('UIOptionsService.keys.vocabPracticeType')).toEqual(VocabPracticeType.Puzzle);
+        }));
+
+        it('remembers Write on paper from the shared practice type', fakeAsync(() => {
+          storageSpy.get.and.callFake((key: string) => Promise.resolve({
+            'UIOptionsService.keys.vocabPracticeType': VocabPracticeType.Paper,
+            'UIOptionsService.keys.editDictationWordPracticeType': VocabPracticeType.Puzzle,
+          }[key]));
+
+          componentViewWillEnter();
+
+          expect(component.wordPracticeType.value).toEqual(VocabPracticeType.Paper);
         }));
       });
 

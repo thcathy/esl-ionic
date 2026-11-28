@@ -20,6 +20,7 @@ import {VocabPracticeHistory} from "../../entity/vocab-practice-history";
 export class PracticeHistoryListComponent {
   @Input() histories: VocabPracticeHistory[];
   @Input() mark: number;
+  @Input() chronological = false;
 
   constructor() {
   }

@@ -17,6 +17,7 @@ export class TtsCloudService {
   private static readonly SLUG_REPLACEMENT = '-';
 
   private currentAudio: HTMLAudioElement | null = null;
+  private playbackDone: (() => void) | null = null;
   private prefetchedAudioUrls: Set<string> = new Set<string>();
 
   constructor(
@@ -67,12 +68,14 @@ export class TtsCloudService {
   }
 
   stopCloudAudio() {
-    if (!this.currentAudio) {
-      return;
+    const finish = this.playbackDone;
+    this.playbackDone = null;
+    if (this.currentAudio) {
+      this.currentAudio.pause();
+      this.currentAudio.currentTime = 0;
+      this.currentAudio = null;
     }
-    this.currentAudio.pause();
-    this.currentAudio.currentTime = 0;
-    this.currentAudio = null;
+    finish?.();
   }
 
   prefetchAudioUrl(url: string | null | undefined): Promise<boolean> {
@@ -122,7 +125,7 @@ export class TtsCloudService {
     return slug.length > 0 ? slug : TtsCloudService.FALLBACK_SEGMENT;
   }
 
-  async playAudioUrl(url: string, rate?: number): Promise<boolean> {
+  async playAudioUrl(url: string, rate?: number, untilEnd = false): Promise<boolean> {
     try {
       this.stopCloudAudio();
       // Always use a fresh player instance to avoid rapid-click replay issues.
@@ -132,6 +135,19 @@ export class TtsCloudService {
       }
       this.currentAudio = audio;
       await audio.play();
+      if (!untilEnd || this.currentAudio !== audio) {
+        return true;
+      }
+      await new Promise<void>(resolve => {
+        const finish = () => {
+          if (this.playbackDone === finish) {
+            this.playbackDone = null;
+          }
+          resolve();
+        };
+        this.playbackDone = finish;
+        audio.addEventListener('ended', finish, { once: true });
+      });
       return true;
     } catch (err) {
       this.log.debug(`Audio play failed: ${url} - ${JSON.stringify(err)}`);

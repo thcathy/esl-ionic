@@ -42,6 +42,10 @@ export namespace Dictations {
 
   export class Options {
     practiceType?: VocabPracticeType;
+    autoPlayNext?: boolean;
+    repeatCount?: number;
+    speakRate?: number;
+    pauseSeconds?: number;
     retryWrongWord?: boolean = false;
     vocabPracticeHistories?: VocabPracticeHistory[];
     voiceMode?: string;

@@ -1,14 +1,15 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
 import {vocabDifficulties, VocabDifficulty} from '../../entity/voacb-practice';
 import {VocabPracticeService} from '../../services/practice/vocab-practice.service';
 import {NavigationService} from '../../services/navigation.service';
 import {ActivatedRoute} from '@angular/router';
 import {FFSAuthService} from '../../services/auth.service';
-import {VocabPracticeType} from '../../enum/vocab-practice-type.enum';
+import {resolveVocabPracticeType, VocabPracticeType} from '../../enum/vocab-practice-type.enum';
 import {StorageService} from '../../services/storage.service';
 import {TranslateService} from "@ngx-translate/core";
 import {UIOptionsService} from '../../services/ui-options.service';
+import {VocabPracticeTypeSelectorComponent} from '../../components/vocab-practice-type-selector/vocab-practice-type-selector.component';
 
 @Component({
     selector: 'app-vocabulary-starter',
@@ -17,6 +18,8 @@ import {UIOptionsService} from '../../services/ui-options.service';
     standalone: false
 })
 export class VocabularyStarterPage implements OnInit {
+  @ViewChild(VocabPracticeTypeSelectorComponent) practiceTypeSelector?: VocabPracticeTypeSelectorComponent;
+
   inputKey = 'VocabularyStarterPage.vocabularyStarterPageInput';
   inputForm: UntypedFormGroup;
   vocabDifficulties: String[] = vocabDifficulties;
@@ -48,8 +51,14 @@ export class VocabularyStarterPage implements OnInit {
   async setupInput() {
     const input = <VocabularyStarterPageInput> await this.storage.get(this.inputKey);
     if (input?.difficulty !== undefined) { this.difficulty.setValue(input.difficulty); }
-    if (input?.type !== undefined) { this.type.setValue(input.type); }
-    const savedVoiceMode = await this.uiOptionsService.loadOption(UIOptionsService.keys.ttsVoiceMode);
+    const [savedVoiceMode, savedPracticeType] = await Promise.all([
+      this.uiOptionsService.loadOption(UIOptionsService.keys.ttsVoiceMode),
+      this.uiOptionsService.loadOption(UIOptionsService.keys.vocabPracticeType),
+    ]);
+    const rememberedType = savedPracticeType ?? input?.type;
+    if (rememberedType !== undefined && rememberedType !== null && rememberedType !== '') {
+      this.type.setValue(resolveVocabPracticeType(rememberedType));
+    }
     this.voiceMode.setValue(this.resolveVoiceMode(input, savedVoiceMode));
   }
 
@@ -64,10 +73,14 @@ export class VocabularyStarterPage implements OnInit {
   }
 
   start() {
+    const practiceType = resolveVocabPracticeType(this.type.value);
+    this.type.setValue(practiceType);
     this.saveInput();
+    this.uiOptionsService.saveOption(UIOptionsService.keys.vocabPracticeType, practiceType);
     this.vocabPracticeService.generatePractice(this.difficulty.value)
       .subscribe(d => {
-        d.options = { practiceType: this.type.value ?? VocabPracticeType.Spell };
+        d.options = { practiceType };
+        this.practiceTypeSelector?.applyPaperPlayback(d.options);
         this.navigationService.startDictation(d);
       });
   }

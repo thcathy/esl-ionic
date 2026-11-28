@@ -1,26 +1,78 @@
-<ion-radio-group [ngModel]="selectedType" (ngModelChange)="onSelectedTypeChange($event)">
-  <ion-row class="radio">
-    <ion-col>
-      <ion-item>
-        <ion-radio [value]="practiceType.Spell">
-          <span [class.deselected]="selectedType === practiceType.Puzzle">{{'Spelling'|translate}}</span>
-        </ion-radio>
-      </ion-item>
-      <div class="type-example" [class.deselected]="selectedType !== practiceType.Spell">
+<div class="option-label practice-method-label" [id]="radioName + '-label'">{{'Practice Method'|translate}}</div>
+<div class="practice-type-list" role="radiogroup" [attr.aria-labelledby]="radioName + '-label'">
+  <label class="practice-type-option" [class.selected]="selectedType === practiceType.Spell">
+    <span class="practice-type-line">
+      <input #typeRadio type="radio" [name]="radioName" [value]="practiceType.Spell"
+        (change)="onRadioChange($event, practiceType.Spell)">
+      <span class="type-name">{{'Spelling'|translate}}</span>
+      <span class="type-example" [class.deselected]="selectedType !== practiceType.Spell">
         <fa-icon icon="apple-alt"></fa-icon>&nbsp;<span class="spell">apple</span>
-      </div>
-    </ion-col>
-    <ion-col>
-      <ion-item>
-        <ion-radio [value]="practiceType.Puzzle">
-          <span [class.deselected]="selectedType === practiceType.Spell">{{'Puzzle'|translate}}</span>
-        </ion-radio>
-      </ion-item>
-      <div class="type-example puzzle" [class.deselected]="selectedType !== practiceType.Puzzle">
+      </span>
+    </span>
+  </label>
+  <label class="practice-type-option" [class.selected]="selectedType === practiceType.Puzzle">
+    <span class="practice-type-line">
+      <input #typeRadio type="radio" [name]="radioName" [value]="practiceType.Puzzle"
+        (change)="onRadioChange($event, practiceType.Puzzle)">
+      <span class="type-name">{{'Puzzle'|translate}}</span>
+      <span class="type-example puzzle" [class.deselected]="selectedType !== practiceType.Puzzle">
         <fa-icon icon="apple-alt"></fa-icon>
-        <span class="puzzle">p</span><span>e</span><span>l</span><span>a</span>
+        <span>p</span><span>e</span><span>l</span><span>a</span>
+      </span>
+    </span>
+  </label>
+  <label class="practice-type-option" [class.selected]="selectedType === practiceType.Paper">
+    <span class="practice-type-line">
+      <input #typeRadio type="radio" [name]="radioName" [value]="practiceType.Paper"
+        (change)="onRadioChange($event, practiceType.Paper)">
+      <span class="type-name">{{'Write on paper'|translate}}</span>
+      <span class="type-example paper" [class.deselected]="selectedType !== practiceType.Paper">
+        {{'Listen, write on paper, then check your answers.'|translate}}
+      </span>
+    </span>
+  </label>
+</div>
+@if (selectedType === practiceType.Paper) {
+  <div class="paper-options">
+    <div class="paper-option-row">
+      <span class="option-label">{{'Repeat'|translate}}</span>
+      <span class="repeat-choices">
+        @for (count of repeatChoices; track count) {
+          <button type="button" class="repeat-choice" [class.selected]="repeatCount === count"
+            (click)="repeatCount = count">{{count}}</button>
+        }
+      </span>
+    </div>
+    <div class="paper-option-row">
+      <span class="option-label">{{'Speed'|translate}}</span>
+      <span class="stepper">
+        <button type="button" class="icon-choice" (click)="slower()" [attr.aria-label]="'Slower'|translate">
+          <fa-icon [icon]="['fas', 'person-walking']"></fa-icon>
+        </button>
+        <span class="stepper-value">{{speedLabel}}</span>
+        <button type="button" class="icon-choice" (click)="faster()" [attr.aria-label]="'Faster'|translate">
+          <fa-icon [icon]="['fas', 'person-running']"></fa-icon>
+        </button>
+      </span>
+    </div>
+    <div class="paper-option-row">
+      <span class="option-label">{{'Auto play next'|translate}}</span>
+      <ion-toggle [(ngModel)]="autoPlayNext" [attr.aria-label]="'Auto play next'|translate"></ion-toggle>
+    </div>
+    @if (autoPlayNext) {
+      <div class="paper-option-row">
+        <span class="option-label">{{'Pause'|translate}}</span>
+        <span class="stepper">
+          <button type="button" class="icon-choice" (click)="changePause(-1)" [attr.aria-label]="'Pause'|translate">
+            <fa-icon icon="minus"></fa-icon>
+          </button>
+          <span class="stepper-value">{{pauseSeconds}} s</span>
+          <button type="button" class="icon-choice" (click)="changePause(1)" [attr.aria-label]="'Pause'|translate">
+            <fa-icon icon="plus"></fa-icon>
+          </button>
+        </span>
       </div>
-    </ion-col>
-  </ion-row>
-</ion-radio-group>
+    }
+  </div>
+}
 <div class="options-divider"></div>

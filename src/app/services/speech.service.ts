@@ -12,6 +12,7 @@ export interface SpeakOptions {
   ttsVersion?: string;
   mode?: string;
   pronounceUrl?: string;
+  untilEnd?: boolean;
 }
 
 /**
@@ -24,6 +25,7 @@ export class SpeechService {
   synth: SpeechSynthesis | null;
   private voiceCache: SpeechSynthesisVoice | null = null;
   private voiceModeCache: string | null = null;
+  private webSpeakDone: (() => void) | null = null;
 
   constructor(
     public appService: AppService,
@@ -32,13 +34,13 @@ export class SpeechService {
     private uiOptionsService: UIOptionsService,
   ) {}
 
-  async speak(text: string, rate = 0.7): Promise<void> {
+  async speak(text: string, rate = 0.7, untilEnd = false): Promise<void> {
     rate = Math.round(rate * 10) / 10;
 
     if (this.appService.isApp()) {
       await this.speakNative(text, rate);
     } else {
-      this.speakWeb(text, rate);
+      await this.speakWeb(text, rate, untilEnd);
     }
   }
 
@@ -51,25 +53,43 @@ export class SpeechService {
       .catch((reason: unknown) => this.log.warn(JSON.stringify(reason)));
   }
 
-  private speakWeb(text: string, rate: number): void {
+  private speakWeb(text: string, rate: number, untilEnd: boolean): Promise<void> {
     this.synth = window.speechSynthesis;
     const voice = this.getWebVoiceSync();
     const lang = voice?.lang ?? 'en-US';
 
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.rate = rate;
-    utterance.lang = lang;
-    if (voice) {
-      utterance.voice = voice;
-    }
-    utterance.onerror = (ev: SpeechSynthesisErrorEvent) => {
-      const msg = (ev as unknown as { message?: string }).message ?? String(ev.error);
-      this.log.warn(`TTS error: ${ev.error}`, msg);
-    };
+    return new Promise(resolve => {
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.rate = rate;
+      utterance.lang = lang;
+      if (voice) {
+        utterance.voice = voice;
+      }
+      const finish = () => {
+        if (this.webSpeakDone === finish) {
+          this.webSpeakDone = null;
+        }
+        resolve();
+      };
+      utterance.onerror = (ev: SpeechSynthesisErrorEvent) => {
+        const msg = (ev as unknown as { message?: string }).message ?? String(ev.error);
+        this.log.warn(`TTS error: ${ev.error}`, msg);
+        if (untilEnd) {
+          finish();
+        }
+      };
+      if (untilEnd) {
+        this.webSpeakDone = finish;
+        utterance.onend = finish;
+      }
 
-    this.synth.cancel();
-    this.synth.speak(utterance);
-    this.synth.resume();
+      this.synth.cancel();
+      this.synth.speak(utterance);
+      this.synth.resume();
+      if (!untilEnd) {
+        resolve();
+      }
+    });
   }
 
   /** Preload voice and voice mode on an earlier user gesture (e.g. Start) so first speak() stays sync on iOS browser. */
@@ -96,7 +116,9 @@ export class SpeechService {
         return 'cloud';
       }
       if (options.pronounceUrl) {
-        const played = await this.ttsCloudService.playAudioUrl(options.pronounceUrl);
+        const played = options.untilEnd
+          ? await this.ttsCloudService.playAudioUrl(options.pronounceUrl, options.rate, true)
+          : await this.ttsCloudService.playAudioUrl(options.pronounceUrl);
         if (played) {
           this.log.info(`Pronunciation audio played after cloud fallback: ${options.pronounceUrl}`);
           return 'cloud';
@@ -104,7 +126,11 @@ export class SpeechService {
       }
       this.log.warn(`Online voice unavailable, fallback to local TTS: ${cloud.audioKey}`);
     }
-    void this.speak(this.resolveLocalSpeakText(text, options), rate);
+    if (options.untilEnd) {
+      await this.speak(this.resolveLocalSpeakText(text, options), rate, true);
+    } else {
+      void this.speak(this.resolveLocalSpeakText(text, options), rate);
+    }
     return 'local';
   }
 
@@ -140,7 +166,9 @@ export class SpeechService {
       speakPunctuation: options.speakPunctuation,
       ttsVersion: options.ttsVersion,
     });
-    const playedByCloud = await this.ttsCloudService.playAudioUrl(audioInfo.url, options.rate);
+    const playedByCloud = options.untilEnd
+      ? await this.ttsCloudService.playAudioUrl(audioInfo.url, options.rate, true)
+      : await this.ttsCloudService.playAudioUrl(audioInfo.url, options.rate);
     if (playedByCloud) {
       this.log.info(`Cloud TTS played: ${audioInfo.key}`);
     }
@@ -163,6 +191,9 @@ export class SpeechService {
 
   stop(): void {
     this.ttsCloudService.stopCloudAudio();
+    const finishWeb = this.webSpeakDone;
+    this.webSpeakDone = null;
+    finishWeb?.();
     if (this.appService.isApp()) {
       TextToSpeech.stop().then(() => this.log.info('Stopped TTS'));
     } else if (this.synth) {

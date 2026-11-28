@@ -85,6 +85,12 @@
                       </ion-radio-group>
                 </app-section-card>
                       <app-section-card [headerTitle]="'Options' | translate" icon="sliders-h">
+                        @if (mode === pageMode.Start && type.value === dictationType.Word) {
+                          <app-vocab-practice-type-selector
+                            [selectedType]="wordPracticeType.value || practiceType.Spell"
+                            (selectedTypeChange)="wordPracticeType.setValue($event)">
+                          </app-vocab-practice-type-selector>
+                        }
                         @if (mode === pageMode.Start) {
                           <app-voice-mode-selector
                             [selectedMode]="voiceMode.value"
@@ -128,14 +134,6 @@
                                 <fa-icon [icon]="['fas', 'window-minimize']" /> {{'Words Contain Space'|translate}}
                               </ion-toggle>
                             </ion-item>
-                            @if (mode === pageMode.Start) {
-                              <div class="word-options-instant">
-                                <app-vocab-practice-type-selector
-                                  [selectedType]="wordPracticeType.value || practiceType.Spell"
-                                  (selectedTypeChange)="wordPracticeType.setValue($event)">
-                                </app-vocab-practice-type-selector>
-                              </div>
-                            }
                           </div>
                         }
                         @if (type.value === dictationType.Sentence) {

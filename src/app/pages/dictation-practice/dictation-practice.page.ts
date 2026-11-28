@@ -37,7 +37,12 @@ export class DictationPracticePage {
   histories: VocabPracticeHistory[] = [];
   isKeyboardActive: boolean;
   puzzleControls: PuzzleControls;
+  paperMarking = false;
+  paperMarks: Array<boolean | null> = [];
   speak$ = new Subject<boolean>();
+  private paperPlaybackId = 0;
+  private paperPauseTimer: ReturnType<typeof setTimeout> | null = null;
+  private paperPauseResolve: ((continued: boolean) => void) | null = null;
 
   constructor(
     public vocabPracticeService: VocabPracticeService,
@@ -54,7 +59,12 @@ export class DictationPracticePage {
     this.initDictation();
   }
 
+  ionViewWillLeave() {
+    this.stopPaperPlayback();
+  }
+
   clearVariables() {
+    this.stopPaperPlayback();
     this.histories = [];
     this.dictation = null;
     this.vocabPractices = [];
@@ -62,6 +72,8 @@ export class DictationPracticePage {
     this.mark = 0;
     this.answer = '';
     this.puzzleControls = null;
+    this.paperMarking = false;
+    this.paperMarks = [];
     this.showPreload = true;
   }
 
@@ -82,7 +94,8 @@ export class DictationPracticePage {
       interpretations: words.length,
     });
 
-    for (const word of words) {
+    this.vocabPractices = Array.from({length: words.length});
+    words.forEach((word, index) => {
       this.fetchQuestion(word)
         .pipe(
           mergeMap(vp => this.fetchImages(vp)),
@@ -90,8 +103,8 @@ export class DictationPracticePage {
           tap(vp => this.interpretationService.interpret(vp.word)
             .subscribe(() => this.preload.recordInterpretation(true)))
         )
-        .subscribe(p => this.receiveVocabPractice(p));
-    }
+        .subscribe(p => this.receiveVocabPractice(p, index));
+    });
   }
 
   get type() { return VocabPracticeType; }
@@ -99,7 +112,41 @@ export class DictationPracticePage {
 
   /** In-scroll footer yields while the spell-mode virtual keyboard occupies ion-footer. */
   get hideAppFooter(): boolean {
-    return this.isKeyboardActive === true && this.practiceType !== VocabPracticeType.Puzzle;
+    return this.isKeyboardActive === true
+      && this.practiceType !== VocabPracticeType.Puzzle
+      && this.practiceType !== VocabPracticeType.Paper;
+  }
+
+  get showAnswerKeyboard(): boolean {
+    return this.dictation != null && this.practiceType !== VocabPracticeType.Paper;
+  }
+
+  get canFinishPaper(): boolean {
+    return this.paperMarks.length > 0
+      && this.paperMarks.length === this.vocabPractices.length
+      && this.paperMarks.every(mark => mark !== null);
+  }
+
+  private get paperRepeat(): number {
+    const count = this.dictation?.options?.repeatCount;
+    return count === 2 || count === 3 ? count : 1;
+  }
+
+  private get paperRate(): number {
+    const rate = this.dictation?.options?.speakRate;
+    if (typeof rate !== 'number' || Number.isNaN(rate)) {
+      return 0.7;
+    }
+    return Math.min(1, Math.max(0.1, Math.round(rate * 10) / 10));
+  }
+
+  private get paperPauseMs(): number {
+    const seconds = this.dictation?.options?.pauseSeconds ?? 5;
+    return Math.min(10, Math.max(1, seconds)) * 1000;
+  }
+
+  private get paperAutoPlay(): boolean {
+    return this.practiceType === VocabPracticeType.Paper && this.dictation?.options?.autoPlayNext === true;
   }
 
   get puzzleCols(): number {
@@ -137,17 +184,79 @@ export class DictationPracticePage {
       : of(vocabPractice);
   }
 
-  private receiveVocabPractice(p: VocabPractice) {
-    this.vocabPractices.push(p);
+  private receiveVocabPractice(p: VocabPractice, index: number) {
+    this.vocabPractices[index] = p;
   }
 
   speak() {
-    const word = this.currentQuestion().word;
-    void this.speechService.speakByVoiceMode(word, {
-      speakPunctuation: this.dictation?.options?.speakPunctuation,
-      pronounceUrl: this.currentQuestion().activePronounceLink,
-    });
+    if (this.practiceType === VocabPracticeType.Paper) {
+      this.stopPaperPlayback();
+      void this.playPaperQuestion(false);
+      this.speak$.next(true);
+      return;
+    }
+    this.speakPractice(this.questionIndex);
     this.speak$.next(true);
+  }
+
+  speakPractice(index: number) {
+    const question = this.vocabPractices[index];
+    if (!question) {
+      return;
+    }
+    void this.speechService.speakByVoiceMode(question.word, {
+      speakPunctuation: this.dictation?.options?.speakPunctuation,
+      pronounceUrl: question.activePronounceLink,
+    });
+  }
+
+  onPaperNext() {
+    this.stopPaperPlayback();
+    if (this.paperMarking) {
+      return;
+    }
+    if (this.end()) {
+      this.paperMarks = this.vocabPractices.map(() => null);
+      this.paperMarking = true;
+      return;
+    }
+    this.questionIndex++;
+    this.onNextQuestion();
+  }
+
+  setPaperMark(index: number, correct: boolean) {
+    this.paperMarks = this.paperMarks.map((mark, i) => {
+      if (i !== index) {
+        return mark;
+      }
+      return mark === correct ? null : correct;
+    });
+  }
+
+  markUnmarkedPaper(correct: boolean) {
+    this.paperMarks = this.paperMarks.map(mark => mark === null ? correct : mark);
+  }
+
+  finishPaper() {
+    if (!this.canFinishPaper) {
+      return;
+    }
+    this.histories = this.vocabPractices.map((question, index) => ({
+      answer: '',
+      question,
+      correct: this.paperMarks[index] === true,
+      state: 'in',
+    }));
+    this.mark = this.histories.filter(history => history.correct).length;
+    this.analytics.practiceDidComplete({
+      itemCount: this.histories.length,
+      correctCount: this.mark,
+    });
+    this.navigationService.practiceComplete({
+      dictation: this.dictation,
+      histories: this.histories,
+      mark: this.mark,
+    });
   }
 
   showPhonics() {
@@ -188,11 +297,70 @@ export class DictationPracticePage {
 
   onNextQuestion() {
     this.preNextQuestion();
+    if (this.practiceType === VocabPracticeType.Paper) {
+      void this.playPaperQuestion(true);
+      return;
+    }
     this.speak();
     this.focusAnswerInput();
     if (this.practiceType === VocabPracticeType.Puzzle) {
       this.puzzleControls = this.vocabPracticeService.createPuzzleControls(this.currentQuestion().word);
     }
+  }
+
+  private async playPaperQuestion(fromQuestion: boolean): Promise<void> {
+    const run = ++this.paperPlaybackId;
+    const times = fromQuestion ? this.paperRepeat : 1;
+    for (let i = 0; i < times; i++) {
+      if (run !== this.paperPlaybackId || this.paperMarking) {
+        return;
+      }
+      await this.speakPaperAndWait(this.questionIndex);
+    }
+    if (!fromQuestion || !this.paperAutoPlay || run !== this.paperPlaybackId || this.paperMarking) {
+      return;
+    }
+    const continued = await this.waitForPaperPause(run);
+    if (!continued || run !== this.paperPlaybackId || this.paperMarking) {
+      return;
+    }
+    this.onPaperNext();
+  }
+
+  private speakPaperAndWait(index: number): Promise<unknown> {
+    const question = this.vocabPractices[index];
+    if (!question) {
+      return Promise.resolve();
+    }
+    return this.speechService.speakByVoiceMode(question.word, {
+      speakPunctuation: this.dictation?.options?.speakPunctuation,
+      pronounceUrl: question.activePronounceLink,
+      rate: this.paperRate,
+      untilEnd: true,
+    });
+  }
+
+  private waitForPaperPause(run: number): Promise<boolean> {
+    return new Promise(resolve => {
+      this.paperPauseResolve = resolve;
+      this.paperPauseTimer = setTimeout(() => {
+        this.paperPauseTimer = null;
+        this.paperPauseResolve = null;
+        resolve(this.paperPlaybackId === run);
+      }, this.paperPauseMs);
+    });
+  }
+
+  private stopPaperPlayback() {
+    this.paperPlaybackId++;
+    if (this.paperPauseTimer != null) {
+      clearTimeout(this.paperPauseTimer);
+      this.paperPauseTimer = null;
+    }
+    const resolve = this.paperPauseResolve;
+    this.paperPauseResolve = null;
+    resolve?.(false);
+    this.speechService.stop();
   }
 
   end = (): boolean => this.questionIndex + 1 >= this.vocabPractices.length;

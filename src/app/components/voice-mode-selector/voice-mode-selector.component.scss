@@ -1,3 +1,14 @@
+ion-select {
+  color: var(--ion-color-primary);
+}
+
+ion-select [slot="label"] {
+  font-size: var(--ion-font-size, 16px);
+  font-weight: 400;
+  line-height: 1.25;
+  color: var(--ion-text-color, #1a1a1a);
+}
+
 .voice-mode-note {
   display: block;
   font-size: 0.82rem;

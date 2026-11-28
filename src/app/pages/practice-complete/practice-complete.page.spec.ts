@@ -205,6 +205,59 @@ describe('PracticeCompletePage', () => {
       expect(dictationServiceSpy.createVocabDictationHistory).toHaveBeenCalledTimes(0);
     }));
 
+    it('saves FillIn Write on paper history with the tick and an empty answer', fakeAsync(() => {
+      const histories = [
+        { answer: '', correct: true, question: { word: 'apple' } },
+        { answer: '', correct: false, question: { word: 'playground' } },
+      ];
+      defaultInput.dictation = TestData.fillInDictation();
+      defaultInput.dictation.options = { practiceType: VocabPracticeType.Paper };
+      defaultInput.histories = histories;
+      defaultInput.mark = 1;
+      const params = { 'practiceCompletePageInput': defaultInput };
+      storageSpy.get.and.callFake((param) => params[param]);
+      authServiceSpy.isAuthenticated.and.returnValue(true);
+      dictationServiceSpy.createVocabDictationHistory.and.returnValue(of(defaultInput.dictation));
+
+      component.ionViewWillEnter();
+      tick();
+
+      expect(dictationServiceSpy.createVocabDictationHistory).toHaveBeenCalledWith(
+        defaultInput.dictation,
+        1,
+        histories,
+      );
+      expect(vocabPracticeServiceSpy.saveHistory).not.toHaveBeenCalled();
+    }));
+
+    it('saves generated Write on paper history instead of skipping it like Puzzle', fakeAsync(() => {
+      defaultInput.dictation = TestData.generateDictation();
+      defaultInput.dictation.options.practiceType = VocabPracticeType.Paper;
+      const params = { 'practiceCompletePageInput': defaultInput };
+      storageSpy.get.and.callFake((param) => params[param]);
+      authServiceSpy.isAuthenticated.and.returnValue(true);
+
+      component.ionViewWillEnter();
+      tick();
+
+      expect(vocabPracticeServiceSpy.saveHistory).toHaveBeenCalledTimes(1);
+      expect(dictationServiceSpy.createVocabDictationHistory).not.toHaveBeenCalled();
+    }));
+
+    it('does not save Write on paper history when logged out', fakeAsync(() => {
+      defaultInput.dictation = TestData.fillInDictation();
+      defaultInput.dictation.options = { practiceType: VocabPracticeType.Paper };
+      const params = { 'practiceCompletePageInput': defaultInput };
+      storageSpy.get.and.callFake((param) => params[param]);
+      authServiceSpy.isAuthenticated.and.returnValue(false);
+
+      component.ionViewWillEnter();
+      tick();
+
+      expect(dictationServiceSpy.createVocabDictationHistory).not.toHaveBeenCalled();
+      expect(vocabPracticeServiceSpy.saveHistory).not.toHaveBeenCalled();
+    }));
+
     it('should call member vocabulary save history if dictation is generated', fakeAsync(() => {
       defaultInput.dictation = TestData.generateDictation();
       defaultInput.dictation.options.practiceType = VocabPracticeType.Spell;
