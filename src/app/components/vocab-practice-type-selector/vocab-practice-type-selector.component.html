@@ -48,11 +48,11 @@
       <span class="speed-choices">
         <ion-button fill="outline" color="primary" shape="round" class="speed-btn" (click)="slower()"
           [attr.aria-label]="'Slower'|translate">
-          <fa-icon icon="bicycle"></fa-icon>
+          <fa-icon [icon]="['fas', 'bicycle']"></fa-icon>
         </ion-button>
         <ion-button fill="outline" color="primary" shape="round" class="speed-btn" (click)="faster()"
           [attr.aria-label]="'Faster'|translate">
-          <fa-icon icon="person-running"></fa-icon>
+          <fa-icon [icon]="['fas', 'rocket']"></fa-icon>
         </ion-button>
       </span>
     </div>
