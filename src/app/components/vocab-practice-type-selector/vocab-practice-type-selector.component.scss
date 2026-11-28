@@ -40,7 +40,7 @@
 
 .type-name {
   flex: 0 0 auto;
-  color: var(--ion-text-color, #1a1a1a);
+  color: #aaaaaa;
 }
 
 .practice-type-option.selected .type-name {
@@ -49,13 +49,9 @@
 
 .type-example {
   font-size: 0.9rem;
-  color: var(--ion-text-color, #1a1a1a);
+  color: #555555;
   display: flex;
   align-items: center;
-}
-
-.practice-type-option.selected .type-example {
-  color: var(--ion-color-primary);
 }
 
 .type-example .spell {
@@ -74,15 +70,11 @@
   height: 24px;
   margin: 0 2px;
   border-radius: 5px;
-  background: var(--ion-text-color, #1a1a1a);
+  background: #2c2c2c;
   color: #ffffff;
   font-weight: 700;
   font-size: 0.78rem;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.18), 0 1px 1px rgba(0, 0, 0, 0.1);
-}
-
-.practice-type-option.selected .puzzle span {
-  background: var(--ion-color-primary);
 }
 
 .type-example.paper {
