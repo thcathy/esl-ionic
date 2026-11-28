@@ -4,21 +4,31 @@
     <span class="practice-type-line">
       <input #typeRadio type="radio" [name]="radioName" [value]="practiceType.Spell"
         (change)="onRadioChange($event, practiceType.Spell)">
-      <span [class.deselected]="selectedType !== practiceType.Spell">{{'Spelling'|translate}}</span>
+      <span class="type-name" [class.deselected]="selectedType !== practiceType.Spell">{{'Spelling'|translate}}</span>
+      <span class="type-example" [class.deselected]="selectedType !== practiceType.Spell">
+        <fa-icon icon="apple-alt"></fa-icon>&nbsp;<span class="spell">apple</span>
+      </span>
     </span>
   </label>
   <label class="practice-type-option" [class.selected]="selectedType === practiceType.Puzzle">
     <span class="practice-type-line">
       <input #typeRadio type="radio" [name]="radioName" [value]="practiceType.Puzzle"
         (change)="onRadioChange($event, practiceType.Puzzle)">
-      <span [class.deselected]="selectedType !== practiceType.Puzzle">{{'Puzzle'|translate}}</span>
+      <span class="type-name" [class.deselected]="selectedType !== practiceType.Puzzle">{{'Puzzle'|translate}}</span>
+      <span class="type-example puzzle" [class.deselected]="selectedType !== practiceType.Puzzle">
+        <fa-icon icon="apple-alt"></fa-icon>
+        <span>p</span><span>e</span><span>l</span><span>a</span>
+      </span>
     </span>
   </label>
   <label class="practice-type-option" [class.selected]="selectedType === practiceType.Paper">
     <span class="practice-type-line">
       <input #typeRadio type="radio" [name]="radioName" [value]="practiceType.Paper"
         (change)="onRadioChange($event, practiceType.Paper)">
-      <span [class.deselected]="selectedType !== practiceType.Paper">{{'Write on paper'|translate}}</span>
+      <span class="type-name" [class.deselected]="selectedType !== practiceType.Paper">{{'Write on paper'|translate}}</span>
+      <span class="type-example paper" [class.deselected]="selectedType !== practiceType.Paper">
+        {{'Listen, write on paper, then tick'|translate}}
+      </span>
     </span>
   </label>
 </div>

@@ -29,9 +29,8 @@ describe('VocabPracticeTypeSelectorComponent', () => {
     expect(text).toContain('Spelling');
     expect(text).toContain('Puzzle');
     expect(text).toContain('Write on paper');
-    expect(text).not.toContain('Listen, write on paper, then tick');
-    expect(fixture.nativeElement.querySelector('.type-example')).toBeNull();
-    expect(fixture.nativeElement.querySelector('.type-hint')).toBeNull();
+    expect(text).toContain('Listen, write on paper, then tick');
+    expect(fixture.nativeElement.querySelectorAll('.type-example').length).toBe(3);
   });
 
   it('keeps Write on paper when the selection changes', () => {
