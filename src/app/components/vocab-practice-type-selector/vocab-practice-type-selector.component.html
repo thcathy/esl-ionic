@@ -44,16 +44,15 @@
       </span>
     </div>
     <div class="paper-option-row">
-      <span>{{'Speed'|translate}} <strong>{{speedLabel}}</strong></span>
-      <span class="speed-choices">
-        <ion-button fill="outline" color="primary" shape="round" class="speed-btn" (click)="slower()"
-          [attr.aria-label]="'Slower'|translate">
+      <span>{{'Speed'|translate}}</span>
+      <span class="stepper">
+        <button type="button" class="icon-choice" (click)="slower()" [attr.aria-label]="'Slower'|translate">
           <fa-icon [icon]="['fas', 'person-walking']"></fa-icon>
-        </ion-button>
-        <ion-button fill="outline" color="primary" shape="round" class="speed-btn" (click)="faster()"
-          [attr.aria-label]="'Faster'|translate">
+        </button>
+        <span class="stepper-value">{{speedLabel}}</span>
+        <button type="button" class="icon-choice" (click)="faster()" [attr.aria-label]="'Faster'|translate">
           <fa-icon [icon]="['fas', 'person-running']"></fa-icon>
-        </ion-button>
+        </button>
       </span>
     </div>
     <div class="paper-option-row">
@@ -63,16 +62,14 @@
     @if (autoPlayNext) {
       <div class="paper-option-row">
         <span>{{'Pause'|translate}}</span>
-        <span class="pause-choices">
-          <ion-button fill="outline" color="medium" shape="round" class="pause-btn"
-            (click)="changePause(-1)" [attr.aria-label]="'Pause'|translate">
+        <span class="stepper">
+          <button type="button" class="icon-choice" (click)="changePause(-1)" [attr.aria-label]="'Pause'|translate">
             <fa-icon icon="minus"></fa-icon>
-          </ion-button>
-          <span class="pause-value">{{pauseSeconds}} s</span>
-          <ion-button fill="outline" color="medium" shape="round" class="pause-btn"
-            (click)="changePause(1)" [attr.aria-label]="'Pause'|translate">
+          </button>
+          <span class="stepper-value">{{pauseSeconds}} s</span>
+          <button type="button" class="icon-choice" (click)="changePause(1)" [attr.aria-label]="'Pause'|translate">
             <fa-icon icon="plus"></fa-icon>
-          </ion-button>
+          </button>
         </span>
       </div>
     }

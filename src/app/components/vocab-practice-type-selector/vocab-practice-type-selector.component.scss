@@ -96,21 +96,41 @@
 }
 
 .repeat-choices,
-.speed-choices,
-.pause-choices {
-  display: flex;
-  align-items: center;
+.stepper {
+  display: grid;
+  width: 132px;
   gap: 6px;
+  align-items: center;
+  justify-content: end;
+  justify-items: center;
 }
 
-.repeat-choice {
+.repeat-choices {
+  grid-template-columns: repeat(3, 36px);
+}
+
+.stepper {
+  grid-template-columns: 36px 48px 36px;
+}
+
+.repeat-choice,
+.icon-choice {
   width: 36px;
-  height: 32px;
+  height: 36px;
+  margin: 0;
+  padding: 0;
   border-radius: 8px;
   border: 1px solid var(--ion-color-primary);
   background: transparent;
   color: var(--ion-color-primary);
   font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-choice {
+  border-radius: 50%;
 }
 
 .repeat-choice.selected {
@@ -118,18 +138,10 @@
   color: #ffffff;
 }
 
-.speed-btn,
-.pause-btn {
-  --padding-start: 0;
-  --padding-end: 0;
-  width: 36px;
-  height: 36px;
-  margin: 0;
-}
-
-.pause-value {
-  min-width: 2.5rem;
+.stepper-value {
+  width: 100%;
   text-align: center;
+  font-variant-numeric: tabular-nums;
 }
 
 .deselected {
