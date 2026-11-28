@@ -1,9 +1,12 @@
-.practice-method-label {
-  padding: 8px 16px 0;
+.option-label {
   font-size: var(--ion-font-size, 16px);
   font-weight: 400;
   line-height: 1.25;
   color: var(--ion-text-color, #1a1a1a);
+}
+
+.practice-method-label {
+  padding: 8px 16px 0;
 }
 
 .practice-type-list {
@@ -97,7 +100,6 @@
   gap: 12px;
   min-height: 44px;
   padding: 2px 8px;
-  font-size: var(--ion-font-size, 16px);
 }
 
 .repeat-choices,

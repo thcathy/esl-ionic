@@ -1,4 +1,4 @@
-<div class="practice-method-label" [id]="radioName + '-label'">{{'Practice method'|translate}}</div>
+<div class="option-label practice-method-label" [id]="radioName + '-label'">{{'Practice method'|translate}}</div>
 <div class="practice-type-list" role="radiogroup" [attr.aria-labelledby]="radioName + '-label'">
   <label class="practice-type-option" [class.selected]="selectedType === practiceType.Spell">
     <span class="practice-type-line">
@@ -35,7 +35,7 @@
 @if (selectedType === practiceType.Paper) {
   <div class="paper-options">
     <div class="paper-option-row">
-      <span>{{'Repeat'|translate}}</span>
+      <span class="option-label">{{'Repeat'|translate}}</span>
       <span class="repeat-choices">
         @for (count of repeatChoices; track count) {
           <button type="button" class="repeat-choice" [class.selected]="repeatCount === count"
@@ -44,7 +44,7 @@
       </span>
     </div>
     <div class="paper-option-row">
-      <span>{{'Speed'|translate}}</span>
+      <span class="option-label">{{'Speed'|translate}}</span>
       <span class="stepper">
         <button type="button" class="icon-choice" (click)="slower()" [attr.aria-label]="'Slower'|translate">
           <fa-icon [icon]="['fas', 'person-walking']"></fa-icon>
@@ -56,12 +56,12 @@
       </span>
     </div>
     <div class="paper-option-row">
-      <span>{{'Auto play next'|translate}}</span>
+      <span class="option-label">{{'Auto play next'|translate}}</span>
       <ion-toggle [(ngModel)]="autoPlayNext" [attr.aria-label]="'Auto play next'|translate"></ion-toggle>
     </div>
     @if (autoPlayNext) {
       <div class="paper-option-row">
-        <span>{{'Pause'|translate}}</span>
+        <span class="option-label">{{'Pause'|translate}}</span>
         <span class="stepper">
           <button type="button" class="icon-choice" (click)="changePause(-1)" [attr.aria-label]="'Pause'|translate">
             <fa-icon icon="minus"></fa-icon>
